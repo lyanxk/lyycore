@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "down": "lyycore:block/imaginary_alloy_forge_other",
+    "up": "lyycore:block/imaginary_alloy_forge_other",
+    "north": "lyycore:block/imaginary_alloy_forge",
+    "south": "lyycore:block/imaginary_alloy_forge",
+    "west": "lyycore:block/imaginary_alloy_forge",
+    "east": "lyycore:block/imaginary_alloy_forge",
+    "particle": "lyycore:block/imaginary_alloy_forge_other"
+  }
+}

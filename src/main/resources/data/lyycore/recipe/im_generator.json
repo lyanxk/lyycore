@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "ABA",
+    "BCB",
+    "ABA"
+  ],
+  "key": {
+    "A": { "item": "lyycore:imaginary_alloy_ingot" },
+    "B": { "item": "lyycore:im_battery" },
+    "C": { "item": "minecraft:nether_star" }
+  },
+  "result": { "id": "lyycore:im_generator", "count": 1 }
+}

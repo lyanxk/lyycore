@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "down":  "lyycore:block/im_generator_up",
+    "up":    "lyycore:block/im_generator_up",
+    "north": "lyycore:block/im_generator_base",
+    "south": "lyycore:block/im_generator_base",
+    "west":  "lyycore:block/im_generator_base",
+    "east":  "lyycore:block/im_generator_base",
+    "particle": "lyycore:block/im_generator_base"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model": "lyycore:block/item_collector" },
+    "facing=east":  { "model": "lyycore:block/item_collector", "y": 90 },
+    "facing=south": { "model": "lyycore:block/item_collector", "y": 180 },
+    "facing=west":  { "model": "lyycore:block/item_collector", "y": 270 }
+  }
+}

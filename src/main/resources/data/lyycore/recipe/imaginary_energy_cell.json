@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "ABA",
+    "BBB",
+    "ABA"
+  ],
+  "key": {
+    "A": { "item": "lyycore:imaginary_alloy_ingot" },
+    "B": { "item": "lyycore:im_battery" }
+  },
+  "result": { "id": "lyycore:imaginary_energy_cell", "count": 1 }
+}

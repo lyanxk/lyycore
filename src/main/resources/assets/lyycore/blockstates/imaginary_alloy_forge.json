@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model": "lyycore:block/imaginary_alloy_forge" },
+    "facing=east":  { "model": "lyycore:block/imaginary_alloy_forge", "y": 90 },
+    "facing=south": { "model": "lyycore:block/imaginary_alloy_forge", "y": 180 },
+    "facing=west":  { "model": "lyycore:block/imaginary_alloy_forge", "y": 270 }
+  }
+}

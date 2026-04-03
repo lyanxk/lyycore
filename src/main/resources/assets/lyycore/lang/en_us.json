@@ -1,0 +1,17 @@
+{
+  "block.lyycore.imaginary_energy_cell": "Imaginary Energy Cell",
+  "screen.lyycore.energy_cell.title": "Imaginary Energy Cell",
+  "tooltip.lyycore.energy": "Energy: %s / %s FE",
+  "item.lyycore.imaginary_disassembler": "Imaginary Disassembler",
+  "block.lyycore.imaginium_ore": "Imaginium Ore",
+  "block.lyycore.deepslate_imaginium_ore": "Deepslate Imaginium Ore",
+  "block.lyycore.item_collector": "Item Collector",
+  "block.lyycore.imaginary_alloy_forge": "Imaginary Alloy Forge",
+  "block.lyycore.im_generator": "Imaginary Generator",
+  "item.lyycore.raw_imaginium": "Raw Imaginium",
+  "item.lyycore.imaginary_alloy_ingot": "Imaginium Ingot",
+  "item.lyycore.im_battery": "Imaginary Battery",
+  "jei.lyycore.imaginary_alloying": "Imaginary Alloying",
+  "item.lyycore.disassembler.mode": "Mode: %s",
+  "item.lyycore.disassembler.special": "Special Mode"
+}

@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "AAA",
+    "AIA",
+    "AAA"
+  ],
+  "key": {
+    "A": { "item": "lyycore:imaginary_alloy_ingot" },
+    "I": { "item": "minecraft:iron_ingot" }
+  },
+  "result": { "id": "lyycore:item_collector", "count": 1 }
+}

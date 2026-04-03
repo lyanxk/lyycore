@@ -1,0 +1,17 @@
+{
+  "block.lyycore.imaginary_energy_cell": "虚数能量单元",
+  "screen.lyycore.energy_cell.title": "虚数能量单元",
+  "tooltip.lyycore.energy": "能量：%s / %s FE",
+  "item.lyycore.imaginary_disassembler": "虚数采掘器",
+  "block.lyycore.imaginium_ore": "虚晶矿石",
+  "block.lyycore.deepslate_imaginium_ore": "深板岩虚晶矿石",
+  "block.lyycore.item_collector": "物品收集器",
+  "block.lyycore.imaginary_alloy_forge": "虚数合金炉",
+  "block.lyycore.im_generator": "虚数发电机",
+  "item.lyycore.raw_imaginium": "粗虚晶",
+  "item.lyycore.imaginary_alloy_ingot": "虚数合金",
+  "item.lyycore.im_battery": "虚数电池",
+  "jei.lyycore.imaginary_alloying": "虚数合金",
+  "item.lyycore.disassembler.mode": "模式: %s",
+  "item.lyycore.disassembler.special": "特殊模式"
+}

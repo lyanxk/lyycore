@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "down":  "lyycore:block/collector_base",
+    "up":    "lyycore:block/collector_top",
+    "north": "lyycore:block/collector_front",
+    "south": "lyycore:block/collector_side",
+    "west":  "lyycore:block/collector_side",
+    "east":  "lyycore:block/collector_side",
+    "particle": "lyycore:block/collector_base"
+  }
+}
