@@ -1,10 +1,11 @@
 package org.lyy.lyycore.content.blockEntities;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -18,7 +19,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.energy.EnergyStorage;
+import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
+import org.lyy.lyycore.Config;
 import org.jetbrains.annotations.Nullable;
 import org.lyy.lyycore.content.menu.IAFMenu;
 import org.lyy.lyycore.content.recipes.ImaginaryAlloyingRecipe;
@@ -32,40 +35,67 @@ import java.util.Optional;
 public class ImaginaryAlloyForgeBlockEntity extends BlockEntity implements MenuProvider {
     private int progress = 0;
     private int maxProgress = 0;
-    private int energyPerTick = 0;
+    private int totalEnergyCost = 0;
+    private int energySpent = 0;
     private boolean hasActiveRecipe = false;
+    private boolean recipeDirty = true;
+    @Nullable private RecipeHolder<ImaginaryAlloyingRecipe> cachedRecipe;
+    @Nullable private ResourceLocation activeRecipeId;
 
-    private final EnergyStorage energyStorage = new EnergyStorage(1_000_000, 1_000_000, 1_000_000);
+    private final EnergyStorage energyStorage = new EnergyStorage(1_000_000, 1_000_000, 1_000_000) {
+        @Override
+        public int receiveEnergy(int maxReceive, boolean simulate) {
+            int received = super.receiveEnergy(maxReceive, simulate);
+            if (!simulate && received > 0) setChanged();
+            return received;
+        }
+
+        @Override
+        public int extractEnergy(int maxExtract, boolean simulate) {
+            int extracted = super.extractEnergy(maxExtract, simulate);
+            if (!simulate && extracted > 0) setChanged();
+            return extracted;
+        }
+    };
 
     private final ItemStackHandler items = new ItemStackHandler(4) {
         @Override
-        protected void onContentsChanged(int slot) { setChanged(); }
+        protected void onContentsChanged(int slot) {
+            recipeDirty = true;
+            setChanged();
+        }
     };
+
+    private final RecipeInput recipeInput = new RecipeInput() {
+        @Override public ItemStack getItem(int index) { return items.getStackInSlot(index); }
+        @Override public int size() { return items.getSlots(); }
+    };
+
+    private final IItemHandler automationHandler = new FilteredItemHandler(new int[]{0, 1, 2, 3});
+    private final IItemHandler inputHandler = new FilteredItemHandler(new int[]{0, 1});
+    private final IItemHandler catalystHandler = new FilteredItemHandler(new int[]{2, 3});
+    private final IItemHandler outputHandler = new FilteredItemHandler(new int[]{3});
 
     private final ContainerData data = new ContainerData() {
         @Override public int get(int i) {
-            return switch (i) {
+            int value = switch (i / 2) {
                 case 0 -> progress;
                 case 1 -> maxProgress;
                 case 2 -> energyStorage.getEnergyStored();
                 case 3 -> energyStorage.getMaxEnergyStored();
                 default -> 0;
             };
+            return i % 2 == 0 ? value & 0xFFFF : value >>> 16 & 0xFFFF;
         }
-        @Override public void set(int i, int v) {
-            switch (i) {
-                case 0 -> progress = v;
-                case 1 -> maxProgress = v;
-            }
-        }
-        @Override public int getCount() { return 4; }
+        @Override public void set(int i, int v) { }
+        @Override public int getCount() { return 8; }
     };
 
     public ImaginaryAlloyForgeBlockEntity(BlockPos pos, BlockState state) {
         super(LyyBlockEntities.IAF.get(), pos, state);
     }
 
-    @Override public Component getDisplayName() { return Component.empty(); }
+    @Override public Component getDisplayName() { return Component.translatable("block.lyycore.imaginary_alloy_forge"); }
 
     @Nullable
     @Override
@@ -76,13 +106,11 @@ public class ImaginaryAlloyForgeBlockEntity extends BlockEntity implements MenuP
     public ContainerData getData() { return data; }
     public EnergyStorage getEnergyStorage() { return energyStorage; }
     public ItemStackHandler getItemHandler() { return items; }
-
-    // --- RecipeInput adapter ---
-    private RecipeInput asRecipeInput() {
-        return new RecipeInput() {
-            @Override public ItemStack getItem(int index) { return items.getStackInSlot(index); }
-            @Override public int size() { return items.getSlots(); }
-        };
+    public IItemHandler getAutomationItemHandler(@Nullable Direction side) {
+        if (side == null) return automationHandler;
+        if (side == Direction.UP) return inputHandler;
+        if (side == Direction.DOWN) return outputHandler;
+        return catalystHandler;
     }
 
     // --- NBT ---
@@ -93,100 +121,123 @@ public class ImaginaryAlloyForgeBlockEntity extends BlockEntity implements MenuP
         tag.put("Items", items.serializeNBT(registries));
         tag.putInt("Progress", progress);
         tag.putInt("MaxProgress", maxProgress);
-        tag.putInt("EnergyPerTick", energyPerTick);
+        tag.putInt("TotalEnergyCost", totalEnergyCost);
+        tag.putInt("EnergySpent", energySpent);
         tag.putBoolean("HasActiveRecipe", hasActiveRecipe);
+        if (activeRecipeId != null) tag.putString("ActiveRecipe", activeRecipeId.toString());
     }
 
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
+        int currentEnergy = energyStorage.getEnergyStored();
+        if (currentEnergy > 0) energyStorage.extractEnergy(currentEnergy, false);
         energyStorage.receiveEnergy(tag.getInt("Energy"), false);
         items.deserializeNBT(registries, tag.getCompound("Items"));
         progress = tag.getInt("Progress");
         maxProgress = tag.getInt("MaxProgress");
-        energyPerTick = tag.getInt("EnergyPerTick");
+        totalEnergyCost = tag.getInt("TotalEnergyCost");
+        energySpent = tag.getInt("EnergySpent");
         hasActiveRecipe = tag.getBoolean("HasActiveRecipe");
-    }
-
-    @Override
-    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
-        CompoundTag tag = new CompoundTag();
-        tag.putInt("Energy", energyStorage.getEnergyStored());
-        tag.put("Items", items.serializeNBT(registries));
-        return tag;
-    }
-
-    @Nullable
-    @Override
-    public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return ClientboundBlockEntityDataPacket.create(this);
+        activeRecipeId = tag.contains("ActiveRecipe") ? ResourceLocation.tryParse(tag.getString("ActiveRecipe")) : null;
+        // Saves made before process_time became seconds stored an incompatible
+        // progress scale. Restarting that recipe preserves its inputs and avoids
+        // finishing it twenty times too early after an upgrade.
+        if (hasActiveRecipe && !tag.contains("TotalEnergyCost")) {
+            progress = 0;
+            maxProgress = 0;
+            totalEnergyCost = 0;
+            energySpent = 0;
+            hasActiveRecipe = false;
+            activeRecipeId = null;
+        }
+        recipeDirty = true;
+        cachedRecipe = null;
     }
 
     // --- Tick ---
     public static void serverTick(Level level, BlockPos pos, BlockState state, ImaginaryAlloyForgeBlockEntity be) {
         if (level.isClientSide) return;
 
-        // Passive energy gain
-        if (level.getGameTime() % 20 == 0)
-            be.energyStorage.receiveEnergy(1, false);
-
-        if (!be.hasActiveRecipe) {
-            be.tryStartRecipe();
-        } else {
-            be.tickProcessing();
+        int passiveInterval = Config.FORGE_PASSIVE_INTERVAL.get();
+        if (level.getGameTime() % passiveInterval == 0) {
+            be.energyStorage.receiveEnergy(Config.FORGE_PASSIVE_FE.get(), false);
         }
-        be.setChanged();
-        level.sendBlockUpdated(pos, state, state, 3);
+
+        if (be.recipeDirty) be.refreshRecipe();
+        if (be.hasActiveRecipe && be.cachedRecipe != null) be.tickProcessing(be.cachedRecipe.value());
     }
 
-    private void tryStartRecipe() {
-        RecipeInput input = asRecipeInput();
-        Optional<RecipeHolder<ImaginaryAlloyingRecipe>> match =
-                level.getRecipeManager().getRecipeFor(LyyRecipes.IMAGINARY_ALLOYING.get(), input, level);
-        match.ifPresent(holder -> {
-            ImaginaryAlloyingRecipe rec = holder.value();
-            if (canOutput(rec)) start(rec);
-        });
-    }
-
-    private void start(ImaginaryAlloyingRecipe rec) {
-        this.maxProgress = Math.max(1, rec.getProcessTime());
-        this.energyPerTick = (rec.getEnergyCost() + this.maxProgress - 1) / this.maxProgress;
+    private void start(RecipeHolder<ImaginaryAlloyingRecipe> holder) {
+        ImaginaryAlloyingRecipe rec = holder.value();
+        // Recipe process_time is authored in seconds; the machine advances once per tick.
+        int seconds = Math.max(1, Math.min(rec.getProcessTime(), Integer.MAX_VALUE / 20));
+        this.maxProgress = seconds * 20;
+        this.totalEnergyCost = Math.max(0, rec.getEnergyCost());
+        this.energySpent = 0;
         this.progress = 0;
         this.hasActiveRecipe = true;
+        this.activeRecipeId = holder.id();
         setChanged();
     }
 
-    private void tickProcessing() {
-        RecipeInput input = asRecipeInput();
-        Optional<RecipeHolder<ImaginaryAlloyingRecipe>> match =
-                level.getRecipeManager().getRecipeFor(LyyRecipes.IMAGINARY_ALLOYING.get(), input, level);
+    private void refreshRecipe() {
+        recipeDirty = false;
+        cachedRecipe = level.getRecipeManager()
+                .getRecipeFor(LyyRecipes.IMAGINARY_ALLOYING.get(), recipeInput, level)
+                .orElse(null);
 
-        if (match.isEmpty() || !canOutput(match.get().value())) {
-            resetProcessing();
+        if (cachedRecipe == null || !canOutput(cachedRecipe.value())) {
+            if (hasActiveRecipe) resetProcessing();
             return;
         }
-        ImaginaryAlloyingRecipe rec = match.get().value();
 
-        // Energy check
-        if (energyPerTick > 0) {
-            if (energyStorage.extractEnergy(energyPerTick, true) < energyPerTick) return;
-            energyStorage.extractEnergy(energyPerTick, false);
+        if (!hasActiveRecipe) {
+            start(cachedRecipe);
+        } else if (activeRecipeId != null && !activeRecipeId.equals(cachedRecipe.id())) {
+            resetProcessing();
+            start(cachedRecipe);
+        } else if (maxProgress <= 0) {
+            start(cachedRecipe);
+        } else {
+            if (activeRecipeId == null) activeRecipeId = cachedRecipe.id();
+            totalEnergyCost = Math.max(0, cachedRecipe.value().getEnergyCost());
+            energySpent = Math.max(0, Math.min(energySpent, totalEnergyCost));
+            progress = Math.max(0, Math.min(progress, maxProgress));
         }
+    }
 
+    private void tickProcessing(ImaginaryAlloyingRecipe rec) {
+        int nextProgress = Math.min(progress + 1, maxProgress);
+        int targetSpent = calculateEnergySpentAtProgress(nextProgress, maxProgress, totalEnergyCost);
+        int due = Math.max(0, targetSpent - energySpent);
+        if (due > 0 && energyStorage.extractEnergy(due, true) < due) return;
+        if (due > 0) energyStorage.extractEnergy(due, false);
+
+        energySpent = targetSpent;
         progress++;
         if (progress >= maxProgress) {
             finish(rec);
             resetProcessing();
+        } else {
+            setChanged();
         }
-        setChanged();
+    }
+
+    public static int calculateEnergySpentAtProgress(int progress, int maxProgress, int totalEnergyCost) {
+        if (maxProgress <= 0 || totalEnergyCost <= 0 || progress <= 0) return 0;
+        int clampedProgress = Math.min(progress, maxProgress);
+        return (int) ((long) clampedProgress * totalEnergyCost / maxProgress);
     }
 
     private void resetProcessing() {
         progress = 0;
         maxProgress = 0;
-        energyPerTick = 0;
+        totalEnergyCost = 0;
+        energySpent = 0;
         hasActiveRecipe = false;
+        activeRecipeId = null;
+        cachedRecipe = null;
         setChanged();
     }
 
@@ -228,6 +279,41 @@ public class ImaginaryAlloyForgeBlockEntity extends BlockEntity implements MenuP
 
         if (rec.getCatalyst() != null && !rec.getCatalyst().isEmpty() && rec.isCatalystConsumed()) {
             items.extractItem(2, 1, false);
+        }
+    }
+
+    private final class FilteredItemHandler implements IItemHandler {
+        private final int[] slots;
+
+        private FilteredItemHandler(int[] slots) {
+            this.slots = slots;
+        }
+
+        private int actualSlot(int slot) {
+            if (slot < 0 || slot >= slots.length) throw new RuntimeException("Slot " + slot + " not in valid range");
+            return slots[slot];
+        }
+
+        @Override public int getSlots() { return slots.length; }
+        @Override public ItemStack getStackInSlot(int slot) { return items.getStackInSlot(actualSlot(slot)); }
+
+        @Override
+        public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+            int actual = actualSlot(slot);
+            return actual == 3 ? stack : items.insertItem(actual, stack, simulate);
+        }
+
+        @Override
+        public ItemStack extractItem(int slot, int amount, boolean simulate) {
+            return items.extractItem(actualSlot(slot), amount, simulate);
+        }
+
+        @Override public int getSlotLimit(int slot) { return items.getSlotLimit(actualSlot(slot)); }
+
+        @Override
+        public boolean isItemValid(int slot, ItemStack stack) {
+            int actual = actualSlot(slot);
+            return actual != 3 && items.isItemValid(actual, stack);
         }
     }
 }

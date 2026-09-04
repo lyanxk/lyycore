@@ -30,7 +30,7 @@ public class ItemCollectorBlock extends BaseEntityBlock {
     @Override protected MapCodec<? extends BaseEntityBlock> codec() { return CODEC; }
 
     public ItemCollectorBlock() {
-        super(BlockBehaviour.Properties.of().strength(2.0f).noOcclusion());
+        super(BlockBehaviour.Properties.of().strength(2.0f));
         registerDefaultState(stateDefinition.any().setValue(MODE, 0).setValue(FACING, Direction.NORTH));
     }
 
@@ -69,8 +69,9 @@ public class ItemCollectorBlock extends BaseEntityBlock {
         if (level.getBlockEntity(pos) instanceof ItemCollectorBlockEntity collector) {
             ItemCollectorBlockEntity.Mode next = collector.toggleMode();
             level.setBlock(pos, state.setValue(MODE, next == ItemCollectorBlockEntity.Mode.SMALL ? 0 : 1), 3);
-            player.displayClientMessage(Component.literal("Collection range: " +
-                    (next == ItemCollectorBlockEntity.Mode.SMALL ? "3×3×3" : "7×7×7")), true);
+            int diameter = next.radius() * 2 + 1;
+            player.displayClientMessage(Component.translatable("message.lyycore.collector_range",
+                    diameter, diameter, diameter), true);
             return InteractionResult.CONSUME;
         }
         return InteractionResult.PASS;

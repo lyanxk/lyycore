@@ -1,14 +1,16 @@
 package org.lyy.lyycore.energy;
 
-public class IEnergyConversion {
-    public static final double IMAGINARY_TO_FE = 100;
-    public static final double FE_TO_IMAGINARY = 1 / IMAGINARY_TO_FE;
+public final class IEnergyConversion {
+    public static final int FE_PER_IMAGINARY = 100;
 
     public static int toFE(int imaginaryEnergy) {
-        return (int) (imaginaryEnergy * IMAGINARY_TO_FE);
+        if (imaginaryEnergy <= 0) return 0;
+        return (int) Math.min((long) imaginaryEnergy * FE_PER_IMAGINARY, Integer.MAX_VALUE);
     }
 
     public static int fromFE(int feEnergy) {
-        return (int) (feEnergy * FE_TO_IMAGINARY);
+        return Math.max(feEnergy, 0) / FE_PER_IMAGINARY;
     }
+
+    private IEnergyConversion() { }
 }

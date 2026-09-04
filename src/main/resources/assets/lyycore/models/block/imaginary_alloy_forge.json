@@ -4,9 +4,9 @@
     "down": "lyycore:block/imaginary_alloy_forge_other",
     "up": "lyycore:block/imaginary_alloy_forge_other",
     "north": "lyycore:block/imaginary_alloy_forge",
-    "south": "lyycore:block/imaginary_alloy_forge",
-    "west": "lyycore:block/imaginary_alloy_forge",
-    "east": "lyycore:block/imaginary_alloy_forge",
+    "south": "lyycore:block/imaginary_alloy_forge_other",
+    "west": "lyycore:block/imaginary_alloy_forge_other",
+    "east": "lyycore:block/imaginary_alloy_forge_other",
     "particle": "lyycore:block/imaginary_alloy_forge_other"
   }
 }

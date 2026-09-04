@@ -7,6 +7,6 @@
   "catalyst": { "item": "lyycore:raw_imaginium" },
   "catalyst_consumed": true,
   "result": { "id": "lyycore:imaginary_alloy_ingot", "count": 1 },
-  "process_time": 10,
+  "process_time": 200,
   "energy_cost": 1000
 }

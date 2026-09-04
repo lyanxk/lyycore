@@ -13,6 +13,7 @@ public class IAFScreen extends AbstractContainerScreen<IAFMenu> {
 
     private static final int ENERGY_U = 176, ENERGY_V = 16, ENERGY_W = 12, ENERGY_H = 48;
     private static final int ENERGY_X = 10, ENERGY_Y = 20;
+    private static final int PROGRESS_X = 91, PROGRESS_Y = 47, PROGRESS_W = 29, PROGRESS_H = 11;
 
     public IAFScreen(IAFMenu menu, Inventory playerInv, Component title) {
         super(menu, playerInv, title);
@@ -31,12 +32,16 @@ public class IAFScreen extends AbstractContainerScreen<IAFMenu> {
             gg.renderTooltip(this.font, Component.translatable("tooltip." + LyyCore.MODID + ".energy",
                     e, max), mouseX, mouseY);
         }
+        if (isHovering(PROGRESS_X, PROGRESS_Y, PROGRESS_W, PROGRESS_H, mouseX, mouseY)) {
+            gg.renderTooltip(this.font, Component.translatable("tooltip." + LyyCore.MODID + ".progress",
+                    menu.getProgress(), menu.getMaxProgress()), mouseX, mouseY);
+        }
     }
 
     @Override
     protected void renderBg(GuiGraphics gg, float partialTicks, int mouseX, int mouseY) {
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
-        gg.blit(BG, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight, 176, 166);
+        gg.blit(BG, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight, 188, 166);
 
         int e = menu.getEnergy();
         int emax = Math.max(menu.getMaxEnergy(), 1);
@@ -48,8 +53,19 @@ public class IAFScreen extends AbstractContainerScreen<IAFMenu> {
                     ENERGY_U,
                     ENERGY_V + (ENERGY_H - h),
                     ENERGY_W,
-                    h);
+                    h,
+                    188,
+                    166);
         }
+
+        int maxProgress = menu.getMaxProgress();
+        int progressWidth = maxProgress <= 0 ? 0
+                : (int) Math.round(menu.getProgress() / (double) maxProgress * (PROGRESS_W - 2));
+        gg.fill(this.leftPos + PROGRESS_X, this.topPos + PROGRESS_Y,
+                this.leftPos + PROGRESS_X + PROGRESS_W, this.topPos + PROGRESS_Y + PROGRESS_H, 0xFF32172D);
+        gg.fill(this.leftPos + PROGRESS_X + 1, this.topPos + PROGRESS_Y + 1,
+                this.leftPos + PROGRESS_X + 1 + progressWidth,
+                this.topPos + PROGRESS_Y + PROGRESS_H - 1, 0xFFF0A1CE);
     }
 
     @Override

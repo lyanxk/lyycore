@@ -5,7 +5,9 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -17,6 +19,7 @@ import org.lyy.lyycore.registry.LyyMenus;
 public class EnergyCellMenu extends AbstractContainerMenu {
     public final EnergyCellBlockEntity be;
     private final ContainerLevelAccess access;
+    private final ContainerData data;
 
     private static final int MACHINE_SLOTS = 1;
     private static final int INV_START = MACHINE_SLOTS;
@@ -25,23 +28,26 @@ public class EnergyCellMenu extends AbstractContainerMenu {
     private static final int HOTBAR_END = HOTBAR_START + 9;
 
     // Server constructor
-    public EnergyCellMenu(int id, Inventory inv, EnergyCellBlockEntity be) {
+    public EnergyCellMenu(int id, Inventory inv, EnergyCellBlockEntity be, ContainerData data) {
         super(LyyMenus.IMAGINARY_ENERGY_CELL.get(), id);
+        checkContainerDataCount(data, 4);
         this.be = be;
         this.access = ContainerLevelAccess.create(be.getLevel(), be.getBlockPos());
+        this.data = data;
+        addDataSlots(data);
         addSlot(new SlotItemHandler(be.getItemHandler(), 0, 80, 34));
         addPlayerSlots(inv);
     }
 
     // Client constructor (from network)
     public EnergyCellMenu(int id, Inventory inv, RegistryFriendlyByteBuf buf) {
-        super(LyyMenus.IMAGINARY_ENERGY_CELL.get(), id);
-        BlockPos pos = buf.readBlockPos();
+        this(id, inv, getBlockEntity(inv, buf.readBlockPos()), new SimpleContainerData(4));
+    }
+
+    private static EnergyCellBlockEntity getBlockEntity(Inventory inv, BlockPos pos) {
         Level level = inv.player.level();
-        this.be = level.getBlockEntity(pos) instanceof EnergyCellBlockEntity c ? c : null;
-        this.access = ContainerLevelAccess.create(level, pos);
-        if (be != null) addSlot(new SlotItemHandler(be.getItemHandler(), 0, 80, 34));
-        addPlayerSlots(inv);
+        if (level.getBlockEntity(pos) instanceof EnergyCellBlockEntity cell) return cell;
+        throw new IllegalStateException("BlockEntity at " + pos + " is not EnergyCellBlockEntity");
     }
 
     private void addPlayerSlots(Inventory inv) {
@@ -52,8 +58,12 @@ public class EnergyCellMenu extends AbstractContainerMenu {
             addSlot(new Slot(inv, i, 8 + i * 18, 142));
     }
 
-    public int getEnergy()   { return be != null ? be.getIEnergyStored() : 0; }
-    public int getCapacity() { return be != null ? be.getMaxIEnergyStored() : 0; }
+    public int getEnergy()   { return combineWords(data.get(0), data.get(1)); }
+    public int getCapacity() { return combineWords(data.get(2), data.get(3)); }
+
+    private static int combineWords(int low, int high) {
+        return low & 0xFFFF | (high & 0xFFFF) << 16;
+    }
 
     @Override
     public boolean stillValid(Player player) {

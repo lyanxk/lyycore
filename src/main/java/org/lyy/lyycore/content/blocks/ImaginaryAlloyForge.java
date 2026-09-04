@@ -3,7 +3,9 @@ package org.lyy.lyycore.content.blocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.Containers;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
@@ -32,7 +34,7 @@ public class ImaginaryAlloyForge extends BaseEntityBlock {
     @Override protected MapCodec<? extends BaseEntityBlock> codec() { return CODEC; }
 
     public ImaginaryAlloyForge() {
-        super(BlockBehaviour.Properties.of().noOcclusion().strength(3));
+        super(BlockBehaviour.Properties.of().strength(3));
         registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH));
     }
 
@@ -62,6 +64,18 @@ public class ImaginaryAlloyForge extends BaseEntityBlock {
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new ImaginaryAlloyForgeBlockEntity(pos, state);
+    }
+
+    @Override
+    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
+        if (!state.is(newState.getBlock()) && level instanceof ServerLevel
+                && level.getBlockEntity(pos) instanceof ImaginaryAlloyForgeBlockEntity be) {
+            for (int slot = 0; slot < be.getItemHandler().getSlots(); slot++) {
+                Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(),
+                        be.getItemHandler().extractItem(slot, Integer.MAX_VALUE, false));
+            }
+        }
+        super.onRemove(state, level, pos, newState, isMoving);
     }
 
     @Nullable

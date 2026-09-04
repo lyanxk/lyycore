@@ -21,6 +21,6 @@ public class LyyCapabilities {
                 (be, side) -> be.getEnergyStorage());
         event.registerBlockEntity(Capabilities.ItemHandler.BLOCK,
                 LyyBlockEntities.IAF.get(),
-                (be, side) -> be.getItemHandler());
+                (be, side) -> be.getAutomationItemHandler(side));
     }
 }

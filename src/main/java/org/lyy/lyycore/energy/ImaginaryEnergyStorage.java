@@ -19,6 +19,7 @@ public class ImaginaryEnergyStorage implements ImaginaryEnergy, IEnergyStorage {
 
     @Override
     public int receiveEnergy(int maxReceive, boolean simulate) {
+        if (maxReceive <= 0) return 0;
         int received = Math.min(capacity - energy, Math.min(this.maxReceive, maxReceive));
         if (!simulate && received > 0) energy += received;
         return received;
@@ -26,6 +27,7 @@ public class ImaginaryEnergyStorage implements ImaginaryEnergy, IEnergyStorage {
 
     @Override
     public int extractEnergy(int maxExtract, boolean simulate) {
+        if (maxExtract <= 0) return 0;
         int extracted = Math.min(energy, Math.min(this.maxExtract, maxExtract));
         if (!simulate && extracted > 0) energy -= extracted;
         return extracted;
@@ -35,11 +37,14 @@ public class ImaginaryEnergyStorage implements ImaginaryEnergy, IEnergyStorage {
     public void setImaginaryEnergy(int v) { imaginaryEnergy = Math.max(0, v); }
 
     public int receiveImaginaryEnergy(int amount) {
-        imaginaryEnergy += amount;
-        return amount;
+        if (amount <= 0) return 0;
+        int accepted = (int) Math.min((long) amount, (long) Integer.MAX_VALUE - imaginaryEnergy);
+        imaginaryEnergy += accepted;
+        return accepted;
     }
 
     public int extractImaginaryEnergy(int amount) {
+        if (amount <= 0) return 0;
         int extracted = Math.min(imaginaryEnergy, amount);
         imaginaryEnergy -= extracted;
         return extracted;

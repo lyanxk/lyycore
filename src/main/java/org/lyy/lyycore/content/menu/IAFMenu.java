@@ -26,6 +26,7 @@ public class IAFMenu extends AbstractContainerMenu {
     // Server constructor
     public IAFMenu(int windowId, Inventory playerInv, ImaginaryAlloyForgeBlockEntity be, ContainerData data) {
         super(LyyMenus.IAF_MENU.get(), windowId);
+        checkContainerDataCount(data, 8);
         this.blockEntity = be;
         this.data = data;
         addDataSlots(data);
@@ -42,7 +43,7 @@ public class IAFMenu extends AbstractContainerMenu {
 
     // Client constructor (from network)
     public IAFMenu(int windowId, Inventory playerInv, RegistryFriendlyByteBuf buf) {
-        this(windowId, playerInv, getBlockEntity(playerInv, buf.readBlockPos()), new SimpleContainerData(4));
+        this(windowId, playerInv, getBlockEntity(playerInv, buf.readBlockPos()), new SimpleContainerData(8));
     }
 
     private static ImaginaryAlloyForgeBlockEntity getBlockEntity(Inventory inv, BlockPos pos) {
@@ -62,10 +63,14 @@ public class IAFMenu extends AbstractContainerMenu {
             addSlot(new Slot(inv, i, left + i * 18, top));
     }
 
-    public int getProgress()    { return data.get(0); }
-    public int getMaxProgress() { return data.get(1); }
-    public int getEnergy()      { return data.get(2); }
-    public int getMaxEnergy()   { return data.get(3); }
+    public int getProgress()    { return combineWords(data.get(0), data.get(1)); }
+    public int getMaxProgress() { return combineWords(data.get(2), data.get(3)); }
+    public int getEnergy()      { return combineWords(data.get(4), data.get(5)); }
+    public int getMaxEnergy()   { return combineWords(data.get(6), data.get(7)); }
+
+    private static int combineWords(int low, int high) {
+        return low & 0xFFFF | (high & 0xFFFF) << 16;
+    }
 
     @Override
     public boolean stillValid(@NotNull Player player) {

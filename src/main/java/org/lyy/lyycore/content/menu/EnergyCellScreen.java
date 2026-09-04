@@ -23,12 +23,29 @@ public class EnergyCellScreen extends AbstractContainerScreen<EnergyCellMenu> {
         g.blit(TEX, x, y, 0, 0, this.imageWidth, this.imageHeight, 176, 166);
         int e = menu.getEnergy();
         int c = menu.getCapacity();
-        g.drawString(this.font, "IE: " + e + " / " + c, leftPos + 8, topPos + 58, 0x66CCFF, false);
+        g.drawString(this.font, "IE: " + compact(e) + " / " + compact(c), leftPos + 8, topPos + 58, 0xF0A1CE, false);
     }
 
     @Override
     public void render(GuiGraphics g, int mouseX, int mouseY, float partial) {
         super.render(g, mouseX, mouseY, partial);
         this.renderTooltip(g, mouseX, mouseY);
+        if (isHovering(10, 56, 156, 15, mouseX, mouseY)) {
+            g.renderTooltip(this.font, Component.literal("IE: " + menu.getEnergy() + " / " + menu.getCapacity()),
+                    mouseX, mouseY);
+        }
+    }
+
+    private static String compact(int value) {
+        if (value >= 1_000_000_000) return compact(value, 1_000_000_000, "G");
+        if (value >= 1_000_000) return compact(value, 1_000_000, "M");
+        if (value >= 1_000) return compact(value, 1_000, "k");
+        return Integer.toString(value);
+    }
+
+    private static String compact(int value, int unit, String suffix) {
+        long hundredths = (long) value * 100 / unit;
+        long decimals = hundredths % 100;
+        return hundredths / 100 + "." + (decimals < 10 ? "0" : "") + decimals + suffix;
     }
 }

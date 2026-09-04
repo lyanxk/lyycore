@@ -5,6 +5,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -23,7 +24,7 @@ public class BaseImaginaryGenerator extends BaseEntityBlock {
     @Override protected MapCodec<? extends BaseEntityBlock> codec() { return CODEC; }
 
     public BaseImaginaryGenerator() {
-        super(BlockBehaviour.Properties.of().noOcclusion().strength(3));
+        super(BlockBehaviour.Properties.of().strength(3));
     }
 
     @Override
@@ -35,6 +36,15 @@ public class BaseImaginaryGenerator extends BaseEntityBlock {
             BaseImaginaryGeneratorBlockEntity.getPositions(be);
         }
         return InteractionResult.SUCCESS;
+    }
+
+    @Override
+    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock,
+                                   BlockPos neighborPos, boolean movedByPiston) {
+        super.neighborChanged(state, level, pos, neighborBlock, neighborPos, movedByPiston);
+        if (!level.isClientSide && level.getBlockEntity(pos) instanceof BaseImaginaryGeneratorBlockEntity be) {
+            be.requestScan();
+        }
     }
 
     @Nullable

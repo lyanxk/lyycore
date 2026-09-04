@@ -2,6 +2,7 @@
   "block.lyycore.imaginary_energy_cell": "Imaginary Energy Cell",
   "screen.lyycore.energy_cell.title": "Imaginary Energy Cell",
   "tooltip.lyycore.energy": "Energy: %s / %s FE",
+  "tooltip.lyycore.progress": "Progress: %s / %s ticks",
   "item.lyycore.imaginary_disassembler": "Imaginary Disassembler",
   "block.lyycore.imaginium_ore": "Imaginium Ore",
   "block.lyycore.deepslate_imaginium_ore": "Deepslate Imaginium Ore",
@@ -13,5 +14,12 @@
   "item.lyycore.im_battery": "Imaginary Battery",
   "jei.lyycore.imaginary_alloying": "Imaginary Alloying",
   "item.lyycore.disassembler.mode": "Mode: %s",
-  "item.lyycore.disassembler.special": "Special Mode"
+  "item.lyycore.disassembler.special": "Special Mode",
+  "item.lyycore.disassembler.mode.low": "Low",
+  "item.lyycore.disassembler.mode.normal": "Normal",
+  "item.lyycore.disassembler.mode.fast": "Fast",
+  "item.lyycore.disassembler.mode.extreme": "Extreme",
+  "item.lyycore.disassembler.mode.aoe3": "Area Mining",
+  "item.lyycore.disassembler.mode.vein": "Vein Mining",
+  "message.lyycore.collector_range": "Collection range: %s×%s×%s"
 }

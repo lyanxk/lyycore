@@ -9,6 +9,7 @@ import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -16,6 +17,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.neoforged.neoforge.items.ItemStackHandler;
+import org.lyy.lyycore.Config;
 import org.lyy.lyycore.content.menu.EnergyCellMenu;
 import org.lyy.lyycore.energy.IEnergyConversion;
 import org.lyy.lyycore.energy.ImaginaryEnergyStorage;
@@ -24,12 +26,53 @@ import org.lyy.lyycore.registry.LyyBlockEntities;
 import javax.annotation.Nullable;
 
 public class EnergyCellBlockEntity extends BlockEntity implements MenuProvider {
-    public static final int TRANSFER_INTERVAL_T = 2;
+    private final ImaginaryEnergyStorage storage = new ImaginaryEnergyStorage(1_000_000_000, 1_000_000_000, 1_000_000_000) {
+        @Override
+        public int receiveEnergy(int maxReceive, boolean simulate) {
+            int received = super.receiveEnergy(maxReceive, simulate);
+            if (!simulate && received > 0) setChanged();
+            return received;
+        }
 
-    private final ImaginaryEnergyStorage storage = new ImaginaryEnergyStorage(1_000_000_000, 1_000_000_000, 1_000_000_000);
-    private int feRatePerTick = 1000;
+        @Override
+        public int extractEnergy(int maxExtract, boolean simulate) {
+            int extracted = super.extractEnergy(maxExtract, simulate);
+            if (!simulate && extracted > 0) setChanged();
+            return extracted;
+        }
+    };
+
+    // Container data packets carry signed 16-bit values in 1.21.1, so each
+    // 32-bit energy value is split into two words for lossless GUI syncing.
+    private final ContainerData data = new ContainerData() {
+        @Override
+        public int get(int index) {
+            int value = switch (index / 2) {
+                case 0 -> storage.getImaginaryEnergyStored();
+                case 1 -> getMaxIEnergyStored();
+                default -> 0;
+            };
+            return index % 2 == 0 ? value & 0xFFFF : value >>> 16 & 0xFFFF;
+        }
+
+        @Override
+        public void set(int index, int value) {
+            // The server owns energy state. Client-side values live in the
+            // SimpleContainerData supplied by EnergyCellMenu.
+        }
+
+        @Override
+        public int getCount() {
+            return 4;
+        }
+    };
 
     private final ItemStackHandler items = new ItemStackHandler(1) {
+        @Override
+        public boolean isItemValid(int slot, ItemStack stack) {
+            return stack.getCapability(Capabilities.EnergyStorage.ITEM) != null;
+        }
+
         @Override
         protected void onContentsChanged(int slot) { setChanged(); }
     };
@@ -39,12 +82,12 @@ public class EnergyCellBlockEntity extends BlockEntity implements MenuProvider {
     }
 
     @Override
-    public Component getDisplayName() { return Component.empty(); }
+    public Component getDisplayName() { return Component.translatable("block.lyycore.imaginary_energy_cell"); }
 
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int id, Inventory inv, Player player) {
-        return new EnergyCellMenu(id, inv, this);
+        return new EnergyCellMenu(id, inv, this, data);
     }
 
     // --- NBT ---
@@ -53,7 +96,6 @@ public class EnergyCellBlockEntity extends BlockEntity implements MenuProvider {
         super.saveAdditional(tag, registries);
         tag.putInt("IE", storage.getImaginaryEnergyStored());
         tag.putInt("energy", storage.getEnergyStored());
-        tag.putInt("feRatePerTick", feRatePerTick);
         tag.put("items", items.serializeNBT(registries));
     }
 
@@ -62,13 +104,13 @@ public class EnergyCellBlockEntity extends BlockEntity implements MenuProvider {
         super.loadAdditional(tag, registries);
         storage.setEnergy(tag.getInt("energy"));
         storage.setImaginaryEnergy(tag.getInt("IE"));
-        feRatePerTick = tag.getInt("feRatePerTick");
         items.deserializeNBT(registries, tag.getCompound("items"));
     }
 
     // --- Accessors ---
     public ImaginaryEnergyStorage getEnergyStorage() { return storage; }
     public ItemStackHandler getItemHandler() { return items; }
+    public ContainerData getData() { return data; }
     public int getIEnergyStored() { return storage.getImaginaryEnergyStored(); }
     public int getMaxIEnergyStored() { return Integer.MAX_VALUE; }
 
@@ -76,30 +118,34 @@ public class EnergyCellBlockEntity extends BlockEntity implements MenuProvider {
     public static void serverTick(Level level, BlockPos pos, BlockState state, EnergyCellBlockEntity be) {
         if (level == null || level.isClientSide) return;
 
-        be.normalizeFeToIe();
+        boolean changed = be.normalizeFeToIe();
 
-        if (level.getGameTime() % TRANSFER_INTERVAL_T == 0) {
-            int ieBurst = be.feRatePerTick * TRANSFER_INTERVAL_T;
-            be.pushIEToNeighbors(ieBurst);
+        int interval = Config.ENERGY_CELL_TRANSFER_INTERVAL.get();
+        if (level.getGameTime() % interval == 0) {
+            int ieBurst = (int) Math.min((long) Config.ENERGY_CELL_IE_RATE.get() * interval, Integer.MAX_VALUE);
+            changed |= be.pushIEToNeighbors(ieBurst);
         }
 
-        be.chargeBattery();
-        be.setChanged();
+        changed |= be.chargeBattery();
+        if (changed) be.setChanged();
     }
 
-    private void normalizeFeToIe() {
+    private boolean normalizeFeToIe() {
         int feBuffered = storage.getEnergyStored();
-        if (feBuffered <= 0) return;
-        int feExtracted = storage.extractEnergy(feBuffered, false);
-        if (feExtracted <= 0) return;
-        int ieToAdd = IEnergyConversion.fromFE(feExtracted);
-        storage.receiveImaginaryEnergy(ieToAdd);
+        int ieToAdd = IEnergyConversion.fromFE(feBuffered);
+        if (ieToAdd <= 0) return false;
+
+        int accepted = storage.receiveImaginaryEnergy(ieToAdd);
+        if (accepted <= 0) return false;
+        storage.extractEnergy(IEnergyConversion.toFE(accepted), false);
+        return true;
     }
 
-    private void pushIEToNeighbors(int ieBurst) {
-        if (level == null || ieBurst <= 0) return;
+    private boolean pushIEToNeighbors(int ieBurst) {
+        if (level == null || ieBurst <= 0) return false;
         int remainingIE = Math.min(ieBurst, storage.getImaginaryEnergyStored());
-        if (remainingIE <= 0) return;
+        if (remainingIE <= 0) return false;
+        boolean changed = false;
 
         for (Direction dir : Direction.values()) {
             if (remainingIE <= 0) break;
@@ -126,32 +172,34 @@ public class EnergyCellBlockEntity extends BlockEntity implements MenuProvider {
             if (feAcceptedReal < feExact) {
                 int ieRefund = IEnergyConversion.fromFE(feExact - feAcceptedReal);
                 if (ieRefund > 0) storage.receiveImaginaryEnergy(ieRefund);
-            } else {
-                remainingIE -= ieExtracted;
             }
+            int refundedIE = IEnergyConversion.fromFE(feExact - feAcceptedReal);
+            remainingIE -= Math.max(ieExtracted - refundedIE, 0);
+            changed |= feAcceptedReal > 0;
         }
+        return changed;
     }
 
-    private void chargeBattery() {
-        if (items.getSlots() <= 0) return;
+    private boolean chargeBattery() {
+        if (items.getSlots() <= 0) return false;
         ItemStack stack = items.getStackInSlot(0);
-        if (stack.isEmpty()) return;
+        if (stack.isEmpty()) return false;
 
         IEnergyStorage batt = stack.getCapability(Capabilities.EnergyStorage.ITEM);
-        if (batt == null) return;
+        if (batt == null) return false;
 
-        int ieBudget = Math.min(feRatePerTick, storage.getImaginaryEnergyStored());
-        if (ieBudget <= 0) return;
+        int ieBudget = Math.min(Config.ENERGY_CELL_IE_RATE.get(), storage.getImaginaryEnergyStored());
+        if (ieBudget <= 0) return false;
 
         int fePlan = IEnergyConversion.toFE(ieBudget);
-        if (fePlan <= 0) return;
+        if (fePlan <= 0) return false;
 
         int feAcceptedSim = batt.receiveEnergy(fePlan, true);
-        if (feAcceptedSim <= 0) return;
+        if (feAcceptedSim <= 0) return false;
 
         int ieNeed = IEnergyConversion.fromFE(feAcceptedSim);
         int ieExtracted = storage.extractImaginaryEnergy(ieNeed);
-        if (ieExtracted <= 0) return;
+        if (ieExtracted <= 0) return false;
 
         int feExact = IEnergyConversion.toFE(ieExtracted);
         int feAcceptedReal = batt.receiveEnergy(feExact, false);
@@ -159,5 +207,6 @@ public class EnergyCellBlockEntity extends BlockEntity implements MenuProvider {
             int ieRefund = IEnergyConversion.fromFE(feExact - feAcceptedReal);
             if (ieRefund > 0) storage.receiveImaginaryEnergy(ieRefund);
         }
+        return feAcceptedReal > 0;
     }
 }
