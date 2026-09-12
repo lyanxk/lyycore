@@ -20,6 +20,7 @@ public class LyyCreativeTab {
                         output.accept(LyyItems.IMAGINARY_ALLOY_INGOT.get());
                         output.accept(LyyItems.IM_BATTERY.get());
                         output.accept(LyyItems.IMAGINARY_DISASSEMBLER.get());
+                        output.accept(LyyItems.WHISPER_OF_THE_PAST.get());
                         output.accept(LyyItems.RAW_IMAGINIUM.get());
                         output.accept(LyyBlocks.IAF.get());
                         output.accept(LyyBlocks.IMAGINARY_ENERGY_CELL.get());

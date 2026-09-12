@@ -1,0 +1,183 @@
+{
+  "loader": "neoforge:obj",
+  "render_type": "minecraft:translucent",
+  "model": "lyycore:models/item/sanctuary_bow/pulling_2.obj",
+  "mtl_override": "lyycore:models/item/sanctuary_bow/crystal.mtl",
+  "automatic_culling": false,
+  "shade_quads": false,
+  "flip_v": true,
+  "emissive_ambient": true,
+  "ambientocclusion": false,
+  "gui_light": "front",
+  "textures": {
+    "crystal_dark": "lyycore:item/sanctuary_bow/crystal_dark",
+    "crystal_darklight": "lyycore:item/sanctuary_bow/crystal_darklight",
+    "crystal_darkedge": "lyycore:item/sanctuary_bow/crystal_darkedge",
+    "crystal_purple": "lyycore:item/sanctuary_bow/crystal_purple",
+    "crystal_purpledark": "lyycore:item/sanctuary_bow/crystal_purpledark",
+    "crystal_purplelight": "lyycore:item/sanctuary_bow/crystal_purplelight",
+    "crystal_violet": "lyycore:item/sanctuary_bow/crystal_violet",
+    "crystal_lilac": "lyycore:item/sanctuary_bow/crystal_lilac",
+    "crystal_pink": "lyycore:item/sanctuary_bow/crystal_pink",
+    "crystal_ivory": "lyycore:item/sanctuary_bow/crystal_ivory",
+    "crystal_ivoryshade": "lyycore:item/sanctuary_bow/crystal_ivoryshade",
+    "crystal_white": "lyycore:item/sanctuary_bow/crystal_white",
+    "crystal_whiteshade": "lyycore:item/sanctuary_bow/crystal_whiteshade",
+    "crystal_teal": "lyycore:item/sanctuary_bow/crystal_teal",
+    "crystal_tealdark": "lyycore:item/sanctuary_bow/crystal_tealdark",
+    "crystal_ice": "lyycore:item/sanctuary_bow/crystal_ice",
+    "crystal_silver": "lyycore:item/sanctuary_bow/crystal_silver",
+    "crystal_ink": "lyycore:item/sanctuary_bow/crystal_ink",
+    "facet_violet": "lyycore:item/sanctuary_bow/facet_violet",
+    "facet_amethyst": "lyycore:item/sanctuary_bow/facet_amethyst",
+    "facet_lilac": "lyycore:item/sanctuary_bow/facet_lilac",
+    "facet_pink": "lyycore:item/sanctuary_bow/facet_pink",
+    "facet_pearl": "lyycore:item/sanctuary_bow/facet_pearl",
+    "facet_white": "lyycore:item/sanctuary_bow/facet_white",
+    "facet_rose": "lyycore:item/sanctuary_bow/facet_rose",
+    "sonnet_crystal_0": "lyycore:item/sanctuary_bow/sonnet_crystal_0",
+    "sonnet_crystal_1": "lyycore:item/sanctuary_bow/sonnet_crystal_1",
+    "sonnet_crystal_2": "lyycore:item/sanctuary_bow/sonnet_crystal_2",
+    "sonnet_crystal_3": "lyycore:item/sanctuary_bow/sonnet_crystal_3",
+    "sonnet_crystal_4": "lyycore:item/sanctuary_bow/sonnet_crystal_4",
+    "particle": "lyycore:item/sanctuary_bow/crystal_pink"
+  },
+  "display": {
+    "thirdperson_righthand": {
+      "rotation": [
+        -80,
+        260,
+        -40
+      ],
+      "translation": [
+        -1,
+        -2,
+        2.5
+      ],
+      "scale": [
+        1.8,
+        1.8,
+        1.8
+      ]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [
+        -80,
+        -280,
+        40
+      ],
+      "translation": [
+        -1,
+        -2,
+        2.5
+      ],
+      "scale": [
+        1.8,
+        1.8,
+        1.8
+      ]
+    },
+    "firstperson_righthand": {
+      "rotation": [
+        0,
+        -90,
+        25
+      ],
+      "translation": [
+        1.13,
+        3.2,
+        1.13
+      ],
+      "scale": [
+        1.36,
+        1.36,
+        1.36
+      ]
+    },
+    "firstperson_lefthand": {
+      "rotation": [
+        0,
+        90,
+        -25
+      ],
+      "translation": [
+        1.13,
+        3.2,
+        1.13
+      ],
+      "scale": [
+        1.36,
+        1.36,
+        1.36
+      ]
+    },
+    "gui": {
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "scale": [
+        0.84,
+        0.84,
+        0.84
+      ]
+    },
+    "ground": {
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "translation": [
+        0,
+        3,
+        0
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    "fixed": {
+      "rotation": [
+        0,
+        180,
+        0
+      ],
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "scale": [
+        1.4,
+        1.4,
+        1.4
+      ]
+    },
+    "head": {
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "translation": [
+        0,
+        8,
+        0
+      ],
+      "scale": [
+        1.4,
+        1.4,
+        1.4
+      ]
+    }
+  }
+}

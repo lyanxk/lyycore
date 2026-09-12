@@ -1,0 +1,77 @@
+newmtl m_efc1ecaf-eaf9-1166-01de-24c91ac7da39
+Ka 1 1 1
+Kd 1 1 1
+d 1
+map_Kd #wine
+
+newmtl m_150c5929-6ea3-b9da-2743-4a25883382fe
+Ka 1 1 1
+Kd 1 1 1
+d 1
+map_Kd #plum
+
+newmtl m_4e2d08fa-1cb1-f871-83d6-842196bd8a78
+Ka 1 1 1
+Kd 1 1 1
+d 1
+map_Kd #orchid
+
+newmtl m_4ff79e8e-c1a5-c6c1-ad45-0b37f3a30bbf
+Ka 1 1 1
+Kd 1 1 1
+d 1
+map_Kd #violet
+
+newmtl m_c5190c87-b77b-61ba-e456-e6d92c707d3e
+Ka 1 1 1
+Kd 1 1 1
+d 1
+map_Kd #lilac
+
+newmtl m_5185ccf5-97ac-7010-78ba-1de38ebf793e
+Ka 1 1 1
+Kd 1 1 1
+d 1
+map_Kd #pink
+
+newmtl m_7348410e-eca4-e8f9-f59c-38f46eb626e5
+Ka 1 1 1
+Kd 1 1 1
+d 1
+map_Kd #rose
+
+newmtl m_3add6362-a0c5-addb-aa3d-5539b88e3056
+Ka 1 1 1
+Kd 1 1 1
+d 1
+map_Kd #pale
+
+newmtl m_e133fdec-6205-58c9-c41b-64bc76f0403c
+Ka 1 1 1
+Kd 1 1 1
+d 1
+map_Kd #white
+
+newmtl m_8c021667-1a4b-7434-0558-a4c05a126690
+Ka 1 1 1
+Kd 1 1 1
+d 1
+map_Kd #ice
+
+newmtl m_22d75a28-61a8-de11-cda2-99bdf9334837
+Ka 1 1 1
+Kd 1 1 1
+d 1
+map_Kd #edge
+
+newmtl m_67bc99f8-0408-9da8-ad43-ef53c77a4c88
+Ka 1 1 1
+Kd 1 1 1
+d 1
+map_Kd #heart
+
+newmtl m_d0614810-c367-c8f3-f7b6-fbe5c080f5e5
+Ka 1 1 1
+Kd 1 1 1
+d 1
+map_Kd #crown_pearl

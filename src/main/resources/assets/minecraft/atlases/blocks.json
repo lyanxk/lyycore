@@ -1,0 +1,9 @@
+{
+  "sources": [
+    {
+      "type": "directory",
+      "source": "crystal_sanctuary",
+      "prefix": "crystal_sanctuary/"
+    }
+  ]
+}

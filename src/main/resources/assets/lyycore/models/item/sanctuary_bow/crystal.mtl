@@ -1,0 +1,179 @@
+newmtl m_080ee9dc-9255-30ff-dc0b-6eaa199db579
+Ka 1 1 1
+Kd 1 1 1
+d 1
+map_Kd #crystal_dark
+
+newmtl m_5387b85b-44cb-f6d4-c60e-44e9ee6e1078
+Ka 1 1 1
+Kd 1 1 1
+d 1
+map_Kd #crystal_darklight
+
+newmtl m_bb49da16-49ff-b6e0-f156-c167ee10cbd7
+Ka 1 1 1
+Kd 1 1 1
+d 1
+map_Kd #crystal_darkedge
+
+newmtl m_3a8e2f7d-ea6d-8c6d-da7a-42c9474c6221
+Ka 1 1 1
+Kd 1 1 1
+d 1
+map_Kd #crystal_purple
+
+newmtl m_6d7638c8-cdb2-d8dd-1859-852f1284e131
+Ka 1 1 1
+Kd 1 1 1
+d 1
+map_Kd #crystal_purpledark
+
+newmtl m_5a80c273-eb09-886b-1098-f716b8f46d45
+Ka 1 1 1
+Kd 1 1 1
+d 1
+map_Kd #crystal_purplelight
+
+newmtl m_4402f4f1-509d-7df0-5d98-8a7f9f96ab4b
+Ka 1 1 1
+Kd 1 1 1
+d 1
+map_Kd #crystal_violet
+
+newmtl m_8f5bd93f-f60f-3caa-3468-bf2e13ad3dd9
+Ka 1 1 1
+Kd 1 1 1
+d 1
+map_Kd #crystal_lilac
+
+newmtl m_e6ef0a03-488f-eff3-b1b1-291952aec02e
+Ka 1 1 1
+Kd 1 1 1
+d 1
+map_Kd #crystal_pink
+
+newmtl m_1183088b-b96c-de7e-6696-fb175d0c099f
+Ka 1 1 1
+Kd 1 1 1
+d 1
+map_Kd #crystal_ivory
+
+newmtl m_32e87dac-5435-fab4-6cf1-420b9e4676ef
+Ka 1 1 1
+Kd 1 1 1
+d 1
+map_Kd #crystal_ivoryshade
+
+newmtl m_9f61f14f-f99f-65bd-6631-fa93930c0039
+Ka 1 1 1
+Kd 1 1 1
+d 1
+map_Kd #crystal_white
+
+newmtl m_c009842a-39f8-2bfd-e238-c7afd6d47059
+Ka 1 1 1
+Kd 1 1 1
+d 1
+map_Kd #crystal_whiteshade
+
+newmtl m_3c0c83a5-dd66-ba53-aa0a-18f3a34add47
+Ka 1 1 1
+Kd 1 1 1
+d 1
+map_Kd #crystal_teal
+
+newmtl m_5b60e6a0-d03f-e67b-2036-a13bfdf88c71
+Ka 1 1 1
+Kd 1 1 1
+d 1
+map_Kd #crystal_tealdark
+
+newmtl m_53a1abe8-55fe-a267-074b-01fb07afd2aa
+Ka 1 1 1
+Kd 1 1 1
+d 1
+map_Kd #crystal_ice
+
+newmtl m_180e4c1e-35c6-bf0a-5213-06f801517497
+Ka 1 1 1
+Kd 1 1 1
+d 1
+map_Kd #crystal_silver
+
+newmtl m_75ba1e50-8c0b-efec-64f4-409309ab5f4f
+Ka 1 1 1
+Kd 1 1 1
+d 1
+map_Kd #crystal_ink
+
+newmtl m_02d3d137-b777-30d3-53b4-2fc2681951b5
+Ka 1 1 1
+Kd 1 1 1
+d 1
+map_Kd #facet_violet
+
+newmtl m_6cde6dd6-f172-9ed2-0464-e33cb607ae7b
+Ka 1 1 1
+Kd 1 1 1
+d 1
+map_Kd #facet_amethyst
+
+newmtl m_ac195a37-6545-e876-4366-c51456c48e7c
+Ka 1 1 1
+Kd 1 1 1
+d 1
+map_Kd #facet_lilac
+
+newmtl m_02f26ee7-4bbe-98b2-0ee8-aef8e4216949
+Ka 1 1 1
+Kd 1 1 1
+d 1
+map_Kd #facet_pink
+
+newmtl m_c310b6f3-d1ea-a699-c407-f15b089b0a29
+Ka 1 1 1
+Kd 1 1 1
+d 1
+map_Kd #facet_pearl
+
+newmtl m_03f02f37-124b-6dbc-2e3e-1f994da87134
+Ka 1 1 1
+Kd 1 1 1
+d 1
+map_Kd #facet_white
+
+newmtl m_393f5309-9511-d38e-f61a-e7e8e96d5159
+Ka 1 1 1
+Kd 1 1 1
+d 1
+map_Kd #facet_rose
+
+newmtl m_47a218fd-90f0-edec-b43d-ff5ba08c47bd
+Ka 1 1 1
+Kd 1 1 1
+d 1
+map_Kd #sonnet_crystal_0
+
+newmtl m_d89f6d49-1ba9-4e35-4de1-ec432d389eb5
+Ka 1 1 1
+Kd 1 1 1
+d 1
+map_Kd #sonnet_crystal_1
+
+newmtl m_b66f513c-6860-9328-b711-e3298ec3a5f0
+Ka 1 1 1
+Kd 1 1 1
+d 1
+map_Kd #sonnet_crystal_2
+
+newmtl m_19d3361d-6d52-e33e-f0ec-3b7eeb9e9ed5
+Ka 1 1 1
+Kd 1 1 1
+d 1
+map_Kd #sonnet_crystal_3
+
+newmtl m_26e94f31-c48a-0205-0dc3-ad9158169127
+Ka 1 1 1
+Kd 1 1 1
+d 1
+map_Kd #sonnet_crystal_4

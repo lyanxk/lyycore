@@ -6,6 +6,8 @@ public class LyyRegistries {
     public static void registerAll(IEventBus bus) {
         LyyBlocks.BLOCKS.register(bus);
         LyyItems.ITEMS.register(bus);
+        LyyEntities.ENTITIES.register(bus);
+        LyyEffects.EFFECTS.register(bus);
         LyyBlockEntities.BLOCK_ENTITIES.register(bus);
         LyyMenus.MENUS.register(bus);
         LyyRecipes.RECIPE_TYPES.register(bus);

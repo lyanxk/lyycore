@@ -1,6 +1,7 @@
 package org.lyy.lyycore.registry;
 
 import net.minecraft.world.item.BlockItem;
+import org.lyy.lyycore.content.item.SonnetBowItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 import net.neoforged.neoforge.registries.DeferredItem;
@@ -12,6 +13,10 @@ public class LyyItems {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(LyyCore.MODID);
 
     // Custom items
+    public static final DeferredItem<SonnetBowItem> WHISPER_OF_THE_PAST =
+            ITEMS.registerItem("whisper_of_the_past", SonnetBowItem::new,
+                    new Item.Properties().stacksTo(1).rarity(Rarity.EPIC));
+
     public static final DeferredItem<Item> IMAGINARY_DISASSEMBLER =
             ITEMS.registerItem("imaginary_disassembler", ImaginaryDisassemblerItem::new,
                     new Item.Properties().stacksTo(1).rarity(Rarity.RARE).fireResistant());

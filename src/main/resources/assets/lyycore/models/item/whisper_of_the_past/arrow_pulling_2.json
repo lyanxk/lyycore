@@ -1,0 +1,593 @@
+{
+  "loader": "lyycore:crystal_arrow",
+  "ambientocclusion": false,
+  "gui_light": "front",
+  "textures": {
+    "sonnet_dark": "lyycore:item/whisper_of_the_past/sonnet_dark",
+    "sonnet_darklight": "lyycore:item/whisper_of_the_past/sonnet_darklight",
+    "sonnet_darkedge": "lyycore:item/whisper_of_the_past/sonnet_darkedge",
+    "sonnet_purple": "lyycore:item/whisper_of_the_past/sonnet_purple",
+    "sonnet_purpledark": "lyycore:item/whisper_of_the_past/sonnet_purpledark",
+    "sonnet_purplelight": "lyycore:item/whisper_of_the_past/sonnet_purplelight",
+    "sonnet_violet": "lyycore:item/whisper_of_the_past/sonnet_violet",
+    "sonnet_lilac": "lyycore:item/whisper_of_the_past/sonnet_lilac",
+    "sonnet_pink": "lyycore:item/whisper_of_the_past/sonnet_pink",
+    "sonnet_ivory": "lyycore:item/whisper_of_the_past/sonnet_ivory",
+    "sonnet_ivoryshade": "lyycore:item/whisper_of_the_past/sonnet_ivoryshade",
+    "sonnet_white": "lyycore:item/whisper_of_the_past/sonnet_white",
+    "sonnet_whiteshade": "lyycore:item/whisper_of_the_past/sonnet_whiteshade",
+    "sonnet_teal": "lyycore:item/whisper_of_the_past/sonnet_teal",
+    "sonnet_tealdark": "lyycore:item/whisper_of_the_past/sonnet_tealdark",
+    "sonnet_ice": "lyycore:item/whisper_of_the_past/sonnet_ice",
+    "sonnet_silver": "lyycore:item/whisper_of_the_past/sonnet_silver",
+    "sonnet_ink": "lyycore:item/whisper_of_the_past/sonnet_ink",
+    "sonnet_crystal_0": "lyycore:item/whisper_of_the_past/sonnet_crystal_0",
+    "sonnet_crystal_1": "lyycore:item/whisper_of_the_past/sonnet_crystal_1",
+    "sonnet_crystal_2": "lyycore:item/whisper_of_the_past/sonnet_crystal_2",
+    "sonnet_crystal_3": "lyycore:item/whisper_of_the_past/sonnet_crystal_3",
+    "sonnet_crystal_4": "lyycore:item/whisper_of_the_past/sonnet_crystal_4",
+    "particle": "lyycore:item/whisper_of_the_past/sonnet_crystal_0"
+  },
+  "faces": [
+    {
+      "vertices": [
+        [
+          11.5272475,
+          4.37883988,
+          8.01074219
+        ],
+        [
+          11.54100068,
+          4.39259307,
+          8.0576985
+        ],
+        [
+          4.63566102,
+          11.29793273,
+          8.0576985
+        ],
+        [
+          4.62190784,
+          11.28417954,
+          8.01074219
+        ]
+      ],
+      "texture": "sonnet_crystal_1"
+    },
+    {
+      "vertices": [
+        [
+          11.54100068,
+          4.39259307,
+          8.0576985
+        ],
+        [
+          11.57420381,
+          4.42579619,
+          8.07714844
+        ],
+        [
+          4.66886415,
+          11.33113585,
+          8.07714844
+        ],
+        [
+          4.63566102,
+          11.29793273,
+          8.0576985
+        ]
+      ],
+      "texture": "sonnet_crystal_3"
+    },
+    {
+      "vertices": [
+        [
+          11.57420381,
+          4.42579619,
+          8.07714844
+        ],
+        [
+          11.60740693,
+          4.45899932,
+          8.0576985
+        ],
+        [
+          4.70206727,
+          11.36433898,
+          8.0576985
+        ],
+        [
+          4.66886415,
+          11.33113585,
+          8.07714844
+        ]
+      ],
+      "texture": "sonnet_crystal_0"
+    },
+    {
+      "vertices": [
+        [
+          11.60740693,
+          4.45899932,
+          8.0576985
+        ],
+        [
+          11.62116012,
+          4.4727525,
+          8.01074219
+        ],
+        [
+          4.71582046,
+          11.37809216,
+          8.01074219
+        ],
+        [
+          4.70206727,
+          11.36433898,
+          8.0576985
+        ]
+      ],
+      "texture": "sonnet_crystal_2"
+    },
+    {
+      "vertices": [
+        [
+          11.62116012,
+          4.4727525,
+          8.01074219
+        ],
+        [
+          11.60740693,
+          4.45899932,
+          7.96378588
+        ],
+        [
+          4.70206727,
+          11.36433898,
+          7.96378588
+        ],
+        [
+          4.71582046,
+          11.37809216,
+          8.01074219
+        ]
+      ],
+      "texture": "sonnet_crystal_4"
+    },
+    {
+      "vertices": [
+        [
+          11.60740693,
+          4.45899932,
+          7.96378588
+        ],
+        [
+          11.57420381,
+          4.42579619,
+          7.94433594
+        ],
+        [
+          4.66886415,
+          11.33113585,
+          7.94433594
+        ],
+        [
+          4.70206727,
+          11.36433898,
+          7.96378588
+        ]
+      ],
+      "texture": "sonnet_crystal_0"
+    },
+    {
+      "vertices": [
+        [
+          11.57420381,
+          4.42579619,
+          7.94433594
+        ],
+        [
+          11.54100068,
+          4.39259307,
+          7.96378588
+        ],
+        [
+          4.63566102,
+          11.29793273,
+          7.96378588
+        ],
+        [
+          4.66886415,
+          11.33113585,
+          7.94433594
+        ]
+      ],
+      "texture": "sonnet_crystal_3"
+    },
+    {
+      "vertices": [
+        [
+          11.54100068,
+          4.39259307,
+          7.96378588
+        ],
+        [
+          11.5272475,
+          4.37883988,
+          8.01074219
+        ],
+        [
+          4.62190784,
+          11.28417954,
+          8.01074219
+        ],
+        [
+          4.63566102,
+          11.29793273,
+          7.96378588
+        ]
+      ],
+      "texture": "sonnet_crystal_1"
+    },
+    {
+      "vertices": [
+        [
+          11.57420381,
+          4.42579619,
+          8.07714844
+        ],
+        [
+          11.54100068,
+          4.39259307,
+          8.0576985
+        ],
+        [
+          11.5272475,
+          4.37883988,
+          8.01074219
+        ],
+        [
+          11.57420381,
+          4.42579619,
+          8.01074219
+        ]
+      ],
+      "texture": "sonnet_crystal_0"
+    },
+    {
+      "vertices": [
+        [
+          11.62116012,
+          4.4727525,
+          8.01074219
+        ],
+        [
+          11.60740693,
+          4.45899932,
+          8.0576985
+        ],
+        [
+          11.57420381,
+          4.42579619,
+          8.07714844
+        ],
+        [
+          11.57420381,
+          4.42579619,
+          8.01074219
+        ]
+      ],
+      "texture": "sonnet_crystal_0"
+    },
+    {
+      "vertices": [
+        [
+          11.57420381,
+          4.42579619,
+          7.94433594
+        ],
+        [
+          11.60740693,
+          4.45899932,
+          7.96378588
+        ],
+        [
+          11.62116012,
+          4.4727525,
+          8.01074219
+        ],
+        [
+          11.57420381,
+          4.42579619,
+          8.01074219
+        ]
+      ],
+      "texture": "sonnet_crystal_0"
+    },
+    {
+      "vertices": [
+        [
+          11.5272475,
+          4.37883988,
+          8.01074219
+        ],
+        [
+          11.54100068,
+          4.39259307,
+          7.96378588
+        ],
+        [
+          11.57420381,
+          4.42579619,
+          7.94433594
+        ],
+        [
+          11.57420381,
+          4.42579619,
+          8.01074219
+        ]
+      ],
+      "texture": "sonnet_crystal_0"
+    },
+    {
+      "vertices": [
+        [
+          4.53075735,
+          11.19302906,
+          8.01074219
+        ],
+        [
+          4.5712079,
+          11.2334796,
+          8.14884898
+        ],
+        [
+          3.84022339,
+          12.15977661,
+          8.01074219
+        ]
+      ],
+      "texture": "sonnet_crystal_1"
+    },
+    {
+      "vertices": [
+        [
+          4.5712079,
+          11.2334796,
+          8.14884898
+        ],
+        [
+          4.66886415,
+          11.33113585,
+          8.20605469
+        ],
+        [
+          3.84022339,
+          12.15977661,
+          8.01074219
+        ]
+      ],
+      "texture": "sonnet_crystal_3"
+    },
+    {
+      "vertices": [
+        [
+          4.66886415,
+          11.33113585,
+          8.20605469
+        ],
+        [
+          4.7665204,
+          11.4287921,
+          8.14884898
+        ],
+        [
+          3.84022339,
+          12.15977661,
+          8.01074219
+        ]
+      ],
+      "texture": "sonnet_crystal_0"
+    },
+    {
+      "vertices": [
+        [
+          4.7665204,
+          11.4287921,
+          8.14884898
+        ],
+        [
+          4.80697094,
+          11.46924265,
+          8.01074219
+        ],
+        [
+          3.84022339,
+          12.15977661,
+          8.01074219
+        ]
+      ],
+      "texture": "sonnet_crystal_2"
+    },
+    {
+      "vertices": [
+        [
+          4.80697094,
+          11.46924265,
+          8.01074219
+        ],
+        [
+          4.7665204,
+          11.4287921,
+          7.87263539
+        ],
+        [
+          3.84022339,
+          12.15977661,
+          8.01074219
+        ]
+      ],
+      "texture": "sonnet_crystal_4"
+    },
+    {
+      "vertices": [
+        [
+          4.7665204,
+          11.4287921,
+          7.87263539
+        ],
+        [
+          4.66886415,
+          11.33113585,
+          7.81542969
+        ],
+        [
+          3.84022339,
+          12.15977661,
+          8.01074219
+        ]
+      ],
+      "texture": "sonnet_crystal_0"
+    },
+    {
+      "vertices": [
+        [
+          4.66886415,
+          11.33113585,
+          7.81542969
+        ],
+        [
+          4.5712079,
+          11.2334796,
+          7.87263539
+        ],
+        [
+          3.84022339,
+          12.15977661,
+          8.01074219
+        ]
+      ],
+      "texture": "sonnet_crystal_3"
+    },
+    {
+      "vertices": [
+        [
+          4.5712079,
+          11.2334796,
+          7.87263539
+        ],
+        [
+          4.53075735,
+          11.19302906,
+          8.01074219
+        ],
+        [
+          3.84022339,
+          12.15977661,
+          8.01074219
+        ]
+      ],
+      "texture": "sonnet_crystal_1"
+    },
+    {
+      "vertices": [
+        [
+          4.66886415,
+          11.33113585,
+          8.20605469
+        ],
+        [
+          4.5712079,
+          11.2334796,
+          8.14884898
+        ],
+        [
+          4.53075735,
+          11.19302906,
+          8.01074219
+        ],
+        [
+          4.66886415,
+          11.33113585,
+          8.01074219
+        ]
+      ],
+      "texture": "sonnet_crystal_0"
+    },
+    {
+      "vertices": [
+        [
+          4.80697094,
+          11.46924265,
+          8.01074219
+        ],
+        [
+          4.7665204,
+          11.4287921,
+          8.14884898
+        ],
+        [
+          4.66886415,
+          11.33113585,
+          8.20605469
+        ],
+        [
+          4.66886415,
+          11.33113585,
+          8.01074219
+        ]
+      ],
+      "texture": "sonnet_crystal_0"
+    },
+    {
+      "vertices": [
+        [
+          4.66886415,
+          11.33113585,
+          7.81542969
+        ],
+        [
+          4.7665204,
+          11.4287921,
+          7.87263539
+        ],
+        [
+          4.80697094,
+          11.46924265,
+          8.01074219
+        ],
+        [
+          4.66886415,
+          11.33113585,
+          8.01074219
+        ]
+      ],
+      "texture": "sonnet_crystal_0"
+    },
+    {
+      "vertices": [
+        [
+          4.53075735,
+          11.19302906,
+          8.01074219
+        ],
+        [
+          4.5712079,
+          11.2334796,
+          7.87263539
+        ],
+        [
+          4.66886415,
+          11.33113585,
+          7.81542969
+        ],
+        [
+          4.66886415,
+          11.33113585,
+          8.01074219
+        ]
+      ],
+      "texture": "sonnet_crystal_0"
+    }
+  ]
+}

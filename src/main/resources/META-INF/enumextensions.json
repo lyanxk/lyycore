@@ -1,0 +1,13 @@
+{
+  "entries": [
+    {
+      "enum": "net/minecraft/client/model/HumanoidModel$ArmPose",
+      "name": "LYYCORE_CRYSTAL_BOW",
+      "constructor": "(ZLnet/neoforged/neoforge/client/IArmPoseTransformer;)V",
+      "parameters": {
+        "class": "org/lyy/lyycore/client/SonnetArmPoseParameters",
+        "field": "CRYSTAL_BOW"
+      }
+    }
+  ]
+}

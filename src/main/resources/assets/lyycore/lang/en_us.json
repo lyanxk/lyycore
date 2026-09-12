@@ -1,4 +1,7 @@
 {
+  "item.lyycore.whisper_of_the_past": "Whisper of the Past: Sonnet",
+  "entity.lyycore.sonnet_crystal_arrow": "Rose Crystal Arrow",
+  "entity.lyycore.sonnet_crystal_spectral_arrow": "Rose Crystal Spectral Arrow",
   "block.lyycore.imaginary_energy_cell": "Imaginary Energy Cell",
   "screen.lyycore.energy_cell.title": "Imaginary Energy Cell",
   "tooltip.lyycore.energy": "Energy: %s / %s FE",
@@ -21,5 +24,10 @@
   "item.lyycore.disassembler.mode.extreme": "Extreme",
   "item.lyycore.disassembler.mode.aoe3": "Area Mining",
   "item.lyycore.disassembler.mode.vein": "Vein Mining",
-  "message.lyycore.collector_range": "Collection range: %s×%s×%s"
+  "message.lyycore.collector_range": "Collection range: %s×%s×%s",
+  "key.lyycore.ultimate": "Ultimate",
+  "key.categories.lyycore": "LyyCore",
+  "effect.lyycore.crystallization": "Crystallization",
+  "entity.lyycore.sonnet_dome": "Sonnet Dome",
+  "entity.lyycore.sonnet_volley": "Sonnet Ricochet"
 }

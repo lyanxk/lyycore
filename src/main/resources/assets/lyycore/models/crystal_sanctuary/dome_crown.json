@@ -1,0 +1,27 @@
+{
+  "loader": "neoforge:obj",
+  "model": "lyycore:models/crystal_sanctuary/dome_crown.obj",
+  "mtl_override": "lyycore:models/crystal_sanctuary/dome_crown.mtl",
+  "automatic_culling": false,
+  "shade_quads": false,
+  "flip_v": true,
+  "emissive_ambient": true,
+  "ambientocclusion": false,
+  "render_type": "minecraft:cutout",
+  "textures": {
+    "particle": "lyycore:crystal_sanctuary/pink",
+    "wine": "lyycore:crystal_sanctuary/wine",
+    "plum": "lyycore:crystal_sanctuary/plum",
+    "orchid": "lyycore:crystal_sanctuary/orchid",
+    "violet": "lyycore:crystal_sanctuary/violet",
+    "lilac": "lyycore:crystal_sanctuary/lilac",
+    "pink": "lyycore:crystal_sanctuary/pink",
+    "rose": "lyycore:crystal_sanctuary/rose",
+    "pale": "lyycore:crystal_sanctuary/pale",
+    "white": "lyycore:crystal_sanctuary/white",
+    "ice": "lyycore:crystal_sanctuary/ice",
+    "edge": "lyycore:crystal_sanctuary/edge",
+    "heart": "lyycore:crystal_sanctuary/heart",
+    "crown_pearl": "lyycore:crystal_sanctuary/crown_pearl"
+  }
+}

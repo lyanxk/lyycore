@@ -1,0 +1,326 @@
+{
+  "loader": "neoforge:composite",
+  "ambientocclusion": false,
+  "gui_light": "front",
+  "display": {
+    "thirdperson_righthand": {
+      "rotation": [
+        -80,
+        260,
+        -40
+      ],
+      "translation": [
+        -1,
+        -2,
+        2.5
+      ],
+      "scale": [
+        1.8,
+        1.8,
+        1.8
+      ]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [
+        -80,
+        -280,
+        40
+      ],
+      "translation": [
+        -1,
+        -2,
+        2.5
+      ],
+      "scale": [
+        1.8,
+        1.8,
+        1.8
+      ]
+    },
+    "firstperson_righthand": {
+      "rotation": [
+        0,
+        -90,
+        25
+      ],
+      "translation": [
+        1.13,
+        3.2,
+        1.13
+      ],
+      "scale": [
+        1.36,
+        1.36,
+        1.36
+      ]
+    },
+    "firstperson_lefthand": {
+      "rotation": [
+        0,
+        90,
+        -25
+      ],
+      "translation": [
+        1.13,
+        3.2,
+        1.13
+      ],
+      "scale": [
+        1.36,
+        1.36,
+        1.36
+      ]
+    },
+    "gui": {
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "scale": [
+        0.84,
+        0.84,
+        0.84
+      ]
+    },
+    "ground": {
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "translation": [
+        0,
+        3,
+        0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    "fixed": {
+      "rotation": [
+        0,
+        180,
+        0
+      ],
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "scale": [
+        1.4,
+        1.4,
+        1.4
+      ]
+    },
+    "head": {
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "translation": [
+        0,
+        8,
+        0
+      ],
+      "scale": [
+        1.4,
+        1.4,
+        1.4
+      ]
+    }
+  },
+  "textures": {
+    "particle": "lyycore:item/whisper_of_the_past/sonnet_purple"
+  },
+  "children": {
+    "bow": {
+      "loader": "neoforge:obj",
+      "model": "lyycore:models/item/whisper_of_the_past/pulling_2.obj",
+      "mtl_override": "lyycore:models/item/whisper_of_the_past/sonnet.mtl",
+      "automatic_culling": false,
+      "shade_quads": true,
+      "flip_v": true,
+      "emissive_ambient": true,
+      "ambientocclusion": false,
+      "gui_light": "front",
+      "textures": {
+        "sonnet_dark": "lyycore:item/whisper_of_the_past/sonnet_dark",
+        "sonnet_darklight": "lyycore:item/whisper_of_the_past/sonnet_darklight",
+        "sonnet_darkedge": "lyycore:item/whisper_of_the_past/sonnet_darkedge",
+        "sonnet_purple": "lyycore:item/whisper_of_the_past/sonnet_purple",
+        "sonnet_purpledark": "lyycore:item/whisper_of_the_past/sonnet_purpledark",
+        "sonnet_purplelight": "lyycore:item/whisper_of_the_past/sonnet_purplelight",
+        "sonnet_violet": "lyycore:item/whisper_of_the_past/sonnet_violet",
+        "sonnet_lilac": "lyycore:item/whisper_of_the_past/sonnet_lilac",
+        "sonnet_pink": "lyycore:item/whisper_of_the_past/sonnet_pink",
+        "sonnet_ivory": "lyycore:item/whisper_of_the_past/sonnet_ivory",
+        "sonnet_ivoryshade": "lyycore:item/whisper_of_the_past/sonnet_ivoryshade",
+        "sonnet_white": "lyycore:item/whisper_of_the_past/sonnet_white",
+        "sonnet_whiteshade": "lyycore:item/whisper_of_the_past/sonnet_whiteshade",
+        "sonnet_teal": "lyycore:item/whisper_of_the_past/sonnet_teal",
+        "sonnet_tealdark": "lyycore:item/whisper_of_the_past/sonnet_tealdark",
+        "sonnet_ice": "lyycore:item/whisper_of_the_past/sonnet_ice",
+        "sonnet_silver": "lyycore:item/whisper_of_the_past/sonnet_silver",
+        "sonnet_ink": "lyycore:item/whisper_of_the_past/sonnet_ink",
+        "sonnet_crystal_0": "lyycore:item/whisper_of_the_past/sonnet_crystal_0",
+        "sonnet_crystal_1": "lyycore:item/whisper_of_the_past/sonnet_crystal_1",
+        "sonnet_crystal_2": "lyycore:item/whisper_of_the_past/sonnet_crystal_2",
+        "sonnet_crystal_3": "lyycore:item/whisper_of_the_past/sonnet_crystal_3",
+        "sonnet_crystal_4": "lyycore:item/whisper_of_the_past/sonnet_crystal_4",
+        "particle": "lyycore:item/whisper_of_the_past/sonnet_purple"
+      },
+      "display": {
+        "thirdperson_righthand": {
+          "rotation": [
+            -80,
+            260,
+            -40
+          ],
+          "translation": [
+            -1,
+            -2,
+            2.5
+          ],
+          "scale": [
+            1.8,
+            1.8,
+            1.8
+          ]
+        },
+        "thirdperson_lefthand": {
+          "rotation": [
+            -80,
+            -280,
+            40
+          ],
+          "translation": [
+            -1,
+            -2,
+            2.5
+          ],
+          "scale": [
+            1.8,
+            1.8,
+            1.8
+          ]
+        },
+        "firstperson_righthand": {
+          "rotation": [
+            0,
+            -90,
+            25
+          ],
+          "translation": [
+            1.13,
+            3.2,
+            1.13
+          ],
+          "scale": [
+            1.36,
+            1.36,
+            1.36
+          ]
+        },
+        "firstperson_lefthand": {
+          "rotation": [
+            0,
+            90,
+            -25
+          ],
+          "translation": [
+            1.13,
+            3.2,
+            1.13
+          ],
+          "scale": [
+            1.36,
+            1.36,
+            1.36
+          ]
+        },
+        "gui": {
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "translation": [
+            0,
+            0,
+            0
+          ],
+          "scale": [
+            0.84,
+            0.84,
+            0.84
+          ]
+        },
+        "ground": {
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "translation": [
+            0,
+            3,
+            0
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "fixed": {
+          "rotation": [
+            0,
+            180,
+            0
+          ],
+          "translation": [
+            0,
+            0,
+            0
+          ],
+          "scale": [
+            1.4,
+            1.4,
+            1.4
+          ]
+        },
+        "head": {
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "translation": [
+            0,
+            8,
+            0
+          ],
+          "scale": [
+            1.4,
+            1.4,
+            1.4
+          ]
+        }
+      }
+    },
+    "arrow": {
+      "parent": "lyycore:item/whisper_of_the_past/arrow_pulling_2"
+    }
+  }
+}

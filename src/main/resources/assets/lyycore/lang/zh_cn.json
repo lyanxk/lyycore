@@ -1,4 +1,7 @@
 {
+  "item.lyycore.whisper_of_the_past": "往世的飞花·爱之诗",
+  "entity.lyycore.sonnet_crystal_arrow": "浅粉水晶箭",
+  "entity.lyycore.sonnet_crystal_spectral_arrow": "浅粉水晶光灵箭",
   "block.lyycore.imaginary_energy_cell": "虚数能量单元",
   "screen.lyycore.energy_cell.title": "虚数能量单元",
   "tooltip.lyycore.energy": "能量：%s / %s FE",
@@ -21,5 +24,10 @@
   "item.lyycore.disassembler.mode.extreme": "极限",
   "item.lyycore.disassembler.mode.aoe3": "范围采掘",
   "item.lyycore.disassembler.mode.vein": "连锁采掘",
-  "message.lyycore.collector_range": "收集范围：%s×%s×%s"
+  "message.lyycore.collector_range": "收集范围：%s×%s×%s",
+  "key.lyycore.ultimate": "终结技",
+  "key.categories.lyycore": "LyyCore",
+  "effect.lyycore.crystallization": "结晶",
+  "entity.lyycore.sonnet_dome": "飞花穹顶",
+  "entity.lyycore.sonnet_volley": "飞花弹射箭"
 }

@@ -1,0 +1,21 @@
+{
+  "loader": "neoforge:composite",
+  "ambientocclusion": false,
+  "children": {
+    "shell": {
+      "parent": "lyycore:crystal_sanctuary/dome_shell"
+    },
+    "fractures": {
+      "parent": "lyycore:crystal_sanctuary/dome_fractures"
+    },
+    "crown": {
+      "parent": "lyycore:crystal_sanctuary/dome_crown"
+    },
+    "trails": {
+      "parent": "lyycore:crystal_sanctuary/dome_trails"
+    }
+  },
+  "textures": {
+    "particle": "lyycore:crystal_sanctuary/pink"
+  }
+}

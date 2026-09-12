@@ -27,6 +27,34 @@ public final class LyyGameTests {
     private static final BlockPos TEST_POS = new BlockPos(1, 1, 1);
 
     @GameTest(template = "empty", timeoutTicks = 40)
+    public static void sonnetArrowsKeepAmmoEffectsButRejectEnchantmentsAndPickup(GameTestHelper helper) {
+        var bow = LyyItems.WHISPER_OF_THE_PAST.get();
+        var weapon = new ItemStack(bow);
+        var tipped = net.minecraft.world.item.alchemy.PotionContents.createItemStack(
+                Items.TIPPED_ARROW, net.minecraft.world.item.alchemy.Potions.POISON);
+        for (var ammo : java.util.List.of(new ItemStack(Items.ARROW), tipped, new ItemStack(Items.SPECTRAL_ARROW))) {
+            net.minecraft.world.entity.projectile.AbstractArrow original = ammo.is(Items.SPECTRAL_ARROW)
+                    ? new net.minecraft.world.entity.projectile.SpectralArrow(helper.getLevel(), 1, 2, 3, ammo, weapon)
+                    : new net.minecraft.world.entity.projectile.Arrow(helper.getLevel(), 1, 2, 3, ammo, weapon);
+            original.setCritArrow(true);
+            original.setBaseDamage(7.5);
+            var crystal = bow.customArrow(original, ammo, weapon);
+            helper.assertTrue(ammo.is(Items.SPECTRAL_ARROW)
+                            ? crystal instanceof org.lyy.lyycore.content.entity.SonnetArrow.Spectral
+                            : crystal instanceof org.lyy.lyycore.content.entity.SonnetArrow,
+                    "Partial shots retain their original arrow effect family");
+            var before = original.saveWithoutId(new net.minecraft.nbt.CompoundTag());
+            var after = crystal.saveWithoutId(new net.minecraft.nbt.CompoundTag());
+            helper.assertTrue(before.getCompound("item").equals(after.getCompound("item")), "Ammo potion data must survive");
+            helper.assertTrue(!crystal.isCritArrow() && crystal.getBaseDamage() == 2 && crystal.getPierceLevel() == 0,
+                    "Weapon enchantments and critical bonuses must not leak into shots");
+            helper.assertTrue(crystal.pickup == net.minecraft.world.entity.projectile.AbstractArrow.Pickup.DISALLOWED, "No arrows are collectible");
+        }
+        helper.assertTrue(!weapon.isDamageableItem() && !bow.isEnchantable(weapon), "Bow must have neither durability nor enchanting");
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty", timeoutTicks = 40)
     public static void imaginaryEnergySaturatesWithoutOverflow(GameTestHelper helper) {
         ImaginaryEnergyStorage storage = new ImaginaryEnergyStorage(1_000, 1_000, 1_000);
         storage.setImaginaryEnergy(Integer.MAX_VALUE - 5);
