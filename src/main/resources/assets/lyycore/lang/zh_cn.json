@@ -143,5 +143,11 @@
   "block.lyycore.miniature_nether_factory": "微缩下界基础采集工厂",
   "tooltip.lyycore.description.miniature_nether_factory": "每次消耗 100 IE 产出 4 个，需外部供能，向上下相邻容器输出。",
   "screen.lyycore.factory.production": "每批 4 个 / 100 IE · 需外部供能",
-  "jei.lyycore.factory.cost": "耗能：%s IE / %s 个"
+  "jei.lyycore.factory.cost": "耗能：%s IE / %s 个",
+  "item.lyycore.imaginary_grapple": "虚数钩爪",
+  "entity.lyycore.grapple_hook": "虚数钩爪",
+  "tooltip.lyycore.grapple.use": "右键出钩，最远 20 格；无限耐久，无冷却。",
+  "tooltip.lyycore.grapple.steer": "抓地后 0.2 秒内可左右调整方向；跳跃一次，以钩点为圆心摆动。",
+  "tooltip.lyycore.grapple.retract": "落地自动收钩；飞行期间无法再次出钩。",
+  "tooltip.lyycore.grapple.entities": "可移动实体会被拉向你；不可移动实体作为牵引锚点。"
 }

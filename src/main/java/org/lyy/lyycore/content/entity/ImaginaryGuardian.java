@@ -10,6 +10,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -21,12 +22,15 @@ import java.util.UUID;
 
 public final class ImaginaryGuardian extends Monster {
     public static final int SUMMON_TICKS = 220;
+    private static final int ATTACK_INTERVAL = 80;
+    private static final int BARRAGE_INTERVAL = 40;
     private static final EntityDataAccessor<Integer> SUMMONING = SynchedEntityData.defineId(ImaginaryGuardian.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> SPINNING = SynchedEntityData.defineId(ImaginaryGuardian.class, EntityDataSerializers.INT);
     private final ServerBossEvent bossBar = new ServerBossEvent(getDisplayName(), BossEvent.BossBarColor.PINK, BossEvent.BossBarOverlay.PROGRESS);
     private Vec3 anchor;
     private UUID summoner;
     private int attackTicks;
+    private int barrageTicks;
 
     public ImaginaryGuardian(EntityType<? extends ImaginaryGuardian> type, Level level) {
         super(type, level);
@@ -81,18 +85,25 @@ public final class ImaginaryGuardian extends Monster {
         if (target != null && (!target.isAlive() || distanceToSqr(target) > 400
                 || target instanceof Player player && (player.isCreative() || player.isSpectator()))) setTarget(null);
         if (getTarget() == null) {
-            setTarget(level().getEntitiesOfClass(Player.class, getBoundingBox().inflate(6),
-                    player -> player.isAlive() && !player.isCreative() && !player.isSpectator() && distanceToSqr(player) <= 36)
+            setTarget(level().getEntitiesOfClass(LivingEntity.class, getBoundingBox().inflate(6),
+                    entity -> (entity instanceof Player || entity instanceof Enemy)
+                            && !(entity instanceof ImaginaryGuardian) && entity.isAlive()
+                            && canAttack(entity) && !isAlliedTo(entity) && distanceToSqr(entity) <= 36)
                     .stream().min(Comparator.comparingDouble(this::distanceToSqr)).orElse(null));
         }
         target = getTarget();
         if (target == null) {
             attackTicks = 0;
+            barrageTicks = 0;
             if (tickCount % 20 == 0) heal(10);
             return;
         }
         getLookControl().setLookAt(target, 360, 360);
-        if (++attackTicks >= 40) {
+        if (++barrageTicks >= BARRAGE_INTERVAL) {
+            barrageTicks = 0;
+            fireRadialBarrage();
+        }
+        if (++attackTicks >= ATTACK_INTERVAL) {
             attackTicks = 0;
             fireVolley(target);
             if (getHealth() < getMaxHealth() / 2) castSpikes(target.position());
@@ -116,9 +127,25 @@ public final class ImaginaryGuardian extends Monster {
             if (crystal == null) continue;
             double angle = i * Math.PI / 2;
             crystal.setOwner(this);
+            crystal.setHomingTarget(target);
             crystal.setPos(getX() + Math.cos(angle), getY() + 1.8 + Math.sin(angle) * 0.6, getZ());
             Vec3 aim = target.getEyePosition().subtract(crystal.position());
-            crystal.shoot(aim.x, aim.y, aim.z, 0.7F, 0);
+            crystal.shoot(aim.x, aim.y, aim.z, 0.35F, 0);
+            level().addFreshEntity(crystal);
+        }
+    }
+    private void fireRadialBarrage() {
+        playSound(SoundEvents.AMETHYST_CLUSTER_PLACE, 2, 1.2F);
+        for (int i = 0; i < 8; i++) {
+            var crystal = LyyEntities.GUARDIAN_CRYSTAL.get().create(level());
+            if (crystal == null) continue;
+            double angle = i * Math.PI / 4;
+            double x = Math.cos(angle);
+            double z = Math.sin(angle);
+            crystal.setOwner(this);
+            crystal.setLifetimeTicks(40);
+            crystal.setPos(getX() + x, getY() + 1.8, getZ() + z);
+            crystal.shoot(x, 0, z, 0.35F, 0);
             level().addFreshEntity(crystal);
         }
     }
@@ -150,13 +177,15 @@ public final class ImaginaryGuardian extends Monster {
         super.addAdditionalSaveData(tag);
         tag.putInt("Summoning", summonTicks());
         tag.putInt("AttackTicks", attackTicks);
+        tag.putInt("BarrageTicks", barrageTicks);
         if (summoner != null) tag.putUUID("Summoner", summoner);
     }
     @Override public void readAdditionalSaveData(CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         anchor = position();
         entityData.set(SUMMONING, Math.clamp(tag.getInt("Summoning"), 0, SUMMON_TICKS));
-        attackTicks = Math.clamp(tag.getInt("AttackTicks"), 0, 39);
+        attackTicks = Math.clamp(tag.getInt("AttackTicks"), 0, ATTACK_INTERVAL - 1);
+        barrageTicks = Math.clamp(tag.getInt("BarrageTicks"), 0, BARRAGE_INTERVAL - 1);
         summoner = tag.hasUUID("Summoner") ? tag.getUUID("Summoner") : null;
     }
 }

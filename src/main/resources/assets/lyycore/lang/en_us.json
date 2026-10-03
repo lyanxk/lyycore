@@ -143,5 +143,11 @@
   "block.lyycore.miniature_nether_factory": "Miniature Nether Gathering Factory",
   "tooltip.lyycore.description.miniature_nether_factory": "Produces 4 items for 100 IE per batch. Requires external power; exports above and below.",
   "screen.lyycore.factory.production": "4 items / 100 IE per batch · external power",
-  "jei.lyycore.factory.cost": "Cost: %s IE / %s items"
+  "jei.lyycore.factory.cost": "Cost: %s IE / %s items",
+  "item.lyycore.imaginary_grapple": "Imaginary Grapple",
+  "entity.lyycore.grapple_hook": "Imaginary Grapple Hook",
+  "tooltip.lyycore.grapple.use": "Right-click to fire up to 20 blocks. Unbreakable; no cooldown.",
+  "tooltip.lyycore.grapple.steer": "Steer within 0.2 seconds after attachment; jump once to swing around the hook point.",
+  "tooltip.lyycore.grapple.retract": "Retracts on landing. Cannot fire again during a grapple flight.",
+  "tooltip.lyycore.grapple.entities": "Pulls movable entities to you; immovable entities act as anchors."
 }

@@ -1,0 +1,36 @@
+{
+  "type": "lyycore:imaginary_crafting",
+  "ingredients": [
+    {
+      "item": "minecraft:chain"
+    },
+    {
+      "item": "lyycore:imaginary_alloy_ingot"
+    },
+    {
+      "item": "lyycore:imaginary_alloy_ingot"
+    },
+    {
+      "item": "lyycore:imaginary_alloy_ingot"
+    },
+    {
+      "item": "lyycore:imaginary_alloy_ingot"
+    },
+    {
+      "item": "lyycore:imaginary_alloy_ingot"
+    },
+    {
+      "item": "lyycore:imaginary_alloy_ingot"
+    },
+    {
+      "item": "lyycore:imaginary_alloy_ingot"
+    },
+    {
+      "item": "lyycore:imaginary_alloy_ingot"
+    }
+  ],
+  "result": {
+    "id": "lyycore:imaginary_grapple",
+    "count": 1
+  }
+}

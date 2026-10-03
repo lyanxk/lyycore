@@ -7,6 +7,7 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.lyy.lyycore.LyyCore;
 import org.lyy.lyycore.content.entity.GuardianCrystal;
+import org.lyy.lyycore.content.entity.GrappleHook;
 import org.lyy.lyycore.content.entity.GuardianSpikes;
 import org.lyy.lyycore.content.entity.ImaginaryGuardian;
 import org.lyy.lyycore.content.entity.SonnetArrow;
@@ -16,6 +17,11 @@ import org.lyy.lyycore.content.entity.SonnetVolley;
 public class LyyEntities {
     public static final DeferredRegister<EntityType<?>> ENTITIES =
             DeferredRegister.create(Registries.ENTITY_TYPE, LyyCore.MODID);
+
+    public static final DeferredHolder<EntityType<?>, EntityType<GrappleHook>> GRAPPLE_HOOK =
+            ENTITIES.register("grapple_hook", () -> EntityType.Builder.<GrappleHook>of(
+                    GrappleHook::new, MobCategory.MISC).sized(0.25F, 0.25F)
+                    .clientTrackingRange(16).updateInterval(1).noSave().build("lyycore:grapple_hook"));
 
     public static final DeferredHolder<EntityType<?>, EntityType<ImaginaryGuardian>> IMAGINARY_GUARDIAN =
             ENTITIES.register("imaginary_guardian", () -> EntityType.Builder.<ImaginaryGuardian>of(

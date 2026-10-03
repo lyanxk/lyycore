@@ -9,6 +9,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import org.lyy.lyycore.LyyCore;
 import org.lyy.lyycore.content.ResourceFrameKind;
 import org.lyy.lyycore.content.item.ImaginaryDisassemblerItem;
+import org.lyy.lyycore.content.item.ImaginaryGrappleItem;
 import org.lyy.lyycore.content.item.SonnetBowItem;
 import java.util.EnumMap;
 import java.util.Map;
@@ -30,6 +31,10 @@ public class LyyItems {
             RESOURCE_FACTORY_ITEMS.put(kind, ITEMS.registerSimpleBlockItem(LyyBlocks.RESOURCE_FACTORIES.get(kind)));
     }
     public static final DeferredItem<BlockItem> MINIATURE_CRYSTAL_FACTORY = ITEMS.registerSimpleBlockItem(LyyBlocks.MINIATURE_CRYSTAL_FACTORY);
+
+    public static final DeferredItem<ImaginaryGrappleItem> IMAGINARY_GRAPPLE =
+            ITEMS.registerItem("imaginary_grapple", ImaginaryGrappleItem::new,
+                    new Item.Properties().stacksTo(1).rarity(Rarity.RARE));
 
     // Custom items
     public static final DeferredItem<SonnetBowItem> WHISPER_OF_THE_PAST =

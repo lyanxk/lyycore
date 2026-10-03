@@ -27,6 +27,10 @@ public class ClientSetup {
 
     @SubscribeEvent
     public static void addCrystalBowGlow(ModelEvent.ModifyBakingResult event) {
+        var grapple = new net.minecraft.client.resources.model.ModelResourceLocation(
+                LyyItems.IMAGINARY_GRAPPLE.getId(), "inventory");
+        var empty = event.getModels().get(GrappleRenderer.EMPTY_HELD_MODEL);
+        if (empty != null) event.getModels().computeIfPresent(grapple, (id, model) -> GrappleHeldModel.wrap(model, empty));
         var itemModel = new net.minecraft.client.resources.model.ModelResourceLocation(
                 ResourceLocation.fromNamespaceAndPath(LyyCore.MODID, "whisper_of_the_past"), "inventory");
         event.getModels().computeIfPresent(itemModel, (id, model) -> SonnetCrystalGlowModel.wrapItem(model));
@@ -39,6 +43,8 @@ public class ClientSetup {
 
     @SubscribeEvent
     public static void registerArrowModel(ModelEvent.RegisterAdditional event) {
+        event.register(GrappleRenderer.EMPTY_HELD_MODEL);
+        for (var model : GrappleRenderer.MODELS) event.register(model);
         event.register(SonnetArrowRenderer.MODEL);
         event.register(SonnetVolleyRenderer.MODEL);
         for (var model : SonnetDomeRenderer.MODELS) event.register(model);
@@ -46,6 +52,7 @@ public class ClientSetup {
 
     @SubscribeEvent
     public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
+        event.registerEntityRenderer(LyyEntities.GRAPPLE_HOOK.get(), GrappleRenderer::new);
         event.registerEntityRenderer(LyyEntities.IMAGINARY_GUARDIAN.get(), context -> new GuardianRenderer<>(context, "boss"));
         event.registerEntityRenderer(LyyEntities.GUARDIAN_CRYSTAL.get(), context -> new GuardianRenderer<>(context, "projectile"));
         event.registerEntityRenderer(LyyEntities.GUARDIAN_SPIKES.get(), context -> new GuardianRenderer<>(context, "spikes"));

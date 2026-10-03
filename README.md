@@ -19,6 +19,7 @@ Minecraft 1.21.1 / NeoForge utility mod for modpack progression.
   (26-neighbor connections, up to 64 blocks including the starting block;
   common stone, dirt and sand terrain is excluded from vein mining through
   the `lyycore:disassembler_vein_excluded` block tag)
+- Imaginary Grapple with a 20-block hook, contact input, gradual traction and automatic landing retraction
 - Optional JEI integration
 
 Natural generation, internal transfers, machine storage and recipe costs use IE.
@@ -58,11 +59,18 @@ guardian prevent another summon without consuming the ingredient.
 
 The stationary guardian has 300 health and 5 armor. Its 11-second invulnerable
 summoning restores its health, then spins its orbiting crystals and repels nearby
-players. It acquires players within 6 blocks, retaliates against attackers, and
+players. It acquires players and other hostile mobs within 6 blocks (excluding
+other Imaginary Guardians and allies), retaliates against attackers, and
 disengages beyond 20 blocks. Out of combat it heals 10 health per second. Every
-two seconds it fires four destructible, shield-blockable crystals for 10 physical
-damage each; blocking disables the shield. Below half health it also sends a
-delayed ground-spike wave toward the target's recorded position. Death of its
+four seconds it fires four destructible, shield-blockable crystals for 10 physical
+damage each; blocking disables the shield. Crystals travel at 0.35 blocks per tick
+and home toward their launch target for the first 2 seconds, then continue straight
+for the remainder of their 5-second lifetime. Independently, every two seconds in
+combat it fires a horizontal eight-direction barrage, with one non-homing crystal
+per direction at 45-degree intervals. These crystals use the same speed and damage
+and disappear after two seconds of flight (or earlier on impact). Below half health
+it also sends a delayed ground-spike wave every four seconds toward the target's
+recorded position. Death of its
 summoner or current player target dismisses it. Defeating it drops one pure crystal.
 
 Craft the `imaginary_crafting_table` using `APA / IWI / ADA`: alloy ingots (A),
@@ -236,3 +244,58 @@ All frames and miniature production machines share one output routine: export
 upwards first, then downwards, and retry blocked output once per second even when
 out of energy. The upgraded machines have separate JEI categories showing the
 four-item batch and its cost, using the original production recipes.
+
+## Imaginary Grapple
+
+Right-click with `lyycore:imaginary_grapple` to fire a hook up to 20 blocks. The
+held grapple disappears in first- and third-person views while its hook is out;
+inventory icons remain visible. Solid blocks and immovable entities act as
+anchors. Movable entities (including dropped items) are pulled toward the player
+instead, with retraction when they arrive. Fully knockback-resistant or
+non-pushable living entities, such as Imaginary Guardians, cannot be reeled in.
+Entity detection stops at the first blocking surface.
+
+Player traction runs locally just before vanilla player travel and starts from
+actual velocity, including the previous tick's gravity, drag and collisions.
+Vanilla movement applies those effects once; the server synchronizes attachment,
+jump and release state instead of sending replacement player velocities each tick.
+The cruise target is 0.95 blocks/tick. Motor acceleration is capped at 0.16, enough
+to overcome normal gravity and drag, with distance-based braking on direct pulls.
+Left/right steering and one jump are accepted for 0.2 seconds (4 ticks) after
+contact. Existing upward momentum supplies the jump without a second boost.
+That jump switches to an arc centered on the actual hook contact point, using
+the player-center-to-hook distance at activation as the reference radius. A tangential
+motor keeps the flight moving; centripetal force and a damped radius correction
+maintain the arc. Radial acceleration is capped at 0.2, and tight arcs use a lower
+cruise target. Radius deviations are corrected gradually rather than snapping
+back to a circle, and never increase the motor's speed. Within 0.8 blocks, direct
+traction remains active to avoid a degenerate swing.
+Neutral input does not consume the jump opportunity, and repeated jump input
+cannot stack boosts. Normal movement input stays blocked only while traction is active.
+Direct traction aims the player's bounding-box center at the pull goal, using half
+the current horizontal body width as the arrival radius. Crossing that radius also
+counts as arrival, so a fast movement packet cannot skip the release point. Ten
+consecutive ticks of collision with less than 0.01 blocks of forward progress end
+a blocked direct pull; this check does not apply to swings. Arrival, obstruction,
+loss of the anchor or the 40-block assisted travel limit stop traction and restore
+normal movement immediately. If already grounded, the hook retracts at once;
+otherwise it retains fall protection until landing, then permits another shot.
+Missed shots retract at maximum range.
+If a block collision shape obstructs the chain between the player and hook, the
+chain breaks and all grapple forces stop without changing the current velocity.
+Swinging releases immediately upon crossing the top above the hook, measured in
+the initial approach direction. Turning the camera cannot release a
+swing early. Direct pulls and entity reeling still break when the hook enters the
+rear 45-degree cone (at least 135 degrees from horizontal facing); pitch is ignored.
+The contact face itself is allowed, but routing behind the anchor block is not.
+Broken chains disappear and restore movement; another shot waits until landing
+unless the player is already grounded. Entity
+reeling also stops on obstruction and leaves the target's momentum untouched.
+The item has infinite durability and no cooldown. Death, disconnects, dimension
+changes and teleports clean up the hook; grapple flights reset fall distance.
+
+Craft it on the imaginary crafting table with a chain in the center and eight
+imaginary alloy ingots around it (5 seconds); JEI displays the same recipe.
+The prepared `F:/misc/BlockBench/grapple_chain` models provide the held item,
+animated four-claw head and alternating chain links. The grab animation uses the
+supplied contact/rebound keyframes, oriented to the hit surface.

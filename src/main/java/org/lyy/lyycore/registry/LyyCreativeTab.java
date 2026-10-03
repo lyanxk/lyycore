@@ -25,6 +25,7 @@ public class LyyCreativeTab {
                         output.accept(LyyBlocks.IMAGINARY_GATE.get());
                         output.accept(LyyBlocks.IMAGINARY_CRAFTING_TABLE.get());
                         output.accept(LyyItems.IMAGINARY_DISASSEMBLER.get());
+                        output.accept(LyyItems.IMAGINARY_GRAPPLE.get());
                         output.accept(LyyItems.WHISPER_OF_THE_PAST.get());
                         output.accept(LyyItems.IMAGINARY_CRYSTAL.get());
                         output.accept(LyyBlocks.IAF.get());

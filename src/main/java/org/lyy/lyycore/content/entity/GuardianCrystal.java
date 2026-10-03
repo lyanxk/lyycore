@@ -12,7 +12,13 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.*;
 
 public final class GuardianCrystal extends Projectile {
+    private static final int HOMING_TICKS = 40;
+    private int lifetimeTicks = 100;
+    private LivingEntity homingTarget;
+
     public GuardianCrystal(EntityType<? extends GuardianCrystal> type, Level level) { super(type, level); setNoGravity(true); }
+    public void setHomingTarget(LivingEntity target) { homingTarget = target; }
+    public void setLifetimeTicks(int ticks) { lifetimeTicks = Math.max(1, ticks); }
     @Override protected void defineSynchedData(SynchedEntityData.Builder builder) { }
     @Override public boolean isPickable() { return true; }
     @Override protected boolean canHitEntity(net.minecraft.world.entity.Entity entity) {
@@ -20,10 +26,26 @@ public final class GuardianCrystal extends Projectile {
     }
     @Override public void tick() {
         super.tick();
-        if (!level().isClientSide && (tickCount > 100 || getOwner() == null || !getOwner().isAlive())) { discard(); return; }
+        if (!level().isClientSide && (getOwner() == null || !getOwner().isAlive())) { discard(); return; }
+        if (!level().isClientSide) updateHoming();
         HitResult hit = ProjectileUtil.getHitResultOnMoveVector(this, this::canHitEntity);
         if (!level().isClientSide && hit.getType() != HitResult.Type.MISS) onHit(hit);
         if (!isRemoved()) setPos(position().add(getDeltaMovement()));
+        if (!level().isClientSide && tickCount >= lifetimeTicks) discard();
+    }
+    private void updateHoming() {
+        if (homingTarget == null) return;
+        if (tickCount > HOMING_TICKS || !homingTarget.isAlive() || homingTarget.isRemoved()
+                || homingTarget.level() != level()
+                || homingTarget instanceof Player player && (player.isCreative() || player.isSpectator())) {
+            homingTarget = null;
+            return;
+        }
+        Vec3 direction = homingTarget.getEyePosition().subtract(position());
+        if (direction.lengthSqr() < 1.0E-7) return;
+        // Only steer during the first two seconds; retain speed and coast afterwards.
+        setDeltaMovement(direction.normalize().scale(getDeltaMovement().length()));
+        hasImpulse = true;
     }
     @Override protected void onHitEntity(EntityHitResult hit) {
         if (getOwner() instanceof LivingEntity owner) {
