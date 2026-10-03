@@ -11,9 +11,20 @@ import org.lyy.lyycore.content.blocks.BaseImaginaryGenerator;
 import org.lyy.lyycore.content.blocks.EnergyCellBlock;
 import org.lyy.lyycore.content.blocks.ImaginaryAlloyForge;
 import org.lyy.lyycore.content.blocks.ItemCollectorBlock;
+import org.lyy.lyycore.content.ResourceFrameKind;
+import org.lyy.lyycore.content.blocks.ResourceGatheringFrameBlock;
+import java.util.EnumMap;
+import java.util.Map;
 
 public class LyyBlocks {
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(LyyCore.MODID);
+    public static final DeferredBlock<Block> CRYSTAL_CONDENSING_FRAME =
+            BLOCKS.register("crystal_condensing_frame", org.lyy.lyycore.content.blocks.CrystalCondensingFrameBlock::new);
+    public static final Map<ResourceFrameKind, DeferredBlock<Block>> RESOURCE_FRAMES = new EnumMap<>(ResourceFrameKind.class);
+    static {
+        for (var kind : ResourceFrameKind.values()) RESOURCE_FRAMES.put(kind,
+                BLOCKS.register(kind.blockId(), () -> ResourceGatheringFrameBlock.create(kind)));
+    }
 
     public static final DeferredBlock<Block> IMAGINARY_ENERGY_CELL =
             BLOCKS.register("imaginary_energy_cell", EnergyCellBlock::new);

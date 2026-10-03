@@ -34,6 +34,9 @@ public class BaseImaginaryGenerator extends BaseEntityBlock {
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
         if (!level.isClientSide && level.getBlockEntity(pos) instanceof BaseImaginaryGeneratorBlockEntity be) {
             BaseImaginaryGeneratorBlockEntity.getPositions(be);
+            player.displayClientMessage(net.minecraft.network.chat.Component.translatable(
+                    "message.lyycore.generator_scan", be.getTargetCount())
+                    .withStyle(style -> style.withColor(0xF1B6D7)), true);
         }
         return InteractionResult.SUCCESS;
     }

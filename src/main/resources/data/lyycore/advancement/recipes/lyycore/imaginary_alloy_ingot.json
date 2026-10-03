@@ -3,7 +3,7 @@
   "criteria": {
     "has_material": {
       "trigger": "minecraft:inventory_changed",
-      "conditions": { "items": [{ "items": "lyycore:raw_imaginium" }] }
+      "conditions": { "items": [{ "items": "lyycore:imaginary_crystal" }] }
     },
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",

@@ -4,7 +4,7 @@
     { "item": "lyycore:imaginary_alloy_ingot" },
     { "item": "minecraft:diamond_block" }
   ],
-  "catalyst": { "item": "minecraft:nether_star" },
+  "catalyst": { "item": "minecraft:nether_brick" },
   "catalyst_consumed": false,
   "result": { "id": "lyycore:im_battery", "count": 1 },
   "process_time": 100,

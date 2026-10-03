@@ -1,75 +1,76 @@
 package org.lyy.lyycore.content.menu;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
-import org.lyy.lyycore.LyyCore;
+import net.minecraft.world.inventory.Slot;
 
 public class IAFScreen extends AbstractContainerScreen<IAFMenu> {
-    private static final ResourceLocation BG = ResourceLocation.fromNamespaceAndPath(LyyCore.MODID, "textures/gui/imaginary_alloy_forge.png");
-
-    private static final int ENERGY_U = 176, ENERGY_V = 16, ENERGY_W = 12, ENERGY_H = 48;
-    private static final int ENERGY_X = 10, ENERGY_Y = 20;
-    private static final int PROGRESS_X = 91, PROGRESS_Y = 47, PROGRESS_W = 29, PROGRESS_H = 11;
+    private static final int ENERGY_X = 12, ENERGY_Y = 28, ENERGY_W = 10, ENERGY_H = 40;
+    private static final int PROGRESS_X = 38, PROGRESS_Y = 77, PROGRESS_W = 110, PROGRESS_H = 10;
+    // JEI owns the arrow tooltip. Progress has its own hover area below it.
+    public static final int RECIPE_X = 96, RECIPE_Y = 42, RECIPE_W = 23, RECIPE_H = 12;
 
     public IAFScreen(IAFMenu menu, Inventory playerInv, Component title) {
         super(menu, playerInv, title);
-        this.imageWidth = 176;
-        this.imageHeight = 166;
-        this.titleLabelX = 10000;
+        this.imageWidth = IAFMenu.WIDTH;
+        this.imageHeight = IAFMenu.HEIGHT;
+        this.inventoryLabelY = IAFMenu.INVENTORY_Y - 12;
     }
 
     @Override
-    public void render(GuiGraphics gg, int mouseX, int mouseY, float partialTicks) {
-        super.render(gg, mouseX, mouseY, partialTicks);
-        this.renderTooltip(gg, mouseX, mouseY);
-
+    public void render(GuiGraphics g, int mouseX, int mouseY, float partialTicks) {
+        super.render(g, mouseX, mouseY, partialTicks);
+        this.renderTooltip(g, mouseX, mouseY);
         if (isHovering(ENERGY_X, ENERGY_Y, ENERGY_W, ENERGY_H, mouseX, mouseY)) {
-            int e = menu.getEnergy(), max = Math.max(menu.getMaxEnergy(), 1);
-            gg.renderTooltip(this.font, Component.translatable("tooltip." + LyyCore.MODID + ".energy",
-                    e, max), mouseX, mouseY);
-        }
-        if (isHovering(PROGRESS_X, PROGRESS_Y, PROGRESS_W, PROGRESS_H, mouseX, mouseY)) {
-            gg.renderTooltip(this.font, Component.translatable("tooltip." + LyyCore.MODID + ".progress",
-                    menu.getProgress(), menu.getMaxProgress()), mouseX, mouseY);
+            g.renderTooltip(font, Component.translatable("tooltip.lyycore.energy",
+                    menu.getEnergy(), menu.getMaxEnergy()), mouseX, mouseY);
+        } else if (isHovering(PROGRESS_X, PROGRESS_Y, PROGRESS_W, PROGRESS_H, mouseX, mouseY)) {
+            Component tooltip = menu.getMaxProgress() <= 0
+                    ? Component.translatable("screen.lyycore.forge.idle")
+                    : Component.translatable("tooltip.lyycore.progress", menu.getProgress(), menu.getMaxProgress());
+            g.renderTooltip(font, tooltip, mouseX, mouseY);
+        } else if (hoveredSlot != null && !hoveredSlot.hasItem() && hoveredSlot.index < 4) {
+            String role = switch (hoveredSlot.index) {
+                case IAFMenu.CATALYST -> "catalyst";
+                case IAFMenu.OUTPUT -> "output";
+                default -> "input";
+            };
+            g.renderTooltip(font, Component.translatable("tooltip.lyycore.forge." + role), mouseX, mouseY);
         }
     }
 
     @Override
-    protected void renderBg(GuiGraphics gg, float partialTicks, int mouseX, int mouseY) {
-        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
-        gg.blit(BG, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight, 188, 166);
-
-        int e = menu.getEnergy();
-        int emax = Math.max(menu.getMaxEnergy(), 1);
-        int h = (int) Math.round((e / (double) emax) * ENERGY_H);
-        if (h > 0) {
-            gg.blit(BG,
-                    this.leftPos + ENERGY_X,
-                    this.topPos + ENERGY_Y + (ENERGY_H - h),
-                    ENERGY_U,
-                    ENERGY_V + (ENERGY_H - h),
-                    ENERGY_W,
-                    h,
-                    188,
-                    166);
+    protected void renderBg(GuiGraphics g, float partialTicks, int mouseX, int mouseY) {
+        ForgeGui.panel(g, leftPos, topPos, imageWidth, imageHeight);
+        g.fill(leftPos + 8, topPos + 19, leftPos + imageWidth - 8, topPos + 20, ForgeGui.TRACK);
+        for (Slot slot : menu.slots) {
+            ForgeGui.slot(g, leftPos + slot.x, topPos + slot.y, slot.index == IAFMenu.CATALYST);
         }
+        ForgeGui.arrow(g, leftPos + RECIPE_X, topPos + RECIPE_Y, ForgeGui.ACCENT);
 
-        int maxProgress = menu.getMaxProgress();
-        int progressWidth = maxProgress <= 0 ? 0
-                : (int) Math.round(menu.getProgress() / (double) maxProgress * (PROGRESS_W - 2));
-        gg.fill(this.leftPos + PROGRESS_X, this.topPos + PROGRESS_Y,
-                this.leftPos + PROGRESS_X + PROGRESS_W, this.topPos + PROGRESS_Y + PROGRESS_H, 0xFF32172D);
-        gg.fill(this.leftPos + PROGRESS_X + 1, this.topPos + PROGRESS_Y + 1,
-                this.leftPos + PROGRESS_X + 1 + progressWidth,
-                this.topPos + PROGRESS_Y + PROGRESS_H - 1, 0xFFF0A1CE);
+        int x = leftPos + ENERGY_X, y = topPos + ENERGY_Y;
+        g.fill(x - 1, y - 1, x + ENERGY_W + 1, y + ENERGY_H + 1, ForgeGui.TEXT);
+        g.fill(x, y, x + ENERGY_W, y + ENERGY_H, ForgeGui.TRACK);
+        int filled = ForgeGui.scaled(menu.getEnergy(), menu.getMaxEnergy(), ENERGY_H);
+        g.fill(x, y + ENERGY_H - filled, x + ENERGY_W, y + ENERGY_H, ForgeGui.ACCENT);
+
+        x = leftPos + PROGRESS_X;
+        y = topPos + PROGRESS_Y;
+        g.fill(x, y, x + PROGRESS_W, y + PROGRESS_H, ForgeGui.TRACK);
+        int progress = ForgeGui.scaled(menu.getProgress(), menu.getMaxProgress(), PROGRESS_W);
+        g.fill(x, y, x + progress, y + PROGRESS_H, 0xFFE59ACB);
     }
 
     @Override
-    protected void renderLabels(GuiGraphics gg, int mouseX, int mouseY) {
-        gg.drawString(this.font, this.playerInventoryTitle, 8, this.imageHeight - 96 + 2, 0x404040, false);
+    protected void renderLabels(GuiGraphics g, int mouseX, int mouseY) {
+        g.drawString(font, title, titleLabelX, titleLabelY, ForgeGui.TEXT, false);
+        g.drawString(font, playerInventoryTitle, inventoryLabelX, inventoryLabelY, ForgeGui.TEXT, false);
+        Component status = menu.getMaxProgress() <= 0
+                ? Component.translatable("screen.lyycore.forge.idle")
+                : Component.literal(ForgeGui.scaled(menu.getProgress(), menu.getMaxProgress(), 100) + "%");
+        g.drawString(font, status, PROGRESS_X + (PROGRESS_W - font.width(status)) / 2,
+                PROGRESS_Y + 1, ForgeGui.TEXT, false);
     }
 }

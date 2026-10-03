@@ -19,6 +19,10 @@ import org.lyy.lyycore.registry.LyyMenus;
 
 public class IAFMenu extends AbstractContainerMenu {
     public static final int INPUT_A = 0, INPUT_B = 1, CATALYST = 2, OUTPUT = 3;
+    public static final int WIDTH = 176, HEIGHT = 186;
+    public static final int INPUT_X = 38, INPUT_A_Y = 28, INPUT_B_Y = 52;
+    public static final int CATALYST_X = 68, CATALYST_Y = 40, OUTPUT_X = 132, OUTPUT_Y = 40;
+    public static final int INVENTORY_X = 8, INVENTORY_Y = 104, HOTBAR_Y = 162;
 
     private final ImaginaryAlloyForgeBlockEntity blockEntity;
     private final ContainerData data;
@@ -32,13 +36,13 @@ public class IAFMenu extends AbstractContainerMenu {
         addDataSlots(data);
 
         IItemHandler handler = be.getItemHandler();
-        addSlot(new SlotItemHandler(handler, INPUT_A, 34, 22));
-        addSlot(new SlotItemHandler(handler, INPUT_B, 50, 52));
-        addSlot(new SlotItemHandler(handler, CATALYST, 66, 22));
-        addSlot(new OutputSlot(handler, OUTPUT, 122, 50));
+        addSlot(new SlotItemHandler(handler, INPUT_A, INPUT_X, INPUT_A_Y));
+        addSlot(new SlotItemHandler(handler, INPUT_B, INPUT_X, INPUT_B_Y));
+        addSlot(new SlotItemHandler(handler, CATALYST, CATALYST_X, CATALYST_Y));
+        addSlot(new OutputSlot(handler, OUTPUT, OUTPUT_X, OUTPUT_Y));
 
-        addPlayerInventory(playerInv, 8, 84);
-        addPlayerHotbar(playerInv, 8, 138);
+        addPlayerInventory(playerInv, INVENTORY_X, INVENTORY_Y);
+        addPlayerHotbar(playerInv, INVENTORY_X, HOTBAR_Y);
     }
 
     // Client constructor (from network)

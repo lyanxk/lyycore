@@ -1,0 +1,24 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:netherrack",
+    "minecraft:soul_sand",
+    "minecraft:soul_soil",
+    "minecraft:quartz",
+    "minecraft:glowstone_dust",
+    "minecraft:glowstone",
+    "minecraft:basalt",
+    "minecraft:smooth_basalt",
+    "minecraft:blackstone",
+    "minecraft:magma_block",
+    "minecraft:gravel",
+    "minecraft:gold_nugget",
+    "minecraft:ancient_debris",
+    "minecraft:crimson_stem",
+    "minecraft:warped_stem",
+    "minecraft:nether_wart_block",
+    "minecraft:warped_wart_block",
+    "minecraft:shroomlight",
+    "minecraft:nether_wart"
+  ]
+}

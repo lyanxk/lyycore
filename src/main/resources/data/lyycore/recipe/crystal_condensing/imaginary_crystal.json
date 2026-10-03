@@ -1,0 +1,8 @@
+{
+  "type": "lyycore:crystal_condensing",
+  "result": {
+    "id": "lyycore:imaginary_crystal"
+  },
+  "dry_cost": 200,
+  "wet_cost": 100
+}

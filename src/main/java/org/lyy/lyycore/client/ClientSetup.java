@@ -72,5 +72,7 @@ public class ClientSetup {
     public static void registerScreens(RegisterMenuScreensEvent event) {
         event.register(LyyMenus.IMAGINARY_ENERGY_CELL.get(), EnergyCellScreen::new);
         event.register(LyyMenus.IAF_MENU.get(), IAFScreen::new);
+        event.register(LyyMenus.CRYSTAL_CONDENSING.get(), org.lyy.lyycore.content.menu.CrystalCondensingScreen::new);
+        event.register(LyyMenus.RESOURCE_GATHERING.get(), org.lyy.lyycore.content.menu.ResourceGatheringScreen::new);
     }
 }

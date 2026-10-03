@@ -1,0 +1,37 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "tag": "lyycore:gathering/overworld_products"
+    },
+    {
+      "tag": "lyycore:gathering/overworld_products"
+    },
+    {
+      "tag": "lyycore:gathering/overworld_products"
+    },
+    {
+      "tag": "lyycore:gathering/overworld_products"
+    },
+    {
+      "tag": "lyycore:gathering/overworld_products"
+    },
+    {
+      "tag": "lyycore:gathering/overworld_products"
+    },
+    {
+      "tag": "lyycore:gathering/overworld_products"
+    },
+    {
+      "tag": "lyycore:gathering/overworld_products"
+    },
+    {
+      "tag": "lyycore:gathering/overworld_products"
+    }
+  ],
+  "result": {
+    "id": "lyycore:overworld_core",
+    "count": 1
+  }
+}

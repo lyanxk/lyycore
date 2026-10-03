@@ -7,6 +7,14 @@ import org.lyy.lyycore.content.blockEntities.ImaginaryAlloyForgeBlockEntity;
 
 public class LyyCapabilities {
     public static void register(RegisterCapabilitiesEvent event) {
+        event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, LyyBlockEntities.RESOURCE_GATHERING_FRAME.get(),
+                (be, side) -> be.getEnergyStorage());
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, LyyBlockEntities.RESOURCE_GATHERING_FRAME.get(),
+                (be, side) -> be.getOutput());
+        event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, LyyBlockEntities.CRYSTAL_CONDENSING_FRAME.get(),
+                (be, side) -> be.getEnergyStorage());
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, LyyBlockEntities.CRYSTAL_CONDENSING_FRAME.get(),
+                (be, side) -> be.getOutput());
         // EnergyCellBlock: energy + items
         event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK,
                 LyyBlockEntities.IMAGINARY_ENERGY_CELL.get(),

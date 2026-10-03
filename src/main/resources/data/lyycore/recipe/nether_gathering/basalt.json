@@ -1,0 +1,7 @@
+{
+  "type": "lyycore:nether_gathering",
+  "result": {
+    "id": "minecraft:basalt"
+  },
+  "dry_cost": 200
+}

@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "AAA",
+    "AKA",
+    "AAA"
+  ],
+  "key": {
+    "A": {
+      "item": "lyycore:imaginary_alloy_ingot"
+    },
+    "K": {
+      "item": "lyycore:overworld_core"
+    }
+  },
+  "result": {
+    "id": "lyycore:overworld_gathering_frame",
+    "count": 1
+  }
+}

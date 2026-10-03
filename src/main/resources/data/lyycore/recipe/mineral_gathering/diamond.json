@@ -1,0 +1,8 @@
+{
+  "type": "lyycore:mineral_gathering",
+  "result": {
+    "id": "minecraft:diamond"
+  },
+  "dry_cost": 200,
+  "wet_cost": 100
+}

@@ -27,17 +27,61 @@ import javax.annotation.Nullable;
 
 public class EnergyCellBlockEntity extends BlockEntity implements MenuProvider {
     private final ImaginaryEnergyStorage storage = new ImaginaryEnergyStorage(1_000_000_000, 1_000_000_000, 1_000_000_000) {
+        private byte feRemainder;
+
+        @Override
+        public int getEnergyStored() { return energy + feRemainder; }
+
+        @Override
+        public void setEnergy(int value) {
+            // Preserve FE saved by older versions until the tick converts it.
+            // New input never accumulates here: only its 0..99 remainder is stored.
+            int restored = Math.max(0, Math.min(value, capacity));
+            feRemainder = (byte) (restored % IEnergyConversion.FE_PER_IMAGINARY);
+            energy = restored - feRemainder;
+        }
+
         @Override
         public int receiveEnergy(int maxReceive, boolean simulate) {
-            int received = super.receiveEnergy(maxReceive, simulate);
-            if (!simulate && received > 0) setChanged();
+            int ieRoom = getMaxIEnergyStored() - getImaginaryEnergyStored();
+            if (maxReceive <= 0 || ieRoom <= 0 || energy > 0) return 0;
+
+            int received = Math.min(maxReceive, this.maxReceive);
+            // Divide before adding the saved remainder, so even an int-sized
+            // transfer never requires an overflowing FE sum or a long value.
+            int remainder = received % IEnergyConversion.FE_PER_IMAGINARY + feRemainder;
+            int ieToAdd = received / IEnergyConversion.FE_PER_IMAGINARY
+                    + remainder / IEnergyConversion.FE_PER_IMAGINARY;
+            if (ieToAdd >= ieRoom) {
+                // This branch only runs when the offered FE can fill the store.
+                // Account for the first incomplete unit before multiplying.
+                received = (ieRoom - 1) * IEnergyConversion.FE_PER_IMAGINARY
+                        + (IEnergyConversion.FE_PER_IMAGINARY - feRemainder);
+                ieToAdd = ieRoom;
+                remainder = 0;
+            }
+            if (!simulate && received > 0) {
+                imaginaryEnergy += ieToAdd;
+                feRemainder = (byte) (remainder % IEnergyConversion.FE_PER_IMAGINARY);
+                setChanged();
+            }
             return received;
         }
 
         @Override
         public int extractEnergy(int maxExtract, boolean simulate) {
-            int extracted = super.extractEnergy(maxExtract, simulate);
-            if (!simulate && extracted > 0) setChanged();
+            if (maxExtract <= 0) return 0;
+            int extracted = Math.min(getEnergyStored(), Math.min(this.maxExtract, maxExtract));
+            if (!simulate && extracted > 0) {
+                int legacyExtracted = Math.min(energy, extracted);
+                energy -= legacyExtracted;
+                feRemainder -= (byte) (extracted - legacyExtracted);
+                if (getEnergyStored() < IEnergyConversion.FE_PER_IMAGINARY) {
+                    feRemainder = (byte) getEnergyStored();
+                    energy = 0;
+                }
+                setChanged();
+            }
             return extracted;
         }
     };
@@ -95,15 +139,17 @@ public class EnergyCellBlockEntity extends BlockEntity implements MenuProvider {
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
         tag.putInt("IE", storage.getImaginaryEnergyStored());
-        tag.putInt("energy", storage.getEnergyStored());
+        int fe = storage.getEnergyStored();
+        if (fe < IEnergyConversion.FE_PER_IMAGINARY) tag.putByte("energy", (byte) fe);
+        else tag.putInt("energy", fe); // Keep unconverted FE from legacy saves intact.
         tag.put("items", items.serializeNBT(registries));
     }
 
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
-        storage.setEnergy(tag.getInt("energy"));
         storage.setImaginaryEnergy(tag.getInt("IE"));
+        storage.setEnergy(tag.getInt("energy"));
         items.deserializeNBT(registries, tag.getCompound("items"));
     }
 

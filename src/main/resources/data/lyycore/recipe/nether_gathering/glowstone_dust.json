@@ -1,0 +1,7 @@
+{
+  "type": "lyycore:nether_gathering",
+  "result": {
+    "id": "minecraft:glowstone_dust"
+  },
+  "dry_cost": 200
+}

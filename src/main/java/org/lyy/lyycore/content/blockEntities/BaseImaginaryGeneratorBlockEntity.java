@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class BaseImaginaryGeneratorBlockEntity extends BlockEntity {
+    private static final int SUPPLY_RADIUS = 5;
     private final ArrayList<Target> savedTargets = new ArrayList<>();
     private boolean needsScan = true;
     private long nextScanGameTime;
@@ -27,6 +28,8 @@ public class BaseImaginaryGeneratorBlockEntity extends BlockEntity {
     public static void getPositions(BaseImaginaryGeneratorBlockEntity be) {
         be.scanTargets();
     }
+
+    public int getTargetCount() { return savedTargets.size(); }
 
     public void requestScan() {
         needsScan = true;
@@ -43,7 +46,7 @@ public class BaseImaginaryGeneratorBlockEntity extends BlockEntity {
         if (level == null || level.isClientSide) return;
         savedTargets.clear();
         BlockPos origin = getBlockPos();
-        int distance = Config.GENERATOR_RANGE.get();
+        int distance = SUPPLY_RADIUS;
         for (int dx = -distance; dx <= distance; dx++) {
             for (int dy = -distance; dy <= distance; dy++) {
                 for (int dz = -distance; dz <= distance; dz++) {

@@ -1,0 +1,8 @@
+{
+  "type": "lyycore:tree_gathering",
+  "result": {
+    "id": "minecraft:birch_log"
+  },
+  "dry_cost": 200,
+  "wet_cost": 100
+}

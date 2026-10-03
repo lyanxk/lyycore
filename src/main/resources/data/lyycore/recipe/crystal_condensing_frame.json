@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "AAA",
+    "ABA",
+    "AAA"
+  ],
+  "key": {
+    "A": {
+      "item": "lyycore:imaginary_alloy_ingot"
+    },
+    "B": {
+      "item": "lyycore:im_battery"
+    }
+  },
+  "result": {
+    "id": "lyycore:crystal_condensing_frame",
+    "count": 1
+  }
+}

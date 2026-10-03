@@ -2,6 +2,11 @@
   "replace": false,
   "values": [
     "lyycore:imaginium_ore",
-    "lyycore:deepslate_imaginium_ore"
+    "lyycore:deepslate_imaginium_ore",
+    "lyycore:crystal_condensing_frame",
+    "lyycore:tree_gathering_frame",
+    "lyycore:overworld_gathering_frame",
+    "lyycore:mineral_gathering_frame",
+    "lyycore:nether_gathering_frame"
   ]
 }

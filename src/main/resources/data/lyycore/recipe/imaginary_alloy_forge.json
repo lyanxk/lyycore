@@ -9,7 +9,7 @@
   "key": {
     "A": { "item": "lyycore:imaginary_alloy_ingot" },
     "I": { "item": "minecraft:iron_block" },
-    "C": { "item": "lyycore:raw_imaginium" }
+    "C": { "item": "lyycore:imaginary_crystal" }
   },
   "result": { "id": "lyycore:imaginary_alloy_forge", "count": 1 }
 }

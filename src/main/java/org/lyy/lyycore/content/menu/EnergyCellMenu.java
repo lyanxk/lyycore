@@ -17,6 +17,9 @@ import org.lyy.lyycore.registry.LyyBlocks;
 import org.lyy.lyycore.registry.LyyMenus;
 
 public class EnergyCellMenu extends AbstractContainerMenu {
+    public static final int WIDTH = 176, HEIGHT = 186;
+    public static final int CHARGE_X = 16, CHARGE_Y = 42;
+    public static final int INVENTORY_X = 8, INVENTORY_Y = 104, HOTBAR_Y = 162;
     public final EnergyCellBlockEntity be;
     private final ContainerLevelAccess access;
     private final ContainerData data;
@@ -35,7 +38,7 @@ public class EnergyCellMenu extends AbstractContainerMenu {
         this.access = ContainerLevelAccess.create(be.getLevel(), be.getBlockPos());
         this.data = data;
         addDataSlots(data);
-        addSlot(new SlotItemHandler(be.getItemHandler(), 0, 80, 34));
+        addSlot(new SlotItemHandler(be.getItemHandler(), 0, CHARGE_X, CHARGE_Y));
         addPlayerSlots(inv);
     }
 
@@ -53,9 +56,9 @@ public class EnergyCellMenu extends AbstractContainerMenu {
     private void addPlayerSlots(Inventory inv) {
         for (int row = 0; row < 3; row++)
             for (int col = 0; col < 9; col++)
-                addSlot(new Slot(inv, col + row * 9 + 9, 8 + col * 18, 84 + row * 18));
+                addSlot(new Slot(inv, col + row * 9 + 9, INVENTORY_X + col * 18, INVENTORY_Y + row * 18));
         for (int i = 0; i < 9; i++)
-            addSlot(new Slot(inv, i, 8 + i * 18, 142));
+            addSlot(new Slot(inv, i, INVENTORY_X + i * 18, HOTBAR_Y));
     }
 
     public int getEnergy()   { return combineWords(data.get(0), data.get(1)); }

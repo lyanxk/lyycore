@@ -2,9 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "pattern": [
-    "AAA",
-    "AIA",
-    "AAA"
+    "III",
+    "IAI",
+    "III"
   ],
   "key": {
     "A": { "item": "lyycore:imaginary_alloy_ingot" },

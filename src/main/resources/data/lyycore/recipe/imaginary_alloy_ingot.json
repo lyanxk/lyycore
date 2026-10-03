@@ -7,9 +7,9 @@
     "DID"
   ],
   "key": {
-    "D": { "item": "minecraft:diamond_block" },
+    "D": { "item": "minecraft:coal_block" },
     "I": { "item": "minecraft:iron_block" },
-    "C": { "item": "lyycore:raw_imaginium" }
+    "C": { "item": "lyycore:imaginary_crystal" }
   },
   "result": { "id": "lyycore:imaginary_alloy_ingot", "count": 1 }
 }

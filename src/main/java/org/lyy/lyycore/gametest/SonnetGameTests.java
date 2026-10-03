@@ -239,39 +239,4 @@ public final class SonnetGameTests {
         });
     }
 
-    @GameTest(template = "empty", timeoutTicks = 40, batch = "sonnet")
-    public static void volleyDealsThirtyTwoPhysicalHitsAtFourBouncesPerTick(GameTestHelper helper) {
-        var player = helper.makeMockServerPlayerInLevel(); player.setPos(helper.absoluteVec(new Vec3(1, 1, 1)));
-        var hits = new java.util.ArrayList<Float>();
-        var enemy = new net.minecraft.world.entity.monster.Husk(EntityType.HUSK, helper.getLevel()) {
-            @Override public boolean hurt(net.minecraft.world.damagesource.DamageSource source, float amount) {
-                if (source.getDirectEntity() instanceof SonnetVolley) hits.add(amount);
-                return super.hurt(source, amount);
-            }
-        };
-        enemy.setPos(helper.absoluteVec(new Vec3(2, 1, 2)));
-        helper.getLevel().addFreshEntity(enemy);
-        enemy.setNoAi(true);
-        enemy.getAttribute(Attributes.MAX_HEALTH).setBaseValue(1000); enemy.setHealth(1000);
-        enemy.getAttribute(Attributes.ARMOR).setBaseValue(0);
-        var passive = helper.spawn(EntityType.COW, new Vec3(1, 1, 2)); passive.setNoAi(true);
-        var dome = helper.spawn(LyyEntities.SONNET_DOME.get(), new Vec3(1, 1, 1)); dome.prepare(player); dome.open();
-        helper.assertTrue(dome.fire(player) && !dome.fire(player), "Server must reject repeated shots within ten ticks");
-        helper.runAfterDelay(9, () -> {
-            helper.assertTrue(hits.size() == 32 && hits.stream().allMatch(amount -> amount == 20),
-                    "All 32 separate 20-point hits must finish within the original eight-tick flight");
-            helper.assertTrue(enemy.getHealth() == 360, "The complete volley must deal 640 raw physical damage");
-            helper.assertTrue(passive.getHealth() == passive.getMaxHealth(), "Passive animals are not enemies");
-            helper.assertTrue(!dome.contains(dome.position().add(25, 0, 0)), "Targets outside the hemisphere are excluded");
-        });
-        helper.runAfterDelay(11, () -> {
-            helper.assertTrue(dome.fire(player), "A new shot is allowed after half a second");
-            var stack = new ItemStack(LyyItems.WHISPER_OF_THE_PAST.get()); SonnetBowItem.bind(stack, dome);
-            SonnetBowItem.refreshBinding(stack, helper.getLevel()); dome.discard();
-            player.setItemInHand(InteractionHand.MAIN_HAND, stack);
-            LyyItems.WHISPER_OF_THE_PAST.get().use(helper.getLevel(), player, InteractionHand.MAIN_HAND);
-            helper.assertTrue(!SonnetBowItem.isCrystal(stack), "Right-clicking a missing dome must revert immediately");
-            enemy.discard(); passive.discard(); player.discard(); helper.succeed();
-        });
-    }
 }

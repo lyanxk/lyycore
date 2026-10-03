@@ -1,0 +1,7 @@
+{
+  "type": "lyycore:nether_gathering",
+  "result": {
+    "id": "minecraft:quartz"
+  },
+  "dry_cost": 200
+}

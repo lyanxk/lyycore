@@ -9,7 +9,7 @@
   "key": {
     "A": { "item": "lyycore:imaginary_alloy_ingot" },
     "B": { "item": "lyycore:im_battery" },
-    "C": { "item": "minecraft:nether_star" }
+    "C": { "item": "minecraft:nether_brick" }
   },
   "result": { "id": "lyycore:im_generator", "count": 1 }
 }

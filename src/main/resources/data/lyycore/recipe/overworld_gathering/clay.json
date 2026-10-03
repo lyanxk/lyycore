@@ -1,0 +1,8 @@
+{
+  "type": "lyycore:overworld_gathering",
+  "result": {
+    "id": "minecraft:clay"
+  },
+  "dry_cost": 200,
+  "wet_cost": 100
+}

@@ -38,3 +38,7 @@ run/
 **/src/generated/**/.cache/
 repo/
 !**/src/**/repo/
+
+# Local design document and Microsoft Word lock files
+/designdoc.docx
+~$*.docx

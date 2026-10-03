@@ -1,0 +1,7 @@
+{
+  "type": "lyycore:nether_gathering",
+  "result": {
+    "id": "minecraft:nether_wart_block"
+  },
+  "dry_cost": 200
+}

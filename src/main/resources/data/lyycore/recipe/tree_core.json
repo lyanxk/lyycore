@@ -1,0 +1,37 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "tag": "lyycore:gathering/tree_products"
+    },
+    {
+      "tag": "lyycore:gathering/tree_products"
+    },
+    {
+      "tag": "lyycore:gathering/tree_products"
+    },
+    {
+      "tag": "lyycore:gathering/tree_products"
+    },
+    {
+      "tag": "lyycore:gathering/tree_products"
+    },
+    {
+      "tag": "lyycore:gathering/tree_products"
+    },
+    {
+      "tag": "lyycore:gathering/tree_products"
+    },
+    {
+      "tag": "lyycore:gathering/tree_products"
+    },
+    {
+      "tag": "lyycore:gathering/tree_products"
+    }
+  ],
+  "result": {
+    "id": "lyycore:tree_core",
+    "count": 1
+  }
+}

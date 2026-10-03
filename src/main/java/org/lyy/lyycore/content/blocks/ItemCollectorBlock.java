@@ -71,7 +71,7 @@ public class ItemCollectorBlock extends BaseEntityBlock {
             level.setBlock(pos, state.setValue(MODE, next == ItemCollectorBlockEntity.Mode.SMALL ? 0 : 1), 3);
             int diameter = next.radius() * 2 + 1;
             player.displayClientMessage(Component.translatable("message.lyycore.collector_range",
-                    diameter, diameter, diameter), true);
+                    diameter, diameter, diameter).withStyle(style -> style.withColor(0xF1B6D7)), true);
             return InteractionResult.CONSUME;
         }
         return InteractionResult.PASS;

@@ -23,6 +23,8 @@ public class LyyCore {
         modEventBus.addListener((RegisterGameTestsEvent event) -> {
             event.register(LyyGameTests.class);
             event.register(SonnetGameTests.class);
+            event.register(org.lyy.lyycore.gametest.CrystalCondensingGameTests.class);
+            event.register(org.lyy.lyycore.gametest.ResourceGatheringGameTests.class);
         });
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
     }

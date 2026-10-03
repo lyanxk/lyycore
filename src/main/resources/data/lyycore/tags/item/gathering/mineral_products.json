@@ -1,0 +1,14 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:coal",
+    "minecraft:raw_copper",
+    "minecraft:raw_iron",
+    "minecraft:raw_gold",
+    "minecraft:redstone",
+    "minecraft:lapis_lazuli",
+    "minecraft:diamond",
+    "minecraft:emerald",
+    "minecraft:amethyst_shard"
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "lyycore:block/frame_grove",
+      "y": 0
+    },
+    "facing=east": {
+      "model": "lyycore:block/frame_grove",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "lyycore:block/frame_grove",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "lyycore:block/frame_grove",
+      "y": 270
+    }
+  }
+}

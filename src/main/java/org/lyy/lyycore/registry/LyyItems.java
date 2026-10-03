@@ -1,6 +1,7 @@
 package org.lyy.lyycore.registry;
 
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.resources.ResourceLocation;
 import org.lyy.lyycore.content.item.SonnetBowItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
@@ -8,9 +9,20 @@ import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.lyy.lyycore.LyyCore;
 import org.lyy.lyycore.content.item.ImaginaryDisassemblerItem;
+import org.lyy.lyycore.content.ResourceFrameKind;
+import java.util.EnumMap;
+import java.util.Map;
 
 public class LyyItems {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(LyyCore.MODID);
+    public static final Map<ResourceFrameKind, DeferredItem<Item>> RESOURCE_CORES = new EnumMap<>(ResourceFrameKind.class);
+    public static final Map<ResourceFrameKind, DeferredItem<BlockItem>> RESOURCE_FRAME_ITEMS = new EnumMap<>(ResourceFrameKind.class);
+    static {
+        for (var kind : ResourceFrameKind.values()) {
+            RESOURCE_CORES.put(kind, ITEMS.registerSimpleItem(kind.coreId()));
+            RESOURCE_FRAME_ITEMS.put(kind, ITEMS.registerSimpleBlockItem(LyyBlocks.RESOURCE_FRAMES.get(kind)));
+        }
+    }
 
     // Custom items
     public static final DeferredItem<SonnetBowItem> WHISPER_OF_THE_PAST =
@@ -22,11 +34,13 @@ public class LyyItems {
                     new Item.Properties().stacksTo(1).rarity(Rarity.RARE).fireResistant());
 
     // Simple items
-    public static final DeferredItem<Item> RAW_IMAGINIUM = ITEMS.registerSimpleItem("raw_imaginium");
+    public static final DeferredItem<Item> IMAGINARY_CRYSTAL = ITEMS.registerSimpleItem("imaginary_crystal");
     public static final DeferredItem<Item> IMAGINARY_ALLOY_INGOT = ITEMS.registerSimpleItem("imaginary_alloy_ingot");
     public static final DeferredItem<Item> IM_BATTERY = ITEMS.registerSimpleItem("im_battery");
 
     // Block items
+    public static final DeferredItem<BlockItem> CRYSTAL_CONDENSING_FRAME_ITEM =
+            ITEMS.registerSimpleBlockItem(LyyBlocks.CRYSTAL_CONDENSING_FRAME);
     public static final DeferredItem<BlockItem> IMAGINARY_ENERGY_CELL_ITEM =
             ITEMS.registerSimpleBlockItem(LyyBlocks.IMAGINARY_ENERGY_CELL);
     public static final DeferredItem<BlockItem> IMAGINIUM_ORE_ITEM =
@@ -39,4 +53,11 @@ public class LyyItems {
             ITEMS.registerSimpleBlockItem(LyyBlocks.IAF);
     public static final DeferredItem<BlockItem> IGB_ITEM =
             ITEMS.registerSimpleBlockItem(LyyBlocks.IGB);
+
+    static {
+        // Resolve old item stacks and datapack references to the renamed item.
+        // Saving those stacks again writes the canonical imaginary_crystal ID.
+        ITEMS.addAlias(ResourceLocation.fromNamespaceAndPath(LyyCore.MODID, "raw_imaginium"),
+                IMAGINARY_CRYSTAL.getId());
+    }
 }

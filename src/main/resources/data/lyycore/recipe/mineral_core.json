@@ -1,0 +1,37 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "tag": "lyycore:gathering/mineral_products"
+    },
+    {
+      "tag": "lyycore:gathering/mineral_products"
+    },
+    {
+      "tag": "lyycore:gathering/mineral_products"
+    },
+    {
+      "tag": "lyycore:gathering/mineral_products"
+    },
+    {
+      "tag": "lyycore:gathering/mineral_products"
+    },
+    {
+      "tag": "lyycore:gathering/mineral_products"
+    },
+    {
+      "tag": "lyycore:gathering/mineral_products"
+    },
+    {
+      "tag": "lyycore:gathering/mineral_products"
+    },
+    {
+      "tag": "lyycore:gathering/mineral_products"
+    }
+  ],
+  "result": {
+    "id": "lyycore:mineral_core",
+    "count": 1
+  }
+}

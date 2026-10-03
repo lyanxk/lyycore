@@ -21,13 +21,18 @@ public class LyyCreativeTab {
                         output.accept(LyyItems.IM_BATTERY.get());
                         output.accept(LyyItems.IMAGINARY_DISASSEMBLER.get());
                         output.accept(LyyItems.WHISPER_OF_THE_PAST.get());
-                        output.accept(LyyItems.RAW_IMAGINIUM.get());
+                        output.accept(LyyItems.IMAGINARY_CRYSTAL.get());
                         output.accept(LyyBlocks.IAF.get());
                         output.accept(LyyBlocks.IMAGINARY_ENERGY_CELL.get());
                         output.accept(LyyBlocks.DEEPSLATE_IMAGINIUM_ORE.get());
                         output.accept(LyyBlocks.IMAGINIUM_ORE.get());
                         output.accept(LyyBlocks.ITEM_COLLECTOR.get());
                         output.accept(LyyBlocks.IGB.get());
+                        output.accept(LyyBlocks.CRYSTAL_CONDENSING_FRAME.get());
+                        for (var kind : org.lyy.lyycore.content.ResourceFrameKind.values()) {
+                            output.accept(kind.core());
+                            output.accept(kind.block());
+                        }
                     })
                     .build());
 }

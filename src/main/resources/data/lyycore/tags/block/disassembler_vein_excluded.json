@@ -1,0 +1,15 @@
+{
+  "replace": false,
+  "values": [
+    "#minecraft:base_stone_overworld",
+    "#minecraft:base_stone_nether",
+    "#minecraft:dirt",
+    "#minecraft:sand",
+    "#c:stones",
+    "#c:cobblestones",
+    "#c:gravels",
+    "#c:netherracks",
+    "#c:end_stones",
+    "#c:sandstone/blocks"
+  ]
+}

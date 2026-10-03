@@ -27,6 +27,60 @@ public final class LyyGameTests {
     private static final BlockPos TEST_POS = new BlockPos(1, 1, 1);
 
     @GameTest(template = "empty", timeoutTicks = 40)
+    public static void legacyRawImaginiumStacksResolveAndSaveWithTheNewId(GameTestHelper helper) {
+        var registries = helper.getLevel().registryAccess();
+        var original = new ItemStack(LyyItems.IMAGINARY_CRYSTAL.get(), 17);
+        original.set(net.minecraft.core.component.DataComponents.CUSTOM_NAME,
+                net.minecraft.network.chat.Component.literal("Named legacy crystal"));
+        var customTag = new net.minecraft.nbt.CompoundTag();
+        customTag.putString("migration_marker", "keep-me");
+        original.set(net.minecraft.core.component.DataComponents.CUSTOM_DATA,
+                net.minecraft.world.item.component.CustomData.of(customTag));
+        var legacy = (net.minecraft.nbt.CompoundTag) original.save(registries);
+        legacy.putString("id", "lyycore:raw_imaginium");
+
+        var migrated = ItemStack.parseOptional(registries, legacy);
+        helper.assertTrue(migrated.is(LyyItems.IMAGINARY_CRYSTAL.get()) && migrated.getCount() == 17,
+                "The legacy item ID must load as imaginary_crystal without losing its count");
+        helper.assertTrue(ItemStack.isSameItemSameComponents(original, migrated),
+                "Custom names and custom component data must survive the item ID migration");
+        var saved = (net.minecraft.nbt.CompoundTag) migrated.save(registries);
+        helper.assertTrue(saved.getString("id").equals("lyycore:imaginary_crystal"),
+                "Migrated stacks must save with the new canonical item ID");
+
+        var legacyIngredient = net.minecraft.world.item.crafting.Ingredient.CODEC.parse(
+                net.minecraft.resources.RegistryOps.create(com.mojang.serialization.JsonOps.INSTANCE, registries),
+                com.google.gson.JsonParser.parseString("{\"item\":\"lyycore:raw_imaginium\"}")).getOrThrow();
+        helper.assertTrue(legacyIngredient.test(migrated), "Old datapack item references must resolve through the alias");
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty", timeoutTicks = 40)
+    public static void imaginaryCrystalRecipesTagsAndOreDropsUseTheRenamedItem(GameTestHelper helper) {
+        var crystal = new ItemStack(LyyItems.IMAGINARY_CRYSTAL.get());
+        var recipes = helper.getLevel().getRecipeManager();
+        var condensed = recipes.byKey(ResourceLocation.fromNamespaceAndPath(LyyCore.MODID,
+                "crystal_condensing/imaginary_crystal")).orElseThrow().value();
+        helper.assertTrue(condensed.getResultItem(helper.getLevel().registryAccess()).is(crystal.getItem()),
+                "The renamed condensation recipe must produce imaginary_crystal");
+        var alloy = (ImaginaryAlloyingRecipe) recipes.byKey(ResourceLocation.fromNamespaceAndPath(LyyCore.MODID,
+                "imaginary_alloy/imaginium_alloy")).orElseThrow().value();
+        helper.assertTrue(alloy.getCatalyst() != null && alloy.getCatalyst().test(crystal),
+                "Imaginary alloying must accept the renamed crystal catalyst");
+        helper.assertTrue(crystal.is(net.minecraft.tags.TagKey.create(net.minecraft.core.registries.Registries.ITEM,
+                        ResourceLocation.fromNamespaceAndPath(LyyCore.MODID, "catalysts"))),
+                "The catalyst item tag must include imaginary_crystal");
+        for (var ore : java.util.List.of(LyyBlocks.IMAGINIUM_ORE.get(), LyyBlocks.DEEPSLATE_IMAGINIUM_ORE.get())) {
+            helper.setBlock(TEST_POS, ore);
+            var drops = net.minecraft.world.level.block.Block.getDrops(ore.defaultBlockState(), helper.getLevel(),
+                    helper.absolutePos(TEST_POS), null, null, new ItemStack(Items.DIAMOND_PICKAXE));
+            helper.assertTrue(drops.size() == 1 && drops.getFirst().is(crystal.getItem()),
+                    "Both ore variants must drop imaginary_crystal without Silk Touch");
+        }
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty", timeoutTicks = 40)
     public static void sonnetArrowsKeepAmmoEffectsButRejectEnchantmentsAndPickup(GameTestHelper helper) {
         var bow = LyyItems.WHISPER_OF_THE_PAST.get();
         var weapon = new ItemStack(bow);
@@ -92,6 +146,102 @@ public final class LyyGameTests {
                 helper.assertTrue(cell.getIEnergyStored() == 1, "Exactly 100 FE must become one IE");
                 helper.succeed();
             });
+        });
+    }
+
+    @GameTest(template = "empty", timeoutTicks = 40)
+    public static void fullEnergyCellRejectsFeInputAndSimulation(GameTestHelper helper) {
+        helper.setBlock(TEST_POS, LyyBlocks.IMAGINARY_ENERGY_CELL.get());
+        EnergyCellBlockEntity cell = helper.getBlockEntity(TEST_POS);
+        var storage = cell.getEnergyStorage();
+        storage.setImaginaryEnergy(Integer.MAX_VALUE);
+        helper.assertTrue(storage.receiveEnergy(Integer.MAX_VALUE, true) == 0,
+                "A full IE store must advertise zero accepted FE in simulation");
+        helper.assertTrue(storage.receiveEnergy(Integer.MAX_VALUE, false) == 0,
+                "A full IE store must reject actual FE input");
+        helper.assertTrue(storage.getEnergyStored() == 0 && cell.getIEnergyStored() == Integer.MAX_VALUE,
+                "Rejected input must not accumulate in the FE buffer or change IE");
+
+        storage.setEnergy(99);
+        helper.assertTrue(storage.receiveEnergy(1, false) == 0 && storage.getEnergyStored() == 99,
+                "A full IE store must reject input even when an existing FE remainder is present");
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty", timeoutTicks = 40)
+    public static void energyCellLimitsFeToRemainingIeCapacity(GameTestHelper helper) {
+        helper.setBlock(TEST_POS, LyyBlocks.IMAGINARY_ENERGY_CELL.get());
+        EnergyCellBlockEntity cell = helper.getBlockEntity(TEST_POS);
+        var storage = cell.getEnergyStorage();
+        storage.setImaginaryEnergy(Integer.MAX_VALUE - 1);
+        helper.assertTrue(storage.receiveEnergy(99, false) == 99,
+                "A nearly full IE store must still accept an incomplete FE unit");
+        helper.assertTrue(storage.receiveEnergy(Integer.MAX_VALUE, true) == 1,
+                "Simulation must subtract existing FE from the last IE unit's capacity");
+        helper.assertTrue(storage.getEnergyStored() == 99 && cell.getIEnergyStored() == Integer.MAX_VALUE - 1,
+                "Simulation must leave both energy stores unchanged");
+        helper.assertTrue(storage.receiveEnergy(Integer.MAX_VALUE, false) == 1,
+                "Only one more FE fits after buffering 99 FE for the final IE unit");
+        helper.assertTrue(cell.getIEnergyStored() == Integer.MAX_VALUE && storage.getEnergyStored() == 0,
+                "Accepted FE must convert immediately, leaving only its remainder");
+        helper.assertTrue(storage.receiveEnergy(100, true) == 0 && storage.receiveEnergy(100, false) == 0,
+                "Multiple transfers in one tick must not exceed IE capacity");
+        storage.extractImaginaryEnergy(1);
+        helper.assertTrue(storage.receiveEnergy(200, false) == 100 && storage.getEnergyStored() == 0,
+                "FE input must resume when IE capacity becomes available without buffering excess");
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty", timeoutTicks = 40)
+    public static void energyCellStoresOnlyAByteRemainderAndReloadsIt(GameTestHelper helper) {
+        helper.setBlock(TEST_POS, LyyBlocks.IMAGINARY_ENERGY_CELL.get());
+        EnergyCellBlockEntity cell = helper.getBlockEntity(TEST_POS);
+        var storage = cell.getEnergyStorage();
+        helper.assertTrue(storage.receiveEnergy(512, true) == 512 && cell.getIEnergyStored() == 0
+                        && storage.getEnergyStored() == 0,
+                "Simulation must not change IE or its byte remainder");
+        helper.assertTrue(storage.receiveEnergy(512, false) == 512 && cell.getIEnergyStored() == 5
+                        && storage.getEnergyStored() == 12,
+                "512 FE must immediately become 5 IE and a 12-FE remainder");
+        storage.receiveEnergy(87, false);
+        var saved = cell.saveWithoutMetadata(helper.getLevel().registryAccess());
+        helper.assertTrue(saved.contains("energy", net.minecraft.nbt.Tag.TAG_BYTE) && saved.getByte("energy") == 99,
+                "The saved FE remainder must be a byte between 0 and 99");
+        var restored = new EnergyCellBlockEntity(helper.absolutePos(TEST_POS), helper.getBlockState(TEST_POS));
+        restored.loadWithComponents(saved, helper.getLevel().registryAccess());
+        helper.assertTrue(restored.getIEnergyStored() == 5 && restored.getEnergyStorage().getEnergyStored() == 99,
+                "IE and the byte remainder must survive a save/load round trip");
+        int accepted = restored.getEnergyStorage().receiveEnergy(Integer.MAX_VALUE, false);
+        helper.assertTrue(accepted == 1_000_000_000 && restored.getIEnergyStored() == 10_000_005
+                        && restored.getEnergyStorage().getEnergyStored() == 99,
+                "An int-sized request must respect the receive rate and convert safely with a saved remainder");
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty", timeoutTicks = 40)
+    public static void energyCellPreservesLegacyBufferedFeDuringMigration(GameTestHelper helper) {
+        helper.setBlock(TEST_POS, LyyBlocks.IMAGINARY_ENERGY_CELL.get());
+        EnergyCellBlockEntity cell = helper.getBlockEntity(TEST_POS);
+        var storage = cell.getEnergyStorage();
+        storage.setEnergy(100);
+        helper.assertTrue(storage.extractEnergy(1, false) == 1 && storage.getEnergyStored() == 99,
+                "Extracting legacy FE below one IE unit must leave a valid byte remainder");
+        helper.assertTrue(storage.receiveEnergy(1, false) == 1 && cell.getIEnergyStored() == 1
+                        && storage.getEnergyStored() == 0,
+                "A partial legacy extraction must not leave new FE input permanently blocked");
+        var legacy = cell.saveWithoutMetadata(helper.getLevel().registryAccess());
+        legacy.putInt("IE", Integer.MAX_VALUE);
+        legacy.putInt("energy", 512);
+        cell.loadWithComponents(legacy, helper.getLevel().registryAccess());
+        helper.assertTrue(cell.getEnergyStorage().getEnergyStored() == 512
+                        && cell.getEnergyStorage().receiveEnergy(100, false) == 0,
+                "Legacy FE must survive loading, while a full IE store rejects new input");
+        cell.getEnergyStorage().extractImaginaryEnergy(5);
+        helper.runAfterDelay(2, () -> {
+            helper.assertTrue(cell.getIEnergyStored() == Integer.MAX_VALUE
+                            && cell.getEnergyStorage().getEnergyStored() == 12,
+                    "Legacy FE must convert when capacity becomes available, leaving only its byte remainder");
+            helper.succeed();
         });
     }
 
@@ -181,7 +331,7 @@ public final class LyyGameTests {
         helper.setBlock(neighbor, net.minecraft.world.level.block.Blocks.STONE);
         var player = helper.makeMockPlayer(GameType.CREATIVE);
         ItemStack tool = new ItemStack(LyyItems.IMAGINARY_DISASSEMBLER.get());
-        ImaginaryDisassemblerItem.setMode(tool, ImaginaryDisassemblerItem.Mode.AOE3);
+        ImaginaryDisassemblerItem.setMode(tool, ImaginaryDisassemblerItem.Mode.AOE5);
         player.setItemInHand(InteractionHand.MAIN_HAND, tool);
         ((ImaginaryDisassemblerItem) tool.getItem()).mineBlock(tool, helper.getLevel(),
                 helper.getBlockState(TEST_POS), helper.absolutePos(TEST_POS), player);

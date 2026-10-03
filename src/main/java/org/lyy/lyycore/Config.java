@@ -6,9 +6,6 @@ import net.neoforged.neoforge.common.ModConfigSpec;
 public final class Config {
     private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
 
-    public static final ModConfigSpec.IntValue GENERATOR_RANGE = BUILDER
-            .comment("Imaginary generator target search radius in blocks")
-            .defineInRange("generator.range", 5, 1, 32);
     public static final ModConfigSpec.IntValue GENERATOR_FE_PER_TARGET_TICK = BUILDER
             .comment("FE generated for every discovered target each tick")
             .defineInRange("generator.fePerTargetTick", 512, 0, Integer.MAX_VALUE);
@@ -48,13 +45,13 @@ public final class Config {
 
     public static final ModConfigSpec.IntValue DISASSEMBLER_MAX_VEIN = BUILDER
             .comment("Maximum vein blocks including the originally mined block")
-            .defineInRange("disassembler.maxVeinBlocks", 16, 1, 1_024);
+            .defineInRange("disassembler.maxVeinBlocks", 64, 1, 64);
     public static final ModConfigSpec.IntValue DISASSEMBLER_MAX_BREAK_EFFECTS = BUILDER
             .comment("Maximum standard block break sounds/particles per operation")
             .defineInRange("disassembler.maxBreakEffects", 8, 1, 8);
     public static final ModConfigSpec.IntValue DISASSEMBLER_AOE_RADIUS = BUILDER
-            .comment("AOE mining radius; 1 means a 3x3 plane")
-            .defineInRange("disassembler.aoeRadius", 1, 0, 8);
+            .comment("AOE mining radius; 2 means a 5x5 plane")
+            .defineInRange("disassembler.aoeRadius", 2, 0, 2);
 
     public static final ModConfigSpec SPEC = BUILDER.build();
 

@@ -8,10 +8,16 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import org.lyy.lyycore.LyyCore;
 import org.lyy.lyycore.content.menu.EnergyCellMenu;
 import org.lyy.lyycore.content.menu.IAFMenu;
+import org.lyy.lyycore.content.menu.CrystalCondensingMenu;
+import org.lyy.lyycore.content.menu.ResourceGatheringMenu;
 
 public class LyyMenus {
     public static final DeferredRegister<MenuType<?>> MENUS =
             DeferredRegister.create(Registries.MENU, LyyCore.MODID);
+    public static final DeferredHolder<MenuType<?>, MenuType<ResourceGatheringMenu>> RESOURCE_GATHERING =
+            MENUS.register("resource_gathering", () -> IMenuTypeExtension.create(ResourceGatheringMenu::new));
+    public static final DeferredHolder<MenuType<?>, MenuType<CrystalCondensingMenu>> CRYSTAL_CONDENSING =
+            MENUS.register("crystal_condensing", () -> IMenuTypeExtension.create(CrystalCondensingMenu::new));
 
     public static final DeferredHolder<MenuType<?>, MenuType<EnergyCellMenu>> IMAGINARY_ENERGY_CELL =
             MENUS.register("imaginary_energy_cell",
