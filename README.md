@@ -58,12 +58,13 @@ JEI. Run `./gradlew.bat runGameTestServer build --console=plain` to validate it.
 
 ### Resource Gathering Frames
 
-Crystal and resource frames share the `CondensingFrame` contract and neutral
+Crystal and resource frames inherit the shared
 `CondensingFrameBlock`, `CondensingFrameBlockEntity`, and `CondensingFrameMenu`
 implementations for block behavior, energy, the 1,024-item output buffer, export,
 and inventory interaction. Each concrete entity supplies its own recipe logic.
 All four resource variants use `ResourceGatheringFrameBlock`; the three overworld
-variants add only the vanilla waterlogging interface and property. Existing block
+variants implement waterlogging in their concrete block class, as does the crystal
+frame. The common block base handles placement direction, menus, ticking, and drops. Existing block
 IDs and storage keys remain unchanged.
 
 A new resource frame waits for an output selection. Use **Select**

@@ -15,7 +15,7 @@ import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 import org.lyy.lyycore.content.blocks.CondensingFrameBlock;
-import org.lyy.lyycore.content.blocks.CondensingFrame;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.lyy.lyycore.energy.IEnergyConversion;
 
 public abstract class CondensingFrameBlockEntity extends BlockEntity implements MenuProvider {
@@ -87,7 +87,7 @@ public abstract class CondensingFrameBlockEntity extends BlockEntity implements 
                 case 0 -> energyIE & 0xFFFF;
                 case 1 -> energyIE >>> 16;
                 case 2 -> outputCount;
-                case 3 -> CondensingFrame.isWaterlogged(getBlockState()) ? 1 : 0;
+                case 3 -> getBlockState().getOptionalValue(BlockStateProperties.WATERLOGGED).orElse(false) ? 1 : 0;
                 default -> 0;
             };
         }

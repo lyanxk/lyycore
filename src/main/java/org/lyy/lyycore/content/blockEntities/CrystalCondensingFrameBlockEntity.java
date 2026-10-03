@@ -6,7 +6,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.state.BlockState;
-import org.lyy.lyycore.content.blocks.CondensingFrame;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.lyy.lyycore.content.menu.CrystalCondensingMenu;
 import org.lyy.lyycore.registry.LyyBlockEntities;
 import org.lyy.lyycore.registry.LyyRecipes;
@@ -23,6 +23,6 @@ public final class CrystalCondensingFrameBlockEntity extends CondensingFrameBloc
         var recipes = level.getRecipeManager().getAllRecipesFor(LyyRecipes.CRYSTAL_CONDENSING.get());
         // One built-in recipe; stable ordering also makes datapack overrides predictable.
         var recipe = recipes.stream().min(java.util.Comparator.comparing(r -> r.id().toString())).orElse(null);
-        if (recipe != null) produceItem(recipe.value().result(), recipe.value().energyCost(CondensingFrame.isWaterlogged(state)), state);
+        if (recipe != null) produceItem(recipe.value().result(), recipe.value().energyCost(state.getOptionalValue(BlockStateProperties.WATERLOGGED).orElse(false)), state);
     }
 }
