@@ -1,5 +1,19 @@
 {
   "variants": {
-    "": { "model": "lyycore:block/im_generator" }
+    "facing=north": {
+      "model": "lyycore:block/im_generator"
+    },
+    "facing=east": {
+      "model": "lyycore:block/im_generator",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "lyycore:block/im_generator",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "lyycore:block/im_generator",
+      "y": 270
+    }
   }
 }

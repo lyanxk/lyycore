@@ -6,22 +6,30 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.lyy.lyycore.LyyCore;
 import org.lyy.lyycore.content.blockEntities.BaseImaginaryGeneratorBlockEntity;
+import org.lyy.lyycore.content.blockEntities.CrystalCondensingFrameBlockEntity;
 import org.lyy.lyycore.content.blockEntities.EnergyCellBlockEntity;
 import org.lyy.lyycore.content.blockEntities.ImaginaryAlloyForgeBlockEntity;
+import org.lyy.lyycore.content.blockEntities.ImaginaryCraftingTableBlockEntity;
+import org.lyy.lyycore.content.blockEntities.ImaginaryGateBlockEntity;
 import org.lyy.lyycore.content.blockEntities.ItemCollectorBlockEntity;
-import org.lyy.lyycore.content.blockEntities.CrystalCondensingFrameBlockEntity;
 import org.lyy.lyycore.content.blockEntities.ResourceGatheringFrameBlockEntity;
 
 public class LyyBlockEntities {
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES =
             DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, LyyCore.MODID);
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ImaginaryGateBlockEntity>> IMAGINARY_GATE =
+            BLOCK_ENTITIES.register("imaginary_gate", () -> BlockEntityType.Builder.of(ImaginaryGateBlockEntity::new,
+                    LyyBlocks.IMAGINARY_GATE.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ImaginaryCraftingTableBlockEntity>> IMAGINARY_CRAFTING_TABLE =
+            BLOCK_ENTITIES.register("imaginary_crafting_table", () -> BlockEntityType.Builder.of(ImaginaryCraftingTableBlockEntity::new,
+                    LyyBlocks.IMAGINARY_CRAFTING_TABLE.get()).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ResourceGatheringFrameBlockEntity>> RESOURCE_GATHERING_FRAME =
             BLOCK_ENTITIES.register("resource_gathering_frame", () -> BlockEntityType.Builder.of(
                     ResourceGatheringFrameBlockEntity::new,
-                    LyyBlocks.RESOURCE_FRAMES.values().stream().map(holder -> holder.get()).toArray(net.minecraft.world.level.block.Block[]::new)).build(null));
+                    java.util.stream.Stream.concat(LyyBlocks.RESOURCE_FRAMES.values().stream(), LyyBlocks.RESOURCE_FACTORIES.values().stream()).map(holder -> holder.get()).toArray(net.minecraft.world.level.block.Block[]::new)).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CrystalCondensingFrameBlockEntity>> CRYSTAL_CONDENSING_FRAME =
             BLOCK_ENTITIES.register("crystal_condensing_frame", () -> BlockEntityType.Builder.of(
-                    CrystalCondensingFrameBlockEntity::new, LyyBlocks.CRYSTAL_CONDENSING_FRAME.get()).build(null));
+                    CrystalCondensingFrameBlockEntity::new, LyyBlocks.CRYSTAL_CONDENSING_FRAME.get(), LyyBlocks.MINIATURE_CRYSTAL_FACTORY.get()).build(null));
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<EnergyCellBlockEntity>> IMAGINARY_ENERGY_CELL =
             BLOCK_ENTITIES.register("imaginary_energy_cell",

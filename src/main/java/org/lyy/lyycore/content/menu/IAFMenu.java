@@ -9,7 +9,6 @@ import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.SlotItemHandler;
@@ -36,9 +35,9 @@ public class IAFMenu extends AbstractContainerMenu {
         addDataSlots(data);
 
         IItemHandler handler = be.getItemHandler();
-        addSlot(new SlotItemHandler(handler, INPUT_A, INPUT_X, INPUT_A_Y));
-        addSlot(new SlotItemHandler(handler, INPUT_B, INPUT_X, INPUT_B_Y));
-        addSlot(new SlotItemHandler(handler, CATALYST, CATALYST_X, CATALYST_Y));
+        addSlot(new MachineSlot(handler, INPUT_A, INPUT_X, INPUT_A_Y));
+        addSlot(new MachineSlot(handler, INPUT_B, INPUT_X, INPUT_B_Y));
+        addSlot(new MachineSlot(handler, CATALYST, CATALYST_X, CATALYST_Y));
         addSlot(new OutputSlot(handler, OUTPUT, OUTPUT_X, OUTPUT_Y));
 
         addPlayerInventory(playerInv, INVENTORY_X, INVENTORY_Y);
@@ -78,7 +77,10 @@ public class IAFMenu extends AbstractContainerMenu {
 
     @Override
     public boolean stillValid(@NotNull Player player) {
-        return blockEntity != null && player.distanceToSqr(blockEntity.getBlockPos().getCenter()) <= 64.0;
+        return !blockEntity.isRemoved()
+                && player.level() == blockEntity.getLevel()
+                && player.level().getBlockEntity(blockEntity.getBlockPos()) == blockEntity
+                && player.distanceToSqr(blockEntity.getBlockPos().getCenter()) <= 64.0;
     }
 
     @Override
@@ -110,7 +112,17 @@ public class IAFMenu extends AbstractContainerMenu {
         return original;
     }
 
-    private static class OutputSlot extends SlotItemHandler {
+    private class MachineSlot extends SlotItemHandler {
+        public MachineSlot(IItemHandler handler, int index, int x, int y) { super(handler, index, x, y); }
+
+        @Override public void setChanged() {
+            super.setChanged();
+            // Menu transfers can mutate the existing stack without calling the handler.
+            blockEntity.inventoryChanged();
+        }
+    }
+
+    private class OutputSlot extends MachineSlot {
         public OutputSlot(IItemHandler handler, int index, int x, int y) { super(handler, index, x, y); }
         @Override public boolean mayPlace(@NotNull ItemStack stack) { return false; }
     }

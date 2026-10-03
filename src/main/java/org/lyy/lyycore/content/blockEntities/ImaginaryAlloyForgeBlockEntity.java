@@ -18,7 +18,9 @@ import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.energy.EnergyStorage;
+import net.neoforged.neoforge.energy.IEnergyStorage;
+import org.lyy.lyycore.energy.ImaginaryEnergyStorage;
+import org.lyy.lyycore.energy.ImaginaryEnergyFeAdapter;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import org.lyy.lyycore.Config;
@@ -27,6 +29,8 @@ import org.lyy.lyycore.content.menu.IAFMenu;
 import org.lyy.lyycore.content.recipes.ImaginaryAlloyingRecipe;
 import org.lyy.lyycore.registry.LyyBlockEntities;
 import org.lyy.lyycore.registry.LyyRecipes;
+import org.lyy.lyycore.content.blocks.ImaginaryAlloyForge;
+import net.minecraft.world.level.block.Block;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,27 +46,30 @@ public class ImaginaryAlloyForgeBlockEntity extends BlockEntity implements MenuP
     @Nullable private RecipeHolder<ImaginaryAlloyingRecipe> cachedRecipe;
     @Nullable private ResourceLocation activeRecipeId;
 
-    private final EnergyStorage energyStorage = new EnergyStorage(1_000_000, 1_000_000, 1_000_000) {
+    private final ImaginaryEnergyStorage energyStorage = new ImaginaryEnergyStorage(0, 0, 0) {
+        @Override public int getMaxImaginaryEnergyStored() { return 1_000_000; }
+        @Override public void setImaginaryEnergy(int value) { imaginaryEnergy = Math.clamp(value, 0, getMaxImaginaryEnergyStored()); }
+
         @Override
-        public int receiveEnergy(int maxReceive, boolean simulate) {
-            int received = super.receiveEnergy(maxReceive, simulate);
+        public int receiveImaginaryEnergy(int maxReceive, boolean simulate) {
+            int received = super.receiveImaginaryEnergy(maxReceive, simulate);
             if (!simulate && received > 0) setChanged();
             return received;
         }
 
         @Override
-        public int extractEnergy(int maxExtract, boolean simulate) {
-            int extracted = super.extractEnergy(maxExtract, simulate);
+        public int extractImaginaryEnergy(int maxExtract, boolean simulate) {
+            int extracted = super.extractImaginaryEnergy(maxExtract, simulate);
             if (!simulate && extracted > 0) setChanged();
             return extracted;
         }
     };
+    private final ImaginaryEnergyFeAdapter feAdapter = new ImaginaryEnergyFeAdapter(energyStorage, this::setChanged);
 
     private final ItemStackHandler items = new ItemStackHandler(4) {
         @Override
         protected void onContentsChanged(int slot) {
-            recipeDirty = true;
-            setChanged();
+            inventoryChanged();
         }
     };
 
@@ -81,8 +88,8 @@ public class ImaginaryAlloyForgeBlockEntity extends BlockEntity implements MenuP
             int value = switch (i / 2) {
                 case 0 -> progress;
                 case 1 -> maxProgress;
-                case 2 -> energyStorage.getEnergyStored();
-                case 3 -> energyStorage.getMaxEnergyStored();
+                case 2 -> energyStorage.getImaginaryEnergyStored();
+                case 3 -> energyStorage.getMaxImaginaryEnergyStored();
                 default -> 0;
             };
             return i % 2 == 0 ? value & 0xFFFF : value >>> 16 & 0xFFFF;
@@ -104,8 +111,13 @@ public class ImaginaryAlloyForgeBlockEntity extends BlockEntity implements MenuP
     }
 
     public ContainerData getData() { return data; }
-    public EnergyStorage getEnergyStorage() { return energyStorage; }
+    public IEnergyStorage getEnergyStorage() { return feAdapter; }
+    public ImaginaryEnergyStorage getImaginaryEnergyStorage() { return energyStorage; }
     public ItemStackHandler getItemHandler() { return items; }
+    public void inventoryChanged() {
+        recipeDirty = true;
+        setChanged();
+    }
     public IItemHandler getAutomationItemHandler(@Nullable Direction side) {
         if (side == null) return automationHandler;
         if (side == Direction.UP) return inputHandler;
@@ -117,7 +129,8 @@ public class ImaginaryAlloyForgeBlockEntity extends BlockEntity implements MenuP
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
-        tag.putInt("Energy", energyStorage.getEnergyStored());
+        tag.putInt("IE", energyStorage.getImaginaryEnergyStored());
+        tag.putByte("FERemainder", feAdapter.getRemainder());
         tag.put("Items", items.serializeNBT(registries));
         tag.putInt("Progress", progress);
         tag.putInt("MaxProgress", maxProgress);
@@ -130,9 +143,10 @@ public class ImaginaryAlloyForgeBlockEntity extends BlockEntity implements MenuP
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
-        int currentEnergy = energyStorage.getEnergyStored();
-        if (currentEnergy > 0) energyStorage.extractEnergy(currentEnergy, false);
-        energyStorage.receiveEnergy(tag.getInt("Energy"), false);
+        // The old natural-generation store and recipe costs were labelled FE;
+        // keep their numerical values when correcting the internal unit to IE.
+        energyStorage.setImaginaryEnergy(tag.getInt(tag.contains("IE") ? "IE" : "Energy"));
+        feAdapter.setRemainder(tag.getInt("FERemainder"));
         items.deserializeNBT(registries, tag.getCompound("Items"));
         progress = tag.getInt("Progress");
         maxProgress = tag.getInt("MaxProgress");
@@ -161,11 +175,16 @@ public class ImaginaryAlloyForgeBlockEntity extends BlockEntity implements MenuP
 
         int passiveInterval = Config.FORGE_PASSIVE_INTERVAL.get();
         if (level.getGameTime() % passiveInterval == 0) {
-            be.energyStorage.receiveEnergy(Config.FORGE_PASSIVE_FE.get(), false);
+            be.energyStorage.receiveImaginaryEnergy(Config.FORGE_PASSIVE_IE.get(), false);
         }
 
         if (be.recipeDirty) be.refreshRecipe();
-        if (be.hasActiveRecipe && be.cachedRecipe != null) be.tickProcessing(be.cachedRecipe.value());
+        boolean burning = be.hasActiveRecipe && be.cachedRecipe != null
+                && be.tickProcessing(be.cachedRecipe.value());
+        // Sync only on ignition/extinction, so animation does not rebuild the chunk every tick.
+        if (state.getValue(ImaginaryAlloyForge.LIT) != burning) {
+            level.setBlock(pos, state.setValue(ImaginaryAlloyForge.LIT, burning), Block.UPDATE_CLIENTS);
+        }
     }
 
     private void start(RecipeHolder<ImaginaryAlloyingRecipe> holder) {
@@ -207,12 +226,12 @@ public class ImaginaryAlloyForgeBlockEntity extends BlockEntity implements MenuP
         }
     }
 
-    private void tickProcessing(ImaginaryAlloyingRecipe rec) {
+    private boolean tickProcessing(ImaginaryAlloyingRecipe rec) {
         int nextProgress = Math.min(progress + 1, maxProgress);
         int targetSpent = calculateEnergySpentAtProgress(nextProgress, maxProgress, totalEnergyCost);
         int due = Math.max(0, targetSpent - energySpent);
-        if (due > 0 && energyStorage.extractEnergy(due, true) < due) return;
-        if (due > 0) energyStorage.extractEnergy(due, false);
+        if (due > 0 && energyStorage.extractImaginaryEnergy(due, true) < due) return false;
+        if (due > 0) energyStorage.extractImaginaryEnergy(due, false);
 
         energySpent = targetSpent;
         progress++;
@@ -222,6 +241,7 @@ public class ImaginaryAlloyForgeBlockEntity extends BlockEntity implements MenuP
         } else {
             setChanged();
         }
+        return hasActiveRecipe;
     }
 
     public static int calculateEnergySpentAtProgress(int progress, int maxProgress, int totalEnergyCost) {

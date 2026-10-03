@@ -20,7 +20,10 @@ public final class UtilityTooltips {
         String hint = switch (id.getPath()) {
             case "imaginary_energy_cell", "imaginary_alloy_forge", "crystal_condensing_frame" -> "open";
             case "tree_gathering_frame", "overworld_gathering_frame", "mineral_gathering_frame", "nether_gathering_frame" -> "open";
+            case "miniature_concrete_factory", "miniature_garden", "miniature_ocean", "miniature_monument" -> "open";
+            case "miniature_crystal_factory", "miniature_tree_factory", "miniature_overworld_factory", "miniature_mineral_factory", "miniature_nether_factory" -> "open";
             case "tree_core", "overworld_core", "mineral_core", "nether_core" -> "";
+            case "concrete_core", "garden_core", "ocean_core", "monument_core" -> "";
             case "item_collector" -> "range";
             case "im_generator" -> "scan";
             case "imaginary_crystal", "imaginary_alloy_ingot", "im_battery",

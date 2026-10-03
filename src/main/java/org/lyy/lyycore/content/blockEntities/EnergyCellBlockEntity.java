@@ -21,13 +21,31 @@ import org.lyy.lyycore.Config;
 import org.lyy.lyycore.content.menu.EnergyCellMenu;
 import org.lyy.lyycore.energy.IEnergyConversion;
 import org.lyy.lyycore.energy.ImaginaryEnergyStorage;
+import org.lyy.lyycore.energy.ImaginaryEnergy;
 import org.lyy.lyycore.registry.LyyBlockEntities;
+import org.lyy.lyycore.registry.LyyCapabilities;
+import org.lyy.lyycore.content.blocks.EnergyCellBlock;
+import net.minecraft.world.level.block.Block;
 
 import javax.annotation.Nullable;
 
 public class EnergyCellBlockEntity extends BlockEntity implements MenuProvider {
     private final ImaginaryEnergyStorage storage = new ImaginaryEnergyStorage(1_000_000_000, 1_000_000_000, 1_000_000_000) {
         private byte feRemainder;
+
+        @Override
+        public int receiveImaginaryEnergy(int amount, boolean simulate) {
+            int accepted = super.receiveImaginaryEnergy(amount, simulate);
+            if (!simulate && accepted > 0) setChanged();
+            return accepted;
+        }
+
+        @Override
+        public int extractImaginaryEnergy(int amount, boolean simulate) {
+            int extracted = super.extractImaginaryEnergy(amount, simulate);
+            if (!simulate && extracted > 0) setChanged();
+            return extracted;
+        }
 
         @Override
         public int getEnergyStored() { return energy + feRemainder; }
@@ -174,6 +192,13 @@ public class EnergyCellBlockEntity extends BlockEntity implements MenuProvider {
 
         changed |= be.chargeBattery();
         if (changed) be.setChanged();
+        // Update the visible gauge only when crossing a segment threshold.
+        int stored = be.getIEnergyStored();
+        int charge = stored <= 0 ? 0 : (int) Math.min(5,
+                ((long) stored * 5 + be.getMaxIEnergyStored() - 1) / be.getMaxIEnergyStored());
+        if (state.getValue(EnergyCellBlock.CHARGE) != charge) {
+            level.setBlock(pos, state.setValue(EnergyCellBlock.CHARGE, charge), Block.UPDATE_CLIENTS);
+        }
     }
 
     private boolean normalizeFeToIe() {
@@ -196,6 +221,18 @@ public class EnergyCellBlockEntity extends BlockEntity implements MenuProvider {
         for (Direction dir : Direction.values()) {
             if (remainingIE <= 0) break;
 
+            ImaginaryEnergy nativeTarget = level.getCapability(LyyCapabilities.IMAGINARY_ENERGY,
+                    worldPosition.relative(dir), dir.getOpposite());
+            if (nativeTarget != null) {
+                if (nativeTarget.canReceiveImaginaryEnergy()) {
+                    int accepted = nativeTarget.receiveImaginaryEnergy(remainingIE, false);
+                    storage.extractImaginaryEnergy(accepted);
+                    remainingIE -= accepted;
+                    changed |= accepted > 0;
+                }
+                continue;
+            }
+
             IEnergyStorage target = level.getCapability(Capabilities.EnergyStorage.BLOCK,
                     worldPosition.relative(dir), dir.getOpposite());
             if (target == null) continue;
@@ -206,6 +243,8 @@ public class EnergyCellBlockEntity extends BlockEntity implements MenuProvider {
             int feAcceptedSim = target.receiveEnergy(feSendCap, true);
             if (feAcceptedSim <= 0) continue;
 
+            // Deliberately plan whole IE only: offers below 100 FE are skipped;
+            // the fractional FE part is not carried into a later output transfer.
             int ieNeeded = IEnergyConversion.fromFE(feAcceptedSim);
             if (ieNeeded <= 0) continue;
 
@@ -216,6 +255,7 @@ public class EnergyCellBlockEntity extends BlockEntity implements MenuProvider {
             int feAcceptedReal = target.receiveEnergy(feExact, false);
 
             if (feAcceptedReal < feExact) {
+                // Policy: discard the sub-100 FE refund remainder instead of buffering it.
                 int ieRefund = IEnergyConversion.fromFE(feExact - feAcceptedReal);
                 if (ieRefund > 0) storage.receiveImaginaryEnergy(ieRefund);
             }
@@ -243,6 +283,7 @@ public class EnergyCellBlockEntity extends BlockEntity implements MenuProvider {
         int feAcceptedSim = batt.receiveEnergy(fePlan, true);
         if (feAcceptedSim <= 0) return false;
 
+        // Charging follows the same whole-IE output policy; below 100 FE is skipped.
         int ieNeed = IEnergyConversion.fromFE(feAcceptedSim);
         int ieExtracted = storage.extractImaginaryEnergy(ieNeed);
         if (ieExtracted <= 0) return false;
@@ -250,6 +291,7 @@ public class EnergyCellBlockEntity extends BlockEntity implements MenuProvider {
         int feExact = IEnergyConversion.toFE(ieExtracted);
         int feAcceptedReal = batt.receiveEnergy(feExact, false);
         if (feAcceptedReal < feExact) {
+            // Policy: discard the sub-100 FE refund remainder instead of buffering it.
             int ieRefund = IEnergyConversion.fromFE(feExact - feAcceptedReal);
             if (ieRefund > 0) storage.receiveImaginaryEnergy(ieRefund);
         }

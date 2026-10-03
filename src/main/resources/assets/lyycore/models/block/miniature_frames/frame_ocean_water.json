@@ -1,0 +1,86 @@
+{
+  "credit": "Made with Blockbench",
+  "parent": "minecraft:block/block",
+  "ambientocclusion": false,
+  "render_type": "minecraft:translucent",
+  "textures": {
+    "sand": "minecraft:block/sand",
+    "gravel": "minecraft:block/gravel",
+    "brain_coral_block": "minecraft:block/brain_coral_block",
+    "tube_coral_block": "minecraft:block/tube_coral_block",
+    "horn_coral_block": "minecraft:block/horn_coral_block",
+    "brain_coral": "minecraft:block/brain_coral",
+    "fire_coral": "minecraft:block/fire_coral",
+    "tube_coral": "minecraft:block/tube_coral",
+    "horn_coral": "minecraft:block/horn_coral",
+    "kelp": "minecraft:block/kelp",
+    "kelp_plant": "minecraft:block/kelp_plant",
+    "seagrass": "lyycore:block/frame_seagrass",
+    "frame_white": "lyycore:block/frame_white",
+    "frame_water_clear": "lyycore:block/frame_water_clear",
+    "frame_water_surface": "lyycore:block/frame_water_surface",
+    "particle": "lyycore:block/frame_white"
+  },
+  "elements": [
+    {
+      "name": "Contained seawater",
+      "from": [
+        1.51,
+        2.81,
+        1.51
+      ],
+      "to": [
+        14.49,
+        12.8,
+        14.49
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_water_clear"
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_water_clear"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_water_clear"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_water_clear"
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_water_surface"
+        }
+      }
+    }
+  ]
+}

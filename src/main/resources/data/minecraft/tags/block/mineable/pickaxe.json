@@ -7,6 +7,19 @@
     "lyycore:tree_gathering_frame",
     "lyycore:overworld_gathering_frame",
     "lyycore:mineral_gathering_frame",
-    "lyycore:nether_gathering_frame"
+    "lyycore:nether_gathering_frame",
+    "lyycore:crystal_block",
+    "lyycore:alloy_block",
+    "lyycore:imaginary_gate",
+    "lyycore:imaginary_crafting_table",
+    "lyycore:miniature_concrete_factory",
+    "lyycore:miniature_garden",
+    "lyycore:miniature_ocean",
+    "lyycore:miniature_monument",
+    "lyycore:miniature_crystal_factory",
+    "lyycore:miniature_tree_factory",
+    "lyycore:miniature_overworld_factory",
+    "lyycore:miniature_mineral_factory",
+    "lyycore:miniature_nether_factory"
   ]
 }

@@ -1,0 +1,1759 @@
+{
+  "credit": "Made with Blockbench",
+  "parent": "minecraft:block/block",
+  "ambientocclusion": false,
+  "render_type": "minecraft:cutout",
+  "textures": {
+    "oak_planks": "minecraft:block/oak_planks",
+    "beehive_front": "minecraft:block/beehive_front",
+    "beehive_side": "minecraft:block/beehive_side",
+    "beehive_end": "minecraft:block/beehive_end",
+    "poppy": "minecraft:block/poppy",
+    "dandelion": "minecraft:block/dandelion",
+    "oxeye_daisy": "minecraft:block/oxeye_daisy",
+    "cornflower": "minecraft:block/cornflower",
+    "short_grass": "lyycore:block/frame_short_grass",
+    "bee": "lyycore:block/frame_bee",
+    "frame_white": "lyycore:block/frame_white",
+    "frame_grass_top": "lyycore:block/frame_grass_top",
+    "frame_grass_side": "lyycore:block/frame_grass_side",
+    "particle": "lyycore:block/frame_white"
+  },
+  "elements": [
+    {
+      "name": "Garden soil",
+      "from": [
+        1.5,
+        1.5,
+        1.5
+      ],
+      "to": [
+        14.5,
+        3,
+        14.5
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_grass_side"
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_grass_side"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_grass_side"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_grass_side"
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_grass_top"
+        }
+      }
+    },
+    {
+      "name": "Raised flower bed",
+      "from": [
+        1.7,
+        3,
+        2
+      ],
+      "to": [
+        6.4,
+        3.75,
+        6.2
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_grass_side"
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_grass_side"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_grass_side"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_grass_side"
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_grass_top"
+        }
+      }
+    },
+    {
+      "name": "Beehive stand",
+      "from": [
+        10.2,
+        3,
+        2.3
+      ],
+      "to": [
+        12.7,
+        4.4,
+        4.8
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#oak_planks"
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#oak_planks"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#oak_planks"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#oak_planks"
+        }
+      }
+    },
+    {
+      "name": "Vanilla beehive",
+      "from": [
+        9.7,
+        4.4,
+        1.9
+      ],
+      "to": [
+        13.2,
+        7.9,
+        5.4
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#beehive_side"
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#beehive_side"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#beehive_front"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#beehive_side"
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#beehive_end"
+        },
+        "down": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#beehive_end"
+        }
+      }
+    },
+    {
+      "name": "Garden poppy",
+      "from": [
+        1.9504310985675777,
+        3.75,
+        4.1
+      ],
+      "to": [
+        4.849568901432422,
+        7.85,
+        4.1
+      ],
+      "rotation": {
+        "angle": 45,
+        "axis": "y",
+        "origin": [
+          3.4,
+          3.75,
+          4.1
+        ],
+        "rescale": true
+      },
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#poppy"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#poppy"
+        }
+      }
+    },
+    {
+      "name": "Garden poppy",
+      "from": [
+        3.4,
+        3.75,
+        2.6504310985675774
+      ],
+      "to": [
+        3.4,
+        7.85,
+        5.549568901432422
+      ],
+      "rotation": {
+        "angle": 45,
+        "axis": "y",
+        "origin": [
+          3.4,
+          3.75,
+          4.1
+        ],
+        "rescale": true
+      },
+      "faces": {
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#poppy"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#poppy"
+        }
+      }
+    },
+    {
+      "name": "Garden dandelion",
+      "from": [
+        3.891852454804887,
+        3.75,
+        4.8
+      ],
+      "to": [
+        6.508147545195113,
+        7.45,
+        4.8
+      ],
+      "rotation": {
+        "angle": 45,
+        "axis": "y",
+        "origin": [
+          5.2,
+          3.75,
+          4.8
+        ],
+        "rescale": true
+      },
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#dandelion"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#dandelion"
+        }
+      }
+    },
+    {
+      "name": "Garden dandelion",
+      "from": [
+        5.2,
+        3.75,
+        3.491852454804887
+      ],
+      "to": [
+        5.2,
+        7.45,
+        6.108147545195113
+      ],
+      "rotation": {
+        "angle": 45,
+        "axis": "y",
+        "origin": [
+          5.2,
+          3.75,
+          4.8
+        ],
+        "rescale": true
+      },
+      "faces": {
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#dandelion"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#dandelion"
+        }
+      }
+    },
+    {
+      "name": "Garden cornflower",
+      "from": [
+        6.5150757595082505,
+        3,
+        4.7
+      ],
+      "to": [
+        9.48492424049175,
+        7.2,
+        4.7
+      ],
+      "rotation": {
+        "angle": 45,
+        "axis": "y",
+        "origin": [
+          8,
+          3,
+          4.7
+        ],
+        "rescale": true
+      },
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#cornflower"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#cornflower"
+        }
+      }
+    },
+    {
+      "name": "Garden cornflower",
+      "from": [
+        8,
+        3,
+        3.2150757595082506
+      ],
+      "to": [
+        8,
+        7.2,
+        6.18492424049175
+      ],
+      "rotation": {
+        "angle": 45,
+        "axis": "y",
+        "origin": [
+          8,
+          3,
+          4.7
+        ],
+        "rescale": true
+      },
+      "faces": {
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#cornflower"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#cornflower"
+        }
+      }
+    },
+    {
+      "name": "Garden oxeye_daisy",
+      "from": [
+        1.8443650813895953,
+        3,
+        10.8
+      ],
+      "to": [
+        4.9556349186104045,
+        7.4,
+        10.8
+      ],
+      "rotation": {
+        "angle": 45,
+        "axis": "y",
+        "origin": [
+          3.4,
+          3,
+          10.8
+        ],
+        "rescale": true
+      },
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#oxeye_daisy"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#oxeye_daisy"
+        }
+      }
+    },
+    {
+      "name": "Garden oxeye_daisy",
+      "from": [
+        3.4,
+        3,
+        9.244365081389596
+      ],
+      "to": [
+        3.4,
+        7.4,
+        12.355634918610406
+      ],
+      "rotation": {
+        "angle": 45,
+        "axis": "y",
+        "origin": [
+          3.4,
+          3,
+          10.8
+        ],
+        "rescale": true
+      },
+      "faces": {
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#oxeye_daisy"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#oxeye_daisy"
+        }
+      }
+    },
+    {
+      "name": "Garden poppy",
+      "from": [
+        6.062563132923541,
+        3,
+        12
+      ],
+      "to": [
+        8.537436867076458,
+        6.5,
+        12
+      ],
+      "rotation": {
+        "angle": 45,
+        "axis": "y",
+        "origin": [
+          7.3,
+          3,
+          12
+        ],
+        "rescale": true
+      },
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#poppy"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#poppy"
+        }
+      }
+    },
+    {
+      "name": "Garden poppy",
+      "from": [
+        7.3,
+        3,
+        10.762563132923542
+      ],
+      "to": [
+        7.3,
+        6.5,
+        13.237436867076458
+      ],
+      "rotation": {
+        "angle": 45,
+        "axis": "y",
+        "origin": [
+          7.3,
+          3,
+          12
+        ],
+        "rescale": true
+      },
+      "faces": {
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#poppy"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#poppy"
+        }
+      }
+    },
+    {
+      "name": "Garden cornflower",
+      "from": [
+        10.379720420448923,
+        3,
+        11.7
+      ],
+      "to": [
+        13.420279579551078,
+        7.3,
+        11.7
+      ],
+      "rotation": {
+        "angle": 45,
+        "axis": "y",
+        "origin": [
+          11.9,
+          3,
+          11.7
+        ],
+        "rescale": true
+      },
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#cornflower"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#cornflower"
+        }
+      }
+    },
+    {
+      "name": "Garden cornflower",
+      "from": [
+        11.9,
+        3,
+        10.179720420448922
+      ],
+      "to": [
+        11.9,
+        7.3,
+        13.220279579551077
+      ],
+      "rotation": {
+        "angle": 45,
+        "axis": "y",
+        "origin": [
+          11.9,
+          3,
+          11.7
+        ],
+        "rescale": true
+      },
+      "faces": {
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#cornflower"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#cornflower"
+        }
+      }
+    },
+    {
+      "name": "Garden dandelion",
+      "from": [
+        10.427207793864214,
+        3,
+        8.4
+      ],
+      "to": [
+        12.972792206135784,
+        6.6,
+        8.4
+      ],
+      "rotation": {
+        "angle": 45,
+        "axis": "y",
+        "origin": [
+          11.7,
+          3,
+          8.4
+        ],
+        "rescale": true
+      },
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#dandelion"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#dandelion"
+        }
+      }
+    },
+    {
+      "name": "Garden dandelion",
+      "from": [
+        11.7,
+        3,
+        7.127207793864215
+      ],
+      "to": [
+        11.7,
+        6.6,
+        9.672792206135785
+      ],
+      "rotation": {
+        "angle": 45,
+        "axis": "y",
+        "origin": [
+          11.7,
+          3,
+          8.4
+        ],
+        "rescale": true
+      },
+      "faces": {
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#dandelion"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#dandelion"
+        }
+      }
+    },
+    {
+      "name": "Grass tuft",
+      "from": [
+        4.710050506338834,
+        3,
+        8
+      ],
+      "to": [
+        6.6899494936611665,
+        5.8,
+        8
+      ],
+      "rotation": {
+        "angle": 45,
+        "axis": "y",
+        "origin": [
+          5.7,
+          3,
+          8
+        ],
+        "rescale": true
+      },
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#short_grass"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#short_grass"
+        }
+      }
+    },
+    {
+      "name": "Grass tuft",
+      "from": [
+        5.7,
+        3,
+        7.010050506338834
+      ],
+      "to": [
+        5.7,
+        5.8,
+        8.989949493661166
+      ],
+      "rotation": {
+        "angle": 45,
+        "axis": "y",
+        "origin": [
+          5.7,
+          3,
+          8
+        ],
+        "rescale": true
+      },
+      "faces": {
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#short_grass"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#short_grass"
+        }
+      }
+    },
+    {
+      "name": "Grass tuft",
+      "from": [
+        8.110050506338833,
+        3,
+        10.3
+      ],
+      "to": [
+        10.089949493661166,
+        5.8,
+        10.3
+      ],
+      "rotation": {
+        "angle": 45,
+        "axis": "y",
+        "origin": [
+          9.1,
+          3,
+          10.3
+        ],
+        "rescale": true
+      },
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#short_grass"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#short_grass"
+        }
+      }
+    },
+    {
+      "name": "Grass tuft",
+      "from": [
+        9.1,
+        3,
+        9.310050506338834
+      ],
+      "to": [
+        9.1,
+        5.8,
+        11.289949493661167
+      ],
+      "rotation": {
+        "angle": 45,
+        "axis": "y",
+        "origin": [
+          9.1,
+          3,
+          10.3
+        ],
+        "rescale": true
+      },
+      "faces": {
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#short_grass"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#short_grass"
+        }
+      }
+    },
+    {
+      "name": "Grass tuft",
+      "from": [
+        1.8100505063388335,
+        3,
+        7
+      ],
+      "to": [
+        3.789949493661166,
+        5.8,
+        7
+      ],
+      "rotation": {
+        "angle": 45,
+        "axis": "y",
+        "origin": [
+          2.8,
+          3,
+          7
+        ],
+        "rescale": true
+      },
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#short_grass"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#short_grass"
+        }
+      }
+    },
+    {
+      "name": "Grass tuft",
+      "from": [
+        2.8,
+        3,
+        6.010050506338834
+      ],
+      "to": [
+        2.8,
+        5.8,
+        7.989949493661166
+      ],
+      "rotation": {
+        "angle": 45,
+        "axis": "y",
+        "origin": [
+          2.8,
+          3,
+          7
+        ],
+        "rescale": true
+      },
+      "faces": {
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#short_grass"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#short_grass"
+        }
+      }
+    },
+    {
+      "name": "Bee one striped body",
+      "from": [
+        6.18,
+        8.18,
+        6.4
+      ],
+      "to": [
+        8.42,
+        10.420000000000002,
+        9.6
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            6.75,
+            2.5,
+            8.5,
+            4.25
+          ],
+          "texture": "#bee"
+        },
+        "east": {
+          "uv": [
+            0,
+            2.5,
+            2.5,
+            4.25
+          ],
+          "texture": "#bee"
+        },
+        "south": {
+          "uv": [
+            2.5,
+            2.5,
+            4.25,
+            4.25
+          ],
+          "texture": "#bee"
+        },
+        "west": {
+          "uv": [
+            4.25,
+            2.5,
+            6.75,
+            4.25
+          ],
+          "texture": "#bee"
+        },
+        "up": {
+          "uv": [
+            2.5,
+            0,
+            4.25,
+            2.5
+          ],
+          "texture": "#bee"
+        },
+        "down": {
+          "uv": [
+            4.25,
+            0,
+            6,
+            2.5
+          ],
+          "texture": "#bee"
+        }
+      }
+    },
+    {
+      "name": "Bee one wing",
+      "from": [
+        4.196,
+        10.420000000000002,
+        7.04
+      ],
+      "to": [
+        6.9159999999999995,
+        10.420000000000002,
+        8.96
+      ],
+      "rotation": {
+        "angle": -22.5,
+        "axis": "z",
+        "origin": [
+          6.9159999999999995,
+          10.420000000000002,
+          8
+        ]
+      },
+      "faces": {
+        "up": {
+          "uv": [
+            1.5,
+            4.5,
+            3.75,
+            6
+          ],
+          "texture": "#bee"
+        },
+        "down": {
+          "uv": [
+            1.5,
+            4.5,
+            3.75,
+            6
+          ],
+          "texture": "#bee"
+        }
+      }
+    },
+    {
+      "name": "Bee one antenna",
+      "from": [
+        6.5600000000000005,
+        10.164000000000001,
+        9.568
+      ],
+      "to": [
+        6.76,
+        10.74,
+        10.144
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0.75,
+            0.25,
+            1,
+            0.5
+          ],
+          "texture": "#bee"
+        },
+        "east": {
+          "uv": [
+            0.75,
+            0.25,
+            1,
+            0.5
+          ],
+          "texture": "#bee"
+        },
+        "south": {
+          "uv": [
+            0.75,
+            0.25,
+            1,
+            0.5
+          ],
+          "texture": "#bee"
+        },
+        "west": {
+          "uv": [
+            0.75,
+            0.25,
+            1,
+            0.5
+          ],
+          "texture": "#bee"
+        },
+        "up": {
+          "uv": [
+            0.75,
+            0.25,
+            1,
+            0.5
+          ],
+          "texture": "#bee"
+        },
+        "down": {
+          "uv": [
+            0.75,
+            0.25,
+            1,
+            0.5
+          ],
+          "texture": "#bee"
+        }
+      }
+    },
+    {
+      "name": "Bee one wing",
+      "from": [
+        7.684,
+        10.420000000000002,
+        7.04
+      ],
+      "to": [
+        10.404,
+        10.420000000000002,
+        8.96
+      ],
+      "rotation": {
+        "angle": 22.5,
+        "axis": "z",
+        "origin": [
+          7.684,
+          10.420000000000002,
+          8
+        ]
+      },
+      "faces": {
+        "up": {
+          "uv": [
+            1.5,
+            4.5,
+            3.75,
+            6
+          ],
+          "texture": "#bee"
+        },
+        "down": {
+          "uv": [
+            1.5,
+            4.5,
+            3.75,
+            6
+          ],
+          "texture": "#bee"
+        }
+      }
+    },
+    {
+      "name": "Bee one antenna",
+      "from": [
+        7.84,
+        10.164000000000001,
+        9.568
+      ],
+      "to": [
+        8.04,
+        10.74,
+        10.144
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0.75,
+            0.25,
+            1,
+            0.5
+          ],
+          "texture": "#bee"
+        },
+        "east": {
+          "uv": [
+            0.75,
+            0.25,
+            1,
+            0.5
+          ],
+          "texture": "#bee"
+        },
+        "south": {
+          "uv": [
+            0.75,
+            0.25,
+            1,
+            0.5
+          ],
+          "texture": "#bee"
+        },
+        "west": {
+          "uv": [
+            0.75,
+            0.25,
+            1,
+            0.5
+          ],
+          "texture": "#bee"
+        },
+        "up": {
+          "uv": [
+            0.75,
+            0.25,
+            1,
+            0.5
+          ],
+          "texture": "#bee"
+        },
+        "down": {
+          "uv": [
+            0.75,
+            0.25,
+            1,
+            0.5
+          ],
+          "texture": "#bee"
+        }
+      }
+    },
+    {
+      "name": "Bee two striped body",
+      "from": [
+        3.195,
+        6.495,
+        10.45
+      ],
+      "to": [
+        4.805,
+        8.105,
+        12.75
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            6.75,
+            2.5,
+            8.5,
+            4.25
+          ],
+          "texture": "#bee"
+        },
+        "east": {
+          "uv": [
+            0,
+            2.5,
+            2.5,
+            4.25
+          ],
+          "texture": "#bee"
+        },
+        "south": {
+          "uv": [
+            2.5,
+            2.5,
+            4.25,
+            4.25
+          ],
+          "texture": "#bee"
+        },
+        "west": {
+          "uv": [
+            4.25,
+            2.5,
+            6.75,
+            4.25
+          ],
+          "texture": "#bee"
+        },
+        "up": {
+          "uv": [
+            2.5,
+            0,
+            4.25,
+            2.5
+          ],
+          "texture": "#bee"
+        },
+        "down": {
+          "uv": [
+            4.25,
+            0,
+            6,
+            2.5
+          ],
+          "texture": "#bee"
+        }
+      }
+    },
+    {
+      "name": "Bee two wing",
+      "from": [
+        1.7690000000000001,
+        8.105,
+        10.91
+      ],
+      "to": [
+        3.724,
+        8.105,
+        12.29
+      ],
+      "rotation": {
+        "angle": -22.5,
+        "axis": "z",
+        "origin": [
+          3.724,
+          8.105,
+          11.6
+        ]
+      },
+      "faces": {
+        "up": {
+          "uv": [
+            1.5,
+            4.5,
+            3.75,
+            6
+          ],
+          "texture": "#bee"
+        },
+        "down": {
+          "uv": [
+            1.5,
+            4.5,
+            3.75,
+            6
+          ],
+          "texture": "#bee"
+        }
+      }
+    },
+    {
+      "name": "Bee two antenna",
+      "from": [
+        3.44,
+        7.921,
+        12.727
+      ],
+      "to": [
+        3.64,
+        8.335,
+        13.141
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0.75,
+            0.25,
+            1,
+            0.5
+          ],
+          "texture": "#bee"
+        },
+        "east": {
+          "uv": [
+            0.75,
+            0.25,
+            1,
+            0.5
+          ],
+          "texture": "#bee"
+        },
+        "south": {
+          "uv": [
+            0.75,
+            0.25,
+            1,
+            0.5
+          ],
+          "texture": "#bee"
+        },
+        "west": {
+          "uv": [
+            0.75,
+            0.25,
+            1,
+            0.5
+          ],
+          "texture": "#bee"
+        },
+        "up": {
+          "uv": [
+            0.75,
+            0.25,
+            1,
+            0.5
+          ],
+          "texture": "#bee"
+        },
+        "down": {
+          "uv": [
+            0.75,
+            0.25,
+            1,
+            0.5
+          ],
+          "texture": "#bee"
+        }
+      }
+    },
+    {
+      "name": "Bee two wing",
+      "from": [
+        4.276,
+        8.105,
+        10.91
+      ],
+      "to": [
+        6.231,
+        8.105,
+        12.29
+      ],
+      "rotation": {
+        "angle": 22.5,
+        "axis": "z",
+        "origin": [
+          4.276,
+          8.105,
+          11.6
+        ]
+      },
+      "faces": {
+        "up": {
+          "uv": [
+            1.5,
+            4.5,
+            3.75,
+            6
+          ],
+          "texture": "#bee"
+        },
+        "down": {
+          "uv": [
+            1.5,
+            4.5,
+            3.75,
+            6
+          ],
+          "texture": "#bee"
+        }
+      }
+    },
+    {
+      "name": "Bee two antenna",
+      "from": [
+        4.36,
+        7.921,
+        12.727
+      ],
+      "to": [
+        4.56,
+        8.335,
+        13.141
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0.75,
+            0.25,
+            1,
+            0.5
+          ],
+          "texture": "#bee"
+        },
+        "east": {
+          "uv": [
+            0.75,
+            0.25,
+            1,
+            0.5
+          ],
+          "texture": "#bee"
+        },
+        "south": {
+          "uv": [
+            0.75,
+            0.25,
+            1,
+            0.5
+          ],
+          "texture": "#bee"
+        },
+        "west": {
+          "uv": [
+            0.75,
+            0.25,
+            1,
+            0.5
+          ],
+          "texture": "#bee"
+        },
+        "up": {
+          "uv": [
+            0.75,
+            0.25,
+            1,
+            0.5
+          ],
+          "texture": "#bee"
+        },
+        "down": {
+          "uv": [
+            0.75,
+            0.25,
+            1,
+            0.5
+          ],
+          "texture": "#bee"
+        }
+      }
+    }
+  ],
+  "display": {
+    "gui": {
+      "rotation": [
+        30,
+        225,
+        0
+      ],
+      "translation": [
+        0,
+        1,
+        0
+      ],
+      "scale": [
+        0.8,
+        0.8,
+        0.8
+      ]
+    },
+    "ground": {
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "translation": [
+        0,
+        3,
+        0
+      ],
+      "scale": [
+        0.4,
+        0.4,
+        0.4
+      ]
+    },
+    "fixed": {
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "scale": [
+        0.6,
+        0.6,
+        0.6
+      ]
+    }
+  }
+}

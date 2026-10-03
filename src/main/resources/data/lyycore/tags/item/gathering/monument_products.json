@@ -1,0 +1,14 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:dark_prismarine",
+    "minecraft:gold_block",
+    "minecraft:prismarine",
+    "minecraft:prismarine_bricks",
+    "minecraft:prismarine_crystals",
+    "minecraft:prismarine_shard",
+    "minecraft:sea_lantern",
+    "minecraft:sponge",
+    "minecraft:wet_sponge"
+  ]
+}

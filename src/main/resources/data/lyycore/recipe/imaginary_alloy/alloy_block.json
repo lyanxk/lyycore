@@ -1,0 +1,21 @@
+{
+  "type": "lyycore:imaginary_alloying",
+  "inputs": [
+    {
+      "item": "minecraft:iron_block"
+    },
+    {
+      "item": "lyycore:imaginary_alloy_ingot"
+    }
+  ],
+  "catalyst": {
+    "item": "lyycore:crystal_block"
+  },
+  "catalyst_consumed": true,
+  "result": {
+    "id": "lyycore:alloy_block",
+    "count": 1
+  },
+  "process_time": 3,
+  "energy_cost": 1000
+}

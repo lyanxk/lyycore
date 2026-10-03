@@ -8,5 +8,5 @@
   "catalyst_consumed": false,
   "result": { "id": "lyycore:im_battery", "count": 1 },
   "process_time": 100,
-  "energy_cost": 5000
+  "energy_cost": 50
 }

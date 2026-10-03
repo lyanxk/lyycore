@@ -70,7 +70,8 @@ public final class ResourceGatheringScreen extends AbstractContainerScreen<Resou
             else if (!menu.selectedResult().isEmpty()) lines.add(menu.selectedResult().getHoverName());
             else lines.add(Component.translatable("screen.lyycore.gathering.choose"));
             lines.add(Component.translatable("screen.lyycore.gathering.output", menu.getOutputCount(), 1024));
-            if (menu.kind().supportsWater()) lines.add(Component.translatable(menu.isWaterlogged() ? "screen.lyycore.gathering.wet" : "screen.lyycore.condensing.dry"));
+            if (menu.isMiniatureFactory()) lines.add(Component.translatable("screen.lyycore.factory.production"));
+            else if (menu.kind().supportsWater()) lines.add(Component.translatable(menu.isWaterlogged() ? "screen.lyycore.gathering.wet" : "screen.lyycore.condensing.dry"));
             if (!menu.getSlot(0).getItem().isEmpty() && !ItemStack.isSameItemSameComponents(menu.getSlot(0).getItem(), menu.selectedResult()))
                 lines.add(Component.translatable("screen.lyycore.gathering.waiting"));
             g.renderComponentTooltip(font, lines, mouseX, mouseY);

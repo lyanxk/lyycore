@@ -1,0 +1,147 @@
+{
+  "parent": "minecraft:block/block",
+  "ambientocclusion": false,
+  "render_type": "minecraft:cutout",
+  "textures": {
+    "particle": "lyycore:block/pink_stargate/white",
+    "white": "lyycore:block/pink_stargate/white",
+    "rim": "lyycore:block/pink_stargate/rim",
+    "pink_crystal": "lyycore:block/pink_stargate/pink_crystal",
+    "pink_sigil": "lyycore:block/pink_stargate/pink_sigil",
+    "portal": "lyycore:block/pink_stargate/portal"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        7.95
+      ],
+      "to": [
+        16,
+        4,
+        8.05
+      ],
+      "faces": {
+        "north": {
+          "texture": "#portal",
+          "uv": [
+            6.4,
+            5.6,
+            9.6,
+            6.4
+          ]
+        },
+        "south": {
+          "texture": "#portal",
+          "uv": [
+            6.4,
+            5.6,
+            9.6,
+            6.4
+          ]
+        }
+      },
+      "shade": false
+    },
+    {
+      "from": [
+        0,
+        4,
+        7.95
+      ],
+      "to": [
+        16,
+        8,
+        8.05
+      ],
+      "faces": {
+        "north": {
+          "texture": "#portal",
+          "uv": [
+            6.4,
+            4.8,
+            9.6,
+            5.6
+          ]
+        },
+        "south": {
+          "texture": "#portal",
+          "uv": [
+            6.4,
+            4.8,
+            9.6,
+            5.6
+          ]
+        }
+      },
+      "shade": false
+    },
+    {
+      "from": [
+        0,
+        8,
+        7.95
+      ],
+      "to": [
+        16,
+        12,
+        8.05
+      ],
+      "faces": {
+        "north": {
+          "texture": "#portal",
+          "uv": [
+            6.4,
+            4.0,
+            9.6,
+            4.8
+          ]
+        },
+        "south": {
+          "texture": "#portal",
+          "uv": [
+            6.4,
+            4.0,
+            9.6,
+            4.8
+          ]
+        }
+      },
+      "shade": false
+    },
+    {
+      "from": [
+        0,
+        12,
+        7.95
+      ],
+      "to": [
+        16,
+        16,
+        8.05
+      ],
+      "faces": {
+        "north": {
+          "texture": "#portal",
+          "uv": [
+            6.4,
+            3.2,
+            9.6,
+            4.0
+          ]
+        },
+        "south": {
+          "texture": "#portal",
+          "uv": [
+            6.4,
+            3.2,
+            9.6,
+            4.0
+          ]
+        }
+      },
+      "shade": false
+    }
+  ]
+}

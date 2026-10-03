@@ -1,0 +1,404 @@
+{
+  "variants": {
+    "facing=north,column=0,row=0": {
+      "model": "lyycore:block/pink_stargate/part_0_0",
+      "y": 0
+    },
+    "facing=north,column=1,row=0": {
+      "model": "lyycore:block/pink_stargate/part_1_0",
+      "y": 0
+    },
+    "facing=north,column=2,row=0": {
+      "model": "lyycore:block/pink_stargate/part_2_0",
+      "y": 0
+    },
+    "facing=north,column=3,row=0": {
+      "model": "lyycore:block/pink_stargate/part_3_0",
+      "y": 0
+    },
+    "facing=north,column=4,row=0": {
+      "model": "lyycore:block/pink_stargate/part_4_0",
+      "y": 0
+    },
+    "facing=north,column=0,row=1": {
+      "model": "lyycore:block/pink_stargate/part_0_1",
+      "y": 0
+    },
+    "facing=north,column=1,row=1": {
+      "model": "lyycore:block/pink_stargate/part_1_1",
+      "y": 0
+    },
+    "facing=north,column=2,row=1": {
+      "model": "lyycore:block/pink_stargate/part_2_1",
+      "y": 0
+    },
+    "facing=north,column=3,row=1": {
+      "model": "lyycore:block/pink_stargate/part_3_1",
+      "y": 0
+    },
+    "facing=north,column=4,row=1": {
+      "model": "lyycore:block/pink_stargate/part_4_1",
+      "y": 0
+    },
+    "facing=north,column=0,row=2": {
+      "model": "lyycore:block/pink_stargate/part_0_2",
+      "y": 0
+    },
+    "facing=north,column=1,row=2": {
+      "model": "lyycore:block/pink_stargate/part_1_2",
+      "y": 0
+    },
+    "facing=north,column=2,row=2": {
+      "model": "lyycore:block/pink_stargate/part_2_2",
+      "y": 0
+    },
+    "facing=north,column=3,row=2": {
+      "model": "lyycore:block/pink_stargate/part_3_2",
+      "y": 0
+    },
+    "facing=north,column=4,row=2": {
+      "model": "lyycore:block/pink_stargate/part_4_2",
+      "y": 0
+    },
+    "facing=north,column=0,row=3": {
+      "model": "lyycore:block/pink_stargate/part_0_3",
+      "y": 0
+    },
+    "facing=north,column=1,row=3": {
+      "model": "lyycore:block/pink_stargate/part_1_3",
+      "y": 0
+    },
+    "facing=north,column=2,row=3": {
+      "model": "lyycore:block/pink_stargate/part_2_3",
+      "y": 0
+    },
+    "facing=north,column=3,row=3": {
+      "model": "lyycore:block/pink_stargate/part_3_3",
+      "y": 0
+    },
+    "facing=north,column=4,row=3": {
+      "model": "lyycore:block/pink_stargate/part_4_3",
+      "y": 0
+    },
+    "facing=north,column=0,row=4": {
+      "model": "lyycore:block/pink_stargate/part_0_4",
+      "y": 0
+    },
+    "facing=north,column=1,row=4": {
+      "model": "lyycore:block/pink_stargate/part_1_4",
+      "y": 0
+    },
+    "facing=north,column=2,row=4": {
+      "model": "lyycore:block/pink_stargate/part_2_4",
+      "y": 0
+    },
+    "facing=north,column=3,row=4": {
+      "model": "lyycore:block/pink_stargate/part_3_4",
+      "y": 0
+    },
+    "facing=north,column=4,row=4": {
+      "model": "lyycore:block/pink_stargate/part_4_4",
+      "y": 0
+    },
+    "facing=east,column=0,row=0": {
+      "model": "lyycore:block/pink_stargate/part_0_0",
+      "y": 90
+    },
+    "facing=east,column=1,row=0": {
+      "model": "lyycore:block/pink_stargate/part_1_0",
+      "y": 90
+    },
+    "facing=east,column=2,row=0": {
+      "model": "lyycore:block/pink_stargate/part_2_0",
+      "y": 90
+    },
+    "facing=east,column=3,row=0": {
+      "model": "lyycore:block/pink_stargate/part_3_0",
+      "y": 90
+    },
+    "facing=east,column=4,row=0": {
+      "model": "lyycore:block/pink_stargate/part_4_0",
+      "y": 90
+    },
+    "facing=east,column=0,row=1": {
+      "model": "lyycore:block/pink_stargate/part_0_1",
+      "y": 90
+    },
+    "facing=east,column=1,row=1": {
+      "model": "lyycore:block/pink_stargate/part_1_1",
+      "y": 90
+    },
+    "facing=east,column=2,row=1": {
+      "model": "lyycore:block/pink_stargate/part_2_1",
+      "y": 90
+    },
+    "facing=east,column=3,row=1": {
+      "model": "lyycore:block/pink_stargate/part_3_1",
+      "y": 90
+    },
+    "facing=east,column=4,row=1": {
+      "model": "lyycore:block/pink_stargate/part_4_1",
+      "y": 90
+    },
+    "facing=east,column=0,row=2": {
+      "model": "lyycore:block/pink_stargate/part_0_2",
+      "y": 90
+    },
+    "facing=east,column=1,row=2": {
+      "model": "lyycore:block/pink_stargate/part_1_2",
+      "y": 90
+    },
+    "facing=east,column=2,row=2": {
+      "model": "lyycore:block/pink_stargate/part_2_2",
+      "y": 90
+    },
+    "facing=east,column=3,row=2": {
+      "model": "lyycore:block/pink_stargate/part_3_2",
+      "y": 90
+    },
+    "facing=east,column=4,row=2": {
+      "model": "lyycore:block/pink_stargate/part_4_2",
+      "y": 90
+    },
+    "facing=east,column=0,row=3": {
+      "model": "lyycore:block/pink_stargate/part_0_3",
+      "y": 90
+    },
+    "facing=east,column=1,row=3": {
+      "model": "lyycore:block/pink_stargate/part_1_3",
+      "y": 90
+    },
+    "facing=east,column=2,row=3": {
+      "model": "lyycore:block/pink_stargate/part_2_3",
+      "y": 90
+    },
+    "facing=east,column=3,row=3": {
+      "model": "lyycore:block/pink_stargate/part_3_3",
+      "y": 90
+    },
+    "facing=east,column=4,row=3": {
+      "model": "lyycore:block/pink_stargate/part_4_3",
+      "y": 90
+    },
+    "facing=east,column=0,row=4": {
+      "model": "lyycore:block/pink_stargate/part_0_4",
+      "y": 90
+    },
+    "facing=east,column=1,row=4": {
+      "model": "lyycore:block/pink_stargate/part_1_4",
+      "y": 90
+    },
+    "facing=east,column=2,row=4": {
+      "model": "lyycore:block/pink_stargate/part_2_4",
+      "y": 90
+    },
+    "facing=east,column=3,row=4": {
+      "model": "lyycore:block/pink_stargate/part_3_4",
+      "y": 90
+    },
+    "facing=east,column=4,row=4": {
+      "model": "lyycore:block/pink_stargate/part_4_4",
+      "y": 90
+    },
+    "facing=south,column=0,row=0": {
+      "model": "lyycore:block/pink_stargate/part_0_0",
+      "y": 180
+    },
+    "facing=south,column=1,row=0": {
+      "model": "lyycore:block/pink_stargate/part_1_0",
+      "y": 180
+    },
+    "facing=south,column=2,row=0": {
+      "model": "lyycore:block/pink_stargate/part_2_0",
+      "y": 180
+    },
+    "facing=south,column=3,row=0": {
+      "model": "lyycore:block/pink_stargate/part_3_0",
+      "y": 180
+    },
+    "facing=south,column=4,row=0": {
+      "model": "lyycore:block/pink_stargate/part_4_0",
+      "y": 180
+    },
+    "facing=south,column=0,row=1": {
+      "model": "lyycore:block/pink_stargate/part_0_1",
+      "y": 180
+    },
+    "facing=south,column=1,row=1": {
+      "model": "lyycore:block/pink_stargate/part_1_1",
+      "y": 180
+    },
+    "facing=south,column=2,row=1": {
+      "model": "lyycore:block/pink_stargate/part_2_1",
+      "y": 180
+    },
+    "facing=south,column=3,row=1": {
+      "model": "lyycore:block/pink_stargate/part_3_1",
+      "y": 180
+    },
+    "facing=south,column=4,row=1": {
+      "model": "lyycore:block/pink_stargate/part_4_1",
+      "y": 180
+    },
+    "facing=south,column=0,row=2": {
+      "model": "lyycore:block/pink_stargate/part_0_2",
+      "y": 180
+    },
+    "facing=south,column=1,row=2": {
+      "model": "lyycore:block/pink_stargate/part_1_2",
+      "y": 180
+    },
+    "facing=south,column=2,row=2": {
+      "model": "lyycore:block/pink_stargate/part_2_2",
+      "y": 180
+    },
+    "facing=south,column=3,row=2": {
+      "model": "lyycore:block/pink_stargate/part_3_2",
+      "y": 180
+    },
+    "facing=south,column=4,row=2": {
+      "model": "lyycore:block/pink_stargate/part_4_2",
+      "y": 180
+    },
+    "facing=south,column=0,row=3": {
+      "model": "lyycore:block/pink_stargate/part_0_3",
+      "y": 180
+    },
+    "facing=south,column=1,row=3": {
+      "model": "lyycore:block/pink_stargate/part_1_3",
+      "y": 180
+    },
+    "facing=south,column=2,row=3": {
+      "model": "lyycore:block/pink_stargate/part_2_3",
+      "y": 180
+    },
+    "facing=south,column=3,row=3": {
+      "model": "lyycore:block/pink_stargate/part_3_3",
+      "y": 180
+    },
+    "facing=south,column=4,row=3": {
+      "model": "lyycore:block/pink_stargate/part_4_3",
+      "y": 180
+    },
+    "facing=south,column=0,row=4": {
+      "model": "lyycore:block/pink_stargate/part_0_4",
+      "y": 180
+    },
+    "facing=south,column=1,row=4": {
+      "model": "lyycore:block/pink_stargate/part_1_4",
+      "y": 180
+    },
+    "facing=south,column=2,row=4": {
+      "model": "lyycore:block/pink_stargate/part_2_4",
+      "y": 180
+    },
+    "facing=south,column=3,row=4": {
+      "model": "lyycore:block/pink_stargate/part_3_4",
+      "y": 180
+    },
+    "facing=south,column=4,row=4": {
+      "model": "lyycore:block/pink_stargate/part_4_4",
+      "y": 180
+    },
+    "facing=west,column=0,row=0": {
+      "model": "lyycore:block/pink_stargate/part_0_0",
+      "y": 270
+    },
+    "facing=west,column=1,row=0": {
+      "model": "lyycore:block/pink_stargate/part_1_0",
+      "y": 270
+    },
+    "facing=west,column=2,row=0": {
+      "model": "lyycore:block/pink_stargate/part_2_0",
+      "y": 270
+    },
+    "facing=west,column=3,row=0": {
+      "model": "lyycore:block/pink_stargate/part_3_0",
+      "y": 270
+    },
+    "facing=west,column=4,row=0": {
+      "model": "lyycore:block/pink_stargate/part_4_0",
+      "y": 270
+    },
+    "facing=west,column=0,row=1": {
+      "model": "lyycore:block/pink_stargate/part_0_1",
+      "y": 270
+    },
+    "facing=west,column=1,row=1": {
+      "model": "lyycore:block/pink_stargate/part_1_1",
+      "y": 270
+    },
+    "facing=west,column=2,row=1": {
+      "model": "lyycore:block/pink_stargate/part_2_1",
+      "y": 270
+    },
+    "facing=west,column=3,row=1": {
+      "model": "lyycore:block/pink_stargate/part_3_1",
+      "y": 270
+    },
+    "facing=west,column=4,row=1": {
+      "model": "lyycore:block/pink_stargate/part_4_1",
+      "y": 270
+    },
+    "facing=west,column=0,row=2": {
+      "model": "lyycore:block/pink_stargate/part_0_2",
+      "y": 270
+    },
+    "facing=west,column=1,row=2": {
+      "model": "lyycore:block/pink_stargate/part_1_2",
+      "y": 270
+    },
+    "facing=west,column=2,row=2": {
+      "model": "lyycore:block/pink_stargate/part_2_2",
+      "y": 270
+    },
+    "facing=west,column=3,row=2": {
+      "model": "lyycore:block/pink_stargate/part_3_2",
+      "y": 270
+    },
+    "facing=west,column=4,row=2": {
+      "model": "lyycore:block/pink_stargate/part_4_2",
+      "y": 270
+    },
+    "facing=west,column=0,row=3": {
+      "model": "lyycore:block/pink_stargate/part_0_3",
+      "y": 270
+    },
+    "facing=west,column=1,row=3": {
+      "model": "lyycore:block/pink_stargate/part_1_3",
+      "y": 270
+    },
+    "facing=west,column=2,row=3": {
+      "model": "lyycore:block/pink_stargate/part_2_3",
+      "y": 270
+    },
+    "facing=west,column=3,row=3": {
+      "model": "lyycore:block/pink_stargate/part_3_3",
+      "y": 270
+    },
+    "facing=west,column=4,row=3": {
+      "model": "lyycore:block/pink_stargate/part_4_3",
+      "y": 270
+    },
+    "facing=west,column=0,row=4": {
+      "model": "lyycore:block/pink_stargate/part_0_4",
+      "y": 270
+    },
+    "facing=west,column=1,row=4": {
+      "model": "lyycore:block/pink_stargate/part_1_4",
+      "y": 270
+    },
+    "facing=west,column=2,row=4": {
+      "model": "lyycore:block/pink_stargate/part_2_4",
+      "y": 270
+    },
+    "facing=west,column=3,row=4": {
+      "model": "lyycore:block/pink_stargate/part_3_4",
+      "y": 270
+    },
+    "facing=west,column=4,row=4": {
+      "model": "lyycore:block/pink_stargate/part_4_4",
+      "y": 270
+    }
+  }
+}

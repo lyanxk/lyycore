@@ -6,6 +6,8 @@ import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import net.neoforged.neoforge.items.SlotItemHandler;
+import org.lyy.lyycore.content.FrameProduction;
+import org.lyy.lyycore.content.blocks.CondensingFrameBlock;
 import org.lyy.lyycore.content.blockEntities.CondensingFrameBlockEntity;
 
 public abstract class CondensingFrameMenu extends AbstractContainerMenu {
@@ -31,6 +33,10 @@ public abstract class CondensingFrameMenu extends AbstractContainerMenu {
             for (int col = 0; col < 9; col++) addSlot(new Slot(inventory, col + row * 9 + 9, 8 + col * 18, 104 + row * 18));
         for (int col = 0; col < 9; col++) addSlot(new Slot(inventory, col, 8 + col * 18, 162));
     }
+    public FrameProduction production() {
+        return ((CondensingFrameBlock) validBlock).production();
+    }
+    public boolean isMiniatureFactory() { return production() == FrameProduction.MINIATURE_FACTORY; }
     public int getEnergyIE() { return data.get(0) & 0xFFFF | (data.get(1) & 0xFFFF) << 16; }
     public int getOutputCount() { return data.get(2); }
     public boolean isWaterlogged() { return data.get(3) != 0; }

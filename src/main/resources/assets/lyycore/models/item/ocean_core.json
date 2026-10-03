@@ -1,0 +1,88 @@
+{
+  "loader": "neoforge:composite",
+  "parent": "minecraft:block/block",
+  "ambientocclusion": false,
+  "textures": {
+    "sand": "minecraft:block/sand",
+    "gravel": "minecraft:block/gravel",
+    "brain_coral_block": "minecraft:block/brain_coral_block",
+    "tube_coral_block": "minecraft:block/tube_coral_block",
+    "horn_coral_block": "minecraft:block/horn_coral_block",
+    "brain_coral": "minecraft:block/brain_coral",
+    "fire_coral": "minecraft:block/fire_coral",
+    "tube_coral": "minecraft:block/tube_coral",
+    "horn_coral": "minecraft:block/horn_coral",
+    "kelp": "minecraft:block/kelp",
+    "kelp_plant": "minecraft:block/kelp_plant",
+    "seagrass": "lyycore:block/frame_seagrass",
+    "frame_white": "lyycore:block/frame_white",
+    "frame_water_clear": "lyycore:block/frame_water_clear",
+    "frame_water_surface": "lyycore:block/frame_water_surface",
+    "particle": "lyycore:block/frame_white"
+  },
+  "children": {
+    "base": {
+      "parent": "lyycore:item/miniature_frames/ocean_core_base"
+    },
+    "water": {
+      "parent": "lyycore:item/miniature_frames/ocean_core_water"
+    }
+  },
+  "item_render_order": [
+    "base",
+    "water"
+  ],
+  "display": {
+    "gui": {
+      "rotation": [
+        30,
+        225,
+        0
+      ],
+      "translation": [
+        0,
+        1,
+        0
+      ],
+      "scale": [
+        0.8,
+        0.8,
+        0.8
+      ]
+    },
+    "ground": {
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "translation": [
+        0,
+        3,
+        0
+      ],
+      "scale": [
+        0.4,
+        0.4,
+        0.4
+      ]
+    },
+    "fixed": {
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "scale": [
+        0.6,
+        0.6,
+        0.6
+      ]
+    }
+  }
+}

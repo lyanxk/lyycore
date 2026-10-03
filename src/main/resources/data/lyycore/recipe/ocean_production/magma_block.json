@@ -1,0 +1,9 @@
+{
+  "type": "lyycore:ocean_production",
+  "result": {
+    "id": "minecraft:magma_block",
+    "count": 1
+  },
+  "dry_cost": 100,
+  "wet_cost": 100
+}

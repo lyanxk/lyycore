@@ -1,0 +1,9 @@
+{
+  "type": "lyycore:concrete_production",
+  "result": {
+    "id": "minecraft:pink_concrete",
+    "count": 1
+  },
+  "dry_cost": 100,
+  "wet_cost": 100
+}

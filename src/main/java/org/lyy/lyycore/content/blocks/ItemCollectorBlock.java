@@ -7,6 +7,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -18,6 +19,8 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.lyy.lyycore.content.blockEntities.ItemCollectorBlockEntity;
 
 import javax.annotation.Nullable;
@@ -30,7 +33,7 @@ public class ItemCollectorBlock extends BaseEntityBlock {
     @Override protected MapCodec<? extends BaseEntityBlock> codec() { return CODEC; }
 
     public ItemCollectorBlock() {
-        super(BlockBehaviour.Properties.of().strength(2.0f));
+        super(BlockBehaviour.Properties.of().strength(2.0f).noOcclusion());
         registerDefaultState(stateDefinition.any().setValue(MODE, 0).setValue(FACING, Direction.NORTH));
     }
 
@@ -41,6 +44,11 @@ public class ItemCollectorBlock extends BaseEntityBlock {
 
     @Override
     public RenderShape getRenderShape(BlockState state) { return RenderShape.MODEL; }
+
+    @Override
+    protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        return MachineBlockShapes.ITEM_COLLECTOR.get(state.getValue(FACING));
+    }
 
     @Nullable
     @Override

@@ -1,0 +1,20 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "lyycore:block/frame_garden",
+      "y": 180
+    },
+    "facing=east": {
+      "model": "lyycore:block/frame_garden",
+      "y": 270
+    },
+    "facing=south": {
+      "model": "lyycore:block/frame_garden",
+      "y": 0
+    },
+    "facing=west": {
+      "model": "lyycore:block/frame_garden",
+      "y": 90
+    }
+  }
+}

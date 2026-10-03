@@ -6,16 +6,21 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.lyy.lyycore.LyyCore;
-import org.lyy.lyycore.content.recipes.ImaginaryAlloyingRecipe;
-import org.lyy.lyycore.content.recipes.CrystalCondensingRecipe;
-import org.lyy.lyycore.content.recipes.ResourceGatheringRecipe;
 import org.lyy.lyycore.content.ResourceFrameKind;
+import org.lyy.lyycore.content.recipes.CrystalCondensingRecipe;
+import org.lyy.lyycore.content.recipes.ImaginaryAlloyingRecipe;
+import org.lyy.lyycore.content.recipes.ImaginaryCraftingRecipe;
+import org.lyy.lyycore.content.recipes.ResourceGatheringRecipe;
 import java.util.EnumMap;
 import java.util.Map;
 
 public class LyyRecipes {
     public static final DeferredRegister<RecipeType<?>> RECIPE_TYPES =
             DeferredRegister.create(Registries.RECIPE_TYPE, LyyCore.MODID);
+    public static final DeferredHolder<RecipeType<?>, RecipeType<ImaginaryCraftingRecipe>> IMAGINARY_CRAFTING =
+            RECIPE_TYPES.register("imaginary_crafting", () -> new RecipeType<>() {
+                @Override public String toString() { return "lyycore:imaginary_crafting"; }
+            });
     public static final DeferredHolder<RecipeType<?>, RecipeType<CrystalCondensingRecipe>> CRYSTAL_CONDENSING =
             RECIPE_TYPES.register("crystal_condensing", () -> new RecipeType<>() {
                 @Override public String toString() { return LyyCore.MODID + ":crystal_condensing"; }
@@ -32,6 +37,8 @@ public class LyyRecipes {
 
     public static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS =
             DeferredRegister.create(Registries.RECIPE_SERIALIZER, LyyCore.MODID);
+    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<ImaginaryCraftingRecipe>> IMAGINARY_CRAFTING_SERIALIZER =
+            RECIPE_SERIALIZERS.register("imaginary_crafting", ImaginaryCraftingRecipe.Serializer::new);
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<CrystalCondensingRecipe>> CRYSTAL_CONDENSING_SERIALIZER =
             RECIPE_SERIALIZERS.register("crystal_condensing", CrystalCondensingRecipe.Serializer::new);
 

@@ -17,6 +17,7 @@ import org.lyy.lyycore.Config;
 import org.lyy.lyycore.registry.LyyBlockEntities;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ItemCollectorBlockEntity extends BlockEntity {
@@ -76,41 +77,50 @@ public class ItemCollectorBlockEntity extends BlockEntity {
         if (items.isEmpty()) return;
 
         if (!be.isCachedTargetValid(level)) be.cachedTarget = null;
-        if (be.cachedTarget == null) {
-            if (level.getGameTime() < be.nextTargetSearch) return;
-            be.cachedTarget = be.findNearestContainer(level, Config.COLLECTOR_TARGET_RADIUS.get(),
-                    items.getFirst().getItem(), null);
-            if (be.cachedTarget == null) {
-                be.nextTargetSearch = level.getGameTime() + Config.COLLECTOR_SEARCH_BACKOFF.get();
-                return;
-            }
-        }
+        if (be.cachedTarget == null && level.getGameTime() < be.nextTargetSearch) return;
 
-        IItemHandler handler = getTargetHandler(level, be.cachedTarget);
-        if (handler == null) { be.cachedTarget = null; return; }
+        IItemHandler handler = be.cachedTarget == null ? null : getTargetHandler(level, be.cachedTarget);
+        List<ItemStack> rejectedStacks = new ArrayList<>();
+        boolean collected = false;
 
         for (ItemEntity itemEntity : items) {
             if (!itemEntity.isAlive()) continue;
             var stack = itemEntity.getItem();
             if (stack.isEmpty()) continue;
 
-            var simRemainder = ItemHandlerHelper.insertItemStacked(handler, stack, true);
-            if (simRemainder.getCount() == stack.getCount()) {
+            if (handler == null || !accepts(handler, stack)) {
+                // Cache failed searches only for this pass. Include count because a
+                // custom handler may require a minimum batch as well as components.
+                if (rejectedStacks.stream().anyMatch(rejected -> ItemStack.matches(rejected, stack))) continue;
                 Target newTarget = be.findNearestContainer(level, Config.COLLECTOR_TARGET_RADIUS.get(),
                         stack, be.cachedTarget);
                 if (newTarget != null) {
                     be.cachedTarget = newTarget;
                     handler = getTargetHandler(level, be.cachedTarget);
-                } else continue;
+                } else {
+                    rejectedStacks.add(stack.copy());
+                    continue;
+                }
             }
-            if (handler == null) break;
+            if (handler == null) { be.cachedTarget = null; continue; }
 
             var remainder = ItemHandlerHelper.insertItemStacked(handler, stack, false);
             if (remainder.isEmpty()) {
                 itemEntity.discard();
+                collected = true;
             } else if (remainder.getCount() < stack.getCount()) {
                 itemEntity.setItem(remainder);
+                collected = true;
             }
+        }
+
+        // One unaccepted item must not prevent later items from finding a container.
+        // Back off only after the entire pass failed to collect anything.
+        if (!collected) {
+            be.cachedTarget = null;
+            be.nextTargetSearch = level.getGameTime() + Config.COLLECTOR_SEARCH_BACKOFF.get();
+        } else {
+            be.nextTargetSearch = 0;
         }
     }
 

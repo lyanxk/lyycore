@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "APA",
+    "IWI",
+    "ADA"
+  ],
+  "key": {
+    "A": {
+      "item": "lyycore:imaginary_alloy_ingot"
+    },
+    "P": {
+      "item": "lyycore:pure_crystal"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "W": {
+      "item": "minecraft:crafting_table"
+    },
+    "D": {
+      "item": "minecraft:diamond"
+    }
+  },
+  "result": {
+    "id": "lyycore:imaginary_crafting_table",
+    "count": 1
+  }
+}

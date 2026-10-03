@@ -15,39 +15,35 @@ import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 import org.lyy.lyycore.content.blocks.CondensingFrameBlock;
+import org.lyy.lyycore.content.FrameProduction;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import org.lyy.lyycore.energy.IEnergyConversion;
+import org.lyy.lyycore.energy.ImaginaryEnergy;
+import org.lyy.lyycore.energy.ImaginaryEnergyFeAdapter;
 
 public abstract class CondensingFrameBlockEntity extends BlockEntity implements MenuProvider {
     public static final int CAPACITY = Integer.MAX_VALUE;
     public static final int OUTPUT_CAPACITY = 1024;
     private int energyIE;
-    private int remainderFE;
     private int passiveTicks;
     private ItemStack storedItem = ItemStack.EMPTY;
     private int outputCount;
 
-    // FE is only an adapter; stored energy and all internal consumption use IE.
-    private final IEnergyStorage energy = new IEnergyStorage() {
-        @Override public int receiveEnergy(int offered, boolean simulate) {
-            long roomFE = (long) (CAPACITY - energyIE) * IEnergyConversion.FE_PER_IMAGINARY - remainderFE;
-            int accepted = (int) Math.max(0, Math.min((long) offered, roomFE));
+    private final ImaginaryEnergy imaginaryEnergy = new ImaginaryEnergy() {
+        @Override public int receiveImaginaryEnergy(int offered, boolean simulate) {
+            int accepted = Math.min(Math.max(0, offered), CAPACITY - energyIE);
             if (!simulate && accepted > 0) {
-                long total = (long) accepted + remainderFE;
-                energyIE += (int) (total / IEnergyConversion.FE_PER_IMAGINARY);
-                remainderFE = (int) (total % IEnergyConversion.FE_PER_IMAGINARY);
+                energyIE += accepted;
                 setChanged();
             }
             return accepted;
         }
-        @Override public int extractEnergy(int amount, boolean simulate) { return 0; }
-        @Override public int getEnergyStored() {
-            return (int) Math.min(Integer.MAX_VALUE, (long) energyIE * IEnergyConversion.FE_PER_IMAGINARY + remainderFE);
-        }
-        @Override public int getMaxEnergyStored() { return Integer.MAX_VALUE; }
-        @Override public boolean canExtract() { return false; }
-        @Override public boolean canReceive() { return true; }
+        @Override public int extractImaginaryEnergy(int amount, boolean simulate) { return 0; }
+        @Override public int getImaginaryEnergyStored() { return energyIE; }
+        @Override public int getMaxImaginaryEnergyStored() { return CAPACITY; }
+        @Override public boolean canExtractImaginaryEnergy() { return false; }
+        @Override public boolean canReceiveImaginaryEnergy() { return true; }
     };
+    private final ImaginaryEnergyFeAdapter energy = new ImaginaryEnergyFeAdapter(imaginaryEnergy, this::setChanged);
 
     // Expose one ordinary stack at a time. The bulk count never enters ItemStack's
     // count codec or vanilla cursor/hotbar logic, which cannot safely hold 1024.
@@ -99,14 +95,16 @@ public abstract class CondensingFrameBlockEntity extends BlockEntity implements 
         super(type, pos, state);
     }
     public IEnergyStorage getEnergyStorage() { return energy; }
+    public ImaginaryEnergy getImaginaryEnergyStorage() { return imaginaryEnergy; }
     public IItemHandlerModifiable getOutput() { return output; }
     public ContainerData getData() { return data; }
+    public FrameProduction production() { return ((CondensingFrameBlock) getBlockState().getBlock()).production(); }
     public int getEnergyIE() { return energyIE; }
     public int getOutputCount() { return outputCount; }
     @Override protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
         tag.putInt("IE", energyIE);
-        tag.putInt("FERemainder", remainderFE);
+        tag.putByte("FERemainder", energy.getRemainder());
         tag.putInt("PassiveTicks", passiveTicks);
         // Keep the original keys so existing crystal and resource frames load unchanged.
         tag.putInt("CrystalCount", outputCount);
@@ -115,7 +113,7 @@ public abstract class CondensingFrameBlockEntity extends BlockEntity implements 
     @Override protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
         energyIE = Math.max(0, tag.getInt("IE"));
-        remainderFE = energyIE == CAPACITY ? 0 : Math.clamp(tag.getInt("FERemainder"), 0, 99);
+        energy.setRemainder(tag.getInt("FERemainder"));
         passiveTicks = Math.clamp(tag.getInt("PassiveTicks"), 0, 19);
         storedItem = ItemStack.parseOptional(registries, tag.getCompound("Crystal"));
         outputCount = storedItem.isEmpty() ? 0 : Math.clamp(tag.getInt("CrystalCount"), 0, OUTPUT_CAPACITY);
@@ -128,11 +126,10 @@ public abstract class CondensingFrameBlockEntity extends BlockEntity implements 
         if (++be.passiveTicks == 20) {
             be.passiveTicks = 0;
             if (be.energyIE < CAPACITY) {
-                be.energyIE++;
-                if (be.energyIE == CAPACITY) be.remainderFE = 0;
+                be.energyIE += be.production().passiveEnergyPerSecond();
             }
             // Retry blocked output even if the last production used all energy.
-            be.pushOutput(state);
+            be.pushOutput();
         }
         be.setChanged();
         be.produce(state);
@@ -141,19 +138,20 @@ public abstract class CondensingFrameBlockEntity extends BlockEntity implements 
     protected abstract void produce(BlockState state);
 
     /** Shared energy, bulk storage and export path for all condensing frames. */
-    protected void produceItem(ItemStack result, int cost, BlockState state) {
+    protected void produceItem(ItemStack result, int cost) {
+        cost = production().energyCost(cost);
+        int batchSize = production().batchSize();
         if (cost <= 0 || result.isEmpty() || energyIE < cost) return;
-        if (outputCount >= OUTPUT_CAPACITY || (!storedItem.isEmpty() && !ItemStack.isSameItemSameComponents(storedItem, result))) return;
+        if (outputCount > OUTPUT_CAPACITY - batchSize || (!storedItem.isEmpty() && !ItemStack.isSameItemSameComponents(storedItem, result))) return;
         energyIE -= cost;
         storedItem = result.copyWithCount(1);
-        outputCount++;
+        outputCount += batchSize;
         setChanged();
-        pushOutput(state);
+        pushOutput();
     }
 
-    private void pushOutput(BlockState state) {
-        Direction front = state.getValue(CondensingFrameBlock.FACING);
-        for (Direction side : new Direction[]{front.getCounterClockWise(), front.getClockWise()}) {
+    private void pushOutput() {
+        for (Direction side : new Direction[]{Direction.UP, Direction.DOWN}) {
             BlockPos targetPos = worldPosition.relative(side);
             if (outputCount == 0 || !level.hasChunkAt(targetPos)) continue;
             var target = level.getCapability(Capabilities.ItemHandler.BLOCK, targetPos, side.getOpposite());

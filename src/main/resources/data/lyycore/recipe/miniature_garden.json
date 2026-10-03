@@ -1,0 +1,36 @@
+{
+  "type": "lyycore:imaginary_crafting",
+  "ingredients": [
+    {
+      "item": "lyycore:garden_core"
+    },
+    {
+      "item": "lyycore:imaginary_alloy_ingot"
+    },
+    {
+      "item": "lyycore:imaginary_alloy_ingot"
+    },
+    {
+      "item": "lyycore:imaginary_alloy_ingot"
+    },
+    {
+      "item": "lyycore:imaginary_alloy_ingot"
+    },
+    {
+      "item": "lyycore:imaginary_alloy_ingot"
+    },
+    {
+      "item": "lyycore:imaginary_alloy_ingot"
+    },
+    {
+      "item": "lyycore:imaginary_alloy_ingot"
+    },
+    {
+      "item": "lyycore:imaginary_alloy_ingot"
+    }
+  ],
+  "result": {
+    "id": "lyycore:miniature_garden",
+    "count": 1
+  }
+}

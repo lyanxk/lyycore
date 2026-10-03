@@ -1,21 +1,22 @@
 package org.lyy.lyycore.registry;
 
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.resources.ResourceLocation;
-import org.lyy.lyycore.content.item.SonnetBowItem;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.lyy.lyycore.LyyCore;
-import org.lyy.lyycore.content.item.ImaginaryDisassemblerItem;
 import org.lyy.lyycore.content.ResourceFrameKind;
+import org.lyy.lyycore.content.item.ImaginaryDisassemblerItem;
+import org.lyy.lyycore.content.item.SonnetBowItem;
 import java.util.EnumMap;
 import java.util.Map;
 
 public class LyyItems {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(LyyCore.MODID);
     public static final Map<ResourceFrameKind, DeferredItem<Item>> RESOURCE_CORES = new EnumMap<>(ResourceFrameKind.class);
+    public static final Map<ResourceFrameKind, DeferredItem<BlockItem>> RESOURCE_FACTORY_ITEMS = new EnumMap<>(ResourceFrameKind.class);
     public static final Map<ResourceFrameKind, DeferredItem<BlockItem>> RESOURCE_FRAME_ITEMS = new EnumMap<>(ResourceFrameKind.class);
     static {
         for (var kind : ResourceFrameKind.values()) {
@@ -23,6 +24,12 @@ public class LyyItems {
             RESOURCE_FRAME_ITEMS.put(kind, ITEMS.registerSimpleBlockItem(LyyBlocks.RESOURCE_FRAMES.get(kind)));
         }
     }
+
+    static {
+        for (var kind : ResourceFrameKind.FACTORY_KINDS)
+            RESOURCE_FACTORY_ITEMS.put(kind, ITEMS.registerSimpleBlockItem(LyyBlocks.RESOURCE_FACTORIES.get(kind)));
+    }
+    public static final DeferredItem<BlockItem> MINIATURE_CRYSTAL_FACTORY = ITEMS.registerSimpleBlockItem(LyyBlocks.MINIATURE_CRYSTAL_FACTORY);
 
     // Custom items
     public static final DeferredItem<SonnetBowItem> WHISPER_OF_THE_PAST =
@@ -32,6 +39,12 @@ public class LyyItems {
     public static final DeferredItem<Item> IMAGINARY_DISASSEMBLER =
             ITEMS.registerItem("imaginary_disassembler", ImaginaryDisassemblerItem::new,
                     new Item.Properties().stacksTo(1).rarity(Rarity.RARE).fireResistant());
+
+    public static final DeferredItem<Item> PURE_CRYSTAL = ITEMS.registerSimpleItem("pure_crystal", new Item.Properties().rarity(Rarity.RARE));
+    public static final DeferredItem<BlockItem> CRYSTAL_BLOCK = ITEMS.registerSimpleBlockItem(LyyBlocks.CRYSTAL_BLOCK);
+    public static final DeferredItem<BlockItem> ALLOY_BLOCK = ITEMS.registerSimpleBlockItem(LyyBlocks.ALLOY_BLOCK);
+    public static final DeferredItem<BlockItem> IMAGINARY_GATE = ITEMS.registerSimpleBlockItem(LyyBlocks.IMAGINARY_GATE);
+    public static final DeferredItem<BlockItem> IMAGINARY_CRAFTING_TABLE = ITEMS.registerSimpleBlockItem(LyyBlocks.IMAGINARY_CRAFTING_TABLE);
 
     // Simple items
     public static final DeferredItem<Item> IMAGINARY_CRYSTAL = ITEMS.registerSimpleItem("imaginary_crystal");

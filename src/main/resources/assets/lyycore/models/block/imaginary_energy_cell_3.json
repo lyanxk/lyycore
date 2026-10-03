@@ -1,0 +1,10 @@
+{
+  "parent": "lyycore:block/imaginary_energy_cell",
+  "textures": {
+    "charge_0": "lyycore:block/machines/enamel",
+    "charge_1": "lyycore:block/machines/enamel",
+    "charge_2": "lyycore:block/machines/enamel",
+    "charge_3": "lyycore:block/machines/inner_rose",
+    "charge_4": "lyycore:block/machines/inner_rose"
+  }
+}

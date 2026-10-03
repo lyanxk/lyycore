@@ -1,0 +1,37 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "tag": "lyycore:gathering/ocean_products"
+    },
+    {
+      "tag": "lyycore:gathering/ocean_products"
+    },
+    {
+      "tag": "lyycore:gathering/ocean_products"
+    },
+    {
+      "tag": "lyycore:gathering/ocean_products"
+    },
+    {
+      "tag": "lyycore:gathering/ocean_products"
+    },
+    {
+      "tag": "lyycore:gathering/ocean_products"
+    },
+    {
+      "tag": "lyycore:gathering/ocean_products"
+    },
+    {
+      "tag": "lyycore:gathering/ocean_products"
+    },
+    {
+      "tag": "lyycore:gathering/ocean_products"
+    }
+  ],
+  "result": {
+    "id": "lyycore:ocean_core",
+    "count": 1
+  }
+}

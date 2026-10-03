@@ -1,6 +1,7 @@
 package org.lyy.lyycore.content.blocks;
 
 import com.mojang.serialization.MapCodec;
+import org.lyy.lyycore.content.FrameProduction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
@@ -29,9 +30,11 @@ import org.lyy.lyycore.registry.LyyBlockEntities;
 
 public final class CrystalCondensingFrameBlock extends CondensingFrameBlock implements SimpleWaterloggedBlock {
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
-    public static final MapCodec<CrystalCondensingFrameBlock> CODEC = simpleCodec(properties -> new CrystalCondensingFrameBlock());
 
-    public CrystalCondensingFrameBlock() {
+    public CrystalCondensingFrameBlock() { this(FrameProduction.STANDARD); }
+
+    public CrystalCondensingFrameBlock(FrameProduction production) {
+        super(production);
         registerDefaultState(defaultBlockState().setValue(WATERLOGGED, false));
     }
 
@@ -70,7 +73,7 @@ public final class CrystalCondensingFrameBlock extends CondensingFrameBlock impl
         return ItemInteractionResult.sidedSuccess(level.isClientSide);
     }
 
-    @Override protected MapCodec<CrystalCondensingFrameBlock> codec() { return CODEC; }
+    @Override protected MapCodec<CrystalCondensingFrameBlock> codec() { return simpleCodec(properties -> new CrystalCondensingFrameBlock(production())); }
     @Override protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
         builder.add(WATERLOGGED);

@@ -1,0 +1,91 @@
+{
+  "parent": "minecraft:block/block",
+  "ambientocclusion": false,
+  "render_type": "minecraft:translucent",
+  "textures": {
+    "particle": "lyycore:block/imaginary_workshop/gem_south_v2",
+    "gem_north_v2": "lyycore:block/imaginary_workshop/gem_north_v2",
+    "gem_south_v2": "lyycore:block/imaginary_workshop/gem_south_v2",
+    "gem_east_v2": "lyycore:block/imaginary_workshop/gem_east_v2",
+    "gem_west_v2": "lyycore:block/imaginary_workshop/gem_west_v2",
+    "gem_up_v2": "lyycore:block/imaginary_workshop/gem_up_v2",
+    "gem_down_v2": "lyycore:block/imaginary_workshop/gem_down_v2"
+  },
+  "elements": [
+    {
+      "name": "Solid translucent gemstone",
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gem_north_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#gem_south_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#gem_east_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#gem_west_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#gem_up_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#gem_down_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

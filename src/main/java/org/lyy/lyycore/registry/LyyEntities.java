@@ -6,6 +6,9 @@ import net.minecraft.world.entity.MobCategory;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.lyy.lyycore.LyyCore;
+import org.lyy.lyycore.content.entity.GuardianCrystal;
+import org.lyy.lyycore.content.entity.GuardianSpikes;
+import org.lyy.lyycore.content.entity.ImaginaryGuardian;
 import org.lyy.lyycore.content.entity.SonnetArrow;
 import org.lyy.lyycore.content.entity.SonnetDome;
 import org.lyy.lyycore.content.entity.SonnetVolley;
@@ -14,6 +17,18 @@ public class LyyEntities {
     public static final DeferredRegister<EntityType<?>> ENTITIES =
             DeferredRegister.create(Registries.ENTITY_TYPE, LyyCore.MODID);
 
+    public static final DeferredHolder<EntityType<?>, EntityType<ImaginaryGuardian>> IMAGINARY_GUARDIAN =
+            ENTITIES.register("imaginary_guardian", () -> EntityType.Builder.<ImaginaryGuardian>of(
+                    ImaginaryGuardian::new, MobCategory.MONSTER).sized(2, 3.5F)
+                    .clientTrackingRange(12).updateInterval(1).fireImmune().build("lyycore:imaginary_guardian"));
+    public static final DeferredHolder<EntityType<?>, EntityType<GuardianCrystal>> GUARDIAN_CRYSTAL =
+            ENTITIES.register("guardian_crystal", () -> EntityType.Builder.<GuardianCrystal>of(
+                    GuardianCrystal::new, MobCategory.MISC).sized(0.5F, 0.5F)
+                    .clientTrackingRange(12).updateInterval(1).fireImmune().noSave().build("lyycore:guardian_crystal"));
+    public static final DeferredHolder<EntityType<?>, EntityType<GuardianSpikes>> GUARDIAN_SPIKES =
+            ENTITIES.register("guardian_spikes", () -> EntityType.Builder.<GuardianSpikes>of(
+                    GuardianSpikes::new, MobCategory.MISC).sized(1.2F, 1.5F)
+                    .clientTrackingRange(12).updateInterval(1).fireImmune().noSave().build("lyycore:guardian_spikes"));
     public static final DeferredHolder<EntityType<?>, EntityType<SonnetDome>> SONNET_DOME =
             ENTITIES.register("sonnet_dome", () -> EntityType.Builder.<SonnetDome>of(SonnetDome::new, MobCategory.MISC)
                     .sized((float) (SonnetDome.RADIUS * 2), (float) SonnetDome.HEIGHT).clientTrackingRange(16).updateInterval(20).fireImmune().build("lyycore:sonnet_dome"));

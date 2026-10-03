@@ -1,0 +1,1957 @@
+{
+  "credit": "Made with Blockbench",
+  "parent": "minecraft:block/block",
+  "ambientocclusion": false,
+  "render_type": "minecraft:cutout",
+  "textures": {
+    "sand": "minecraft:block/sand",
+    "gravel": "minecraft:block/gravel",
+    "brain_coral_block": "minecraft:block/brain_coral_block",
+    "tube_coral_block": "minecraft:block/tube_coral_block",
+    "horn_coral_block": "minecraft:block/horn_coral_block",
+    "brain_coral": "minecraft:block/brain_coral",
+    "fire_coral": "minecraft:block/fire_coral",
+    "tube_coral": "minecraft:block/tube_coral",
+    "horn_coral": "minecraft:block/horn_coral",
+    "kelp": "minecraft:block/kelp",
+    "kelp_plant": "minecraft:block/kelp_plant",
+    "seagrass": "lyycore:block/frame_seagrass",
+    "frame_white": "lyycore:block/frame_white",
+    "frame_water_clear": "lyycore:block/frame_water_clear",
+    "frame_water_surface": "lyycore:block/frame_water_surface",
+    "particle": "lyycore:block/frame_white"
+  },
+  "elements": [
+    {
+      "name": "White base with inlaid pink paths",
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        1.5,
+        16
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        },
+        "down": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        }
+      }
+    },
+    {
+      "name": "Corner pillar 0 0",
+      "from": [
+        0,
+        1.5,
+        0
+      ],
+      "to": [
+        1.5,
+        14.5,
+        1.5
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        }
+      }
+    },
+    {
+      "name": "Corner pillar 14.5 0",
+      "from": [
+        14.5,
+        1.5,
+        0
+      ],
+      "to": [
+        16,
+        14.5,
+        1.5
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        }
+      }
+    },
+    {
+      "name": "Corner pillar 0 14.5",
+      "from": [
+        0,
+        1.5,
+        14.5
+      ],
+      "to": [
+        1.5,
+        14.5,
+        16
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        }
+      }
+    },
+    {
+      "name": "Corner pillar 14.5 14.5",
+      "from": [
+        14.5,
+        1.5,
+        14.5
+      ],
+      "to": [
+        16,
+        14.5,
+        16
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        }
+      }
+    },
+    {
+      "name": "Top north beam",
+      "from": [
+        0,
+        14.5,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        1.5
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        },
+        "down": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        }
+      }
+    },
+    {
+      "name": "Top south beam",
+      "from": [
+        0,
+        14.5,
+        14.5
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        },
+        "down": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        }
+      }
+    },
+    {
+      "name": "Top west beam",
+      "from": [
+        0,
+        14.5,
+        1.5
+      ],
+      "to": [
+        1.5,
+        16,
+        14.5
+      ],
+      "faces": {
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        },
+        "down": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        }
+      }
+    },
+    {
+      "name": "Top east beam",
+      "from": [
+        14.5,
+        14.5,
+        1.5
+      ],
+      "to": [
+        16,
+        16,
+        14.5
+      ],
+      "faces": {
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        },
+        "down": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        }
+      }
+    },
+    {
+      "name": "Sandy seabed",
+      "from": [
+        1.5,
+        1.5,
+        1.5
+      ],
+      "to": [
+        14.5,
+        2.8,
+        14.5
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#sand"
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#sand"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#sand"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#sand"
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#sand"
+        }
+      }
+    },
+    {
+      "name": "Gravel shelf",
+      "from": [
+        9.4,
+        2.8,
+        2.1
+      ],
+      "to": [
+        14,
+        3.25,
+        6.3
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#gravel"
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#gravel"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#gravel"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#gravel"
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#gravel"
+        }
+      }
+    },
+    {
+      "name": "Pink coral rock",
+      "from": [
+        2.1,
+        2.8,
+        8.5
+      ],
+      "to": [
+        5.4,
+        5.6,
+        11.8
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#brain_coral_block"
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#brain_coral_block"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#brain_coral_block"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#brain_coral_block"
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#brain_coral_block"
+        }
+      }
+    },
+    {
+      "name": "Blue coral rock",
+      "from": [
+        5.6,
+        2.8,
+        4.7
+      ],
+      "to": [
+        8.6,
+        5.8,
+        7.7
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#tube_coral_block"
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#tube_coral_block"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#tube_coral_block"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#tube_coral_block"
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#tube_coral_block"
+        }
+      }
+    },
+    {
+      "name": "Yellow coral rock",
+      "from": [
+        9.3,
+        2.8,
+        9.6
+      ],
+      "to": [
+        12.5,
+        5.1,
+        12.8
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#horn_coral_block"
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#horn_coral_block"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#horn_coral_block"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#horn_coral_block"
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#horn_coral_block"
+        }
+      }
+    },
+    {
+      "name": "Pink coral branches",
+      "from": [
+        2.462563132923542,
+        5.6,
+        10.1
+      ],
+      "to": [
+        4.937436867076459,
+        9.1,
+        10.1
+      ],
+      "rotation": {
+        "angle": 45,
+        "axis": "y",
+        "origin": [
+          3.7,
+          5.6,
+          10.1
+        ],
+        "rescale": true
+      },
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#brain_coral"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#brain_coral"
+        }
+      }
+    },
+    {
+      "name": "Pink coral branches",
+      "from": [
+        3.7,
+        5.6,
+        8.862563132923542
+      ],
+      "to": [
+        3.7,
+        9.1,
+        11.337436867076457
+      ],
+      "rotation": {
+        "angle": 45,
+        "axis": "y",
+        "origin": [
+          3.7,
+          5.6,
+          10.1
+        ],
+        "rescale": true
+      },
+      "faces": {
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#brain_coral"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#brain_coral"
+        }
+      }
+    },
+    {
+      "name": "Blue coral branches",
+      "from": [
+        5.8979184719828694,
+        5.8,
+        6.2
+      ],
+      "to": [
+        8.30208152801713,
+        9.2,
+        6.2
+      ],
+      "rotation": {
+        "angle": 45,
+        "axis": "y",
+        "origin": [
+          7.1,
+          5.8,
+          6.2
+        ],
+        "rescale": true
+      },
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#tube_coral"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#tube_coral"
+        }
+      }
+    },
+    {
+      "name": "Blue coral branches",
+      "from": [
+        7.1,
+        5.8,
+        4.997918471982869
+      ],
+      "to": [
+        7.1,
+        9.2,
+        7.402081528017131
+      ],
+      "rotation": {
+        "angle": 45,
+        "axis": "y",
+        "origin": [
+          7.1,
+          5.8,
+          6.2
+        ],
+        "rescale": true
+      },
+      "faces": {
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#tube_coral"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#tube_coral"
+        }
+      }
+    },
+    {
+      "name": "Red coral branches",
+      "from": [
+        9.91507575950825,
+        2.8,
+        6.8
+      ],
+      "to": [
+        12.88492424049175,
+        7,
+        6.8
+      ],
+      "rotation": {
+        "angle": 45,
+        "axis": "y",
+        "origin": [
+          11.4,
+          2.8,
+          6.8
+        ],
+        "rescale": true
+      },
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#fire_coral"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#fire_coral"
+        }
+      }
+    },
+    {
+      "name": "Red coral branches",
+      "from": [
+        11.4,
+        2.8,
+        5.31507575950825
+      ],
+      "to": [
+        11.4,
+        7,
+        8.28492424049175
+      ],
+      "rotation": {
+        "angle": 45,
+        "axis": "y",
+        "origin": [
+          11.4,
+          2.8,
+          6.8
+        ],
+        "rescale": true
+      },
+      "faces": {
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#fire_coral"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#fire_coral"
+        }
+      }
+    },
+    {
+      "name": "Yellow coral branches",
+      "from": [
+        9.768629150101525,
+        5.1,
+        11.2
+      ],
+      "to": [
+        12.031370849898476,
+        8.3,
+        11.2
+      ],
+      "rotation": {
+        "angle": 45,
+        "axis": "y",
+        "origin": [
+          10.9,
+          5.1,
+          11.2
+        ],
+        "rescale": true
+      },
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#horn_coral"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#horn_coral"
+        }
+      }
+    },
+    {
+      "name": "Yellow coral branches",
+      "from": [
+        10.9,
+        5.1,
+        10.068629150101524
+      ],
+      "to": [
+        10.9,
+        8.3,
+        12.331370849898475
+      ],
+      "rotation": {
+        "angle": 45,
+        "axis": "y",
+        "origin": [
+          10.9,
+          5.1,
+          11.2
+        ],
+        "rescale": true
+      },
+      "faces": {
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#horn_coral"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#horn_coral"
+        }
+      }
+    },
+    {
+      "name": "Kelp stalk",
+      "from": [
+        2.351471862576143,
+        2.8,
+        3.4
+      ],
+      "to": [
+        4.048528137423857,
+        8.600000000000001,
+        3.4
+      ],
+      "rotation": {
+        "angle": 45,
+        "axis": "y",
+        "origin": [
+          3.2,
+          2.8,
+          3.4
+        ],
+        "rescale": true
+      },
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#kelp_plant"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#kelp_plant"
+        }
+      }
+    },
+    {
+      "name": "Kelp stalk",
+      "from": [
+        3.2,
+        2.8,
+        2.5514718625761432
+      ],
+      "to": [
+        3.2,
+        8.600000000000001,
+        4.248528137423857
+      ],
+      "rotation": {
+        "angle": 45,
+        "axis": "y",
+        "origin": [
+          3.2,
+          2.8,
+          3.4
+        ],
+        "rescale": true
+      },
+      "faces": {
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#kelp_plant"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#kelp_plant"
+        }
+      }
+    },
+    {
+      "name": "Kelp crown",
+      "from": [
+        2.245405845398161,
+        8.600000000000001,
+        3.4
+      ],
+      "to": [
+        4.154594154601839,
+        11.600000000000001,
+        3.4
+      ],
+      "rotation": {
+        "angle": 45,
+        "axis": "y",
+        "origin": [
+          3.2,
+          8.600000000000001,
+          3.4
+        ],
+        "rescale": true
+      },
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#kelp"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#kelp"
+        }
+      }
+    },
+    {
+      "name": "Kelp crown",
+      "from": [
+        3.2,
+        8.600000000000001,
+        2.445405845398161
+      ],
+      "to": [
+        3.2,
+        11.600000000000001,
+        4.354594154601839
+      ],
+      "rotation": {
+        "angle": 45,
+        "axis": "y",
+        "origin": [
+          3.2,
+          8.600000000000001,
+          3.4
+        ],
+        "rescale": true
+      },
+      "faces": {
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#kelp"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#kelp"
+        }
+      }
+    },
+    {
+      "name": "Kelp stalk",
+      "from": [
+        10.851471862576142,
+        3.25,
+        3.6
+      ],
+      "to": [
+        12.548528137423856,
+        8.35,
+        3.6
+      ],
+      "rotation": {
+        "angle": 45,
+        "axis": "y",
+        "origin": [
+          11.7,
+          3.25,
+          3.6
+        ],
+        "rescale": true
+      },
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#kelp_plant"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#kelp_plant"
+        }
+      }
+    },
+    {
+      "name": "Kelp stalk",
+      "from": [
+        11.7,
+        3.25,
+        2.7514718625761434
+      ],
+      "to": [
+        11.7,
+        8.35,
+        4.448528137423857
+      ],
+      "rotation": {
+        "angle": 45,
+        "axis": "y",
+        "origin": [
+          11.7,
+          3.25,
+          3.6
+        ],
+        "rescale": true
+      },
+      "faces": {
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#kelp_plant"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#kelp_plant"
+        }
+      }
+    },
+    {
+      "name": "Kelp crown",
+      "from": [
+        10.74540584539816,
+        8.35,
+        3.6
+      ],
+      "to": [
+        12.654594154601838,
+        11.35,
+        3.6
+      ],
+      "rotation": {
+        "angle": 45,
+        "axis": "y",
+        "origin": [
+          11.7,
+          8.35,
+          3.6
+        ],
+        "rescale": true
+      },
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#kelp"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#kelp"
+        }
+      }
+    },
+    {
+      "name": "Kelp crown",
+      "from": [
+        11.7,
+        8.35,
+        2.645405845398161
+      ],
+      "to": [
+        11.7,
+        11.35,
+        4.55459415460184
+      ],
+      "rotation": {
+        "angle": 45,
+        "axis": "y",
+        "origin": [
+          11.7,
+          8.35,
+          3.6
+        ],
+        "rescale": true
+      },
+      "faces": {
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#kelp"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#kelp"
+        }
+      }
+    },
+    {
+      "name": "Kelp stalk",
+      "from": [
+        12.251471862576143,
+        2.8,
+        8.3
+      ],
+      "to": [
+        13.948528137423857,
+        6.2,
+        8.3
+      ],
+      "rotation": {
+        "angle": 45,
+        "axis": "y",
+        "origin": [
+          13.1,
+          2.8,
+          8.3
+        ],
+        "rescale": true
+      },
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#kelp_plant"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#kelp_plant"
+        }
+      }
+    },
+    {
+      "name": "Kelp stalk",
+      "from": [
+        13.1,
+        2.8,
+        7.451471862576144
+      ],
+      "to": [
+        13.1,
+        6.2,
+        9.148528137423858
+      ],
+      "rotation": {
+        "angle": 45,
+        "axis": "y",
+        "origin": [
+          13.1,
+          2.8,
+          8.3
+        ],
+        "rescale": true
+      },
+      "faces": {
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#kelp_plant"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#kelp_plant"
+        }
+      }
+    },
+    {
+      "name": "Kelp crown",
+      "from": [
+        12.14540584539816,
+        6.199999999999999,
+        8.3
+      ],
+      "to": [
+        14.054594154601839,
+        9.2,
+        8.3
+      ],
+      "rotation": {
+        "angle": 45,
+        "axis": "y",
+        "origin": [
+          13.1,
+          6.199999999999999,
+          8.3
+        ],
+        "rescale": true
+      },
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#kelp"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#kelp"
+        }
+      }
+    },
+    {
+      "name": "Kelp crown",
+      "from": [
+        13.1,
+        6.199999999999999,
+        7.345405845398162
+      ],
+      "to": [
+        13.1,
+        9.2,
+        9.25459415460184
+      ],
+      "rotation": {
+        "angle": 45,
+        "axis": "y",
+        "origin": [
+          13.1,
+          6.199999999999999,
+          8.3
+        ],
+        "rescale": true
+      },
+      "faces": {
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#kelp"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#kelp"
+        }
+      }
+    },
+    {
+      "name": "Seagrass",
+      "from": [
+        6.410050506338834,
+        2.8,
+        12.6
+      ],
+      "to": [
+        8.389949493661167,
+        5.6,
+        12.6
+      ],
+      "rotation": {
+        "angle": 45,
+        "axis": "y",
+        "origin": [
+          7.4,
+          2.8,
+          12.6
+        ],
+        "rescale": true
+      },
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#seagrass"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#seagrass"
+        }
+      }
+    },
+    {
+      "name": "Seagrass",
+      "from": [
+        7.4,
+        2.8,
+        11.610050506338833
+      ],
+      "to": [
+        7.4,
+        5.6,
+        13.589949493661166
+      ],
+      "rotation": {
+        "angle": 45,
+        "axis": "y",
+        "origin": [
+          7.4,
+          2.8,
+          12.6
+        ],
+        "rescale": true
+      },
+      "faces": {
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#seagrass"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#seagrass"
+        }
+      }
+    },
+    {
+      "name": "Seagrass",
+      "from": [
+        4.8100505063388335,
+        2.8,
+        10.4
+      ],
+      "to": [
+        6.789949493661166,
+        5.6,
+        10.4
+      ],
+      "rotation": {
+        "angle": 45,
+        "axis": "y",
+        "origin": [
+          5.8,
+          2.8,
+          10.4
+        ],
+        "rescale": true
+      },
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#seagrass"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#seagrass"
+        }
+      }
+    },
+    {
+      "name": "Seagrass",
+      "from": [
+        5.8,
+        2.8,
+        9.410050506338834
+      ],
+      "to": [
+        5.8,
+        5.6,
+        11.389949493661167
+      ],
+      "rotation": {
+        "angle": 45,
+        "axis": "y",
+        "origin": [
+          5.8,
+          2.8,
+          10.4
+        ],
+        "rescale": true
+      },
+      "faces": {
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#seagrass"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#seagrass"
+        }
+      }
+    },
+    {
+      "name": "Seagrass",
+      "from": [
+        7.910050506338834,
+        2.8,
+        3
+      ],
+      "to": [
+        9.889949493661167,
+        5.6,
+        3
+      ],
+      "rotation": {
+        "angle": 45,
+        "axis": "y",
+        "origin": [
+          8.9,
+          2.8,
+          3
+        ],
+        "rescale": true
+      },
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#seagrass"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#seagrass"
+        }
+      }
+    },
+    {
+      "name": "Seagrass",
+      "from": [
+        8.9,
+        2.8,
+        2.0100505063388336
+      ],
+      "to": [
+        8.9,
+        5.6,
+        3.9899494936611664
+      ],
+      "rotation": {
+        "angle": 45,
+        "axis": "y",
+        "origin": [
+          8.9,
+          2.8,
+          3
+        ],
+        "rescale": true
+      },
+      "faces": {
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#seagrass"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#seagrass"
+        }
+      }
+    }
+  ]
+}

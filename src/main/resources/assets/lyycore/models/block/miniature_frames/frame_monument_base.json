@@ -1,0 +1,2834 @@
+{
+  "credit": "Made with Blockbench",
+  "parent": "minecraft:block/block",
+  "ambientocclusion": false,
+  "render_type": "minecraft:cutout",
+  "textures": {
+    "sand": "minecraft:block/sand",
+    "prismarine": "minecraft:block/prismarine",
+    "prismarine_bricks": "minecraft:block/prismarine_bricks",
+    "dark_prismarine": "minecraft:block/dark_prismarine",
+    "sea_lantern": "minecraft:block/sea_lantern",
+    "guardian": "lyycore:block/frame_guardian",
+    "frame_white": "lyycore:block/frame_white",
+    "frame_water_clear": "lyycore:block/frame_water_clear",
+    "frame_water_surface": "lyycore:block/frame_water_surface",
+    "particle": "lyycore:block/frame_white"
+  },
+  "elements": [
+    {
+      "name": "White base with inlaid pink paths",
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        1.5,
+        16
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        },
+        "down": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        }
+      }
+    },
+    {
+      "name": "Corner pillar 0 0",
+      "from": [
+        0,
+        1.5,
+        0
+      ],
+      "to": [
+        1.5,
+        14.5,
+        1.5
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        }
+      }
+    },
+    {
+      "name": "Corner pillar 14.5 0",
+      "from": [
+        14.5,
+        1.5,
+        0
+      ],
+      "to": [
+        16,
+        14.5,
+        1.5
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        }
+      }
+    },
+    {
+      "name": "Corner pillar 0 14.5",
+      "from": [
+        0,
+        1.5,
+        14.5
+      ],
+      "to": [
+        1.5,
+        14.5,
+        16
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        }
+      }
+    },
+    {
+      "name": "Corner pillar 14.5 14.5",
+      "from": [
+        14.5,
+        1.5,
+        14.5
+      ],
+      "to": [
+        16,
+        14.5,
+        16
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        }
+      }
+    },
+    {
+      "name": "Top north beam",
+      "from": [
+        0,
+        14.5,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        1.5
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        },
+        "down": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        }
+      }
+    },
+    {
+      "name": "Top south beam",
+      "from": [
+        0,
+        14.5,
+        14.5
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        },
+        "down": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        }
+      }
+    },
+    {
+      "name": "Top west beam",
+      "from": [
+        0,
+        14.5,
+        1.5
+      ],
+      "to": [
+        1.5,
+        16,
+        14.5
+      ],
+      "faces": {
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        },
+        "down": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        }
+      }
+    },
+    {
+      "name": "Top east beam",
+      "from": [
+        14.5,
+        14.5,
+        1.5
+      ],
+      "to": [
+        16,
+        16,
+        14.5
+      ],
+      "faces": {
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        },
+        "down": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_white"
+        }
+      }
+    },
+    {
+      "name": "Monument sandy seabed",
+      "from": [
+        1.5,
+        1.5,
+        1.5
+      ],
+      "to": [
+        14.5,
+        2.45,
+        14.5
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#sand"
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#sand"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#sand"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#sand"
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#sand"
+        }
+      }
+    },
+    {
+      "name": "Prismarine foundation",
+      "from": [
+        2.4,
+        2.45,
+        2.2
+      ],
+      "to": [
+        13.6,
+        3.3,
+        8.6
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#prismarine"
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#prismarine"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#prismarine"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#prismarine"
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#prismarine"
+        }
+      }
+    },
+    {
+      "name": "Temple stair lower",
+      "from": [
+        4.3,
+        2.45,
+        9.7
+      ],
+      "to": [
+        11.7,
+        2.85,
+        11.3
+      ],
+      "faces": {
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#prismarine_bricks"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#prismarine_bricks"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#prismarine_bricks"
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#prismarine_bricks"
+        }
+      }
+    },
+    {
+      "name": "Temple stair upper",
+      "from": [
+        4.3,
+        2.45,
+        8.6
+      ],
+      "to": [
+        11.7,
+        3.3,
+        9.7
+      ],
+      "faces": {
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#prismarine_bricks"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#prismarine_bricks"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#prismarine_bricks"
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#prismarine_bricks"
+        }
+      }
+    },
+    {
+      "name": "Temple left pier",
+      "from": [
+        3.3,
+        3.3,
+        3.2
+      ],
+      "to": [
+        5.7,
+        6.9,
+        7.8
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#prismarine_bricks"
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#prismarine_bricks"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#prismarine_bricks"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#prismarine_bricks"
+        }
+      }
+    },
+    {
+      "name": "Temple right pier",
+      "from": [
+        10.3,
+        3.3,
+        3.2
+      ],
+      "to": [
+        12.7,
+        6.9,
+        7.8
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#prismarine_bricks"
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#prismarine_bricks"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#prismarine_bricks"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#prismarine_bricks"
+        }
+      }
+    },
+    {
+      "name": "Temple dark rear wall",
+      "from": [
+        5.7,
+        3.3,
+        3.2
+      ],
+      "to": [
+        10.3,
+        6.9,
+        4.3
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#dark_prismarine"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#dark_prismarine"
+        }
+      }
+    },
+    {
+      "name": "Temple upper lintel",
+      "from": [
+        3.3,
+        6.9,
+        3.2
+      ],
+      "to": [
+        12.7,
+        7.9,
+        7.8
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#prismarine_bricks"
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#prismarine_bricks"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#prismarine_bricks"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#prismarine_bricks"
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#prismarine_bricks"
+        },
+        "down": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#prismarine_bricks"
+        }
+      }
+    },
+    {
+      "name": "Temple stepped roof",
+      "from": [
+        4.4,
+        7.9,
+        3.65
+      ],
+      "to": [
+        11.6,
+        8.7,
+        7.35
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#prismarine"
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#prismarine"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#prismarine"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#prismarine"
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#prismarine"
+        }
+      }
+    },
+    {
+      "name": "Temple dark roof ridge",
+      "from": [
+        6.7,
+        8.7,
+        4.1
+      ],
+      "to": [
+        9.3,
+        9.35,
+        6.9
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#dark_prismarine"
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#dark_prismarine"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#dark_prismarine"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#dark_prismarine"
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#dark_prismarine"
+        }
+      }
+    },
+    {
+      "name": "Sea lantern left",
+      "from": [
+        3.3,
+        5.4,
+        7.8
+      ],
+      "to": [
+        5.7,
+        6.9,
+        8.6
+      ],
+      "faces": {
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#sea_lantern"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#sea_lantern"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#sea_lantern"
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#sea_lantern"
+        },
+        "down": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#sea_lantern"
+        }
+      },
+      "shade": false,
+      "neoforge_data": {
+        "block_light": 15,
+        "sky_light": 15,
+        "ambient_occlusion": false
+      }
+    },
+    {
+      "name": "Sea lantern right",
+      "from": [
+        10.3,
+        5.4,
+        7.8
+      ],
+      "to": [
+        12.7,
+        6.9,
+        8.6
+      ],
+      "faces": {
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#sea_lantern"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#sea_lantern"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#sea_lantern"
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#sea_lantern"
+        },
+        "down": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#sea_lantern"
+        }
+      },
+      "shade": false,
+      "neoforge_data": {
+        "block_light": 15,
+        "sky_light": 15,
+        "ambient_occlusion": false
+      }
+    },
+    {
+      "name": "Prismarine rubble",
+      "from": [
+        2,
+        2.45,
+        11.8
+      ],
+      "to": [
+        4.1,
+        4.2,
+        13.7
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#prismarine"
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#prismarine"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#prismarine"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#prismarine"
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#prismarine"
+        }
+      }
+    },
+    {
+      "name": "Dark prismarine relic",
+      "from": [
+        12,
+        2.45,
+        11.4
+      ],
+      "to": [
+        14,
+        4.55,
+        13.5
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#dark_prismarine"
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#dark_prismarine"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#dark_prismarine"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#dark_prismarine"
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#dark_prismarine"
+        }
+      }
+    },
+    {
+      "name": "Guardian body",
+      "from": [
+        6.65,
+        6.15,
+        9
+      ],
+      "to": [
+        9.35,
+        8.85,
+        12.600000000000001
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            11,
+            4,
+            14,
+            7
+          ],
+          "texture": "#guardian"
+        },
+        "east": {
+          "uv": [
+            7,
+            4,
+            11,
+            7
+          ],
+          "texture": "#guardian"
+        },
+        "south": {
+          "uv": [
+            4,
+            4,
+            7,
+            7
+          ],
+          "texture": "#guardian"
+        },
+        "west": {
+          "uv": [
+            0,
+            4,
+            4,
+            7
+          ],
+          "texture": "#guardian"
+        },
+        "up": {
+          "uv": [
+            4,
+            0,
+            7,
+            4
+          ],
+          "texture": "#guardian"
+        },
+        "down": {
+          "uv": [
+            7,
+            0,
+            10,
+            4
+          ],
+          "texture": "#guardian"
+        }
+      }
+    },
+    {
+      "name": "Guardian left cheek",
+      "from": [
+        6.2,
+        6.15,
+        9.450000000000001
+      ],
+      "to": [
+        6.65,
+        8.85,
+        12.15
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            6.5,
+            10,
+            7,
+            13
+          ],
+          "texture": "#guardian"
+        },
+        "south": {
+          "uv": [
+            3,
+            10,
+            3.5,
+            13
+          ],
+          "texture": "#guardian"
+        },
+        "west": {
+          "uv": [
+            0,
+            10,
+            3,
+            13
+          ],
+          "texture": "#guardian"
+        },
+        "up": {
+          "uv": [
+            3,
+            7,
+            3.5,
+            10
+          ],
+          "texture": "#guardian"
+        },
+        "down": {
+          "uv": [
+            3.5,
+            7,
+            4,
+            10
+          ],
+          "texture": "#guardian"
+        }
+      }
+    },
+    {
+      "name": "Guardian right cheek",
+      "from": [
+        9.35,
+        6.15,
+        9.450000000000001
+      ],
+      "to": [
+        9.8,
+        8.85,
+        12.15
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            6.5,
+            10,
+            7,
+            13
+          ],
+          "texture": "#guardian"
+        },
+        "east": {
+          "uv": [
+            3.5,
+            10,
+            6.5,
+            13
+          ],
+          "texture": "#guardian"
+        },
+        "south": {
+          "uv": [
+            3,
+            10,
+            3.5,
+            13
+          ],
+          "texture": "#guardian"
+        },
+        "up": {
+          "uv": [
+            3,
+            7,
+            3.5,
+            10
+          ],
+          "texture": "#guardian"
+        },
+        "down": {
+          "uv": [
+            3.5,
+            7,
+            4,
+            10
+          ],
+          "texture": "#guardian"
+        }
+      }
+    },
+    {
+      "name": "Guardian upper shell",
+      "from": [
+        6.65,
+        8.85,
+        9.450000000000001
+      ],
+      "to": [
+        9.35,
+        9.3,
+        12.15
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            13,
+            13,
+            16,
+            13.5
+          ],
+          "texture": "#guardian"
+        },
+        "east": {
+          "uv": [
+            10,
+            13,
+            13,
+            13.5
+          ],
+          "texture": "#guardian"
+        },
+        "south": {
+          "uv": [
+            7,
+            13,
+            10,
+            13.5
+          ],
+          "texture": "#guardian"
+        },
+        "west": {
+          "uv": [
+            4,
+            13,
+            7,
+            13.5
+          ],
+          "texture": "#guardian"
+        },
+        "up": {
+          "uv": [
+            7,
+            10,
+            10,
+            13
+          ],
+          "texture": "#guardian"
+        }
+      }
+    },
+    {
+      "name": "Guardian lower shell",
+      "from": [
+        6.65,
+        5.7,
+        9.450000000000001
+      ],
+      "to": [
+        9.35,
+        6.15,
+        12.15
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            13,
+            13,
+            16,
+            13.5
+          ],
+          "texture": "#guardian"
+        },
+        "east": {
+          "uv": [
+            10,
+            13,
+            13,
+            13.5
+          ],
+          "texture": "#guardian"
+        },
+        "south": {
+          "uv": [
+            7,
+            13,
+            10,
+            13.5
+          ],
+          "texture": "#guardian"
+        },
+        "west": {
+          "uv": [
+            4,
+            13,
+            7,
+            13.5
+          ],
+          "texture": "#guardian"
+        },
+        "down": {
+          "uv": [
+            10,
+            10,
+            13,
+            13
+          ],
+          "texture": "#guardian"
+        }
+      }
+    },
+    {
+      "name": "Guardian central eye",
+      "from": [
+        7.775,
+        7.275,
+        12.6225
+      ],
+      "to": [
+        8.225,
+        7.725,
+        12.7125
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            2.7,
+            0.10000000000000009,
+            3.2,
+            0.6000000000000001
+          ],
+          "texture": "#guardian"
+        },
+        "east": {
+          "uv": [
+            2.6,
+            0.10000000000000009,
+            2.7,
+            0.6000000000000001
+          ],
+          "texture": "#guardian"
+        },
+        "south": {
+          "uv": [
+            2.1,
+            0.10000000000000009,
+            2.6,
+            0.6000000000000001
+          ],
+          "texture": "#guardian"
+        },
+        "west": {
+          "uv": [
+            2,
+            0.10000000000000009,
+            2.1,
+            0.6000000000000001
+          ],
+          "texture": "#guardian"
+        },
+        "up": {
+          "uv": [
+            2.1,
+            0,
+            2.6,
+            0.10000000000000009
+          ],
+          "texture": "#guardian"
+        },
+        "down": {
+          "uv": [
+            2.6,
+            0,
+            3.1,
+            0.10000000000000009
+          ],
+          "texture": "#guardian"
+        }
+      }
+    },
+    {
+      "name": "Guardian tail base",
+      "from": [
+        7.55,
+        7.05,
+        7.987500000000001
+      ],
+      "to": [
+        8.45,
+        7.95,
+        9
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            13.25,
+            1.125,
+            14.25,
+            2.125
+          ],
+          "texture": "#guardian"
+        },
+        "east": {
+          "uv": [
+            12.125,
+            1.125,
+            13.25,
+            2.125
+          ],
+          "texture": "#guardian"
+        },
+        "west": {
+          "uv": [
+            10,
+            1.125,
+            11.125,
+            2.125
+          ],
+          "texture": "#guardian"
+        },
+        "up": {
+          "uv": [
+            11.125,
+            0,
+            12.125,
+            1.125
+          ],
+          "texture": "#guardian"
+        },
+        "down": {
+          "uv": [
+            12.125,
+            0,
+            13.125,
+            1.125
+          ],
+          "texture": "#guardian"
+        }
+      }
+    },
+    {
+      "name": "Guardian tail tip",
+      "from": [
+        7.6625,
+        7.1625,
+        7.200000000000001
+      ],
+      "to": [
+        8.3375,
+        7.8375,
+        7.987500000000001
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            2.5,
+            14.375,
+            3.25,
+            15.125
+          ],
+          "texture": "#guardian"
+        },
+        "east": {
+          "uv": [
+            1.625,
+            14.375,
+            2.5,
+            15.125
+          ],
+          "texture": "#guardian"
+        },
+        "west": {
+          "uv": [
+            0,
+            14.375,
+            0.875,
+            15.125
+          ],
+          "texture": "#guardian"
+        },
+        "up": {
+          "uv": [
+            0.875,
+            13.5,
+            1.625,
+            14.375
+          ],
+          "texture": "#guardian"
+        },
+        "down": {
+          "uv": [
+            1.625,
+            13.5,
+            2.375,
+            14.375
+          ],
+          "texture": "#guardian"
+        }
+      }
+    },
+    {
+      "name": "Guardian tail fin",
+      "from": [
+        7.89875,
+        6.6,
+        6.750000000000001
+      ],
+      "to": [
+        8.10125,
+        8.4,
+        7.425000000000001
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            7.975,
+            5.5,
+            8.2,
+            7.5
+          ],
+          "texture": "#guardian"
+        },
+        "east": {
+          "uv": [
+            7.225,
+            5.5,
+            7.975,
+            7.5
+          ],
+          "texture": "#guardian"
+        },
+        "south": {
+          "uv": [
+            7,
+            5.5,
+            7.225,
+            7.5
+          ],
+          "texture": "#guardian"
+        },
+        "west": {
+          "uv": [
+            6.25,
+            5.5,
+            7,
+            7.5
+          ],
+          "texture": "#guardian"
+        },
+        "up": {
+          "uv": [
+            7,
+            4.75,
+            7.225,
+            5.5
+          ],
+          "texture": "#guardian"
+        },
+        "down": {
+          "uv": [
+            7.225,
+            4.75,
+            7.45,
+            5.5
+          ],
+          "texture": "#guardian"
+        }
+      }
+    },
+    {
+      "name": "Guardian diagonal spine",
+      "from": [
+        6.35,
+        4.9,
+        10.600000000000001
+      ],
+      "to": [
+        6.75,
+        6.35,
+        11
+      ],
+      "rotation": {
+        "angle": -45,
+        "axis": "z",
+        "origin": [
+          6.55,
+          6.05,
+          10.8
+        ]
+      },
+      "faces": {
+        "north": {
+          "uv": [
+            1.5,
+            0.5,
+            2,
+            2.75
+          ],
+          "texture": "#guardian"
+        },
+        "east": {
+          "uv": [
+            1,
+            0.5,
+            1.5,
+            2.75
+          ],
+          "texture": "#guardian"
+        },
+        "south": {
+          "uv": [
+            0.5,
+            0.5,
+            1,
+            2.75
+          ],
+          "texture": "#guardian"
+        },
+        "west": {
+          "uv": [
+            0,
+            0.5,
+            0.5,
+            2.75
+          ],
+          "texture": "#guardian"
+        },
+        "up": {
+          "uv": [
+            0.5,
+            0,
+            1,
+            0.5
+          ],
+          "texture": "#guardian"
+        },
+        "down": {
+          "uv": [
+            1,
+            0,
+            1.5,
+            0.5
+          ],
+          "texture": "#guardian"
+        }
+      }
+    },
+    {
+      "name": "Guardian diagonal spine",
+      "from": [
+        6.35,
+        8.649999999999999,
+        10.600000000000001
+      ],
+      "to": [
+        6.75,
+        10.1,
+        11
+      ],
+      "rotation": {
+        "angle": 45,
+        "axis": "z",
+        "origin": [
+          6.55,
+          8.95,
+          10.8
+        ]
+      },
+      "faces": {
+        "north": {
+          "uv": [
+            1.5,
+            0.5,
+            2,
+            2.75
+          ],
+          "texture": "#guardian"
+        },
+        "east": {
+          "uv": [
+            1,
+            0.5,
+            1.5,
+            2.75
+          ],
+          "texture": "#guardian"
+        },
+        "south": {
+          "uv": [
+            0.5,
+            0.5,
+            1,
+            2.75
+          ],
+          "texture": "#guardian"
+        },
+        "west": {
+          "uv": [
+            0,
+            0.5,
+            0.5,
+            2.75
+          ],
+          "texture": "#guardian"
+        },
+        "up": {
+          "uv": [
+            0.5,
+            0,
+            1,
+            0.5
+          ],
+          "texture": "#guardian"
+        },
+        "down": {
+          "uv": [
+            1,
+            0,
+            1.5,
+            0.5
+          ],
+          "texture": "#guardian"
+        }
+      }
+    },
+    {
+      "name": "Guardian diagonal spine",
+      "from": [
+        9.25,
+        4.9,
+        10.600000000000001
+      ],
+      "to": [
+        9.649999999999999,
+        6.35,
+        11
+      ],
+      "rotation": {
+        "angle": 45,
+        "axis": "z",
+        "origin": [
+          9.45,
+          6.05,
+          10.8
+        ]
+      },
+      "faces": {
+        "north": {
+          "uv": [
+            1.5,
+            0.5,
+            2,
+            2.75
+          ],
+          "texture": "#guardian"
+        },
+        "east": {
+          "uv": [
+            1,
+            0.5,
+            1.5,
+            2.75
+          ],
+          "texture": "#guardian"
+        },
+        "south": {
+          "uv": [
+            0.5,
+            0.5,
+            1,
+            2.75
+          ],
+          "texture": "#guardian"
+        },
+        "west": {
+          "uv": [
+            0,
+            0.5,
+            0.5,
+            2.75
+          ],
+          "texture": "#guardian"
+        },
+        "up": {
+          "uv": [
+            0.5,
+            0,
+            1,
+            0.5
+          ],
+          "texture": "#guardian"
+        },
+        "down": {
+          "uv": [
+            1,
+            0,
+            1.5,
+            0.5
+          ],
+          "texture": "#guardian"
+        }
+      }
+    },
+    {
+      "name": "Guardian diagonal spine",
+      "from": [
+        9.25,
+        8.649999999999999,
+        10.600000000000001
+      ],
+      "to": [
+        9.649999999999999,
+        10.1,
+        11
+      ],
+      "rotation": {
+        "angle": -45,
+        "axis": "z",
+        "origin": [
+          9.45,
+          8.95,
+          10.8
+        ]
+      },
+      "faces": {
+        "north": {
+          "uv": [
+            1.5,
+            0.5,
+            2,
+            2.75
+          ],
+          "texture": "#guardian"
+        },
+        "east": {
+          "uv": [
+            1,
+            0.5,
+            1.5,
+            2.75
+          ],
+          "texture": "#guardian"
+        },
+        "south": {
+          "uv": [
+            0.5,
+            0.5,
+            1,
+            2.75
+          ],
+          "texture": "#guardian"
+        },
+        "west": {
+          "uv": [
+            0,
+            0.5,
+            0.5,
+            2.75
+          ],
+          "texture": "#guardian"
+        },
+        "up": {
+          "uv": [
+            0.5,
+            0,
+            1,
+            0.5
+          ],
+          "texture": "#guardian"
+        },
+        "down": {
+          "uv": [
+            1,
+            0,
+            1.5,
+            0.5
+          ],
+          "texture": "#guardian"
+        }
+      }
+    },
+    {
+      "name": "Guardian front back spine",
+      "from": [
+        7.82,
+        4.9,
+        9.170000000000002
+      ],
+      "to": [
+        8.18,
+        6.35,
+        9.530000000000001
+      ],
+      "rotation": {
+        "angle": 45,
+        "axis": "x",
+        "origin": [
+          8,
+          6.05,
+          9.350000000000001
+        ]
+      },
+      "faces": {
+        "north": {
+          "uv": [
+            1.5,
+            0.5,
+            2,
+            2.75
+          ],
+          "texture": "#guardian"
+        },
+        "east": {
+          "uv": [
+            1,
+            0.5,
+            1.5,
+            2.75
+          ],
+          "texture": "#guardian"
+        },
+        "south": {
+          "uv": [
+            0.5,
+            0.5,
+            1,
+            2.75
+          ],
+          "texture": "#guardian"
+        },
+        "west": {
+          "uv": [
+            0,
+            0.5,
+            0.5,
+            2.75
+          ],
+          "texture": "#guardian"
+        },
+        "up": {
+          "uv": [
+            0.5,
+            0,
+            1,
+            0.5
+          ],
+          "texture": "#guardian"
+        },
+        "down": {
+          "uv": [
+            1,
+            0,
+            1.5,
+            0.5
+          ],
+          "texture": "#guardian"
+        }
+      }
+    },
+    {
+      "name": "Guardian front back spine",
+      "from": [
+        7.82,
+        8.649999999999999,
+        9.170000000000002
+      ],
+      "to": [
+        8.18,
+        10.1,
+        9.530000000000001
+      ],
+      "rotation": {
+        "angle": -45,
+        "axis": "x",
+        "origin": [
+          8,
+          8.95,
+          9.350000000000001
+        ]
+      },
+      "faces": {
+        "north": {
+          "uv": [
+            1.5,
+            0.5,
+            2,
+            2.75
+          ],
+          "texture": "#guardian"
+        },
+        "east": {
+          "uv": [
+            1,
+            0.5,
+            1.5,
+            2.75
+          ],
+          "texture": "#guardian"
+        },
+        "south": {
+          "uv": [
+            0.5,
+            0.5,
+            1,
+            2.75
+          ],
+          "texture": "#guardian"
+        },
+        "west": {
+          "uv": [
+            0,
+            0.5,
+            0.5,
+            2.75
+          ],
+          "texture": "#guardian"
+        },
+        "up": {
+          "uv": [
+            0.5,
+            0,
+            1,
+            0.5
+          ],
+          "texture": "#guardian"
+        },
+        "down": {
+          "uv": [
+            1,
+            0,
+            1.5,
+            0.5
+          ],
+          "texture": "#guardian"
+        }
+      }
+    },
+    {
+      "name": "Guardian front back spine",
+      "from": [
+        7.82,
+        4.9,
+        12.07
+      ],
+      "to": [
+        8.18,
+        6.35,
+        12.43
+      ],
+      "rotation": {
+        "angle": -45,
+        "axis": "x",
+        "origin": [
+          8,
+          6.05,
+          12.25
+        ]
+      },
+      "faces": {
+        "north": {
+          "uv": [
+            1.5,
+            0.5,
+            2,
+            2.75
+          ],
+          "texture": "#guardian"
+        },
+        "east": {
+          "uv": [
+            1,
+            0.5,
+            1.5,
+            2.75
+          ],
+          "texture": "#guardian"
+        },
+        "south": {
+          "uv": [
+            0.5,
+            0.5,
+            1,
+            2.75
+          ],
+          "texture": "#guardian"
+        },
+        "west": {
+          "uv": [
+            0,
+            0.5,
+            0.5,
+            2.75
+          ],
+          "texture": "#guardian"
+        },
+        "up": {
+          "uv": [
+            0.5,
+            0,
+            1,
+            0.5
+          ],
+          "texture": "#guardian"
+        },
+        "down": {
+          "uv": [
+            1,
+            0,
+            1.5,
+            0.5
+          ],
+          "texture": "#guardian"
+        }
+      }
+    },
+    {
+      "name": "Guardian front back spine",
+      "from": [
+        7.82,
+        8.649999999999999,
+        12.07
+      ],
+      "to": [
+        8.18,
+        10.1,
+        12.43
+      ],
+      "rotation": {
+        "angle": 45,
+        "axis": "x",
+        "origin": [
+          8,
+          8.95,
+          12.25
+        ]
+      },
+      "faces": {
+        "north": {
+          "uv": [
+            1.5,
+            0.5,
+            2,
+            2.75
+          ],
+          "texture": "#guardian"
+        },
+        "east": {
+          "uv": [
+            1,
+            0.5,
+            1.5,
+            2.75
+          ],
+          "texture": "#guardian"
+        },
+        "south": {
+          "uv": [
+            0.5,
+            0.5,
+            1,
+            2.75
+          ],
+          "texture": "#guardian"
+        },
+        "west": {
+          "uv": [
+            0,
+            0.5,
+            0.5,
+            2.75
+          ],
+          "texture": "#guardian"
+        },
+        "up": {
+          "uv": [
+            0.5,
+            0,
+            1,
+            0.5
+          ],
+          "texture": "#guardian"
+        },
+        "down": {
+          "uv": [
+            1,
+            0,
+            1.5,
+            0.5
+          ],
+          "texture": "#guardian"
+        }
+      }
+    },
+    {
+      "name": "Guardian side spine",
+      "from": [
+        5.8,
+        7.32,
+        9.270000000000001
+      ],
+      "to": [
+        7.2,
+        7.68,
+        9.63
+      ],
+      "rotation": {
+        "angle": -45,
+        "axis": "y",
+        "origin": [
+          6.5,
+          7.5,
+          9.450000000000001
+        ]
+      },
+      "faces": {
+        "north": {
+          "uv": [
+            1.5,
+            0.5,
+            2,
+            2.75
+          ],
+          "texture": "#guardian"
+        },
+        "east": {
+          "uv": [
+            1,
+            0.5,
+            1.5,
+            2.75
+          ],
+          "texture": "#guardian"
+        },
+        "south": {
+          "uv": [
+            0.5,
+            0.5,
+            1,
+            2.75
+          ],
+          "texture": "#guardian"
+        },
+        "west": {
+          "uv": [
+            0,
+            0.5,
+            0.5,
+            2.75
+          ],
+          "texture": "#guardian"
+        },
+        "up": {
+          "uv": [
+            0.5,
+            0,
+            1,
+            0.5
+          ],
+          "texture": "#guardian"
+        },
+        "down": {
+          "uv": [
+            1,
+            0,
+            1.5,
+            0.5
+          ],
+          "texture": "#guardian"
+        }
+      }
+    },
+    {
+      "name": "Guardian side spine",
+      "from": [
+        5.8,
+        7.32,
+        11.97
+      ],
+      "to": [
+        7.2,
+        7.68,
+        12.33
+      ],
+      "rotation": {
+        "angle": 45,
+        "axis": "y",
+        "origin": [
+          6.5,
+          7.5,
+          12.15
+        ]
+      },
+      "faces": {
+        "north": {
+          "uv": [
+            1.5,
+            0.5,
+            2,
+            2.75
+          ],
+          "texture": "#guardian"
+        },
+        "east": {
+          "uv": [
+            1,
+            0.5,
+            1.5,
+            2.75
+          ],
+          "texture": "#guardian"
+        },
+        "south": {
+          "uv": [
+            0.5,
+            0.5,
+            1,
+            2.75
+          ],
+          "texture": "#guardian"
+        },
+        "west": {
+          "uv": [
+            0,
+            0.5,
+            0.5,
+            2.75
+          ],
+          "texture": "#guardian"
+        },
+        "up": {
+          "uv": [
+            0.5,
+            0,
+            1,
+            0.5
+          ],
+          "texture": "#guardian"
+        },
+        "down": {
+          "uv": [
+            1,
+            0,
+            1.5,
+            0.5
+          ],
+          "texture": "#guardian"
+        }
+      }
+    },
+    {
+      "name": "Guardian side spine",
+      "from": [
+        8.8,
+        7.32,
+        9.270000000000001
+      ],
+      "to": [
+        10.2,
+        7.68,
+        9.63
+      ],
+      "rotation": {
+        "angle": 45,
+        "axis": "y",
+        "origin": [
+          9.5,
+          7.5,
+          9.450000000000001
+        ]
+      },
+      "faces": {
+        "north": {
+          "uv": [
+            1.5,
+            0.5,
+            2,
+            2.75
+          ],
+          "texture": "#guardian"
+        },
+        "east": {
+          "uv": [
+            1,
+            0.5,
+            1.5,
+            2.75
+          ],
+          "texture": "#guardian"
+        },
+        "south": {
+          "uv": [
+            0.5,
+            0.5,
+            1,
+            2.75
+          ],
+          "texture": "#guardian"
+        },
+        "west": {
+          "uv": [
+            0,
+            0.5,
+            0.5,
+            2.75
+          ],
+          "texture": "#guardian"
+        },
+        "up": {
+          "uv": [
+            0.5,
+            0,
+            1,
+            0.5
+          ],
+          "texture": "#guardian"
+        },
+        "down": {
+          "uv": [
+            1,
+            0,
+            1.5,
+            0.5
+          ],
+          "texture": "#guardian"
+        }
+      }
+    },
+    {
+      "name": "Guardian side spine",
+      "from": [
+        8.8,
+        7.32,
+        11.97
+      ],
+      "to": [
+        10.2,
+        7.68,
+        12.33
+      ],
+      "rotation": {
+        "angle": -45,
+        "axis": "y",
+        "origin": [
+          9.5,
+          7.5,
+          12.15
+        ]
+      },
+      "faces": {
+        "north": {
+          "uv": [
+            1.5,
+            0.5,
+            2,
+            2.75
+          ],
+          "texture": "#guardian"
+        },
+        "east": {
+          "uv": [
+            1,
+            0.5,
+            1.5,
+            2.75
+          ],
+          "texture": "#guardian"
+        },
+        "south": {
+          "uv": [
+            0.5,
+            0.5,
+            1,
+            2.75
+          ],
+          "texture": "#guardian"
+        },
+        "west": {
+          "uv": [
+            0,
+            0.5,
+            0.5,
+            2.75
+          ],
+          "texture": "#guardian"
+        },
+        "up": {
+          "uv": [
+            0.5,
+            0,
+            1,
+            0.5
+          ],
+          "texture": "#guardian"
+        },
+        "down": {
+          "uv": [
+            1,
+            0,
+            1.5,
+            0.5
+          ],
+          "texture": "#guardian"
+        }
+      }
+    }
+  ]
+}

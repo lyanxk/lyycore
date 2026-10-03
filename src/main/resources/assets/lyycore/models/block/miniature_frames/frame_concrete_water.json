@@ -1,0 +1,142 @@
+{
+  "credit": "Made with Blockbench",
+  "parent": "minecraft:block/block",
+  "ambientocclusion": false,
+  "render_type": "minecraft:translucent",
+  "textures": {
+    "smooth_stone": "minecraft:block/smooth_stone",
+    "iron_block": "minecraft:block/iron_block",
+    "sand": "minecraft:block/sand",
+    "gravel": "minecraft:block/gravel",
+    "stone_bricks": "minecraft:block/stone_bricks",
+    "white_concrete_powder": "minecraft:block/white_concrete_powder",
+    "white_concrete": "minecraft:block/white_concrete",
+    "pink_concrete": "minecraft:block/pink_concrete",
+    "frame_white": "lyycore:block/frame_white",
+    "frame_water_clear": "lyycore:block/frame_water_clear",
+    "frame_water_surface": "lyycore:block/frame_water_surface",
+    "particle": "lyycore:block/frame_white"
+  },
+  "elements": [
+    {
+      "name": "Concrete curing water",
+      "from": [
+        2.56,
+        2.65,
+        7.46
+      ],
+      "to": [
+        9.14,
+        3.7,
+        10.34
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_water_clear"
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_water_clear"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_water_clear"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_water_clear"
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_water_surface"
+        }
+      }
+    },
+    {
+      "name": "Water stream",
+      "from": [
+        8.55,
+        3.7,
+        7.55
+      ],
+      "to": [
+        9.05,
+        7.75,
+        8.05
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_water_clear"
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_water_clear"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_water_clear"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_water_clear"
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#frame_water_surface"
+        }
+      }
+    }
+  ]
+}

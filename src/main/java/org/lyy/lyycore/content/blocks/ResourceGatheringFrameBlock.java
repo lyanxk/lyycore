@@ -1,6 +1,7 @@
 package org.lyy.lyycore.content.blocks;
 
 import com.mojang.serialization.MapCodec;
+import org.lyy.lyycore.content.FrameProduction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
@@ -32,22 +33,28 @@ public class ResourceGatheringFrameBlock extends CondensingFrameBlock {
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     private final ResourceFrameKind kind;
 
-    private ResourceGatheringFrameBlock(ResourceFrameKind kind) { this.kind = kind; }
+    private ResourceGatheringFrameBlock(ResourceFrameKind kind, FrameProduction production) {
+        super(production);
+        this.kind = kind;
+    }
 
     public static ResourceGatheringFrameBlock create(ResourceFrameKind kind) {
-        return kind.supportsWater() ? new Waterlogged(kind) : new ResourceGatheringFrameBlock(kind);
+        return create(kind, FrameProduction.STANDARD);
+    }
+    public static ResourceGatheringFrameBlock create(ResourceFrameKind kind, FrameProduction production) {
+        return kind.supportsWater() ? new Waterlogged(kind, production) : new ResourceGatheringFrameBlock(kind, production);
     }
     public ResourceFrameKind kind() { return kind; }
     @Override protected MapCodec<ResourceGatheringFrameBlock> codec() {
-        return simpleCodec(properties -> create(kind));
+        return simpleCodec(properties -> create(kind, production()));
     }
     @Override protected BlockEntityType<ResourceGatheringFrameBlockEntity> frameBlockEntityType() {
         return LyyBlockEntities.RESOURCE_GATHERING_FRAME.get();
     }
 
     private static final class Waterlogged extends ResourceGatheringFrameBlock implements SimpleWaterloggedBlock {
-        private Waterlogged(ResourceFrameKind kind) {
-            super(kind);
+        private Waterlogged(ResourceFrameKind kind, FrameProduction production) {
+            super(kind, production);
             registerDefaultState(defaultBlockState().setValue(WATERLOGGED, false));
         }
 

@@ -11,7 +11,7 @@ import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import org.lyy.lyycore.content.ResourceFrameKind;
 
-/** Four independent types share their wire format, not their recipe pools. */
+/** Resource frames share a wire format while keeping separate production pools. */
 public record ResourceGatheringRecipe(ResourceFrameKind kind, ItemStack result, int dryCost, int wetCost) implements Recipe<RecipeInput> {
     public ResourceGatheringRecipe {
         if (result.isEmpty() || result.getCount() != 1 || dryCost <= 0 || wetCost <= 0)
@@ -34,8 +34,8 @@ public record ResourceGatheringRecipe(ResourceFrameKind kind, ItemStack result, 
         public Serializer(ResourceFrameKind kind) {
             codec = RecordCodecBuilder.mapCodec(instance -> instance.group(
                     ItemStack.STRICT_SINGLE_ITEM_CODEC.fieldOf("result").forGetter(ResourceGatheringRecipe::result),
-                    Codec.intRange(1, Integer.MAX_VALUE).optionalFieldOf("dry_cost", 200).forGetter(ResourceGatheringRecipe::dryCost),
-                    Codec.intRange(1, Integer.MAX_VALUE).optionalFieldOf("wet_cost", kind.supportsWater() ? 100 : 200).forGetter(ResourceGatheringRecipe::wetCost)
+                    Codec.intRange(1, Integer.MAX_VALUE).optionalFieldOf("dry_cost", kind.defaultDryCost()).forGetter(ResourceGatheringRecipe::dryCost),
+                    Codec.intRange(1, Integer.MAX_VALUE).optionalFieldOf("wet_cost", kind.defaultWetCost()).forGetter(ResourceGatheringRecipe::wetCost)
             ).apply(instance, (result, dry, wet) -> new ResourceGatheringRecipe(kind, result, dry, wet)));
             stream = StreamCodec.of((buf, recipe) -> {
                 ItemStack.STREAM_CODEC.encode(buf, recipe.result);

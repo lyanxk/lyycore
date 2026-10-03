@@ -1,0 +1,63 @@
+{
+  "parent": "minecraft:block/block",
+  "ambientocclusion": false,
+  "render_type": "minecraft:translucent",
+  "textures": {
+    "particle": "lyycore:block/imaginary_workshop/altar_diamond_facet",
+    "facet": "lyycore:block/imaginary_workshop/altar_diamond_facet"
+  },
+  "transform": {
+    "matrix": [
+      [
+        0.7071067811865475,
+        -0.3070831871371286,
+        0.6369457717715875,
+        0.016186302401294594
+      ],
+      [
+        0,
+        -0.9007773489355771,
+        -0.43428120802608244,
+        0.9469161461479381
+      ],
+      [
+        0.7071067811865475,
+        0.3070831871371286,
+        -0.6369457717715875,
+        0.17727002530779967
+      ]
+    ]
+  },
+  "elements": [
+    {
+      "name": "Diamond crystal face lower 4",
+      "from": [
+        7.534009742330268,
+        6.3999999999999995,
+        6.875
+      ],
+      "to": [
+        10.715990257669732,
+        10.063502422545943,
+        6.875
+      ],
+      "shade": false,
+      "neoforge_data": {
+        "block_light": 15,
+        "sky_light": 15,
+        "ambient_occlusion": false
+      },
+      "faces": {
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#facet"
+        }
+      }
+    }
+  ]
+}

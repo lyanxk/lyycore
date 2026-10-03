@@ -19,6 +19,11 @@ public class LyyCreativeTab {
                     .displayItems((params, output) -> {
                         output.accept(LyyItems.IMAGINARY_ALLOY_INGOT.get());
                         output.accept(LyyItems.IM_BATTERY.get());
+                        output.accept(LyyItems.PURE_CRYSTAL.get());
+                        output.accept(LyyBlocks.CRYSTAL_BLOCK.get());
+                        output.accept(LyyBlocks.ALLOY_BLOCK.get());
+                        output.accept(LyyBlocks.IMAGINARY_GATE.get());
+                        output.accept(LyyBlocks.IMAGINARY_CRAFTING_TABLE.get());
                         output.accept(LyyItems.IMAGINARY_DISASSEMBLER.get());
                         output.accept(LyyItems.WHISPER_OF_THE_PAST.get());
                         output.accept(LyyItems.IMAGINARY_CRYSTAL.get());
@@ -29,6 +34,8 @@ public class LyyCreativeTab {
                         output.accept(LyyBlocks.ITEM_COLLECTOR.get());
                         output.accept(LyyBlocks.IGB.get());
                         output.accept(LyyBlocks.CRYSTAL_CONDENSING_FRAME.get());
+                        output.accept(LyyBlocks.MINIATURE_CRYSTAL_FACTORY.get());
+                        for (var kind : org.lyy.lyycore.content.ResourceFrameKind.FACTORY_KINDS) output.accept(kind.factoryBlock());
                         for (var kind : org.lyy.lyycore.content.ResourceFrameKind.values()) {
                             output.accept(kind.core());
                             output.accept(kind.block());

@@ -31,7 +31,7 @@ public class CrystalCondensingScreen extends AbstractContainerScreen<CrystalCond
         super.renderSlotContents(g, stack, slot, slot.index == 0 ? "" : countString);
     }
     @Override protected void renderLabels(GuiGraphics g, int mouseX, int mouseY) {
-        g.drawString(font, title, 8, 6, ForgeGui.TEXT, false);
+        g.drawString(font, font.plainSubstrByWidth(title.getString(), 160), 8, 6, ForgeGui.TEXT, false);
         g.drawString(font, playerInventoryTitle, 8, 92, ForgeGui.TEXT, false);
         String amount = String.format(java.util.Locale.ROOT, "%,d IE", menu.getEnergyIE());
         g.drawString(font, amount, (imageWidth - font.width(amount)) / 2, 70, ForgeGui.TEXT, false);
@@ -42,12 +42,15 @@ public class CrystalCondensingScreen extends AbstractContainerScreen<CrystalCond
         super.render(g, mouseX, mouseY, partial);
         if (isHovering(8, 68, 160, 19, mouseX, mouseY)) {
             g.renderTooltip(font, Component.translatable("tooltip.lyycore.imaginary_energy", menu.getEnergyIE(), CondensingFrameBlockEntity.CAPACITY), mouseX, mouseY);
-        } else if (isHovering(59, 24, 58, 40, mouseX, mouseY)) {
+        } else if (isHovering(77, 35, 24, 31, mouseX, mouseY)) {
+            // Keep output details beside the slot; the left rail belongs to JEI.
             var lines = new java.util.ArrayList<Component>();
             if (menu.getSlot(0).hasItem()) lines.add(menu.getSlot(0).getItem().getHoverName());
             lines.add(Component.translatable("screen.lyycore.condensing.output", menu.getOutputCount(), CondensingFrameBlockEntity.OUTPUT_CAPACITY));
-            lines.add(Component.translatable(menu.isWaterlogged() ? "screen.lyycore.condensing.wet" : "screen.lyycore.condensing.dry"));
+            lines.add(Component.translatable(menu.isMiniatureFactory() ? "screen.lyycore.factory.production" : menu.isWaterlogged() ? "screen.lyycore.condensing.wet" : "screen.lyycore.condensing.dry"));
             g.renderComponentTooltip(font, lines, mouseX, mouseY);
+        } else if (isHovering(8, 5, 160, 12, mouseX, mouseY)) {
+            g.renderTooltip(font, title, mouseX, mouseY);
         } else renderTooltip(g, mouseX, mouseY);
     }
 }

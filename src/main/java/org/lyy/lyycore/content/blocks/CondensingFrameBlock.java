@@ -14,6 +14,7 @@ import net.minecraft.world.level.block.state.*;
 import net.minecraft.world.level.block.state.properties.*;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.*;
+import org.lyy.lyycore.content.FrameProduction;
 import org.lyy.lyycore.content.blockEntities.CondensingFrameBlockEntity;
 
 public abstract class CondensingFrameBlock extends BaseEntityBlock {
@@ -24,10 +25,15 @@ public abstract class CondensingFrameBlock extends BaseEntityBlock {
             Block.box(0, 1.5, 14.5, 1.5, 14.5, 16), Block.box(14.5, 1.5, 14.5, 16, 14.5, 16),
             Block.box(5, 3, 5, 11, 13, 11));
 
-    protected CondensingFrameBlock() {
+    private final FrameProduction production;
+
+    protected CondensingFrameBlock(FrameProduction production) {
         super(Properties.of().strength(3).sound(SoundType.AMETHYST).noOcclusion());
+        this.production = production;
         registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH));
     }
+
+    public FrameProduction production() { return production; }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {

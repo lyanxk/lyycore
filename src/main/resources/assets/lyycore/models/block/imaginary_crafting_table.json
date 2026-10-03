@@ -1,0 +1,20 @@
+{
+  "loader": "neoforge:composite",
+  "parent": "minecraft:block/block",
+  "ambientocclusion": false,
+  "textures": {
+    "particle": "lyycore:block/imaginary_workshop/alloy_frame_v2"
+  },
+  "children": {
+    "altar": {
+      "parent": "lyycore:block/imaginary_workshop/altar_base"
+    },
+    "crystal": {
+      "parent": "lyycore:block/imaginary_workshop/altar_crystal"
+    }
+  },
+  "item_render_order": [
+    "altar",
+    "crystal"
+  ]
+}

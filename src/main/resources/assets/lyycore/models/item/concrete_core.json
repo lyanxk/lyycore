@@ -1,0 +1,84 @@
+{
+  "loader": "neoforge:composite",
+  "parent": "minecraft:block/block",
+  "ambientocclusion": false,
+  "textures": {
+    "smooth_stone": "minecraft:block/smooth_stone",
+    "iron_block": "minecraft:block/iron_block",
+    "sand": "minecraft:block/sand",
+    "gravel": "minecraft:block/gravel",
+    "stone_bricks": "minecraft:block/stone_bricks",
+    "white_concrete_powder": "minecraft:block/white_concrete_powder",
+    "white_concrete": "minecraft:block/white_concrete",
+    "pink_concrete": "minecraft:block/pink_concrete",
+    "frame_white": "lyycore:block/frame_white",
+    "frame_water_clear": "lyycore:block/frame_water_clear",
+    "frame_water_surface": "lyycore:block/frame_water_surface",
+    "particle": "lyycore:block/frame_white"
+  },
+  "children": {
+    "base": {
+      "parent": "lyycore:item/miniature_frames/concrete_core_base"
+    },
+    "water": {
+      "parent": "lyycore:item/miniature_frames/concrete_core_water"
+    }
+  },
+  "item_render_order": [
+    "base",
+    "water"
+  ],
+  "display": {
+    "gui": {
+      "rotation": [
+        30,
+        225,
+        0
+      ],
+      "translation": [
+        0,
+        1,
+        0
+      ],
+      "scale": [
+        0.8,
+        0.8,
+        0.8
+      ]
+    },
+    "ground": {
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "translation": [
+        0,
+        3,
+        0
+      ],
+      "scale": [
+        0.4,
+        0.4,
+        0.4
+      ]
+    },
+    "fixed": {
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "scale": [
+        0.6,
+        0.6,
+        0.6
+      ]
+    }
+  }
+}

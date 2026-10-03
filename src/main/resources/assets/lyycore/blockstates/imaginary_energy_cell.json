@@ -1,5 +1,94 @@
 {
   "variants": {
-    "": { "model": "lyycore:block/imaginary_energy_cell" }
+    "facing=north,charge=0": {
+      "model": "lyycore:block/imaginary_energy_cell_0"
+    },
+    "facing=north,charge=1": {
+      "model": "lyycore:block/imaginary_energy_cell_1"
+    },
+    "facing=north,charge=2": {
+      "model": "lyycore:block/imaginary_energy_cell_2"
+    },
+    "facing=north,charge=3": {
+      "model": "lyycore:block/imaginary_energy_cell_3"
+    },
+    "facing=north,charge=4": {
+      "model": "lyycore:block/imaginary_energy_cell_4"
+    },
+    "facing=north,charge=5": {
+      "model": "lyycore:block/imaginary_energy_cell_5"
+    },
+    "facing=east,charge=0": {
+      "model": "lyycore:block/imaginary_energy_cell_0",
+      "y": 90
+    },
+    "facing=east,charge=1": {
+      "model": "lyycore:block/imaginary_energy_cell_1",
+      "y": 90
+    },
+    "facing=east,charge=2": {
+      "model": "lyycore:block/imaginary_energy_cell_2",
+      "y": 90
+    },
+    "facing=east,charge=3": {
+      "model": "lyycore:block/imaginary_energy_cell_3",
+      "y": 90
+    },
+    "facing=east,charge=4": {
+      "model": "lyycore:block/imaginary_energy_cell_4",
+      "y": 90
+    },
+    "facing=east,charge=5": {
+      "model": "lyycore:block/imaginary_energy_cell_5",
+      "y": 90
+    },
+    "facing=south,charge=0": {
+      "model": "lyycore:block/imaginary_energy_cell_0",
+      "y": 180
+    },
+    "facing=south,charge=1": {
+      "model": "lyycore:block/imaginary_energy_cell_1",
+      "y": 180
+    },
+    "facing=south,charge=2": {
+      "model": "lyycore:block/imaginary_energy_cell_2",
+      "y": 180
+    },
+    "facing=south,charge=3": {
+      "model": "lyycore:block/imaginary_energy_cell_3",
+      "y": 180
+    },
+    "facing=south,charge=4": {
+      "model": "lyycore:block/imaginary_energy_cell_4",
+      "y": 180
+    },
+    "facing=south,charge=5": {
+      "model": "lyycore:block/imaginary_energy_cell_5",
+      "y": 180
+    },
+    "facing=west,charge=0": {
+      "model": "lyycore:block/imaginary_energy_cell_0",
+      "y": 270
+    },
+    "facing=west,charge=1": {
+      "model": "lyycore:block/imaginary_energy_cell_1",
+      "y": 270
+    },
+    "facing=west,charge=2": {
+      "model": "lyycore:block/imaginary_energy_cell_2",
+      "y": 270
+    },
+    "facing=west,charge=3": {
+      "model": "lyycore:block/imaginary_energy_cell_3",
+      "y": 270
+    },
+    "facing=west,charge=4": {
+      "model": "lyycore:block/imaginary_energy_cell_4",
+      "y": 270
+    },
+    "facing=west,charge=5": {
+      "model": "lyycore:block/imaginary_energy_cell_5",
+      "y": 270
+    }
   }
 }

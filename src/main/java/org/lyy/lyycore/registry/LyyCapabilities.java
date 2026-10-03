@@ -2,11 +2,25 @@ package org.lyy.lyycore.registry;
 
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
-import org.lyy.lyycore.content.blockEntities.EnergyCellBlockEntity;
-import org.lyy.lyycore.content.blockEntities.ImaginaryAlloyForgeBlockEntity;
+import net.neoforged.neoforge.capabilities.BlockCapability;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import org.lyy.lyycore.LyyCore;
+import org.lyy.lyycore.energy.ImaginaryEnergy;
 
 public class LyyCapabilities {
+    public static final BlockCapability<ImaginaryEnergy, Direction> IMAGINARY_ENERGY = BlockCapability.createSided(
+            ResourceLocation.fromNamespaceAndPath(LyyCore.MODID, "imaginary_energy"), ImaginaryEnergy.class);
+
     public static void register(RegisterCapabilitiesEvent event) {
+        event.registerBlockEntity(IMAGINARY_ENERGY, LyyBlockEntities.RESOURCE_GATHERING_FRAME.get(),
+                (be, side) -> be.getImaginaryEnergyStorage());
+        event.registerBlockEntity(IMAGINARY_ENERGY, LyyBlockEntities.CRYSTAL_CONDENSING_FRAME.get(),
+                (be, side) -> be.getImaginaryEnergyStorage());
+        event.registerBlockEntity(IMAGINARY_ENERGY, LyyBlockEntities.IMAGINARY_ENERGY_CELL.get(),
+                (be, side) -> be.getEnergyStorage());
+        event.registerBlockEntity(IMAGINARY_ENERGY, LyyBlockEntities.IAF.get(),
+                (be, side) -> be.getImaginaryEnergyStorage());
         event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, LyyBlockEntities.RESOURCE_GATHERING_FRAME.get(),
                 (be, side) -> be.getEnergyStorage());
         event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, LyyBlockEntities.RESOURCE_GATHERING_FRAME.get(),

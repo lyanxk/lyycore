@@ -1,0 +1,9 @@
+{
+  "type": "lyycore:garden_production",
+  "result": {
+    "id": "minecraft:red_tulip",
+    "count": 1
+  },
+  "dry_cost": 100,
+  "wet_cost": 100
+}

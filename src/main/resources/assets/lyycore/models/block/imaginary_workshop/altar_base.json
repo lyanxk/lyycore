@@ -1,0 +1,2212 @@
+{
+  "parent": "minecraft:block/block",
+  "ambientocclusion": false,
+  "render_type": "minecraft:solid",
+  "textures": {
+    "particle": "lyycore:block/imaginary_workshop/alloy_frame_v2",
+    "diamond_block": "minecraft:block/diamond_block",
+    "iron_block": "lyycore:block/imaginary_workshop/iron_block",
+    "alloy_frame_v2": "lyycore:block/imaginary_workshop/alloy_frame_v2",
+    "alloy_cap_v2": "lyycore:block/imaginary_workshop/alloy_cap_v2",
+    "alloy_rail_v2": "lyycore:block/imaginary_workshop/alloy_rail_v2",
+    "conduit_floor_v2": "lyycore:block/imaginary_workshop/conduit_floor_v2",
+    "gem_prism_v2": "lyycore:block/imaginary_workshop/gem_prism_v2",
+    "altar_floor": "lyycore:block/imaginary_workshop/altar_floor",
+    "altar_offering_top": "lyycore:block/imaginary_workshop/altar_offering_top"
+  },
+  "elements": [
+    {
+      "name": "Lower octagon middle",
+      "from": [
+        0,
+        0,
+        2
+      ],
+      "to": [
+        16,
+        0.5,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "name": "Lower octagon north",
+      "from": [
+        2,
+        0,
+        0
+      ],
+      "to": [
+        14,
+        0.5,
+        2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "name": "Lower octagon south",
+      "from": [
+        2,
+        0,
+        14
+      ],
+      "to": [
+        14,
+        0.5,
+        16
+      ],
+      "faces": {
+        "south": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "name": "Upper octagon middle",
+      "from": [
+        0.5,
+        0.5,
+        2.5
+      ],
+      "to": [
+        15.5,
+        1,
+        13.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#altar_floor",
+          "uv": [
+            0.5,
+            2.5,
+            15.5,
+            13.5
+          ]
+        }
+      }
+    },
+    {
+      "name": "Upper octagon north",
+      "from": [
+        2.5,
+        0.5,
+        0.5
+      ],
+      "to": [
+        13.5,
+        1,
+        2.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#altar_floor",
+          "uv": [
+            2.5,
+            0.5,
+            13.5,
+            2.5
+          ]
+        },
+        "down": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "name": "Upper octagon south",
+      "from": [
+        2.5,
+        0.5,
+        13.5
+      ],
+      "to": [
+        13.5,
+        1,
+        15.5
+      ],
+      "faces": {
+        "south": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#altar_floor",
+          "uv": [
+            2.5,
+            13.5,
+            13.5,
+            15.5
+          ]
+        },
+        "down": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "name": "Offering 01 foot",
+      "from": [
+        6.7,
+        1,
+        0.9000000000000001
+      ],
+      "to": [
+        9.3,
+        1.6,
+        3.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "name": "Offering 01 stem",
+      "from": [
+        7.3,
+        1.6,
+        1.5000000000000002
+      ],
+      "to": [
+        8.7,
+        3.2,
+        2.9000000000000004
+      ],
+      "faces": {
+        "north": {
+          "texture": "#iron_block",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#iron_block",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#iron_block",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#iron_block",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "name": "Offering 01 top",
+      "from": [
+        6.6,
+        3.2,
+        0.8000000000000003
+      ],
+      "to": [
+        9.4,
+        3.8,
+        3.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#altar_offering_top",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "name": "Offering 02 foot",
+      "from": [
+        10.801219330881974,
+        1,
+        2.5987806691180246
+      ],
+      "to": [
+        13.401219330881975,
+        1.6,
+        5.198780669118024
+      ],
+      "faces": {
+        "north": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "name": "Offering 02 stem",
+      "from": [
+        11.401219330881975,
+        1.6,
+        3.1987806691180243
+      ],
+      "to": [
+        12.801219330881974,
+        3.2,
+        4.598780669118025
+      ],
+      "faces": {
+        "north": {
+          "texture": "#iron_block",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#iron_block",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#iron_block",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#iron_block",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "name": "Offering 02 top",
+      "from": [
+        10.701219330881974,
+        3.2,
+        2.4987806691180245
+      ],
+      "to": [
+        13.501219330881975,
+        3.8,
+        5.298780669118024
+      ],
+      "faces": {
+        "north": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#altar_offering_top",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "name": "Offering 03 foot",
+      "from": [
+        12.5,
+        1,
+        6.7
+      ],
+      "to": [
+        15.100000000000001,
+        1.6,
+        9.3
+      ],
+      "faces": {
+        "north": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "name": "Offering 03 stem",
+      "from": [
+        13.100000000000001,
+        1.6,
+        7.3
+      ],
+      "to": [
+        14.5,
+        3.2,
+        8.7
+      ],
+      "faces": {
+        "north": {
+          "texture": "#iron_block",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#iron_block",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#iron_block",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#iron_block",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "name": "Offering 03 top",
+      "from": [
+        12.4,
+        3.2,
+        6.6
+      ],
+      "to": [
+        15.200000000000001,
+        3.8,
+        9.4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#altar_offering_top",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "name": "Offering 04 foot",
+      "from": [
+        10.801219330881974,
+        1,
+        10.801219330881974
+      ],
+      "to": [
+        13.401219330881975,
+        1.6,
+        13.401219330881975
+      ],
+      "faces": {
+        "north": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "name": "Offering 04 stem",
+      "from": [
+        11.401219330881975,
+        1.6,
+        11.401219330881975
+      ],
+      "to": [
+        12.801219330881974,
+        3.2,
+        12.801219330881974
+      ],
+      "faces": {
+        "north": {
+          "texture": "#iron_block",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#iron_block",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#iron_block",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#iron_block",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "name": "Offering 04 top",
+      "from": [
+        10.701219330881974,
+        3.2,
+        10.701219330881974
+      ],
+      "to": [
+        13.501219330881975,
+        3.8,
+        13.501219330881975
+      ],
+      "faces": {
+        "north": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#altar_offering_top",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "name": "Offering 05 foot",
+      "from": [
+        6.7,
+        1,
+        12.5
+      ],
+      "to": [
+        9.3,
+        1.6,
+        15.100000000000001
+      ],
+      "faces": {
+        "north": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "name": "Offering 05 stem",
+      "from": [
+        7.3,
+        1.6,
+        13.100000000000001
+      ],
+      "to": [
+        8.7,
+        3.2,
+        14.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#iron_block",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#iron_block",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#iron_block",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#iron_block",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "name": "Offering 05 top",
+      "from": [
+        6.6,
+        3.2,
+        12.4
+      ],
+      "to": [
+        9.4,
+        3.8,
+        15.200000000000001
+      ],
+      "faces": {
+        "north": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#altar_offering_top",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "name": "Offering 06 foot",
+      "from": [
+        2.5987806691180246,
+        1,
+        10.801219330881976
+      ],
+      "to": [
+        5.198780669118024,
+        1.6,
+        13.401219330881977
+      ],
+      "faces": {
+        "north": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "name": "Offering 06 stem",
+      "from": [
+        3.1987806691180243,
+        1.6,
+        11.401219330881977
+      ],
+      "to": [
+        4.598780669118025,
+        3.2,
+        12.801219330881976
+      ],
+      "faces": {
+        "north": {
+          "texture": "#iron_block",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#iron_block",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#iron_block",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#iron_block",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "name": "Offering 06 top",
+      "from": [
+        2.4987806691180245,
+        3.2,
+        10.701219330881976
+      ],
+      "to": [
+        5.298780669118024,
+        3.8,
+        13.501219330881977
+      ],
+      "faces": {
+        "north": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#altar_offering_top",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "name": "Offering 07 foot",
+      "from": [
+        0.9000000000000001,
+        1,
+        6.700000000000002
+      ],
+      "to": [
+        3.5,
+        1.6,
+        9.300000000000002
+      ],
+      "faces": {
+        "north": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "name": "Offering 07 stem",
+      "from": [
+        1.5000000000000002,
+        1.6,
+        7.300000000000002
+      ],
+      "to": [
+        2.9000000000000004,
+        3.2,
+        8.700000000000001
+      ],
+      "faces": {
+        "north": {
+          "texture": "#iron_block",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#iron_block",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#iron_block",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#iron_block",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "name": "Offering 07 top",
+      "from": [
+        0.8000000000000003,
+        3.2,
+        6.600000000000001
+      ],
+      "to": [
+        3.6,
+        3.8,
+        9.400000000000002
+      ],
+      "faces": {
+        "north": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#altar_offering_top",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "name": "Offering 08 foot",
+      "from": [
+        2.5987806691180237,
+        1,
+        2.5987806691180255
+      ],
+      "to": [
+        5.198780669118023,
+        1.6,
+        5.198780669118025
+      ],
+      "faces": {
+        "north": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "name": "Offering 08 stem",
+      "from": [
+        3.1987806691180234,
+        1.6,
+        3.198780669118025
+      ],
+      "to": [
+        4.598780669118024,
+        3.2,
+        4.5987806691180255
+      ],
+      "faces": {
+        "north": {
+          "texture": "#iron_block",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#iron_block",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#iron_block",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#iron_block",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "name": "Offering 08 top",
+      "from": [
+        2.4987806691180237,
+        3.2,
+        2.4987806691180254
+      ],
+      "to": [
+        5.298780669118024,
+        3.8,
+        5.298780669118026
+      ],
+      "faces": {
+        "north": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#altar_offering_top",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "name": "Central alloy foot",
+      "from": [
+        5.8,
+        1,
+        5.8
+      ],
+      "to": [
+        10.2,
+        1.7,
+        10.2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "name": "Central silver plinth",
+      "from": [
+        6.3,
+        1.7,
+        6.3
+      ],
+      "to": [
+        9.7,
+        2.5,
+        9.7
+      ],
+      "faces": {
+        "north": {
+          "texture": "#iron_block",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#iron_block",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#iron_block",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#iron_block",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#iron_block",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "name": "Blue diamond center",
+      "from": [
+        6.7,
+        2.5,
+        6.7
+      ],
+      "to": [
+        9.3,
+        3.1,
+        9.3
+      ],
+      "faces": {
+        "up": {
+          "texture": "#diamond_block",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "name": "Central white rim 0",
+      "from": [
+        6,
+        2.5,
+        6
+      ],
+      "to": [
+        10,
+        3.1,
+        6.7
+      ],
+      "faces": {
+        "north": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "name": "Central white rim 1",
+      "from": [
+        6,
+        2.5,
+        9.3
+      ],
+      "to": [
+        10,
+        3.1,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "name": "Central white rim 2",
+      "from": [
+        6,
+        2.5,
+        6.7
+      ],
+      "to": [
+        6.7,
+        3.1,
+        9.3
+      ],
+      "faces": {
+        "west": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "name": "Central white rim 3",
+      "from": [
+        9.3,
+        2.5,
+        6.7
+      ],
+      "to": [
+        10,
+        3.1,
+        9.3
+      ],
+      "faces": {
+        "east": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#alloy_frame_v2",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    }
+  ]
+}

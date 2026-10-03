@@ -1,15 +1,36 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "category": "misc",
-  "pattern": [
-    "ABA",
-    "BCB",
-    "ABA"
+  "type": "lyycore:imaginary_crafting",
+  "ingredients": [
+    {
+      "item": "lyycore:alloy_block"
+    },
+    {
+      "item": "lyycore:crystal_block"
+    },
+    {
+      "item": "lyycore:im_battery"
+    },
+    {
+      "item": "lyycore:crystal_block"
+    },
+    {
+      "item": "lyycore:im_battery"
+    },
+    {
+      "item": "lyycore:crystal_block"
+    },
+    {
+      "item": "lyycore:im_battery"
+    },
+    {
+      "item": "lyycore:crystal_block"
+    },
+    {
+      "item": "lyycore:im_battery"
+    }
   ],
-  "key": {
-    "A": { "item": "lyycore:imaginary_alloy_ingot" },
-    "B": { "item": "lyycore:im_battery" },
-    "C": { "item": "minecraft:nether_brick" }
-  },
-  "result": { "id": "lyycore:im_generator", "count": 1 }
+  "result": {
+    "id": "lyycore:im_generator",
+    "count": 1
+  }
 }

@@ -36,17 +36,23 @@ public class ImaginaryEnergyStorage implements ImaginaryEnergy, IEnergyStorage {
     public int getImaginaryEnergyStored() { return imaginaryEnergy; }
     public void setImaginaryEnergy(int v) { imaginaryEnergy = Math.max(0, v); }
 
-    public int receiveImaginaryEnergy(int amount) {
+    @Override public int getMaxImaginaryEnergyStored() { return Integer.MAX_VALUE; }
+    @Override public boolean canReceiveImaginaryEnergy() { return true; }
+    @Override public boolean canExtractImaginaryEnergy() { return true; }
+
+    @Override
+    public int receiveImaginaryEnergy(int amount, boolean simulate) {
         if (amount <= 0) return 0;
-        int accepted = (int) Math.min((long) amount, (long) Integer.MAX_VALUE - imaginaryEnergy);
-        imaginaryEnergy += accepted;
+        int accepted = Math.min(amount, getMaxImaginaryEnergyStored() - imaginaryEnergy);
+        if (!simulate) imaginaryEnergy += accepted;
         return accepted;
     }
 
-    public int extractImaginaryEnergy(int amount) {
+    @Override
+    public int extractImaginaryEnergy(int amount, boolean simulate) {
         if (amount <= 0) return 0;
         int extracted = Math.min(imaginaryEnergy, amount);
-        imaginaryEnergy -= extracted;
+        if (!simulate) imaginaryEnergy -= extracted;
         return extracted;
     }
 

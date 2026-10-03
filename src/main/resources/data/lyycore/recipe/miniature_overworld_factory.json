@@ -1,0 +1,36 @@
+{
+  "type": "lyycore:imaginary_crafting",
+  "ingredients": [
+    {
+      "item": "lyycore:overworld_gathering_frame"
+    },
+    {
+      "item": "lyycore:alloy_block"
+    },
+    {
+      "item": "lyycore:alloy_block"
+    },
+    {
+      "item": "lyycore:alloy_block"
+    },
+    {
+      "item": "lyycore:alloy_block"
+    },
+    {
+      "item": "lyycore:alloy_block"
+    },
+    {
+      "item": "lyycore:alloy_block"
+    },
+    {
+      "item": "lyycore:alloy_block"
+    },
+    {
+      "item": "lyycore:alloy_block"
+    }
+  ],
+  "result": {
+    "id": "lyycore:miniature_overworld_factory",
+    "count": 1
+  }
+}

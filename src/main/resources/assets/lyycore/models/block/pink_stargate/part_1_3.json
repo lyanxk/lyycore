@@ -1,0 +1,317 @@
+{
+  "parent": "minecraft:block/block",
+  "ambientocclusion": false,
+  "render_type": "minecraft:cutout",
+  "textures": {
+    "particle": "lyycore:block/pink_stargate/white",
+    "white": "lyycore:block/pink_stargate/white",
+    "rim": "lyycore:block/pink_stargate/rim",
+    "pink_crystal": "lyycore:block/pink_stargate/pink_crystal",
+    "pink_sigil": "lyycore:block/pink_stargate/pink_sigil",
+    "portal": "lyycore:block/pink_stargate/portal"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        7.95
+      ],
+      "to": [
+        16,
+        4,
+        8.05
+      ],
+      "faces": {
+        "north": {
+          "texture": "#portal",
+          "uv": [
+            9.6,
+            5.6,
+            12.8,
+            6.4
+          ]
+        },
+        "south": {
+          "texture": "#portal",
+          "uv": [
+            3.2,
+            5.6,
+            6.4,
+            6.4
+          ]
+        }
+      },
+      "shade": false
+    },
+    {
+      "from": [
+        0,
+        4,
+        7.95
+      ],
+      "to": [
+        16,
+        8,
+        8.05
+      ],
+      "faces": {
+        "north": {
+          "texture": "#portal",
+          "uv": [
+            9.6,
+            4.8,
+            12.8,
+            5.6
+          ]
+        },
+        "south": {
+          "texture": "#portal",
+          "uv": [
+            3.2,
+            4.8,
+            6.4,
+            5.6
+          ]
+        }
+      },
+      "shade": false
+    },
+    {
+      "from": [
+        0,
+        8,
+        7.95
+      ],
+      "to": [
+        16,
+        12,
+        8.05
+      ],
+      "faces": {
+        "north": {
+          "texture": "#portal",
+          "uv": [
+            9.6,
+            4.0,
+            12.8,
+            4.8
+          ]
+        },
+        "south": {
+          "texture": "#portal",
+          "uv": [
+            3.2,
+            4.0,
+            6.4,
+            4.8
+          ]
+        }
+      },
+      "shade": false
+    },
+    {
+      "from": [
+        4,
+        12,
+        7.95
+      ],
+      "to": [
+        16,
+        16,
+        8.05
+      ],
+      "faces": {
+        "north": {
+          "texture": "#portal",
+          "uv": [
+            9.6,
+            3.2,
+            12.0,
+            4.0
+          ]
+        },
+        "south": {
+          "texture": "#portal",
+          "uv": [
+            4.0,
+            3.2,
+            6.4,
+            4.0
+          ]
+        }
+      },
+      "shade": false
+    },
+    {
+      "from": [
+        0,
+        12,
+        0
+      ],
+      "to": [
+        4,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pink_sigil",
+          "uv": [
+            0.0,
+            8.0,
+            8.0,
+            16.0
+          ]
+        },
+        "south": {
+          "texture": "#pink_sigil",
+          "uv": [
+            8.0,
+            8.0,
+            16.0,
+            16.0
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        3.75,
+        12,
+        0
+      ],
+      "to": [
+        4,
+        16,
+        7.95
+      ],
+      "faces": {
+        "east": {
+          "texture": "#white",
+          "uv": [
+            0.0,
+            0.0,
+            16.0,
+            16.0
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        3.75,
+        12,
+        8.05
+      ],
+      "to": [
+        4,
+        16,
+        16
+      ],
+      "faces": {
+        "east": {
+          "texture": "#white",
+          "uv": [
+            0.0,
+            0.0,
+            16.0,
+            16.0
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        12,
+        0
+      ],
+      "to": [
+        4,
+        12.25,
+        0.95
+      ],
+      "faces": {
+        "down": {
+          "texture": "#white",
+          "uv": [
+            8.0,
+            0.0,
+            16.0,
+            16.0
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        12,
+        0.95
+      ],
+      "to": [
+        4,
+        12.25,
+        7.95
+      ],
+      "faces": {
+        "down": {
+          "texture": "#white",
+          "uv": [
+            0.0,
+            0.0,
+            16.0,
+            16.0
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        12,
+        8.05
+      ],
+      "to": [
+        4,
+        12.25,
+        15.05
+      ],
+      "faces": {
+        "down": {
+          "texture": "#white",
+          "uv": [
+            0.0,
+            0.0,
+            16.0,
+            16.0
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        12,
+        15.05
+      ],
+      "to": [
+        4,
+        12.25,
+        16
+      ],
+      "faces": {
+        "down": {
+          "texture": "#white",
+          "uv": [
+            8.0,
+            0.0,
+            16.0,
+            16.0
+          ]
+        }
+      }
+    }
+  ]
+}

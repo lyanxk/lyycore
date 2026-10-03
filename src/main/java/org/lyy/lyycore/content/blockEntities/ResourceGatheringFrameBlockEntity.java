@@ -79,7 +79,7 @@ public final class ResourceGatheringFrameBlockEntity extends CondensingFrameBloc
         var holder = level.getRecipeManager().byKey(selectedRecipe).orElse(null);
         if (holder == null || !(holder.value() instanceof ResourceGatheringRecipe recipe) || recipe.kind() != kind())
             return;
-        produceItem(recipe.result(), recipe.energyCost(state.getOptionalValue(BlockStateProperties.WATERLOGGED).orElse(false)), state);
+        produceItem(recipe.result(), recipe.energyCost(state.getOptionalValue(BlockStateProperties.WATERLOGGED).orElse(false)));
     }
 
     @Override
@@ -89,7 +89,7 @@ public final class ResourceGatheringFrameBlockEntity extends CondensingFrameBloc
 
     @Override
     public Component getDisplayName() {
-        return Component.translatable("block.lyycore." + kind().blockId());
+        return getBlockState().getBlock().getName();
     }
 
     @Override

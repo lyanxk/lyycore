@@ -15,7 +15,7 @@ public final class CrystalCondensingFrameBlockEntity extends CondensingFrameBloc
     public CrystalCondensingFrameBlockEntity(BlockPos pos, BlockState state) {
         super(LyyBlockEntities.CRYSTAL_CONDENSING_FRAME.get(), pos, state);
     }
-    @Override public Component getDisplayName() { return Component.translatable("block.lyycore.crystal_condensing_frame"); }
+    @Override public Component getDisplayName() { return getBlockState().getBlock().getName(); }
     @Override public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player) {
         return new CrystalCondensingMenu(id, inventory, this, getOutput(), getData());
     }
@@ -23,6 +23,6 @@ public final class CrystalCondensingFrameBlockEntity extends CondensingFrameBloc
         var recipes = level.getRecipeManager().getAllRecipesFor(LyyRecipes.CRYSTAL_CONDENSING.get());
         // One built-in recipe; stable ordering also makes datapack overrides predictable.
         var recipe = recipes.stream().min(java.util.Comparator.comparing(r -> r.id().toString())).orElse(null);
-        if (recipe != null) produceItem(recipe.value().result(), recipe.value().energyCost(state.getOptionalValue(BlockStateProperties.WATERLOGGED).orElse(false)), state);
+        if (recipe != null) produceItem(recipe.value().result(), recipe.value().energyCost(state.getOptionalValue(BlockStateProperties.WATERLOGGED).orElse(false)));
     }
 }

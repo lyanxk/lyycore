@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "AAA",
+    "ACA",
+    "AAA"
+  ],
+  "key": {
+    "A": {
+      "item": "lyycore:imaginary_alloy_ingot"
+    },
+    "C": {
+      "item": "lyycore:crystal_block"
+    }
+  },
+  "result": {
+    "id": "lyycore:imaginary_gate",
+    "count": 1
+  }
+}

@@ -2,6 +2,8 @@ package org.lyy.lyycore.content.blockEntities;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -9,6 +11,9 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.lyy.lyycore.Config;
 import org.lyy.lyycore.registry.LyyBlockEntities;
+import org.lyy.lyycore.registry.LyyCapabilities;
+import org.lyy.lyycore.energy.ImaginaryEnergy;
+import org.lyy.lyycore.energy.IEnergyConversion;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -18,8 +23,9 @@ public class BaseImaginaryGeneratorBlockEntity extends BlockEntity {
     private final ArrayList<Target> savedTargets = new ArrayList<>();
     private boolean needsScan = true;
     private long nextScanGameTime;
+    private int generationRemainderFE;
 
-    private record Target(BlockPos pos, Direction side) { }
+    private record Target(BlockPos pos, Direction side, boolean nativeIE) { }
 
     public BaseImaginaryGeneratorBlockEntity(BlockPos pos, BlockState state) {
         super(LyyBlockEntities.IGB.get(), pos, state);
@@ -42,6 +48,18 @@ public class BaseImaginaryGeneratorBlockEntity extends BlockEntity {
         requestScan();
     }
 
+    @Override
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
+        tag.putInt("GenerationRemainderFE", generationRemainderFE);
+    }
+
+    @Override
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
+        generationRemainderFE = Math.clamp(tag.getInt("GenerationRemainderFE"), 0, IEnergyConversion.FE_PER_IMAGINARY - 1);
+    }
+
     private void scanTargets() {
         if (level == null || level.isClientSide) return;
         savedTargets.clear();
@@ -54,16 +72,22 @@ public class BaseImaginaryGeneratorBlockEntity extends BlockEntity {
                     if (cur.equals(origin)) continue;
                     if (!level.hasChunkAt(cur)) continue;
 
+                    Target nativeTarget = findImaginaryTarget(cur);
+                    if (nativeTarget != null) {
+                        savedTargets.add(nativeTarget);
+                        continue;
+                    }
+
                     IEnergyStorage unsided = level.getCapability(Capabilities.EnergyStorage.BLOCK, cur, null);
                     if (unsided != null && unsided.canReceive()) {
-                        savedTargets.add(new Target(cur.immutable(), null));
+                        savedTargets.add(new Target(cur.immutable(), null, false));
                         continue;
                     }
 
                     for (Direction side : Direction.values()) {
                         IEnergyStorage sided = level.getCapability(Capabilities.EnergyStorage.BLOCK, cur, side);
                         if (sided != null && sided.canReceive()) {
-                            savedTargets.add(new Target(cur.immutable(), side));
+                            savedTargets.add(new Target(cur.immutable(), side, false));
                             break;
                         }
                     }
@@ -74,6 +98,16 @@ public class BaseImaginaryGeneratorBlockEntity extends BlockEntity {
         nextScanGameTime = level.getGameTime() + Config.GENERATOR_RESCAN_INTERVAL.get();
     }
 
+    private Target findImaginaryTarget(BlockPos pos) {
+        ImaginaryEnergy unsided = level.getCapability(LyyCapabilities.IMAGINARY_ENERGY, pos, null);
+        if (unsided != null && unsided.canReceiveImaginaryEnergy()) return new Target(pos.immutable(), null, true);
+        for (Direction side : Direction.values()) {
+            ImaginaryEnergy sided = level.getCapability(LyyCapabilities.IMAGINARY_ENERGY, pos, side);
+            if (sided != null && sided.canReceiveImaginaryEnergy()) return new Target(pos.immutable(), side, true);
+        }
+        return null;
+    }
+
     public static void serverTick(Level level, BlockPos pos, BlockState state, BaseImaginaryGeneratorBlockEntity be) {
         if (level.isClientSide) return;
         if (be.needsScan || level.getGameTime() >= be.nextScanGameTime) be.scanTargets();
@@ -82,8 +116,14 @@ public class BaseImaginaryGeneratorBlockEntity extends BlockEntity {
     }
 
     private static void provideEnergy(Level level, BaseImaginaryGeneratorBlockEntity be) {
-        int amount = Config.GENERATOR_FE_PER_TARGET_TICK.get();
-        if (amount <= 0) return;
+        int amountFE = Config.GENERATOR_FE_PER_TARGET_TICK.get();
+        if (amountFE <= 0) return;
+        // Native IE storage is integral. Carry the fraction across ticks and saves:
+        // 512 FE/t supplies exactly 128 IE over 25 ticks, rather than truncating to 125.
+        int fraction = be.generationRemainderFE + amountFE % IEnergyConversion.FE_PER_IMAGINARY;
+        int amountIE = amountFE / IEnergyConversion.FE_PER_IMAGINARY + fraction / IEnergyConversion.FE_PER_IMAGINARY;
+        be.generationRemainderFE = fraction % IEnergyConversion.FE_PER_IMAGINARY;
+        be.setChanged();
 
         Iterator<Target> iterator = be.savedTargets.iterator();
         while (iterator.hasNext()) {
@@ -92,9 +132,15 @@ public class BaseImaginaryGeneratorBlockEntity extends BlockEntity {
                 iterator.remove();
                 continue;
             }
-            IEnergyStorage energy = level.getCapability(Capabilities.EnergyStorage.BLOCK, target.pos(), target.side());
-            if (energy == null || !energy.canReceive()) iterator.remove();
-            else energy.receiveEnergy(amount, false);
+            if (target.nativeIE()) {
+                ImaginaryEnergy energy = level.getCapability(LyyCapabilities.IMAGINARY_ENERGY, target.pos(), target.side());
+                if (energy == null || !energy.canReceiveImaginaryEnergy()) iterator.remove();
+                else energy.receiveImaginaryEnergy(amountIE, false);
+            } else {
+                IEnergyStorage energy = level.getCapability(Capabilities.EnergyStorage.BLOCK, target.pos(), target.side());
+                if (energy == null || !energy.canReceive()) iterator.remove();
+                else energy.receiveEnergy(amountFE, false);
+            }
         }
     }
 }
