@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "lyycore:item/heart_of_nothingness"
+  }
+}

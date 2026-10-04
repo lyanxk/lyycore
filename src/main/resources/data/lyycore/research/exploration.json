@@ -1,0 +1,12 @@
+{
+  "icon": {
+    "id": "lyycore:supermutation_factor"
+  },
+  "title": "research.lyycore.exploration.title",
+  "summary": "research.lyycore.exploration.summary",
+  "description": "research.lyycore.exploration.description",
+  "rarity": "high",
+  "materials": [],
+  "experience_points": 3000,
+  "required_advancement": "lyycore:progression/better"
+}

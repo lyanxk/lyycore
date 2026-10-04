@@ -10,8 +10,8 @@ import net.minecraft.util.Mth;
 import org.lyy.lyycore.content.entity.EnderCompanion;
 
 public final class EnderCompanionRenderer extends EntityRenderer<EnderCompanion> {
-    private final EnderCompanionModel hatchling = new EnderCompanionModel("hatchling");
-    private final EnderCompanionModel juvenile = new EnderCompanionModel("juvenile");
+    private final AnimatedMeshModel hatchling = new AnimatedMeshModel("ender_dragon_hatchling");
+    private final AnimatedMeshModel juvenile = new AnimatedMeshModel("ender_dragon_juvenile");
     public EnderCompanionRenderer(EntityRendererProvider.Context context) { super(context); shadowRadius = 0.5F; }
     @Override public void render(EnderCompanion dragon, float yaw, float partial, PoseStack pose, MultiBufferSource buffers, int light) {
         pose.pushPose();
@@ -20,7 +20,7 @@ public final class EnderCompanionRenderer extends EntityRenderer<EnderCompanion>
         float flying = Mth.lerp(partial, dragon.previousFlightBlend, dragon.flightBlend);
         float walking = Mth.clamp(dragon.walkAnimation.speed(partial) * 4, 0, 1);
         float gliding = Mth.clamp((float) dragon.getDeltaMovement().horizontalDistance() * 8, 0, 1);
-        (dragon.stage() == 0 ? hatchling : juvenile).render(pose, buffers, light, dragon.tickCount + partial, walkTime, walking, flying, gliding);
+        (dragon.stage() == 0 ? hatchling : juvenile).renderBlended(pose, buffers, light, dragon.tickCount + partial, walkTime, walking, flying, gliding);
         pose.popPose();
         super.render(dragon, yaw, partial, pose, buffers, light);
     }

@@ -14,6 +14,7 @@ import java.util.function.Predicate;
 /** All skill requests pass through the server's unlock checks and current-style dispatch. */
 public final class SkillSystem {
     public static final ResourceLocation SPECIAL = ResourceLocation.fromNamespaceAndPath("lyycore", "special");
+    private static final String FACTOR_UNLOCKED = "lyycore:factor_unlocked";
     private static final String UNLOCKED = "lyycore:skills_unlocked";
     private static final Map<StyleSystem.Style, Map<ResourceLocation, Skill>> BINDINGS = new EnumMap<>(StyleSystem.Style.class);
 
@@ -28,16 +29,25 @@ public final class SkillSystem {
             throw new IllegalStateException("Duplicate skill binding: " + style + "/" + key);
     }
     public static boolean unlocked(Player player) {
-        return player.getPersistentData().getCompound(Player.PERSISTED_NBT_TAG).getBoolean(UNLOCKED);
+        return player.getPersistentData().getCompound(Player.PERSISTED_NBT_TAG).getBoolean(UNLOCKED)
+                || player.getPersistentData().getCompound(Player.PERSISTED_NBT_TAG).getBoolean(FACTOR_UNLOCKED);
+    }
+    public static void unlockFromFactor(Player player) {
+        var persisted = player.getPersistentData().getCompound(Player.PERSISTED_NBT_TAG);
+        persisted.putBoolean(FACTOR_UNLOCKED, true);
+        player.getPersistentData().put(Player.PERSISTED_NBT_TAG, persisted);
     }
     public static void setUnlocked(Player player, boolean value) {
         var persisted = player.getPersistentData().getCompound(Player.PERSISTED_NBT_TAG);
         persisted.putBoolean(UNLOCKED, value);
         player.getPersistentData().put(Player.PERSISTED_NBT_TAG, persisted);
     }
+    public static boolean canUse(ServerPlayer player) {
+        return unlocked(player) && player.isAlive() && !player.isSpectator()
+                && player.containerMenu == player.inventoryMenu && !player.hasEffect(LyyEffects.CRYSTALLIZATION);
+    }
     public static boolean cast(ServerPlayer player, ResourceLocation key) {
-        if (!unlocked(player) || !player.isAlive() || player.isSpectator()
-                || player.containerMenu != player.inventoryMenu || player.hasEffect(LyyEffects.CRYSTALLIZATION)) return false;
+        if (!canUse(player)) return false;
         var skill = BINDINGS.getOrDefault(StyleSystem.current(player), Map.of()).get(key);
         return skill != null && ResearchProgress.completed(player, skill.research()) && skill.cast().test(player);
     }

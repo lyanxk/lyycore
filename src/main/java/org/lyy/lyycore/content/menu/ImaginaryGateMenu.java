@@ -7,7 +7,6 @@ import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.items.SlotItemHandler;
 import org.lyy.lyycore.content.blockEntities.ImaginaryGateBlockEntity;
-import org.lyy.lyycore.registry.LyyBlocks;
 import org.lyy.lyycore.registry.LyyMenus;
 
 public class ImaginaryGateMenu extends AbstractContainerMenu {
@@ -47,7 +46,7 @@ public class ImaginaryGateMenu extends AbstractContainerMenu {
         ItemStack original = stack.copy();
         if (index == 0) {
             if (!moveItemStackTo(stack, 1, 37, true)) return ItemStack.EMPTY;
-        } else if (stack.is(LyyBlocks.CRYSTAL_BLOCK.get().asItem())) {
+        } else if (gate.acceptsOffering(stack)) {
             if (!moveItemStackTo(stack, 0, 1, false)) return ItemStack.EMPTY;
         } else if (index < 28) {
             if (!moveItemStackTo(stack, 28, 37, false)) return ItemStack.EMPTY;

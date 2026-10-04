@@ -1,0 +1,37 @@
+{
+  "parent": "lyycore:progression/root",
+  "display": {
+    "icon": {
+      "id": "lyycore:imaginary_condensing_beacon"
+    },
+    "title": {
+      "translate": "advancement.lyycore.better.title"
+    },
+    "description": {
+      "translate": "advancement.lyycore.better.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "acquired": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "lyycore:imaginary_condensing_beacon"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "acquired"
+    ]
+  ]
+}

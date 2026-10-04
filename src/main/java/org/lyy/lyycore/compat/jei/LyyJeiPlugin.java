@@ -36,7 +36,8 @@ public class LyyJeiPlugin implements IModPlugin {
     @Override
     public void registerCategories(IRecipeCategoryRegistration reg) {
         reg.addRecipeCategories(new ImaginaryAlloyingCategory(reg.getJeiHelpers().getGuiHelper()));
-        reg.addRecipeCategories(new ImaginaryCraftingCategory(reg.getJeiHelpers().getGuiHelper()));
+        reg.addRecipeCategories(new ImaginaryCraftingCategory<>(reg.getJeiHelpers().getGuiHelper(), LyyJeiTypes.IMAGINARY_CRAFTING, LyyBlocks.IMAGINARY_CRAFTING_TABLE.get()));
+        reg.addRecipeCategories(new ImaginaryCraftingCategory<>(reg.getJeiHelpers().getGuiHelper(), LyyJeiTypes.IMAGINARY_CONDENSING, LyyBlocks.IMAGINARY_CONDENSING_BEACON.get()));
         reg.addRecipeCategories(new CrystalCondensingCategory(reg.getJeiHelpers().getGuiHelper(), FrameProduction.STANDARD));
         reg.addRecipeCategories(new CrystalCondensingCategory(reg.getJeiHelpers().getGuiHelper(), FrameProduction.MINIATURE_FACTORY));
         for (var kind : ResourceFrameKind.FACTORY_KINDS) reg.addRecipeCategories(new ResourceGatheringCategory(reg.getJeiHelpers().getGuiHelper(), kind, FrameProduction.MINIATURE_FACTORY));
@@ -79,6 +80,7 @@ public class LyyJeiPlugin implements IModPlugin {
                     modRecipeCount, modRecipeIds);
         }
         reg.addRecipes(LyyJeiTypes.IMAGINARY_ALLOYING, recipes);
+        reg.addRecipes(LyyJeiTypes.IMAGINARY_CONDENSING, rm.getAllRecipesFor(LyyRecipes.IMAGINARY_CONDENSING.get()).stream().map(RecipeHolder::value).toList());
         reg.addRecipes(LyyJeiTypes.IMAGINARY_CRAFTING, rm.getAllRecipesFor(LyyRecipes.IMAGINARY_CRAFTING.get())
                 .stream().map(RecipeHolder::value).toList());
         reg.addRecipes(LyyJeiTypes.CRYSTAL_CONDENSING, rm.getAllRecipesFor(LyyRecipes.CRYSTAL_CONDENSING.get())
@@ -93,9 +95,14 @@ public class LyyJeiPlugin implements IModPlugin {
 
     @Override
     public void registerGuiHandlers(IGuiHandlerRegistration reg) {
-        reg.addRecipeClickArea(ImaginaryCraftingScreen.class,
-                ImaginaryCraftingScreen.RECIPE_X, ImaginaryCraftingScreen.RECIPE_Y,
-                ImaginaryCraftingScreen.RECIPE_W, ImaginaryCraftingScreen.RECIPE_H, LyyJeiTypes.IMAGINARY_CRAFTING);
+        reg.addGuiContainerHandler(ImaginaryCraftingScreen.class, new IGuiContainerHandler<ImaginaryCraftingScreen>() {
+            @Override public java.util.Collection<IGuiClickableArea> getGuiClickableAreas(ImaginaryCraftingScreen screen, double x, double y) {
+                var types = screen.getMenu().condensing() ? new mezz.jei.api.recipe.RecipeType<?>[]{LyyJeiTypes.IMAGINARY_CONDENSING, LyyJeiTypes.IMAGINARY_CRAFTING}
+                        : new mezz.jei.api.recipe.RecipeType<?>[]{LyyJeiTypes.IMAGINARY_CRAFTING};
+                return List.of(IGuiClickableArea.createBasic(ImaginaryCraftingScreen.RECIPE_X, ImaginaryCraftingScreen.RECIPE_Y,
+                        ImaginaryCraftingScreen.RECIPE_W, ImaginaryCraftingScreen.RECIPE_H, types));
+            }
+        });
         reg.addGuiContainerHandler(ResourceGatheringScreen.class, new IGuiContainerHandler<ResourceGatheringScreen>() {
             @Override public java.util.Collection<IGuiClickableArea> getGuiClickableAreas(ResourceGatheringScreen screen, double x, double y) {
                 if (screen.isSelectorOpen()) return List.of();
@@ -116,6 +123,7 @@ public class LyyJeiPlugin implements IModPlugin {
 
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration reg) {
+        reg.addRecipeCatalyst(new ItemStack(LyyBlocks.IMAGINARY_CONDENSING_BEACON.get()), LyyJeiTypes.IMAGINARY_CONDENSING, LyyJeiTypes.IMAGINARY_CRAFTING);
         reg.addRecipeCatalyst(new ItemStack(LyyBlocks.IMAGINARY_CRAFTING_TABLE.get()), LyyJeiTypes.IMAGINARY_CRAFTING);
         for (var kind : ResourceFrameKind.values()) reg.addRecipeCatalyst(new ItemStack(kind.block()), LyyJeiTypes.RESOURCE_GATHERING.get(kind));
         reg.addRecipeCatalyst(new ItemStack(LyyBlocks.MINIATURE_CRYSTAL_FACTORY.get()), LyyJeiTypes.MINIATURE_CRYSTAL);
@@ -126,7 +134,8 @@ public class LyyJeiPlugin implements IModPlugin {
 
     @Override
     public void registerRecipeTransferHandlers(IRecipeTransferRegistration reg) {
-        reg.addRecipeTransferHandler(new ImaginaryCraftingTransferInfo(reg.getTransferHelper()));
+        reg.addRecipeTransferHandler(new ImaginaryCraftingTransferInfo<>(reg.getTransferHelper(), LyyJeiTypes.IMAGINARY_CRAFTING, false));
+        reg.addRecipeTransferHandler(new ImaginaryCraftingTransferInfo<>(reg.getTransferHelper(), LyyJeiTypes.IMAGINARY_CONDENSING, true));
         reg.addRecipeTransferHandler(IAFMenu.class, LyyMenus.IAF_MENU.get(),
                 LyyJeiTypes.IMAGINARY_ALLOYING,
                 0, 3,   // machine input slots start, count

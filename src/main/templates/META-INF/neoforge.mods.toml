@@ -10,6 +10,9 @@ enumExtensions="META-INF/enumextensions.json"
 authors="${mod_authors}"
 description='''${mod_description}'''
 
+[[mixins]]
+config="lyycore.mixins.json"
+
 [[dependencies.${mod_id}]]
     modId="neoforge"
     type="required"

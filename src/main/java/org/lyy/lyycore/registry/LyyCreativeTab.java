@@ -24,6 +24,12 @@ public class LyyCreativeTab {
                         output.accept(LyyBlocks.ALLOY_BLOCK.get());
                         output.accept(LyyBlocks.IMAGINARY_GATE.get());
                         output.accept(LyyBlocks.ADVANCED_IMAGINARY_GATE.get());
+                        output.accept(LyyItems.SMALL_IMAGINARY_CORE.get());
+                        output.accept(LyyItems.HEART_OF_NOTHINGNESS.get());
+                        output.accept(LyyItems.IMAGINARY_CONDENSING_BEACON.get());
+                        output.accept(LyyItems.SPATIAL_TRANSMISSION_TOWER.get());
+                        output.accept(LyyItems.COORDINATE_DEVICE.get());
+                        output.accept(LyyItems.SUPERMUTATION_FACTOR.get());
                         output.accept(LyyBlocks.ENDER_SENTRY.get());
                         output.accept(LyyBlocks.IMAGINARY_CRAFTING_TABLE.get());
                         output.accept(LyyBlocks.IMAGINARY_RESEARCH_TABLE.get());

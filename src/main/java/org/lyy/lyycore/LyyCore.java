@@ -16,6 +16,7 @@ public class LyyCore {
 
     public LyyCore(IEventBus modEventBus, ModContainer modContainer) {
         LyyRegistries.registerAll(modEventBus);
+        org.lyy.lyycore.content.skills.BasicSkills.register();
         modEventBus.addListener(LyyCapabilities::register);
         Config.migrateLegacyEnergyUnits();
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);

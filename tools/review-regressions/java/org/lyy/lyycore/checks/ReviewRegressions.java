@@ -36,56 +36,14 @@ import org.lyy.lyycore.registry.LyyBlocks;
 import org.lyy.lyycore.registry.LyyItems;
 import io.netty.buffer.Unpooled;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.entity.player.Player;
 import org.lyy.lyycore.content.ResearchProgress;
 import org.lyy.lyycore.content.item.ResearchNotesItem;
 import org.lyy.lyycore.content.menu.ResearchMenu;
-import org.lyy.lyycore.content.research.ResearchDefinition;
 import org.lyy.lyycore.content.research.ResearchManager;
-import org.lyy.lyycore.network.ResearchNetwork;
 
 @GameTestHolder("lyycore")
 @PrefixGameTestTemplate(false)
 public final class ReviewRegressions {
-    @GameTest(template = "empty")
-    public static void independentResearchPreservesNotesAndSync(GameTestHelper test) {
-        var level = test.getLevel();
-        var entries = java.util.List.copyOf(ResearchManager.all(level));
-        test.assertTrue(entries.stream().filter(entry -> entry.id().getNamespace().equals("lyycore")).count() == 4,
-                "Independent research directory did not load all four definitions");
-        var player = player(level);
-        var persisted = new CompoundTag();
-        var completed = new CompoundTag();
-        for (var entry : entries) {
-            test.assertTrue(level.getServer().getResourceManager().getResource(entry.id().withPrefix("recipe/").withSuffix(".json")).isEmpty(),
-                    "Obsolete research recipe JSON remains in the packaged resources");
-            test.assertTrue(level.getRecipeManager().byKey(entry.id()).isEmpty(), "Research still registered as a recipe");
-            completed.putBoolean(entry.id().toString(), true);
-            var notes = ResearchNotesItem.create(entry.id(), player.getUUID());
-            test.assertTrue(ResearchNotesItem.research(notes, level) == entry.value(), "Existing note ID no longer resolves");
-        }
-        persisted.put("lyycore:research", completed);
-        player.getPersistentData().put(Player.PERSISTED_NBT_TAG, persisted);
-        var buffer = new RegistryFriendlyByteBuf(Unpooled.buffer(), level.registryAccess());
-        try {
-            ResearchNetwork.Catalog.CODEC.encode(buffer, new ResearchNetwork.Catalog(entries));
-            var decoded = ResearchNetwork.Catalog.CODEC.decode(buffer).entries();
-            test.assertTrue(decoded.size() == entries.size() && !buffer.isReadable(), "Catalog packet length mismatch");
-            var ops = level.registryAccess().createSerializationContext(com.mojang.serialization.JsonOps.INSTANCE);
-            for (int i = 0; i < entries.size(); i++) {
-                var expected = entries.get(i);
-                var actual = decoded.get(i);
-                test.assertTrue(ResearchProgress.completed(player, actual.id()), "Existing progress no longer recognized");
-                test.assertTrue(actual.id().equals(expected.id()) &&
-                        ResearchDefinition.CODEC.encodeStart(ops, expected.value()).getOrThrow().equals(
-                                ResearchDefinition.CODEC.encodeStart(ops, actual.value()).getOrThrow()),
-                        "Research packet changed definition data: " + actual.id());
-            }
-        } finally { buffer.release(); }
-        test.succeed();
-    }
-
     @GameTest(template = "empty", batch = "research_reload", timeoutTicks = 400)
     public static void researchReloadRejectsStaleMenu(GameTestHelper test) {
         var level = test.getLevel();

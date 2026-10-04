@@ -24,6 +24,8 @@
     "lyycore:imaginary_research_table",
     "lyycore:production_lab",
     "lyycore:advanced_imaginary_gate",
-    "lyycore:ender_sentry"
+    "lyycore:ender_sentry",
+    "lyycore:imaginary_condensing_beacon",
+    "lyycore:spatial_transmission_tower"
   ]
 }

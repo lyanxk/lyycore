@@ -1,0 +1,25 @@
+{
+  "icon": {
+    "id": "lyycore:small_imaginary_core"
+  },
+  "title": "research.lyycore.welcome_the_challenge.title",
+  "summary": "research.lyycore.welcome_the_challenge.summary",
+  "description": "research.lyycore.welcome_the_challenge.description",
+  "rarity": "common",
+  "materials": [
+    {
+      "id": "lyycore:crystal_block",
+      "count": 32
+    }
+  ],
+  "experience_points": 2000,
+  "production": {
+    "result": {
+      "id": "lyycore:small_imaginary_core"
+    },
+    "duration": 200
+  },
+  "prerequisites": [
+    "lyycore:research/why_cant_people_fly"
+  ]
+}

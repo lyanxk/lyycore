@@ -16,6 +16,7 @@ import org.lyy.lyycore.content.research.ResearchDefinition;
 import org.lyy.lyycore.content.research.ResearchEntry;
 import org.lyy.lyycore.content.research.ResearchManager;
 import org.lyy.lyycore.content.skills.SkillSystem;
+import org.lyy.lyycore.content.skills.BasicSkills;
 import org.lyy.lyycore.content.skills.StyleSystem;
 import java.util.List;
 
@@ -32,32 +33,43 @@ public final class ResearchNetwork {
                         ResearchDefinition.STREAM_CODEC.decode((RegistryFriendlyByteBuf) buf)))));
         @Override public Type<Catalog> type() { return TYPE; }
     }
-    public enum Action { MEMORY, NEXT_STYLE, SPECIAL }
+    public enum Action { MEMORY, NEXT_STYLE }
     public record Request(Action action) implements CustomPacketPayload {
         public static final Type<Request> TYPE = new Type<>(ResourceLocation.parse("lyycore:research_action"));
         public static final StreamCodec<RegistryFriendlyByteBuf, Request> CODEC = StreamCodec.of(
                 (buffer, request) -> buffer.writeEnum(request.action), buffer -> new Request(buffer.readEnum(Action.class)));
         @Override public Type<Request> type() { return TYPE; }
     }
-    public record State(boolean unlocked, StyleSystem.Style style) implements CustomPacketPayload {
+    public record State(boolean unlocked, StyleSystem.Style style, boolean explored, int guard, boolean guarding) implements CustomPacketPayload {
         public static final Type<State> TYPE = new Type<>(ResourceLocation.parse("lyycore:skill_state"));
         public static final StreamCodec<RegistryFriendlyByteBuf, State> CODEC = StreamCodec.of(
-                (buffer, state) -> { buffer.writeBoolean(state.unlocked); buffer.writeEnum(state.style); },
-                buffer -> new State(buffer.readBoolean(), buffer.readEnum(StyleSystem.Style.class)));
+                (buffer, state) -> { buffer.writeBoolean(state.unlocked); buffer.writeEnum(state.style); buffer.writeBoolean(state.explored); buffer.writeVarInt(state.guard); buffer.writeBoolean(state.guarding); },
+                buffer -> new State(buffer.readBoolean(), buffer.readEnum(StyleSystem.Style.class), buffer.readBoolean(), buffer.readVarInt(), buffer.readBoolean()));
         @Override public Type<State> type() { return TYPE; }
     }
+    public record Input(boolean held, int forward, int strafe) implements CustomPacketPayload {
+        public static final Type<Input> TYPE = new Type<>(ResourceLocation.parse("lyycore:skill_input"));
+        public static final StreamCodec<RegistryFriendlyByteBuf, Input> CODEC = StreamCodec.of((buf, input) -> {
+            buf.writeBoolean(input.held); buf.writeByte(input.forward); buf.writeByte(input.strafe);
+        }, buf -> new Input(buf.readBoolean(), buf.readByte(), buf.readByte()));
+        @Override public Type<Input> type() { return TYPE; }
+    }
     @SubscribeEvent public static void register(RegisterPayloadHandlersEvent event) {
-        var registrar = event.registrar("2");
+        var registrar = event.registrar("4");
+        registrar.playToServer(Input.TYPE, Input.CODEC, (input, context) -> {
+            if (context.player() instanceof ServerPlayer player) BasicSkills.input(player, input.held, input.forward, input.strafe);
+        });
         registrar.playToClient(Catalog.TYPE, Catalog.CODEC, (payload, context) -> ResearchManager.updateClient(payload.entries));
         registrar.playToServer(Request.TYPE, Request.CODEC, (payload, context) -> {
             if (!(context.player() instanceof ServerPlayer player)) return;
             switch (payload.action) {
                 case MEMORY -> ResearchMenu.openMemory(player);
-                case SPECIAL -> SkillSystem.cast(player, SkillSystem.SPECIAL);
                 case NEXT_STYLE -> {
                     if (SkillSystem.unlocked(player) && player.isAlive() && !player.isSpectator()
                             && player.containerMenu == player.inventoryMenu) {
                         StyleSystem.select(player, StyleSystem.current(player).next());
+                        BasicSkills.resetInput(player);
+                        BasicSkills.updateFlight(player);
                         sync(player);
                     }
                 }
@@ -66,10 +78,13 @@ public final class ResearchNetwork {
         registrar.playToClient(State.TYPE, State.CODEC, (payload, context) -> {
             SkillSystem.setUnlocked(context.player(), payload.unlocked);
             StyleSystem.select(context.player(), payload.style);
+            context.player().getPersistentData().putBoolean("lyycore:exploration", payload.explored);
+            BasicSkills.setGuard(context.player(), payload.guard);
+            context.player().getPersistentData().putBoolean("lyycore:guarding", payload.guarding);
         });
     }
     public static void sync(ServerPlayer player) {
-        PacketDistributor.sendToPlayer(player, new State(SkillSystem.unlocked(player), StyleSystem.current(player)));
+        PacketDistributor.sendToPlayer(player, new State(SkillSystem.unlocked(player), StyleSystem.current(player), BasicSkills.available(player), BasicSkills.guard(player), BasicSkills.guarding(player)));
     }
     @SubscribeEvent public static void datapackSync(OnDatapackSyncEvent event) {
         var catalog = new Catalog(List.copyOf(ResearchManager.all(event.getPlayerList().getServer().overworld())));

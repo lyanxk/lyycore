@@ -1,0 +1,23 @@
+{
+  "icon": {
+    "id": "lyycore:supermutation_factor"
+  },
+  "title": "research.lyycore.adaptive_enhancement.title",
+  "summary": "research.lyycore.adaptive_enhancement.summary",
+  "description": "research.lyycore.adaptive_enhancement.description",
+  "rarity": "special",
+  "materials": [
+    {
+      "id": "minecraft:bread",
+      "count": 64
+    }
+  ],
+  "experience_points": 3000,
+  "production": {
+    "result": {
+      "id": "lyycore:supermutation_factor"
+    },
+    "duration": 6000
+  },
+  "required_advancement": "lyycore:progression/better"
+}

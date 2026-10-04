@@ -1,5 +1,6 @@
 package org.lyy.lyycore.content;
 
+import org.lyy.lyycore.content.skills.BasicSkills;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -8,6 +9,7 @@ import net.minecraft.world.item.ItemStack;
 import org.lyy.lyycore.content.research.ResearchDefinition;
 import org.lyy.lyycore.content.skills.SkillSystem;
 import org.lyy.lyycore.network.ResearchNetwork;
+import org.lyy.lyycore.network.WingsNetwork;
 import org.lyy.lyycore.content.research.ResearchManager;
 
 public final class ResearchProgress {
@@ -15,6 +17,14 @@ public final class ResearchProgress {
     private ResearchProgress() { }
     public static boolean completed(Player player, ResourceLocation id) {
         return player.getPersistentData().getCompound(Player.PERSISTED_NBT_TAG).getCompound(KEY).getBoolean(id.toString());
+    }
+    /** Availability is checked by the server; it never scans or consumes the inventory. */
+    public static boolean available(Player player, ResearchDefinition research) {
+        if (!research.prerequisites().stream().allMatch(id -> completed(player, id))) return false;
+        if (research.requiredAdvancement().isEmpty()) return true;
+        if (!(player instanceof ServerPlayer server)) return false;
+        var advancement = server.server.getAdvancements().get(research.requiredAdvancement().get());
+        return advancement != null && server.getAdvancements().getOrStartProgress(advancement).isDone();
     }
     /** Plan the entire payment before changing anything, including duplicate material costs. */
     private static int[] payment(Player player, ResearchDefinition research) {
@@ -41,7 +51,7 @@ public final class ResearchProgress {
         return true;
     }
     public static boolean canAfford(Player player, ResearchDefinition research) {
-        return hasExperience(player, research) && payment(player, research) != null;
+        return available(player, research) && hasExperience(player, research) && payment(player, research) != null;
     }
     /** Derive spendable XP from the level and bar; commands can leave totalExperience stale. */
     public static int experiencePoints(Player player) {
@@ -55,7 +65,7 @@ public final class ResearchProgress {
         return player.experienceLevel >= research.experienceLevels() && experiencePoints(player) >= research.experiencePoints();
     }
     public static boolean complete(ServerPlayer player, ResourceLocation id, ResearchDefinition research) {
-        if (completed(player, id) || !hasExperience(player, research)) return false;
+        if (completed(player, id) || !available(player, research) || !hasExperience(player, research)) return false;
         int[] consumed = payment(player, research);
         if (consumed == null) return false;
         for (int slot = 0; slot < consumed.length; slot++) player.getInventory().items.get(slot).shrink(consumed[slot]);
@@ -85,6 +95,16 @@ public final class ResearchProgress {
             }
         }
         if (!value && id.equals(EnderCompanions.RESEARCH)) EnderCompanions.recall(player);
+        if (id.equals(AegisWings.RESEARCH)) WingsNetwork.sync(player);
+        if (id.equals(BasicSkills.RESEARCH)) {
+            BasicSkills.resetInput(player);
+            BasicSkills.updateFlight(player);
+            ResearchNetwork.sync(player);
+        }
+        if (value && id.equals(ResourceLocation.parse("lyycore:research/adaptive_enhancement"))) {
+            var advancement = player.server.getAdvancements().get(ResourceLocation.parse("lyycore:progression/well_fed"));
+            if (advancement != null) player.getAdvancements().award(advancement, "research");
+        }
         return true;
     }
 }

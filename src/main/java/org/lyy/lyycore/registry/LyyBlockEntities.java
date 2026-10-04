@@ -5,6 +5,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.lyy.lyycore.LyyCore;
+import org.lyy.lyycore.content.blockEntities.*;
 import org.lyy.lyycore.content.blockEntities.BaseImaginaryGeneratorBlockEntity;
 import org.lyy.lyycore.content.blockEntities.CrystalCondensingFrameBlockEntity;
 import org.lyy.lyycore.content.blockEntities.EnergyCellBlockEntity;
@@ -20,6 +21,10 @@ import org.lyy.lyycore.content.blockEntities.ProductionLabBlockEntity;
 public class LyyBlockEntities {
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES =
             DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, LyyCore.MODID);
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ImaginaryCondensingBeaconBlockEntity>> IMAGINARY_CONDENSING_BEACON =
+            BLOCK_ENTITIES.register("imaginary_condensing_beacon", () -> BlockEntityType.Builder.of(ImaginaryCondensingBeaconBlockEntity::new, LyyBlocks.IMAGINARY_CONDENSING_BEACON.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SpatialTransmissionTowerBlockEntity>> SPATIAL_TRANSMISSION_TOWER =
+            BLOCK_ENTITIES.register("spatial_transmission_tower", () -> BlockEntityType.Builder.of(SpatialTransmissionTowerBlockEntity::new, LyyBlocks.SPATIAL_TRANSMISSION_TOWER.get()).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<AdvancedImaginaryGateBlockEntity>> ADVANCED_IMAGINARY_GATE =
             BLOCK_ENTITIES.register("advanced_imaginary_gate", () -> BlockEntityType.Builder.of(AdvancedImaginaryGateBlockEntity::new,
                     LyyBlocks.ADVANCED_IMAGINARY_GATE.get()).build(null));

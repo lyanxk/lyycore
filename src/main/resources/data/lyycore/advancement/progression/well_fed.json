@@ -1,0 +1,28 @@
+{
+  "parent": "lyycore:progression/better",
+  "display": {
+    "icon": {
+      "id": "minecraft:bread"
+    },
+    "title": {
+      "translate": "advancement.lyycore.well_fed.title"
+    },
+    "description": {
+      "translate": "advancement.lyycore.well_fed.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "research": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "requirements": [
+    [
+      "research"
+    ]
+  ]
+}

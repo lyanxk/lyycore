@@ -7,6 +7,7 @@ import net.minecraft.world.item.Rarity;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.lyy.lyycore.LyyCore;
+import org.lyy.lyycore.content.item.*;
 import org.lyy.lyycore.content.ResourceFrameKind;
 import org.lyy.lyycore.content.item.ImaginaryDisassemblerItem;
 import org.lyy.lyycore.content.item.ImaginaryReaperItem;
@@ -19,6 +20,10 @@ import java.util.Map;
 
 public class LyyItems {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(LyyCore.MODID);
+    public static final DeferredItem<BlockItem> IMAGINARY_CONDENSING_BEACON = ITEMS.registerSimpleBlockItem(LyyBlocks.IMAGINARY_CONDENSING_BEACON);
+    public static final DeferredItem<BlockItem> SPATIAL_TRANSMISSION_TOWER = ITEMS.registerSimpleBlockItem(LyyBlocks.SPATIAL_TRANSMISSION_TOWER);
+    public static final DeferredItem<CoordinateDeviceItem> COORDINATE_DEVICE = ITEMS.registerItem("coordinate_device", CoordinateDeviceItem::new, new Item.Properties().stacksTo(1));
+    public static final DeferredItem<SupermutationFactorItem> SUPERMUTATION_FACTOR = ITEMS.registerItem("supermutation_factor", SupermutationFactorItem::new, new Item.Properties().stacksTo(16).rarity(Rarity.EPIC));
     public static final DeferredItem<BlockItem> PRODUCTION_LAB = ITEMS.registerSimpleBlockItem(LyyBlocks.PRODUCTION_LAB);
     public static final DeferredItem<ResearchNotesItem> RESEARCH_NOTES = ITEMS.registerItem("research_notes", ResearchNotesItem::new, new Item.Properties().stacksTo(1));
     public static final DeferredItem<BlockItem> IMAGINARY_RESEARCH_TABLE = ITEMS.registerSimpleBlockItem(LyyBlocks.IMAGINARY_RESEARCH_TABLE);
@@ -55,6 +60,8 @@ public class LyyItems {
             ITEMS.registerItem("imaginary_reaper", ImaginaryReaperItem::new,
                     new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant());
     public static final DeferredItem<Item> LIGHTNING_BOTTLE = ITEMS.registerSimpleItem("lightning_bottle");
+    public static final DeferredItem<Item> SMALL_IMAGINARY_CORE = ITEMS.registerSimpleItem("small_imaginary_core");
+    public static final DeferredItem<Item> HEART_OF_NOTHINGNESS = ITEMS.registerSimpleItem("heart_of_nothingness");
     public static final DeferredItem<WeatherBallItem> STORM_BALL = ITEMS.registerItem("storm_ball",
             properties -> new WeatherBallItem(properties, true), new Item.Properties().stacksTo(16));
     public static final DeferredItem<WeatherBallItem> SUN_BALL = ITEMS.registerItem("sun_ball",

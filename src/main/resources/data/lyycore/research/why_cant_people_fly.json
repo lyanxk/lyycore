@@ -1,0 +1,28 @@
+{
+  "icon": {
+    "id": "minecraft:feather"
+  },
+  "title": "research.lyycore.why_cant_people_fly.title",
+  "summary": "research.lyycore.why_cant_people_fly.summary",
+  "description": "research.lyycore.why_cant_people_fly.description",
+  "rarity": "common",
+  "materials": [
+    {
+      "id": "minecraft:feather",
+      "count": 64
+    },
+    {
+      "id": "minecraft:potion",
+      "components": {
+        "minecraft:potion_contents": {
+          "potion": "minecraft:water"
+        }
+      }
+    },
+    {
+      "id": "lyycore:crystal_block",
+      "count": 32
+    }
+  ],
+  "experience_points": 0
+}

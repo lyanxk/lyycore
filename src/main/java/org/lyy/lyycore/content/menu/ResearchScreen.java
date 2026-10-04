@@ -10,6 +10,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import org.lyy.lyycore.content.research.ResearchDefinition;
+import org.lyy.lyycore.content.AegisWings;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +21,7 @@ public final class ResearchScreen extends AbstractContainerScreen<ResearchMenu> 
     private int page, selected = -1, scroll, materialRow;
     private List<Integer> visibleEntries = List.of();
     private boolean confirming;
-    private PaperButton researchButton, confirmButton;
+    private PaperButton researchButton, confirmButton, wingsButton;
 
     public ResearchScreen(ResearchMenu menu, Inventory inventory, Component title) {
         super(menu, inventory, title);
@@ -44,7 +45,7 @@ public final class ResearchScreen extends AbstractContainerScreen<ResearchMenu> 
     private void rebuildButtons() {
         refreshVisibleEntries();
         clearWidgets();
-        researchButton = confirmButton = null;
+        researchButton = confirmButton = wingsButton = null;
         if (confirming) {
             confirmButton = button(67, 186, 76, 20, text("yes"), () -> {
                 if (minecraft.gameMode != null) minecraft.gameMode.handleInventoryButtonClick(menu.containerId, selected);
@@ -54,6 +55,12 @@ public final class ResearchScreen extends AbstractContainerScreen<ResearchMenu> 
             button(157, 186, 76, 20, text("no"), this::closeConfirmation);
         } else if (selected >= 0) {
             button(15, 13, 50, 19, text("back"), () -> { selected = -1; scroll = 0; rebuildButtons(); });
+            if (menu.isMemory() && menu.entries().get(selected).id().equals(AegisWings.RESEARCH)) {
+                wingsButton = button(70, 190, 160, 21, text("hide_wings"), () -> {
+                    if (minecraft.gameMode != null)
+                        minecraft.gameMode.handleInventoryButtonClick(menu.containerId, ResearchMenu.TOGGLE_WINGS);
+                });
+            }
             if (!menu.isMemory() || research().production().isPresent()) {
                 researchButton = button(92, 190, 116, 21, text(menu.isMemory() ? "transcribe" : "research"), () -> {
                     if (menu.isMemory()) {
@@ -114,6 +121,7 @@ public final class ResearchScreen extends AbstractContainerScreen<ResearchMenu> 
             researchButton.setMessage(text(status == ResearchMenu.COMPLETED ? "completed" : "research"));
         }
         if (confirmButton != null) confirmButton.active = status == ResearchMenu.READY;
+        if (wingsButton != null) wingsButton.setMessage(text(menu.wingsVisible() ? "hide_wings" : "show_wings"));
     }
 
     @Override protected void containerTick() {
@@ -148,7 +156,7 @@ public final class ResearchScreen extends AbstractContainerScreen<ResearchMenu> 
         g.pose().translate(leftPos + 165, topPos + 18, 0);
         g.pose().scale(scale, scale, 1);
         int titleX = -font.width(title) / 2;
-        g.drawString(font, title, titleX, 0, research.rarity().color, false);
+        g.drawString(font, title, titleX, 0, research.rarity().color, true);
         g.pose().popPose();
 
         List<net.minecraft.util.FormattedCharSequence> summary = font.split(

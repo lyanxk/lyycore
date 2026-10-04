@@ -5,6 +5,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.StringRepresentable;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import java.util.List;
 import java.util.Optional;
@@ -12,7 +13,8 @@ import java.util.Optional;
 /** A research definition. Completing it unlocks its stable research ID for that player. */
 public record ResearchDefinition(ItemStack icon, String title, String summary, String description,
                              Rarity rarity, List<ItemStack> materials, int experienceLevels, int experiencePoints, boolean dangerous,
-                             Optional<Production> production, boolean unlocksSkills) {
+                             Optional<Production> production, boolean unlocksSkills,
+                             List<ResourceLocation> prerequisites, Optional<ResourceLocation> requiredAdvancement) {
     /** A present production definition also enables free transcription in the memory screen. */
     public record Production(ItemStack result, int duration) {
         public static final Codec<Production> CODEC = RecordCodecBuilder.create(i -> i.group(
@@ -38,6 +40,7 @@ public record ResearchDefinition(ItemStack icon, String title, String summary, S
             throw new IllegalArgumentException("Research requires an icon, nonempty materials and either a level or point cost");
         icon = icon.copy();
         materials = materials.stream().map(ItemStack::copy).toList();
+        prerequisites = List.copyOf(prerequisites);
     }
     public static final Codec<ResearchDefinition> CODEC = RecordCodecBuilder.create(i -> i.group(
             ItemStack.STRICT_SINGLE_ITEM_CODEC.fieldOf("icon").forGetter(ResearchDefinition::icon),
@@ -50,7 +53,9 @@ public record ResearchDefinition(ItemStack icon, String title, String summary, S
             Codec.intRange(0, 1000000).optionalFieldOf("experience_points", 0).forGetter(ResearchDefinition::experiencePoints),
             Codec.BOOL.optionalFieldOf("dangerous", false).forGetter(ResearchDefinition::dangerous),
             Production.CODEC.optionalFieldOf("production").forGetter(ResearchDefinition::production),
-            Codec.BOOL.optionalFieldOf("unlocks_skills", false).forGetter(ResearchDefinition::unlocksSkills)
+            Codec.BOOL.optionalFieldOf("unlocks_skills", false).forGetter(ResearchDefinition::unlocksSkills),
+            ResourceLocation.CODEC.listOf().optionalFieldOf("prerequisites", List.of()).forGetter(ResearchDefinition::prerequisites),
+            ResourceLocation.CODEC.optionalFieldOf("required_advancement").forGetter(ResearchDefinition::requiredAdvancement)
     ).apply(i, ResearchDefinition::new));
     public static final StreamCodec<RegistryFriendlyByteBuf, ResearchDefinition> STREAM_CODEC = StreamCodec.of((b, r) -> {
         ItemStack.STREAM_CODEC.encode(b, r.icon);
@@ -61,8 +66,11 @@ public record ResearchDefinition(ItemStack icon, String title, String summary, S
         b.writeBoolean(r.production.isPresent());
         r.production.ifPresent(p -> { ItemStack.STREAM_CODEC.encode(b, p.result); b.writeVarInt(p.duration); });
         b.writeBoolean(r.unlocksSkills);
+        b.writeCollection(r.prerequisites, (buf, id) -> buf.writeResourceLocation(id));
+        b.writeOptional(r.requiredAdvancement, (buf, id) -> buf.writeResourceLocation(id));
     }, b -> new ResearchDefinition(ItemStack.STREAM_CODEC.decode(b), b.readUtf(), b.readUtf(), b.readUtf(),
             b.readEnum(Rarity.class), b.readList(buf -> ItemStack.STREAM_CODEC.decode((RegistryFriendlyByteBuf) buf)),
             b.readVarInt(), b.readVarInt(), b.readBoolean(), b.readBoolean()
-                    ? Optional.of(new Production(ItemStack.STREAM_CODEC.decode(b), b.readVarInt())) : Optional.empty(), b.readBoolean()));
+                    ? Optional.of(new Production(ItemStack.STREAM_CODEC.decode(b), b.readVarInt())) : Optional.empty(), b.readBoolean(),
+            b.readList(buf -> buf.readResourceLocation()), b.readOptional(buf -> buf.readResourceLocation())));
 }

@@ -8,6 +8,7 @@ import net.minecraft.world.level.material.MapColor;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.lyy.lyycore.LyyCore;
+import org.lyy.lyycore.content.blocks.*;
 import org.lyy.lyycore.content.ResourceFrameKind;
 import org.lyy.lyycore.content.FrameProduction;
 import org.lyy.lyycore.content.blocks.CrystalCondensingFrameBlock;
@@ -27,6 +28,8 @@ import java.util.Map;
 
 public class LyyBlocks {
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(LyyCore.MODID);
+    public static final DeferredBlock<ImaginaryCondensingBeaconBlock> IMAGINARY_CONDENSING_BEACON = BLOCKS.register("imaginary_condensing_beacon", ImaginaryCondensingBeaconBlock::new);
+    public static final DeferredBlock<SpatialTransmissionTowerBlock> SPATIAL_TRANSMISSION_TOWER = BLOCKS.register("spatial_transmission_tower", SpatialTransmissionTowerBlock::new);
     public static final DeferredBlock<ProductionLabBlock> PRODUCTION_LAB = BLOCKS.register("production_lab", ProductionLabBlock::new);
     public static final DeferredBlock<ImaginaryResearchTableBlock> IMAGINARY_RESEARCH_TABLE =
             BLOCKS.register("imaginary_research_table", ImaginaryResearchTableBlock::new);

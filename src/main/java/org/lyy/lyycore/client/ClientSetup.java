@@ -25,6 +25,13 @@ import net.neoforged.neoforge.client.event.ModelEvent;
 
 @EventBusSubscriber(modid = LyyCore.MODID, value = Dist.CLIENT)
 public class ClientSetup {
+    @SubscribeEvent public static void addPlayerLayers(EntityRenderersEvent.AddLayers event) {
+        for (var skin : event.getSkins()) {
+            net.minecraft.client.renderer.entity.player.PlayerRenderer renderer = event.getSkin(skin);
+            if (renderer != null) renderer.addLayer(new AegisWingsLayer(renderer));
+        }
+    }
+
     @SubscribeEvent
     public static void uploadDomeMeshes(ModelEvent.BakingCompleted event) {
         SonnetDomeMesh.reload(event.getModelManager());
@@ -45,6 +52,7 @@ public class ClientSetup {
     @SubscribeEvent
     public static void registerGeometryLoaders(ModelEvent.RegisterGeometryLoaders event) {
         event.register(ResourceLocation.fromNamespaceAndPath(LyyCore.MODID, "crystal_arrow"), CrystalArrowGeometry.LOADER);
+        event.register(ResourceLocation.fromNamespaceAndPath(LyyCore.MODID, "machine_mesh"), MachineMeshGeometry.LOADER);
     }
 
     @SubscribeEvent
@@ -60,6 +68,11 @@ public class ClientSetup {
 
     @SubscribeEvent
     public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
+        event.registerBlockEntityRenderer(LyyBlockEntities.IMAGINARY_CONDENSING_BEACON.get(), context -> new EnergyMachineRenderer<>("imaginary_condensing_beacon", "idle"));
+        event.registerBlockEntityRenderer(LyyBlockEntities.SPATIAL_TRANSMISSION_TOWER.get(), context -> new EnergyMachineRenderer<>("spatial_transmission_tower", "working"));
+        event.registerEntityRenderer(LyyEntities.LIFE_REVEL.get(), context -> new RevelRenderer<>(context, "life_revel"));
+        event.registerEntityRenderer(LyyEntities.REVEL_DANCER.get(), context -> new RevelRenderer<>(context, "revel_dancer"));
+        event.registerEntityRenderer(LyyEntities.REVEL_BLIND.get(), context -> new RevelRenderer<>(context, "revel_blind"));
         event.registerEntityRenderer(LyyEntities.ENDER_COMPANION.get(), EnderCompanionRenderer::new);
         event.registerBlockEntityRenderer(LyyBlockEntities.RESEARCH_TABLE.get(), ResearchTableRenderer::new);
         event.registerBlockEntityRenderer(LyyBlockEntities.PRODUCTION_LAB.get(), ProductionLabRenderer::new);

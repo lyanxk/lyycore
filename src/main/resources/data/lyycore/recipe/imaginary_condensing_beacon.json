@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "IGI",
+    "CHF",
+    "AAA"
+  ],
+  "key": {
+    "I": {
+      "item": "minecraft:iron_block"
+    },
+    "G": {
+      "item": "minecraft:glass"
+    },
+    "C": {
+      "item": "lyycore:imaginary_crafting_table"
+    },
+    "H": {
+      "item": "lyycore:heart_of_nothingness"
+    },
+    "F": {
+      "item": "lyycore:imaginary_alloy_forge"
+    },
+    "A": {
+      "item": "lyycore:alloy_block"
+    }
+  },
+  "result": {
+    "id": "lyycore:imaginary_condensing_beacon",
+    "count": 1
+  }
+}

@@ -1,5 +1,6 @@
 package org.lyy.lyycore.client;
 
+import org.lyy.lyycore.content.skills.BasicSkills;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
@@ -46,8 +47,18 @@ public final class StyleHud {
         }
         float blend = previous == null ? 1 : Mth.clamp((now - changedAt) / 4, 0, 1);
         blend = blend * blend * (3 - 2 * blend);
-        int centerX = 52, centerY = graphics.guiHeight() - 76;
+        int centerX = 52, centerY = 52;
 
+        if (style == StyleSystem.Style.TECHNIQUE && BasicSkills.available(mc.player)) {
+            int guard = BasicSkills.guard(mc.player);
+            for (int i = 0; i < 100; i++) {
+                double angle = i * Math.PI * 2 / 100 - Math.PI / 2;
+                int x = centerX + (int)Math.round(Math.cos(angle) * 49);
+                int y = centerY + (int)Math.round(Math.sin(angle) * 49);
+                graphics.fill(x - 1, y - 1, x + 1, y + 1, i < guard ? 0xFFFFD4EE : 0x88524C62);
+            }
+            graphics.drawCenteredString(mc.font, Integer.toString(guard), centerX, centerY + 55, 0xFFFFE5F4);
+        }
         // A small crystal connects the four glyphs while keeping the world visible.
         for (int row = -4; row <= 4; row++) {
             int halfWidth = 4 - Math.abs(row);

@@ -117,6 +117,12 @@ def rotate(point, rotation):
 def dragon(name):
     source = load(name)
     textures(name, "entity")
+    names = [Path(t["name"]).stem for t in source["textures"]]
+    bake_mesh(source, name, [f"lyycore:textures/entity/{name}/{n}.png" for n in names])
+
+
+def bake_mesh(source, name, texture_paths, strip_motion=()):
+    """Bake Blockbench geometry once; the client only samples bone transforms."""
     groups = {g["uuid"]: g for g in source["groups"]}
     elements = {e["uuid"]: e for e in source["elements"]}
     bones, indexes = [], {}
@@ -133,13 +139,16 @@ def dragon(name):
         length = math.sqrt(sum(v*v for v in normal))
         if length < 1e-9: return
         normal = [v/length for v in normal]
-        rows = [[round(v, 6) for v in point + [u/16 for u in uv] + normal] for point,uv in zip(vertices,uvs)]
+        atlas = source["textures"][texture]
+        size = [atlas.get("uv_width", 16), atlas.get("uv_height", 16)]
+        rows = [[round(v, 6) for v in point + [u/s for u,s in zip(uv, size)] + normal] for point,uv in zip(vertices,uvs)]
         if len(rows) == 3: rows.append(rows[-1])
         assert len(rows) == 4
         bone["faces"].append({"texture": texture, "vertices": rows})
 
     def add_element(bone, element):
         if element.get("export", True) is False: return
+        if element.get("type", "cube") not in ("cube", "mesh"): return
         if element.get("type") == "mesh":
             for face in element["faces"].values():
                 if face.get("texture") is not None:
@@ -179,18 +188,19 @@ def dragon(name):
             channels = {}
             for key in animator.get("keyframes", []):
                 if key["channel"] not in ("position", "rotation", "scale"): continue
-                assert key.get("interpolation", "linear") == "linear"
+                assert key.get("interpolation", "linear") in ("linear", "step")
                 value = [float(key["data_points"][0][axis]) for axis in "xyz"]
-                channels.setdefault(key["channel"], []).append([key["time"], *value])
+                channels.setdefault(key["channel"], []).append([key["time"], *value, *([1] if key.get("interpolation") == "step" else [])])
             for values in channels.values(): values.sort(key=lambda v:v[0])
+            if (bones[indexes[uuid]]["name"], kind) in strip_motion:
+                channels.pop("position", None)
             if bones[indexes[uuid]]["name"] == "root" and kind in ("fly", "glide") and "position" in channels:
                 # The source's hover altitude is a preview offset, not world movement.
                 baseline = channels["position"][0][2]
                 for key in channels["position"]: key[2] -= baseline
             tracks[str(indexes[uuid])] = channels
-        animations[kind] = {"length": animation["length"], "tracks": tracks}
-    names = [Path(t["name"]).stem for t in source["textures"]]
-    write(ASSETS / "geometry" / f"{name}.json", {"textures": [f"lyycore:textures/entity/{name}/{n}.png" for n in names], "bones": bones, "animations": animations})
+        animations[kind] = {"length": animation["length"], "loop": animation.get("loop") == "loop", "tracks": tracks}
+    write(ASSETS / "geometry" / f"{name}.json", {"textures": texture_paths, "bones": bones, "animations": animations})
     print(f"{name}: {len(bones)} bones, {sum(len(b['faces']) for b in bones)} faces, {len(animations)} clips")
 
 

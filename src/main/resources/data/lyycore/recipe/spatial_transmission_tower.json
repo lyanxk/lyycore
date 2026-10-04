@@ -1,0 +1,37 @@
+{
+  "type": "lyycore:imaginary_condensing",
+  "ingredients": [
+    {
+      "item": "lyycore:im_generator"
+    },
+    {
+      "item": "lyycore:alloy_block"
+    },
+    {
+      "item": "lyycore:alloy_block"
+    },
+    {
+      "item": "lyycore:alloy_block"
+    },
+    {
+      "item": "lyycore:alloy_block"
+    },
+    {
+      "item": "lyycore:alloy_block"
+    },
+    {
+      "item": "lyycore:alloy_block"
+    },
+    {
+      "item": "lyycore:alloy_block"
+    },
+    {
+      "item": "lyycore:alloy_block"
+    }
+  ],
+  "result": {
+    "id": "lyycore:spatial_transmission_tower"
+  },
+  "duration": 100,
+  "energy": 10
+}

@@ -13,6 +13,8 @@ import java.util.EnumMap;
 import java.util.Map;
 
 public class LyyJeiTypes {
+    public static final RecipeType<org.lyy.lyycore.content.recipes.ImaginaryCondensingRecipe> IMAGINARY_CONDENSING =
+            RecipeType.create(LyyCore.MODID, "imaginary_condensing", org.lyy.lyycore.content.recipes.ImaginaryCondensingRecipe.class);
     public static final RecipeType<ImaginaryCraftingRecipe> IMAGINARY_CRAFTING =
             RecipeType.create(LyyCore.MODID, "imaginary_crafting", ImaginaryCraftingRecipe.class);
     public static final Map<ResourceFrameKind, RecipeType<ResourceGatheringRecipe>> RESOURCE_GATHERING = new EnumMap<>(ResourceFrameKind.class);

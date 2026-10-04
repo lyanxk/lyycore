@@ -16,6 +16,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.status.ChunkStatus;
 import org.lyy.lyycore.content.menu.AdvancedImaginaryGateMenu;
 import org.lyy.lyycore.registry.LyyBlockEntities;
+import org.lyy.lyycore.registry.LyyItems;
+import org.lyy.lyycore.registry.LyyEntities;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.item.ItemStack;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -29,6 +34,9 @@ public final class AdvancedImaginaryGateBlockEntity extends ImaginaryGateBlockEn
 
     public AdvancedImaginaryGateBlockEntity(BlockPos pos, BlockState state) {
         super(LyyBlockEntities.ADVANCED_IMAGINARY_GATE.get(), pos, state);
+    }
+    @Override protected EntityType<? extends Mob> summonType(ItemStack offering) {
+        return offering.is(LyyItems.SMALL_IMAGINARY_CORE.get()) ? LyyEntities.LIFE_REVEL.get() : super.summonType(offering);
     }
     private static List<BlockPos> columns() {
         List<BlockPos> result = new ArrayList<>();

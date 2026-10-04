@@ -13,6 +13,14 @@ public class LyyCapabilities {
             ResourceLocation.fromNamespaceAndPath(LyyCore.MODID, "imaginary_energy"), ImaginaryEnergy.class);
 
     public static void register(RegisterCapabilitiesEvent event) {
+        event.registerBlock(IMAGINARY_ENERGY, (level, pos, state, be, side) -> {
+            var center = org.lyy.lyycore.content.blocks.SquareMachineBlock.center(pos, state);
+            return level.getBlockEntity(center) instanceof org.lyy.lyycore.content.blockEntities.ImaginaryCondensingBeaconBlockEntity beacon ? beacon.energy() : null;
+        }, LyyBlocks.IMAGINARY_CONDENSING_BEACON.get());
+        event.registerBlock(Capabilities.EnergyStorage.BLOCK, (level, pos, state, be, side) -> {
+            var center = org.lyy.lyycore.content.blocks.SquareMachineBlock.center(pos, state);
+            return level.getBlockEntity(center) instanceof org.lyy.lyycore.content.blockEntities.ImaginaryCondensingBeaconBlockEntity beacon ? beacon.fe() : null;
+        }, LyyBlocks.IMAGINARY_CONDENSING_BEACON.get());
         event.registerBlockEntity(IMAGINARY_ENERGY, LyyBlockEntities.RESOURCE_GATHERING_FRAME.get(),
                 (be, side) -> be.getImaginaryEnergyStorage());
         event.registerBlockEntity(IMAGINARY_ENERGY, LyyBlockEntities.CRYSTAL_CONDENSING_FRAME.get(),
