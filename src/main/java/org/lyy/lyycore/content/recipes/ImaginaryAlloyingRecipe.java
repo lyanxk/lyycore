@@ -49,29 +49,37 @@ public class ImaginaryAlloyingRecipe implements Recipe<RecipeInput> {
 
     @Override
     public boolean matches(RecipeInput input, Level level) {
+        return matchedInputSlots(input) != null;
+    }
+
+    /** The same assignment is used for matching and consumption, including overlapping ingredients. */
+    @Nullable public int[] matchedInputSlots(RecipeInput input) {
+        if (input.size() < 3) return null;
         // Slot 0,1 = normal inputs (unordered), slot 2 = catalyst
         if (catalyst != null && !catalyst.isEmpty()) {
-            if (!catalyst.test(input.getItem(2))) return false;
+            if (!catalyst.test(input.getItem(2))) return null;
         }
 
-        List<ItemStack> offered = new ArrayList<>();
-        if (!input.getItem(0).isEmpty()) offered.add(input.getItem(0));
-        if (!input.getItem(1).isEmpty()) offered.add(input.getItem(1));
+        List<Integer> offered = new ArrayList<>();
+        if (!input.getItem(0).isEmpty()) offered.add(0);
+        if (!input.getItem(1).isEmpty()) offered.add(1);
 
         List<Ingredient> required = new ArrayList<>();
         for (Ingredient ing : inputs) { if (!ing.isEmpty()) required.add(ing); }
 
-        if (offered.size() != required.size()) return false;
-
-        boolean[] used = new boolean[offered.size()];
-        for (Ingredient need : required) {
-            boolean matched = false;
-            for (int i = 0; i < offered.size(); i++) {
-                if (!used[i] && need.test(offered.get(i))) { used[i] = true; matched = true; break; }
-            }
-            if (!matched) return false;
+        if (offered.size() != required.size()) return null;
+        if (offered.isEmpty()) return new int[0];
+        int first = offered.getFirst();
+        if (offered.size() == 1)
+            return required.getFirst().test(input.getItem(first)) ? new int[]{first} : null;
+        int second = offered.get(1);
+        if (required.get(0).test(input.getItem(first)) && required.get(1).test(input.getItem(second))) {
+            return new int[]{first, second};
         }
-        return true;
+        if (required.get(0).test(input.getItem(second)) && required.get(1).test(input.getItem(first))) {
+            return new int[]{second, first};
+        }
+        return null;
     }
 
     @Override
@@ -111,6 +119,13 @@ public class ImaginaryAlloyingRecipe implements Recipe<RecipeInput> {
     public ItemStack getResult() { return result; }
     public int getProcessTime() { return processTime; }
     public int getEnergyCost() { return energyCost; }
+
+    /** A no-op reload can preserve work; changed definitions must start a new job. */
+    public boolean sameDefinitionAs(ImaginaryAlloyingRecipe other) {
+        return inputs.equals(other.inputs) && java.util.Objects.equals(catalyst, other.catalyst)
+                && catalystConsumed == other.catalystConsumed && ItemStack.matches(result, other.result)
+                && processTime == other.processTime && energyCost == other.energyCost;
+    }
 
     // --- Serializer ---
     public static class Serializer implements RecipeSerializer<ImaginaryAlloyingRecipe> {

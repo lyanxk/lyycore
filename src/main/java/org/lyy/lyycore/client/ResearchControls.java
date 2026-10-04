@@ -8,6 +8,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
@@ -15,10 +16,14 @@ import net.neoforged.neoforge.client.settings.KeyConflictContext;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.lwjgl.glfw.GLFW;
 import org.lyy.lyycore.content.skills.SkillSystem;
+import org.lyy.lyycore.content.research.ResearchManager;
 import org.lyy.lyycore.network.ResearchNetwork;
 
 @EventBusSubscriber(modid = "lyycore", value = Dist.CLIENT)
 public final class ResearchControls {
+    @SubscribeEvent public static void logout(ClientPlayerNetworkEvent.LoggingOut event) {
+        ResearchManager.clearClient();
+    }
     public static final KeyMapping MEMORY = key("memory", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_K);
     public static final KeyMapping STYLE = key("style", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_V);
     // GLFW is zero-based: mouse button 5 is index 4.

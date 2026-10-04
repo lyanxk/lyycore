@@ -5,10 +5,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import org.lyy.lyycore.content.recipes.ResearchRecipe;
+import org.lyy.lyycore.content.research.ResearchDefinition;
 import org.lyy.lyycore.content.skills.SkillSystem;
 import org.lyy.lyycore.network.ResearchNetwork;
-import org.lyy.lyycore.registry.LyyRecipes;
+import org.lyy.lyycore.content.research.ResearchManager;
 
 public final class ResearchProgress {
     private static final String KEY = "lyycore:research";
@@ -17,7 +17,7 @@ public final class ResearchProgress {
         return player.getPersistentData().getCompound(Player.PERSISTED_NBT_TAG).getCompound(KEY).getBoolean(id.toString());
     }
     /** Plan the entire payment before changing anything, including duplicate material costs. */
-    private static int[] payment(Player player, ResearchRecipe research) {
+    private static int[] payment(Player player, ResearchDefinition research) {
         int[] consumed = new int[player.getInventory().items.size()];
         for (ItemStack cost : research.materials()) {
             int remaining = cost.getCount();
@@ -32,7 +32,7 @@ public final class ResearchProgress {
         }
         return consumed;
     }
-    /** Require the components explicitly declared by a recipe; allow a used or renamed tool. */
+    /** Require the components explicitly declared by a research definition; allow a used or renamed tool. */
     public static boolean matchesMaterial(ItemStack held, ItemStack cost) {
         if (!ItemStack.isSameItem(held, cost)) return false;
         for (var entry : cost.getComponentsPatch().entrySet()) {
@@ -40,7 +40,7 @@ public final class ResearchProgress {
         }
         return true;
     }
-    public static boolean canAfford(Player player, ResearchRecipe research) {
+    public static boolean canAfford(Player player, ResearchDefinition research) {
         return hasExperience(player, research) && payment(player, research) != null;
     }
     /** Derive spendable XP from the level and bar; commands can leave totalExperience stale. */
@@ -51,10 +51,10 @@ public final class ResearchProgress {
                 : (9 * level * level - 325 * level + 4440) / 2;
         return (int) Math.min(Integer.MAX_VALUE, base + Math.round(player.experienceProgress * player.getXpNeededForNextLevel()));
     }
-    private static boolean hasExperience(Player player, ResearchRecipe research) {
+    private static boolean hasExperience(Player player, ResearchDefinition research) {
         return player.experienceLevel >= research.experienceLevels() && experiencePoints(player) >= research.experiencePoints();
     }
-    public static boolean complete(ServerPlayer player, ResourceLocation id, ResearchRecipe research) {
+    public static boolean complete(ServerPlayer player, ResourceLocation id, ResearchDefinition research) {
         if (completed(player, id) || !hasExperience(player, research)) return false;
         int[] consumed = payment(player, research);
         if (consumed == null) return false;
@@ -68,7 +68,7 @@ public final class ResearchProgress {
     }
 
     /** Change an unlock without charging or refunding its research costs. */
-    public static boolean setCompleted(ServerPlayer player, ResourceLocation id, ResearchRecipe research, boolean value) {
+    public static boolean setCompleted(ServerPlayer player, ResourceLocation id, ResearchDefinition research, boolean value) {
         if (completed(player, id) == value) return false;
         CompoundTag persisted = player.getPersistentData().getCompound(Player.PERSISTED_NBT_TAG);
         CompoundTag entries = persisted.getCompound(KEY);
@@ -77,7 +77,7 @@ public final class ResearchProgress {
         persisted.put(KEY, entries);
         player.getPersistentData().put(Player.PERSISTED_NBT_TAG, persisted);
         if (research.unlocksSkills()) {
-            boolean unlocked = value || player.level().getRecipeManager().getAllRecipesFor(LyyRecipes.RESEARCH.get()).stream()
+            boolean unlocked = value || ResearchManager.all(player.level()).stream()
                     .anyMatch(entry -> entry.value().unlocksSkills() && completed(player, entry.id()));
             if (SkillSystem.unlocked(player) != unlocked) {
                 SkillSystem.setUnlocked(player, unlocked);

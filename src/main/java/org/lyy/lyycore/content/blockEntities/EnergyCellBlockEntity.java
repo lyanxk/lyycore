@@ -21,6 +21,7 @@ import org.lyy.lyycore.Config;
 import org.lyy.lyycore.content.menu.EnergyCellMenu;
 import org.lyy.lyycore.energy.IEnergyConversion;
 import org.lyy.lyycore.energy.ImaginaryEnergyStorage;
+import org.lyy.lyycore.energy.ImaginaryEnergyFeAdapter;
 import org.lyy.lyycore.energy.ImaginaryEnergy;
 import org.lyy.lyycore.registry.LyyBlockEntities;
 import org.lyy.lyycore.registry.LyyCapabilities;
@@ -30,8 +31,7 @@ import net.minecraft.world.level.block.Block;
 import javax.annotation.Nullable;
 
 public class EnergyCellBlockEntity extends BlockEntity implements MenuProvider {
-    private final ImaginaryEnergyStorage storage = new ImaginaryEnergyStorage(1_000_000_000, 1_000_000_000, 1_000_000_000) {
-        private byte feRemainder;
+    private final ImaginaryEnergyStorage storage = new ImaginaryEnergyStorage(0, 0, 0) {
 
         @Override
         public int receiveImaginaryEnergy(int amount, boolean simulate) {
@@ -47,62 +47,12 @@ public class EnergyCellBlockEntity extends BlockEntity implements MenuProvider {
             return extracted;
         }
 
-        @Override
-        public int getEnergyStored() { return energy + feRemainder; }
-
-        @Override
-        public void setEnergy(int value) {
-            // Preserve FE saved by older versions until the tick converts it.
-            // New input never accumulates here: only its 0..99 remainder is stored.
-            int restored = Math.max(0, Math.min(value, capacity));
-            feRemainder = (byte) (restored % IEnergyConversion.FE_PER_IMAGINARY);
-            energy = restored - feRemainder;
-        }
-
-        @Override
-        public int receiveEnergy(int maxReceive, boolean simulate) {
-            int ieRoom = getMaxIEnergyStored() - getImaginaryEnergyStored();
-            if (maxReceive <= 0 || ieRoom <= 0 || energy > 0) return 0;
-
-            int received = Math.min(maxReceive, this.maxReceive);
-            // Divide before adding the saved remainder, so even an int-sized
-            // transfer never requires an overflowing FE sum or a long value.
-            int remainder = received % IEnergyConversion.FE_PER_IMAGINARY + feRemainder;
-            int ieToAdd = received / IEnergyConversion.FE_PER_IMAGINARY
-                    + remainder / IEnergyConversion.FE_PER_IMAGINARY;
-            if (ieToAdd >= ieRoom) {
-                // This branch only runs when the offered FE can fill the store.
-                // Account for the first incomplete unit before multiplying.
-                received = (ieRoom - 1) * IEnergyConversion.FE_PER_IMAGINARY
-                        + (IEnergyConversion.FE_PER_IMAGINARY - feRemainder);
-                ieToAdd = ieRoom;
-                remainder = 0;
-            }
-            if (!simulate && received > 0) {
-                imaginaryEnergy += ieToAdd;
-                feRemainder = (byte) (remainder % IEnergyConversion.FE_PER_IMAGINARY);
-                setChanged();
-            }
-            return received;
-        }
-
-        @Override
-        public int extractEnergy(int maxExtract, boolean simulate) {
-            if (maxExtract <= 0) return 0;
-            int extracted = Math.min(getEnergyStored(), Math.min(this.maxExtract, maxExtract));
-            if (!simulate && extracted > 0) {
-                int legacyExtracted = Math.min(energy, extracted);
-                energy -= legacyExtracted;
-                feRemainder -= (byte) (extracted - legacyExtracted);
-                if (getEnergyStored() < IEnergyConversion.FE_PER_IMAGINARY) {
-                    feRemainder = (byte) getEnergyStored();
-                    energy = 0;
-                }
-                setChanged();
-            }
-            return extracted;
-        }
     };
+    private final ImaginaryEnergyFeAdapter feAdapter = new ImaginaryEnergyFeAdapter(
+            storage, this::setChanged, 1_000_000_000, 1_000_000_000);
+    // Only old saves can contain an extra whole-FE buffer. Preserve any amount
+    // that cannot yet fit into IE; all new transfers use the single IE store.
+    private int legacyEnergyFE;
 
     // Container data packets carry signed 16-bit values in 1.21.1, so each
     // 32-bit energy value is split into two words for lossless GUI syncing.
@@ -156,8 +106,9 @@ public class EnergyCellBlockEntity extends BlockEntity implements MenuProvider {
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
+        normalizeLegacyFeToIe();
         tag.putInt("IE", storage.getImaginaryEnergyStored());
-        int fe = storage.getEnergyStored();
+        int fe = legacyEnergyFE + feAdapter.getRemainder();
         if (fe < IEnergyConversion.FE_PER_IMAGINARY) tag.putByte("energy", (byte) fe);
         else tag.putInt("energy", fe); // Keep unconverted FE from legacy saves intact.
         tag.put("items", items.serializeNBT(registries));
@@ -167,12 +118,16 @@ public class EnergyCellBlockEntity extends BlockEntity implements MenuProvider {
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
         storage.setImaginaryEnergy(tag.getInt("IE"));
-        storage.setEnergy(tag.getInt("energy"));
+        int savedFE = Math.clamp(tag.getInt("energy"), 0, 1_000_000_000);
+        feAdapter.setRemainder(savedFE % IEnergyConversion.FE_PER_IMAGINARY);
+        legacyEnergyFE = savedFE - feAdapter.getRemainder();
+        normalizeLegacyFeToIe();
         items.deserializeNBT(registries, tag.getCompound("items"));
     }
 
     // --- Accessors ---
-    public ImaginaryEnergyStorage getEnergyStorage() { return storage; }
+    public IEnergyStorage getEnergyStorage() { return feAdapter; }
+    public ImaginaryEnergyStorage getImaginaryEnergyStorage() { return storage; }
     public ItemStackHandler getItemHandler() { return items; }
     public ContainerData getData() { return data; }
     public int getIEnergyStored() { return storage.getImaginaryEnergyStored(); }
@@ -182,7 +137,7 @@ public class EnergyCellBlockEntity extends BlockEntity implements MenuProvider {
     public static void serverTick(Level level, BlockPos pos, BlockState state, EnergyCellBlockEntity be) {
         if (level == null || level.isClientSide) return;
 
-        boolean changed = be.normalizeFeToIe();
+        boolean changed = be.normalizeLegacyFeToIe();
 
         int interval = Config.ENERGY_CELL_TRANSFER_INTERVAL.get();
         if (level.getGameTime() % interval == 0) {
@@ -201,14 +156,14 @@ public class EnergyCellBlockEntity extends BlockEntity implements MenuProvider {
         }
     }
 
-    private boolean normalizeFeToIe() {
-        int feBuffered = storage.getEnergyStored();
+    private boolean normalizeLegacyFeToIe() {
+        int feBuffered = legacyEnergyFE;
         int ieToAdd = IEnergyConversion.fromFE(feBuffered);
         if (ieToAdd <= 0) return false;
 
         int accepted = storage.receiveImaginaryEnergy(ieToAdd);
         if (accepted <= 0) return false;
-        storage.extractEnergy(IEnergyConversion.toFE(accepted), false);
+        legacyEnergyFE -= IEnergyConversion.toFE(accepted);
         return true;
     }
 

@@ -9,13 +9,12 @@ import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.commands.arguments.ResourceLocationArgument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.crafting.RecipeHolder;
+import org.lyy.lyycore.content.research.ResearchEntry;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import org.lyy.lyycore.content.menu.ResearchMenu;
-import org.lyy.lyycore.content.recipes.ResearchRecipe;
-import org.lyy.lyycore.registry.LyyRecipes;
+import org.lyy.lyycore.content.research.ResearchManager;
 
 @EventBusSubscriber(modid = "lyycore")
 public final class ResearchCommands {
@@ -39,9 +38,8 @@ public final class ResearchCommands {
         return Commands.literal(name).then(Commands.argument("research", ResourceLocationArgument.id())
                 .suggests((context, builder) -> {
                     var player = context.getSource().getPlayerOrException();
-                    return SharedSuggestionProvider.suggestResource(player.level().getRecipeManager()
-                            .getAllRecipesFor(LyyRecipes.RESEARCH.get()).stream()
-                            .map(RecipeHolder::id)
+                    return SharedSuggestionProvider.suggestResource(ResearchManager.all(player.level()).stream()
+                            .map(ResearchEntry::id)
                             .filter(id -> ResearchProgress.completed(player, id) != completed), builder);
                 })
                 .executes(context -> change(context.getSource(), ResourceLocationArgument.getId(context, "research"), completed)));
@@ -49,8 +47,9 @@ public final class ResearchCommands {
 
     private static int change(CommandSourceStack source, ResourceLocation id, boolean completed) throws CommandSyntaxException {
         var player = source.getPlayerOrException();
-        var entry = player.level().getRecipeManager().byKey(id).orElse(null);
-        if (entry == null || !(entry.value() instanceof ResearchRecipe research)) throw UNKNOWN.create(id);
+        var entry = ResearchManager.get(player.level(), id);
+        if (entry == null) throw UNKNOWN.create(id);
+        var research = entry.value();
         if (!ResearchProgress.setCompleted(player, id, research, completed))
             throw (completed ? ALREADY_COMPLETED : NOT_COMPLETED).create(id);
 

@@ -1,0 +1,10 @@
+Asset name: 「虚无」之心 — sealed crystal revision
+Generation method: Built-in image_gen edit, transparent_background=true.
+Reference: art/heart_of_nothingness.png
+
+Edit the supplied item image to fix the enclosure. It is currently an open crystal frame with a bare dark hole: this is wrong.
+Create the corrected 「虚无」之心, a boss-drop Minecraft item sprite: a SOLID, CLOSED three-dimensional pale pink crystal heart containing a SMALL dark void suspended deep INSIDE it.
+The central black void must be fully encapsulated behind the front surface of the crystal, not exposed, not flush with the outer surface, and not filling a hollow frame.
+Change the structure decisively: shrink the dark inner core to about ONE THIRD of the full heart's width and height, surround it with visibly thick pale pink crystal on ALL sides, and draw an unbroken translucent front face that crosses OVER the dark core. Several broad, continuous pale pink/lilac faceted planes cover the entire front of the heart, including its center. Let the dark purple-black seed remain visible through the tinted front crystal as an enclosed cloudy silhouette. Two strong sharp white diagonal facet highlights MUST continue across the face IN FRONT of the dark core, visibly occluding part of it. No aperture, no cavity, no empty center, no cutaway, no open ring. The void is a small contained black-purple mote, not a heart-shaped hole. The outer heart should look sealed like something embedded in thick glass or amber.
+Preserve the overall pointed heart silhouette, restrained pink-white-lilac palette, small gold seal at the bottom, centered composition, and transparent background from the reference. Keep sufficient transparent margins. Draw only one item. Maintain crisp pixel-art material shading and strong small-inventory readability, with simple large pixel clusters; no text, no background, no pedestal, no floating debris, no blur or bloom.
+The crystal front must be visibly present rather than literally alpha-transparent: use opaque pale pink and lilac facet colors over and around the core. Alpha transparency is ONLY for the area outside the item's silhouette.

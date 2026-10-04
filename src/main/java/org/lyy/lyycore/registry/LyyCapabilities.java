@@ -18,7 +18,7 @@ public class LyyCapabilities {
         event.registerBlockEntity(IMAGINARY_ENERGY, LyyBlockEntities.CRYSTAL_CONDENSING_FRAME.get(),
                 (be, side) -> be.getImaginaryEnergyStorage());
         event.registerBlockEntity(IMAGINARY_ENERGY, LyyBlockEntities.IMAGINARY_ENERGY_CELL.get(),
-                (be, side) -> be.getEnergyStorage());
+                (be, side) -> be.getImaginaryEnergyStorage());
         event.registerBlockEntity(IMAGINARY_ENERGY, LyyBlockEntities.IAF.get(),
                 (be, side) -> be.getImaginaryEnergyStorage());
         event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, LyyBlockEntities.RESOURCE_GATHERING_FRAME.get(),

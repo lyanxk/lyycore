@@ -7,9 +7,9 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.RecipeHolder;
+import org.lyy.lyycore.content.research.ResearchEntry;
+import org.lyy.lyycore.content.research.ResearchManager;
 import org.lyy.lyycore.content.ResearchProgress;
-import org.lyy.lyycore.content.recipes.ResearchRecipe;
 import org.lyy.lyycore.registry.*;
 import java.util.Comparator;
 import java.util.List;
@@ -22,7 +22,7 @@ public final class ResearchMenu extends AbstractContainerMenu {
     public static final int CLOSE_PREVIEW = -1;
     private final Player owner;
     private final ContainerLevelAccess access;
-    private final List<RecipeHolder<ResearchRecipe>> entries;
+    private final List<ResearchEntry> entries;
     private final int[] statuses;
     private final boolean memory;
     private int preview = -1, previewExperience;
@@ -33,7 +33,7 @@ public final class ResearchMenu extends AbstractContainerMenu {
         this(id, inventory, buffer.readBlockPos(), readEntries(inventory.player, buffer), false);
     }
 
-    private ResearchMenu(int id, Inventory inventory, BlockPos pos, List<RecipeHolder<ResearchRecipe>> entries, boolean memory) {
+    private ResearchMenu(int id, Inventory inventory, BlockPos pos, List<ResearchEntry> entries, boolean memory) {
         super(memory ? LyyMenus.MEMORY.get() : LyyMenus.RESEARCH.get(), id);
         this.owner = inventory.player;
         this.memory = memory;
@@ -45,19 +45,18 @@ public final class ResearchMenu extends AbstractContainerMenu {
             addDataSlot(DataSlot.shared(statuses, i));
         }
     }
-    private static List<RecipeHolder<ResearchRecipe>> available(Player player, boolean completedOnly) {
-        return player.level().getRecipeManager().getAllRecipesFor(LyyRecipes.RESEARCH.get()).stream()
+    private static List<ResearchEntry> available(Player player, boolean completedOnly) {
+        return ResearchManager.all(player.level()).stream()
                 .filter(entry -> ResearchProgress.completed(player, entry.id()) == completedOnly)
                 .sorted(Comparator.comparing(entry -> entry.id().toString())).toList();
     }
-    private static List<RecipeHolder<ResearchRecipe>> readEntries(Player player, RegistryFriendlyByteBuf buffer) {
+    private static List<ResearchEntry> readEntries(Player player, RegistryFriendlyByteBuf buffer) {
         // Resolve only the server-selected IDs, preserving their order for button/status indices.
         return buffer.readList(buf -> {
             var id = buf.readResourceLocation();
-            var entry = player.level().getRecipeManager().byKey(id).orElseThrow();
-            if (!(entry.value() instanceof ResearchRecipe recipe))
-                throw new IllegalStateException("Not a research recipe: " + id);
-            return new RecipeHolder<>(id, recipe);
+            var entry = ResearchManager.get(player.level(), id);
+            if (entry == null) throw new IllegalStateException("Unknown research: " + id);
+            return entry;
         });
     }
     public static ResearchMenu memory(int id, Inventory inventory, RegistryFriendlyByteBuf buffer) {
@@ -80,7 +79,7 @@ public final class ResearchMenu extends AbstractContainerMenu {
                 buffer -> buffer.writeCollection(entries, (buf, entry) -> buf.writeResourceLocation(entry.id())));
     }
     public boolean isMemory() { return memory; }
-    public List<RecipeHolder<ResearchRecipe>> entries() { return entries; }
+    public List<ResearchEntry> entries() { return entries; }
     public int status(int index) { return statuses[index]; }
 
     /** Nonnegative buttons submit research; negative buttons only manage the cost preview. */
@@ -140,13 +139,14 @@ public final class ResearchMenu extends AbstractContainerMenu {
         if (id >= entries.size()) return false;
         var entry = entries.get(id);
         // Reject stale menus after /reload rather than charging for an obsolete definition.
-        if (player.level().getRecipeManager().byKey(entry.id()).orElse(null) != entry) return false;
+        if (ResearchManager.get(player.level(), entry.id()) != entry) return false;
         if (memory) {
             if (!ResearchProgress.completed(player, entry.id()) || entry.value().production().isEmpty()) return false;
             ItemStack notes = ResearchNotesItem.create(entry.id(), player.getUUID());
             if (!player.getInventory().add(notes)) player.drop(notes, false);
             player.inventoryMenu.broadcastChanges();
             player.displayClientMessage(Component.translatable("message.lyycore.research_copied"), true);
+            server.closeContainer();
             return true;
         }
         boolean completed = ResearchProgress.complete(server, entry.id(), entry.value());

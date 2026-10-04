@@ -12,9 +12,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeInput;
+import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -32,9 +32,6 @@ import org.lyy.lyycore.registry.LyyRecipes;
 import org.lyy.lyycore.content.blocks.ImaginaryAlloyForge;
 import net.minecraft.world.level.block.Block;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 public class ImaginaryAlloyForgeBlockEntity extends BlockEntity implements MenuProvider {
     private int progress = 0;
@@ -44,6 +41,7 @@ public class ImaginaryAlloyForgeBlockEntity extends BlockEntity implements MenuP
     private boolean hasActiveRecipe = false;
     private boolean recipeDirty = true;
     @Nullable private RecipeHolder<ImaginaryAlloyingRecipe> cachedRecipe;
+    @Nullable private RecipeManager cachedRecipeManager;
     @Nullable private ResourceLocation activeRecipeId;
 
     private final ImaginaryEnergyStorage energyStorage = new ImaginaryEnergyStorage(0, 0, 0) {
@@ -178,6 +176,14 @@ public class ImaginaryAlloyForgeBlockEntity extends BlockEntity implements MenuP
             be.energyStorage.receiveImaginaryEnergy(Config.FORGE_PASSIVE_IE.get(), false);
         }
 
+        var manager = level.getRecipeManager();
+        // A resource reload replaces the manager, including cached misses. Also
+        // reject an active holder replaced in-place by another recipe provider.
+        if (be.cachedRecipeManager != manager || be.cachedRecipe != null
+                && manager.byKey(be.cachedRecipe.id()).orElse(null) != be.cachedRecipe) {
+            be.recipeDirty = true;
+            be.cachedRecipeManager = manager;
+        }
         if (be.recipeDirty) be.refreshRecipe();
         boolean burning = be.hasActiveRecipe && be.cachedRecipe != null
                 && be.tickProcessing(be.cachedRecipe.value());
@@ -202,6 +208,7 @@ public class ImaginaryAlloyForgeBlockEntity extends BlockEntity implements MenuP
 
     private void refreshRecipe() {
         recipeDirty = false;
+        var previous = cachedRecipe;
         cachedRecipe = level.getRecipeManager()
                 .getRecipeFor(LyyRecipes.IMAGINARY_ALLOYING.get(), recipeInput, level)
                 .orElse(null);
@@ -213,9 +220,12 @@ public class ImaginaryAlloyForgeBlockEntity extends BlockEntity implements MenuP
 
         if (!hasActiveRecipe) {
             start(cachedRecipe);
-        } else if (activeRecipeId != null && !activeRecipeId.equals(cachedRecipe.id())) {
+        } else if (activeRecipeId != null && !activeRecipeId.equals(cachedRecipe.id())
+                || previous != null && !previous.value().sameDefinitionAs(cachedRecipe.value())) {
+            var next = cachedRecipe;
             resetProcessing();
-            start(cachedRecipe);
+            cachedRecipe = next;
+            start(next);
         } else if (maxProgress <= 0) {
             start(cachedRecipe);
         } else {
@@ -271,7 +281,12 @@ public class ImaginaryAlloyForgeBlockEntity extends BlockEntity implements MenuP
     }
 
     private void finish(ImaginaryAlloyingRecipe rec) {
-        consumeInputsFor(rec);
+        int[] matchedSlots = rec.matchedInputSlots(recipeInput);
+        if (matchedSlots == null || !canOutput(rec)) {
+            recipeDirty = true;
+            return;
+        }
+        consumeInputsFor(rec, matchedSlots);
         ItemStack result = rec.getResultItem(level.registryAccess());
         ItemStack out = items.getStackInSlot(3);
         if (out.isEmpty()) {
@@ -282,20 +297,8 @@ public class ImaginaryAlloyForgeBlockEntity extends BlockEntity implements MenuP
         setChanged();
     }
 
-    private void consumeInputsFor(ImaginaryAlloyingRecipe rec) {
-        List<ItemStack> offered = new ArrayList<>();
-        offered.add(items.getStackInSlot(0));
-        offered.add(items.getStackInSlot(1));
-
-        boolean[] used = new boolean[offered.size()];
-        for (Ingredient need : rec.getIngredients()) {
-            for (int i = 0; i < offered.size(); i++) {
-                if (!used[i] && need.test(offered.get(i))) { used[i] = true; break; }
-            }
-        }
-        for (int i = 0; i < used.length; i++) {
-            if (used[i]) items.extractItem(i, 1, false);
-        }
+    private void consumeInputsFor(ImaginaryAlloyingRecipe rec, int[] matchedSlots) {
+        for (int slot : matchedSlots) items.extractItem(slot, 1, false);
 
         if (rec.getCatalyst() != null && !rec.getCatalyst().isEmpty() && rec.isCatalystConsumed()) {
             items.extractItem(2, 1, false);

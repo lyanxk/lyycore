@@ -11,17 +11,12 @@ import org.lyy.lyycore.content.recipes.CrystalCondensingRecipe;
 import org.lyy.lyycore.content.recipes.ImaginaryAlloyingRecipe;
 import org.lyy.lyycore.content.recipes.ImaginaryCraftingRecipe;
 import org.lyy.lyycore.content.recipes.ResourceGatheringRecipe;
-import org.lyy.lyycore.content.recipes.ResearchRecipe;
 import java.util.EnumMap;
 import java.util.Map;
 
 public class LyyRecipes {
     public static final DeferredRegister<RecipeType<?>> RECIPE_TYPES =
             DeferredRegister.create(Registries.RECIPE_TYPE, LyyCore.MODID);
-    public static final DeferredHolder<RecipeType<?>, RecipeType<ResearchRecipe>> RESEARCH =
-            RECIPE_TYPES.register("research", () -> new RecipeType<>() {
-                @Override public String toString() { return "lyycore:research"; }
-            });
     public static final DeferredHolder<RecipeType<?>, RecipeType<ImaginaryCraftingRecipe>> IMAGINARY_CRAFTING =
             RECIPE_TYPES.register("imaginary_crafting", () -> new RecipeType<>() {
                 @Override public String toString() { return "lyycore:imaginary_crafting"; }
@@ -42,8 +37,6 @@ public class LyyRecipes {
 
     public static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS =
             DeferredRegister.create(Registries.RECIPE_SERIALIZER, LyyCore.MODID);
-    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<ResearchRecipe>> RESEARCH_SERIALIZER =
-            RECIPE_SERIALIZERS.register("research", ResearchRecipe.Serializer::new);
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<ImaginaryCraftingRecipe>> IMAGINARY_CRAFTING_SERIALIZER =
             RECIPE_SERIALIZERS.register("imaginary_crafting", ImaginaryCraftingRecipe.Serializer::new);
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<CrystalCondensingRecipe>> CRYSTAL_CONDENSING_SERIALIZER =

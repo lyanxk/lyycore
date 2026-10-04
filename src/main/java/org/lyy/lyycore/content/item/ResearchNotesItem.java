@@ -10,7 +10,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Level;
-import org.lyy.lyycore.content.recipes.ResearchRecipe;
+import org.lyy.lyycore.content.research.ResearchDefinition;
+import org.lyy.lyycore.content.research.ResearchManager;
 import org.lyy.lyycore.registry.LyyItems;
 
 import javax.annotation.Nullable;
@@ -28,13 +29,13 @@ public final class ResearchNotesItem extends Item {
         return stack;
     }
 
-    @Nullable public static ResearchRecipe research(ItemStack stack, Level level) {
+    @Nullable public static ResearchDefinition research(ItemStack stack, Level level) {
         if (!stack.is(LyyItems.RESEARCH_NOTES.get())) return null;
         var data = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
         ResourceLocation id = ResourceLocation.tryParse(data.getString("Research"));
         if (id == null || !data.hasUUID("Owner")) return null;
-        var holder = level.getRecipeManager().byKey(id).orElse(null);
-        return holder != null && holder.value() instanceof ResearchRecipe research ? research : null;
+        var holder = ResearchManager.get(level, id);
+        return holder == null ? null : holder.value();
     }
 
     @Override public void inventoryTick(ItemStack stack, Level level, Entity entity, int slot, boolean selected) {
@@ -50,7 +51,7 @@ public final class ResearchNotesItem extends Item {
 
     @Override public void appendHoverText(ItemStack stack, TooltipContext context, java.util.List<Component> lines, net.minecraft.world.item.TooltipFlag flag) {
         if (context.level() != null) {
-            ResearchRecipe research = research(stack, context.level());
+            ResearchDefinition research = research(stack, context.level());
             if (research != null) lines.add(Component.translatable(research.title()).withColor(research.rarity().color));
         }
     }

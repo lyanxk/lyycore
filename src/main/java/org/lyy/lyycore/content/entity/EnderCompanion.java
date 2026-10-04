@@ -23,6 +23,8 @@ import java.util.Comparator;
 import java.util.UUID;
 
 public final class EnderCompanion extends PathfinderMob {
+    private static final double ACQUIRE_RANGE = 5, CHASE_RANGE = 10;
+    private static final float CHASE_MOVEMENT_MULTIPLIER = 3;
     private static final EntityDataAccessor<Integer> STAGE = SynchedEntityData.defineId(EnderCompanion.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> FLYING = SynchedEntityData.defineId(EnderCompanion.class, EntityDataSerializers.BOOLEAN);
     private UUID owner;
@@ -105,17 +107,24 @@ public final class EnderCompanion extends PathfinderMob {
             flightBlend = Mth.clamp(flightBlend + (flying() ? 0.1F : -0.1F), 0, 1);
         }
     }
-    private boolean validTarget(LivingEntity target) {
+    private boolean validTarget(LivingEntity target, double range) {
         return target != null && target instanceof Enemy && target.isAlive() && !target.isInvulnerable()
-                && target.distanceToSqr(sentry.getCenter()) <= 25;
+                && target.level() == level() && target.distanceToSqr(sentry.getCenter()) <= range * range;
     }
     @Override protected void customServerAiStep() {
         super.customServerAiStep();
         if (attackCooldown > 0) attackCooldown--;
-        if (getTarget() != null && !validTarget(getTarget())) { setTarget(null); navigation.stop(); }
+        boolean withinChaseRange = distanceToSqr(sentry.getCenter()) <= CHASE_RANGE * CHASE_RANGE;
+        if (getTarget() != null && (!withinChaseRange || !validTarget(getTarget(), CHASE_RANGE))) {
+            setTarget(null);
+            navigation.stop();
+            wanderCooldown = 0;
+        }
         // Only query the sentry's small neighbourhood, twice per second.
-        if (getTarget() == null && tickCount % 10 == 0) {
-            setTarget(level().getEntitiesOfClass(LivingEntity.class, new AABB(sentry).inflate(5), this::validTarget).stream()
+        // Keep an acquired target even after it leaves the initial five-block range.
+        if (getTarget() == null && withinChaseRange && tickCount % 10 == 0) {
+            setTarget(level().getEntitiesOfClass(LivingEntity.class, new AABB(sentry).inflate(ACQUIRE_RANGE),
+                            candidate -> validTarget(candidate, ACQUIRE_RANGE)).stream()
                     .filter(this::hasLineOfSight).min(Comparator.comparingDouble(this::distanceToSqr)).orElse(null));
         }
         LivingEntity target = getTarget();
@@ -135,7 +144,9 @@ public final class EnderCompanion extends PathfinderMob {
         wanderCooldown = 60 + random.nextInt(60);
         boolean fly = stage() > 0 && random.nextInt(4) != 0;
         setFlying(fly);
-        if (fly && random.nextInt(3) == 0) { navigation.stop(); return; } // Rest in a hover.
+        // Return toward the sentry after a chase; only hover while already near home.
+        if (fly && distanceToSqr(sentry.getCenter()) <= ACQUIRE_RANGE * ACQUIRE_RANGE
+                && random.nextInt(3) == 0) { navigation.stop(); return; }
         double angle = random.nextDouble() * Math.PI * 2;
         double radius = random.nextDouble() * 3;
         BlockPos destination = sentry.offset((int) Math.round(Math.cos(angle) * radius), 0, (int) Math.round(Math.sin(angle) * radius));
@@ -149,10 +160,12 @@ public final class EnderCompanion extends PathfinderMob {
         navigation.moveTo(destination.getX() + 0.5, destination.getY(), destination.getZ() + 0.5, 0.65);
     }
     @Override public void travel(Vec3 input) {
-        if (!flying()) { super.travel(input); return; }
+        float chaseMultiplier = getTarget() != null ? CHASE_MOVEMENT_MULTIPLIER : 1;
+        // Scale movement once: ground navigation speed affects both input and acceleration.
+        if (!flying()) { super.travel(input.scale(chaseMultiplier)); return; }
         // Air movement uses the controller's acceleration and a stable drag; gravity is disabled.
         if (isControlledByLocalInstance()) {
-            moveRelative(0.08F, input);
+            moveRelative(0.08F * chaseMultiplier, input);
             move(MoverType.SELF, getDeltaMovement());
             setDeltaMovement(getDeltaMovement().scale(0.8));
         }

@@ -10,17 +10,26 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.bus.api.ICancellableEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.entity.EntityTeleportEvent;
+import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.neoforge.event.tick.*;
 import net.neoforged.neoforge.event.entity.player.*;
 import net.neoforged.neoforge.event.entity.living.*;
 import org.lyy.lyycore.LyyCore;
 import org.lyy.lyycore.content.item.SonnetBowItem;
 import org.lyy.lyycore.registry.LyyEffects;
+import java.util.IdentityHashMap;
+import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
 
 @EventBusSubscriber(modid = LyyCore.MODID)
 public final class SonnetEvents {
     private static final ResourceLocation HOVER = ResourceLocation.fromNamespaceAndPath(LyyCore.MODID, "sonnet_hover");
     private static final String FROZEN = "SonnetFrozenState";
+    // Retain the event until dispatch has finished, so later handlers can still
+    // cancel it or change its destination. Cleared every server tick / shutdown.
+    private static final Map<LivingEntity, List<EntityTeleportEvent>> PENDING_TELEPORTS = new IdentityHashMap<>();
     public static boolean frozen(LivingEntity entity) { return entity.hasEffect(LyyEffects.CRYSTALLIZATION); }
 
     @SubscribeEvent public static void playerPre(PlayerTickEvent.Pre event) { hover(event.getEntity(), true); freeze(event.getEntity()); }
@@ -54,6 +63,13 @@ public final class SonnetEvents {
     }
 
     private static void freeze(LivingEntity entity) {
+        // Clients must not maintain a second anchor which can fight server
+        // teleports. Suppress local momentum; the server owns position and AI.
+        if (entity.level().isClientSide) {
+            if (frozen(entity)) stopFrozenMovement(entity);
+            return;
+        }
+        applyPendingTeleport(entity);
         CompoundTag data = entity.getPersistentData();
         if (!frozen(entity)) {
             if (data.contains(FROZEN)) {
@@ -64,18 +80,54 @@ public final class SonnetEvents {
         }
         if (!data.contains(FROZEN)) {
             CompoundTag state = new CompoundTag();
-            state.putDouble("X", entity.getX()); state.putDouble("Y", entity.getY()); state.putDouble("Z", entity.getZ());
             if (entity instanceof Mob mob) state.putBoolean("NoAI", mob.isNoAi());
+            anchorHere(entity, state);
             data.put(FROZEN, state);
         }
         var state = data.getCompound(FROZEN);
+        // A mob's NBT is copied across dimensions; players keep the same object.
+        // Preserve the original NoAI value while rebasing either kind of entity.
+        // Missing Dimension also safely upgrades anchors saved by older versions.
+        if (!entity.level().dimension().location().toString().equals(state.getString("Dimension")))
+            anchorHere(entity, state);
         var anchor = new Vec3(state.getDouble("X"), state.getDouble("Y"), state.getDouble("Z"));
-        entity.stopUsingItem(); entity.setDeltaMovement(Vec3.ZERO); entity.fallDistance = 0;
+        stopFrozenMovement(entity);
         if (entity instanceof Mob mob) { mob.getNavigation().stop(); mob.setNoAi(true); }
         if (entity instanceof ServerPlayer player && player.distanceToSqr(anchor) > 0.0001)
             player.connection.teleport(anchor.x, anchor.y, anchor.z, player.getYRot(), player.getXRot());
         else entity.setPos(anchor);
     }
+
+    private static void stopFrozenMovement(LivingEntity entity) {
+        entity.stopUsingItem();
+        entity.setDeltaMovement(Vec3.ZERO);
+        entity.fallDistance = 0;
+    }
+
+    private static void anchorHere(LivingEntity entity, CompoundTag state) {
+        state.putDouble("X", entity.getX()); state.putDouble("Y", entity.getY()); state.putDouble("Z", entity.getZ());
+        state.putString("Dimension", entity.level().dimension().location().toString());
+    }
+
+    @SubscribeEvent public static void teleport(EntityTeleportEvent event) {
+        if (event.getEntity() instanceof LivingEntity entity && !entity.level().isClientSide && frozen(entity))
+            PENDING_TELEPORTS.computeIfAbsent(entity, ignored -> new ArrayList<>()).add(event);
+    }
+
+    private static void applyPendingTeleport(LivingEntity entity) {
+        var events = PENDING_TELEPORTS.remove(entity);
+        if (events != null && events.stream().anyMatch(event -> !event.isCanceled())
+                && frozen(entity) && entity.getPersistentData().contains(FROZEN))
+            anchorHere(entity, entity.getPersistentData().getCompound(FROZEN));
+    }
+
+    @SubscribeEvent public static void finishTeleports(ServerTickEvent.Post event) {
+        // Also handle teleports after an entity's tick, or into an unticking
+        // chunk, without retaining removed/unloaded entities in this map.
+        for (var entity : List.copyOf(PENDING_TELEPORTS.keySet())) applyPendingTeleport(entity);
+    }
+
+    @SubscribeEvent public static void serverStopped(ServerStoppedEvent event) { PENDING_TELEPORTS.clear(); }
 
     @SubscribeEvent public static void attack(AttackEntityEvent event) { if (frozen(event.getEntity())) event.setCanceled(true); }
     private static void interact(PlayerInteractEvent event) {

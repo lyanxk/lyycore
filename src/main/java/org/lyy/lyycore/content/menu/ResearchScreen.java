@@ -1,24 +1,21 @@
 package org.lyy.lyycore.content.menu;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.Style;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
-import org.lyy.lyycore.content.recipes.ResearchRecipe;
+import org.lyy.lyycore.content.research.ResearchDefinition;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public final class ResearchScreen extends AbstractContainerScreen<ResearchMenu> {
     private static final int INK = 0xFF302D35, MUTED_INK = 0xFF68616A, GOLD = 0xFFB69A55, PAPER = 0xFFF9F7F1;
-    private static final Style TEXT_STYLE = Style.EMPTY.withFont(Minecraft.UNIFORM_FONT);
     private static final int PAGE_SIZE = 18, COLUMNS = 6, DETAIL_HEIGHT = 111;
     private int page, selected = -1, scroll, materialRow;
     private List<Integer> visibleEntries = List.of();
@@ -26,7 +23,7 @@ public final class ResearchScreen extends AbstractContainerScreen<ResearchMenu> 
     private PaperButton researchButton, confirmButton;
 
     public ResearchScreen(ResearchMenu menu, Inventory inventory, Component title) {
-        super(menu, inventory, title.copy().withStyle(TEXT_STYLE));
+        super(menu, inventory, title);
         imageWidth = 300;
         imageHeight = 222;
     }
@@ -36,7 +33,7 @@ public final class ResearchScreen extends AbstractContainerScreen<ResearchMenu> 
     }
 
     private static MutableComponent translated(String key, Object... args) {
-        return Component.translatable(key, args).withStyle(TEXT_STYLE);
+        return Component.translatable(key, args);
     }
 
     @Override protected void init() {
@@ -86,7 +83,7 @@ public final class ResearchScreen extends AbstractContainerScreen<ResearchMenu> 
     }
 
     private PaperButton button(int x, int y, int width, int height, Component label, Runnable action) {
-        return addRenderableWidget(new PaperButton(leftPos + x, topPos + y, width, height, label.copy().withStyle(TEXT_STYLE), action));
+        return addRenderableWidget(new PaperButton(leftPos + x, topPos + y, width, height, label, action));
     }
 
     private boolean refreshVisibleEntries() {
@@ -107,7 +104,7 @@ public final class ResearchScreen extends AbstractContainerScreen<ResearchMenu> 
     }
 
     private int pages() { return Math.max(1, (visibleEntries.size() + PAGE_SIZE - 1) / PAGE_SIZE); }
-    private ResearchRecipe research() { return menu.entries().get(selected).value(); }
+    private ResearchDefinition research() { return menu.entries().get(selected).value(); }
 
     private void refreshStatus() {
         if (selected < 0) return;
@@ -143,7 +140,7 @@ public final class ResearchScreen extends AbstractContainerScreen<ResearchMenu> 
     }
 
     private void renderDetails(GuiGraphics g) {
-        ResearchRecipe research = research();
+        ResearchDefinition research = research();
         g.renderItem(research.icon(), leftPos + 267, topPos + 14);
         var title = translated(research.title());
         float scale = Math.min(1F, 188F / Math.max(1, font.width(title)));
@@ -151,11 +148,6 @@ public final class ResearchScreen extends AbstractContainerScreen<ResearchMenu> 
         g.pose().translate(leftPos + 165, topPos + 18, 0);
         g.pose().scale(scale, scale, 1);
         int titleX = -font.width(title) / 2;
-        // Bright rarity colors need an outline against the light paper background.
-        if (research.rarity() != ResearchRecipe.Rarity.UNKNOWN) {
-            for (int dx = -1; dx <= 1; dx++) for (int dy = -1; dy <= 1; dy++)
-                if (dx != 0 || dy != 0) g.drawString(font, title, titleX + dx, dy, INK, false);
-        }
         g.drawString(font, title, titleX, 0, research.rarity().color, false);
         g.pose().popPose();
 
