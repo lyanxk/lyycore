@@ -1,0 +1,38 @@
+{
+  "display": {
+    "icon": {
+      "id": "lyycore:imaginary_gate"
+    },
+    "title": {
+      "translate": "advancement.lyycore.rituals.title"
+    },
+    "description": {
+      "translate": "advancement.lyycore.rituals.description"
+    },
+    "frame": "task",
+    "show_toast": false,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "criteria": {
+    "entry": {
+      "trigger": "minecraft:tick",
+      "conditions": {
+        "player": {
+          "type_specific": {
+            "type": "minecraft:player",
+            "advancements": {
+              "lyycore:progression/root": true
+            }
+          }
+        }
+      }
+    }
+  },
+  "requirements": [
+    [
+      "entry"
+    ]
+  ],
+  "parent": "lyycore:progression/root"
+}

@@ -1,0 +1,37 @@
+{
+  "type": "lyycore:research",
+  "icon": {
+    "id": "lyycore:advanced_imaginary_gate"
+  },
+  "title": "research.lyycore.advanced_imaginary_gate.title",
+  "summary": "research.lyycore.advanced_imaginary_gate.summary",
+  "description": "research.lyycore.advanced_imaginary_gate.description",
+  "rarity": "common",
+  "materials": [
+    {
+      "id": "minecraft:blue_ice"
+    },
+    {
+      "id": "minecraft:mushroom_stem"
+    },
+    {
+      "id": "minecraft:potion",
+      "components": {
+        "minecraft:potion_contents": {
+          "potion": "minecraft:water"
+        }
+      }
+    },
+    {
+      "id": "minecraft:nether_wart",
+      "count": 64
+    }
+  ],
+  "experience_points": 300,
+  "production": {
+    "result": {
+      "id": "lyycore:advanced_imaginary_gate"
+    },
+    "duration": 2000
+  }
+}

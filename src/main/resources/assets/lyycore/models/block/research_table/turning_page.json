@@ -1,0 +1,91 @@
+{
+  "textures": {
+    "0": "lyycore:block/research_table/white",
+    "1": "lyycore:block/research_table/gold",
+    "2": "lyycore:block/research_table/dark",
+    "3": "lyycore:block/research_table/pink",
+    "4": "lyycore:block/research_table/paper",
+    "5": "lyycore:block/research_table/edge",
+    "6": "lyycore:block/research_table/panel",
+    "7": "lyycore:block/research_table/column",
+    "8": "lyycore:block/research_table/page",
+    "9": "lyycore:block/research_table/page_edge",
+    "10": "lyycore:block/research_table/top_inlay",
+    "11": "lyycore:block/research_table/glyph_0",
+    "12": "lyycore:block/research_table/glyph_1",
+    "13": "lyycore:block/research_table/glyph_2",
+    "14": "lyycore:block/research_table/glyph_3",
+    "15": "lyycore:block/research_table/glyph_4",
+    "16": "lyycore:block/research_table/glyph_5"
+  },
+  "elements": [
+    {
+      "from": [
+        8.18,
+        8.02,
+        5.35
+      ],
+      "to": [
+        12.52,
+        8.049999999999997,
+        10.65
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#4"
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#4"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#4"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#4"
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#8"
+        },
+        "down": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#8"
+        }
+      }
+    }
+  ]
+}

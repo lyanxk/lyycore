@@ -1,0 +1,25 @@
+{
+  "type": "lyycore:research",
+  "icon": {
+    "id": "lyycore:storm_ball"
+  },
+  "title": "research.lyycore.change_weather.title",
+  "summary": "research.lyycore.change_weather.summary",
+  "description": "research.lyycore.change_weather.description",
+  "rarity": "common",
+  "materials": [
+    {
+      "id": "minecraft:blue_ice"
+    },
+    {
+      "id": "minecraft:magma_block"
+    }
+  ],
+  "experience_points": 2000,
+  "production": {
+    "result": {
+      "id": "lyycore:storm_ball"
+    },
+    "duration": 400
+  }
+}

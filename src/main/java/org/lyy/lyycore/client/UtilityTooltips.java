@@ -22,7 +22,7 @@ public final class UtilityTooltips {
             case "tree_gathering_frame", "overworld_gathering_frame", "mineral_gathering_frame", "nether_gathering_frame" -> "open";
             case "miniature_concrete_factory", "miniature_garden", "miniature_ocean", "miniature_monument" -> "open";
             case "miniature_crystal_factory", "miniature_tree_factory", "miniature_overworld_factory", "miniature_mineral_factory", "miniature_nether_factory" -> "open";
-            case "tree_core", "overworld_core", "mineral_core", "nether_core" -> "";
+            case "tree_core", "overworld_core", "mineral_core", "nether_core", "lightning_bottle" -> "";
             case "concrete_core", "garden_core", "ocean_core", "monument_core" -> "";
             case "item_collector" -> "range";
             case "im_generator" -> "scan";

@@ -1,593 +1,155 @@
 {
-  "loader": "lyycore:crystal_arrow",
+  "loader": "neoforge:obj",
+  "model": "lyycore:models/item/whisper_of_the_past/arrow_pulling_0.obj",
+  "mtl_override": "lyycore:models/item/whisper_of_the_past/sonnet.mtl",
+  "automatic_culling": false,
+  "shade_quads": false,
+  "flip_v": true,
+  "emissive_ambient": true,
   "ambientocclusion": false,
   "gui_light": "front",
   "textures": {
-    "sonnet_dark": "lyycore:item/whisper_of_the_past/sonnet_dark",
-    "sonnet_darklight": "lyycore:item/whisper_of_the_past/sonnet_darklight",
-    "sonnet_darkedge": "lyycore:item/whisper_of_the_past/sonnet_darkedge",
-    "sonnet_purple": "lyycore:item/whisper_of_the_past/sonnet_purple",
-    "sonnet_purpledark": "lyycore:item/whisper_of_the_past/sonnet_purpledark",
-    "sonnet_purplelight": "lyycore:item/whisper_of_the_past/sonnet_purplelight",
-    "sonnet_violet": "lyycore:item/whisper_of_the_past/sonnet_violet",
-    "sonnet_lilac": "lyycore:item/whisper_of_the_past/sonnet_lilac",
-    "sonnet_pink": "lyycore:item/whisper_of_the_past/sonnet_pink",
-    "sonnet_ivory": "lyycore:item/whisper_of_the_past/sonnet_ivory",
-    "sonnet_ivoryshade": "lyycore:item/whisper_of_the_past/sonnet_ivoryshade",
-    "sonnet_white": "lyycore:item/whisper_of_the_past/sonnet_white",
-    "sonnet_whiteshade": "lyycore:item/whisper_of_the_past/sonnet_whiteshade",
-    "sonnet_teal": "lyycore:item/whisper_of_the_past/sonnet_teal",
-    "sonnet_tealdark": "lyycore:item/whisper_of_the_past/sonnet_tealdark",
-    "sonnet_ice": "lyycore:item/whisper_of_the_past/sonnet_ice",
-    "sonnet_silver": "lyycore:item/whisper_of_the_past/sonnet_silver",
-    "sonnet_ink": "lyycore:item/whisper_of_the_past/sonnet_ink",
-    "sonnet_crystal_0": "lyycore:item/whisper_of_the_past/sonnet_crystal_0",
-    "sonnet_crystal_1": "lyycore:item/whisper_of_the_past/sonnet_crystal_1",
-    "sonnet_crystal_2": "lyycore:item/whisper_of_the_past/sonnet_crystal_2",
-    "sonnet_crystal_3": "lyycore:item/whisper_of_the_past/sonnet_crystal_3",
-    "sonnet_crystal_4": "lyycore:item/whisper_of_the_past/sonnet_crystal_4",
-    "particle": "lyycore:item/whisper_of_the_past/sonnet_crystal_0"
+    "pmx_sonnet": "lyycore:item/whisper_of_the_past/pmx_sonnet",
+    "pmx_crystal": "lyycore:item/whisper_of_the_past/pmx_crystal",
+    "particle": "lyycore:item/whisper_of_the_past/pmx_sonnet"
   },
-  "faces": [
-    {
-      "vertices": [
-        [
-          9.31753881,
-          6.58854857,
-          8.01074219
-        ],
-        [
-          9.33129199,
-          6.60230176,
-          8.0576985
-        ],
-        [
-          2.42595233,
-          13.50764142,
-          8.0576985
-        ],
-        [
-          2.41219915,
-          13.49388823,
-          8.01074219
-        ]
+  "display": {
+    "thirdperson_righthand": {
+      "rotation": [
+        -80,
+        260,
+        -40
       ],
-      "texture": "sonnet_crystal_1"
+      "translation": [
+        -1,
+        -2,
+        2.5
+      ],
+      "scale": [
+        1.8,
+        1.8,
+        1.8
+      ]
     },
-    {
-      "vertices": [
-        [
-          9.33129199,
-          6.60230176,
-          8.0576985
-        ],
-        [
-          9.36449512,
-          6.63550488,
-          8.07714844
-        ],
-        [
-          2.45915546,
-          13.54084454,
-          8.07714844
-        ],
-        [
-          2.42595233,
-          13.50764142,
-          8.0576985
-        ]
+    "thirdperson_lefthand": {
+      "rotation": [
+        -80,
+        -280,
+        40
       ],
-      "texture": "sonnet_crystal_3"
+      "translation": [
+        -1,
+        -2,
+        2.5
+      ],
+      "scale": [
+        1.8,
+        1.8,
+        1.8
+      ]
     },
-    {
-      "vertices": [
-        [
-          9.36449512,
-          6.63550488,
-          8.07714844
-        ],
-        [
-          9.39769824,
-          6.66870801,
-          8.0576985
-        ],
-        [
-          2.49235858,
-          13.57404767,
-          8.0576985
-        ],
-        [
-          2.45915546,
-          13.54084454,
-          8.07714844
-        ]
+    "firstperson_righthand": {
+      "rotation": [
+        0,
+        -90,
+        25
       ],
-      "texture": "sonnet_crystal_0"
+      "translation": [
+        1.13,
+        3.2,
+        1.13
+      ],
+      "scale": [
+        1.36,
+        1.36,
+        1.36
+      ]
     },
-    {
-      "vertices": [
-        [
-          9.39769824,
-          6.66870801,
-          8.0576985
-        ],
-        [
-          9.41145143,
-          6.68246119,
-          8.01074219
-        ],
-        [
-          2.50611177,
-          13.58780085,
-          8.01074219
-        ],
-        [
-          2.49235858,
-          13.57404767,
-          8.0576985
-        ]
+    "firstperson_lefthand": {
+      "rotation": [
+        0,
+        90,
+        -25
       ],
-      "texture": "sonnet_crystal_2"
+      "translation": [
+        1.13,
+        3.2,
+        1.13
+      ],
+      "scale": [
+        1.36,
+        1.36,
+        1.36
+      ]
     },
-    {
-      "vertices": [
-        [
-          9.41145143,
-          6.68246119,
-          8.01074219
-        ],
-        [
-          9.39769824,
-          6.66870801,
-          7.96378588
-        ],
-        [
-          2.49235858,
-          13.57404767,
-          7.96378588
-        ],
-        [
-          2.50611177,
-          13.58780085,
-          8.01074219
-        ]
+    "gui": {
+      "rotation": [
+        0,
+        0,
+        0
       ],
-      "texture": "sonnet_crystal_4"
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "scale": [
+        0.84,
+        0.84,
+        0.84
+      ]
     },
-    {
-      "vertices": [
-        [
-          9.39769824,
-          6.66870801,
-          7.96378588
-        ],
-        [
-          9.36449512,
-          6.63550488,
-          7.94433594
-        ],
-        [
-          2.45915546,
-          13.54084454,
-          7.94433594
-        ],
-        [
-          2.49235858,
-          13.57404767,
-          7.96378588
-        ]
+    "ground": {
+      "rotation": [
+        0,
+        0,
+        0
       ],
-      "texture": "sonnet_crystal_0"
+      "translation": [
+        0,
+        3,
+        0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ]
     },
-    {
-      "vertices": [
-        [
-          9.36449512,
-          6.63550488,
-          7.94433594
-        ],
-        [
-          9.33129199,
-          6.60230176,
-          7.96378588
-        ],
-        [
-          2.42595233,
-          13.50764142,
-          7.96378588
-        ],
-        [
-          2.45915546,
-          13.54084454,
-          7.94433594
-        ]
+    "fixed": {
+      "rotation": [
+        0,
+        180,
+        0
       ],
-      "texture": "sonnet_crystal_3"
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "scale": [
+        1.4,
+        1.4,
+        1.4
+      ]
     },
-    {
-      "vertices": [
-        [
-          9.33129199,
-          6.60230176,
-          7.96378588
-        ],
-        [
-          9.31753881,
-          6.58854857,
-          8.01074219
-        ],
-        [
-          2.41219915,
-          13.49388823,
-          8.01074219
-        ],
-        [
-          2.42595233,
-          13.50764142,
-          7.96378588
-        ]
+    "head": {
+      "rotation": [
+        0,
+        0,
+        0
       ],
-      "texture": "sonnet_crystal_1"
-    },
-    {
-      "vertices": [
-        [
-          9.36449512,
-          6.63550488,
-          8.07714844
-        ],
-        [
-          9.33129199,
-          6.60230176,
-          8.0576985
-        ],
-        [
-          9.31753881,
-          6.58854857,
-          8.01074219
-        ],
-        [
-          9.36449512,
-          6.63550488,
-          8.01074219
-        ]
+      "translation": [
+        0,
+        8,
+        0
       ],
-      "texture": "sonnet_crystal_0"
-    },
-    {
-      "vertices": [
-        [
-          9.41145143,
-          6.68246119,
-          8.01074219
-        ],
-        [
-          9.39769824,
-          6.66870801,
-          8.0576985
-        ],
-        [
-          9.36449512,
-          6.63550488,
-          8.07714844
-        ],
-        [
-          9.36449512,
-          6.63550488,
-          8.01074219
-        ]
-      ],
-      "texture": "sonnet_crystal_0"
-    },
-    {
-      "vertices": [
-        [
-          9.36449512,
-          6.63550488,
-          7.94433594
-        ],
-        [
-          9.39769824,
-          6.66870801,
-          7.96378588
-        ],
-        [
-          9.41145143,
-          6.68246119,
-          8.01074219
-        ],
-        [
-          9.36449512,
-          6.63550488,
-          8.01074219
-        ]
-      ],
-      "texture": "sonnet_crystal_0"
-    },
-    {
-      "vertices": [
-        [
-          9.31753881,
-          6.58854857,
-          8.01074219
-        ],
-        [
-          9.33129199,
-          6.60230176,
-          7.96378588
-        ],
-        [
-          9.36449512,
-          6.63550488,
-          7.94433594
-        ],
-        [
-          9.36449512,
-          6.63550488,
-          8.01074219
-        ]
-      ],
-      "texture": "sonnet_crystal_0"
-    },
-    {
-      "vertices": [
-        [
-          2.32104866,
-          13.40273775,
-          8.01074219
-        ],
-        [
-          2.36149921,
-          13.44318829,
-          8.14884898
-        ],
-        [
-          1.6305147,
-          14.3694853,
-          8.01074219
-        ]
-      ],
-      "texture": "sonnet_crystal_1"
-    },
-    {
-      "vertices": [
-        [
-          2.36149921,
-          13.44318829,
-          8.14884898
-        ],
-        [
-          2.45915546,
-          13.54084454,
-          8.20605469
-        ],
-        [
-          1.6305147,
-          14.3694853,
-          8.01074219
-        ]
-      ],
-      "texture": "sonnet_crystal_3"
-    },
-    {
-      "vertices": [
-        [
-          2.45915546,
-          13.54084454,
-          8.20605469
-        ],
-        [
-          2.55681171,
-          13.63850079,
-          8.14884898
-        ],
-        [
-          1.6305147,
-          14.3694853,
-          8.01074219
-        ]
-      ],
-      "texture": "sonnet_crystal_0"
-    },
-    {
-      "vertices": [
-        [
-          2.55681171,
-          13.63850079,
-          8.14884898
-        ],
-        [
-          2.59726225,
-          13.67895134,
-          8.01074219
-        ],
-        [
-          1.6305147,
-          14.3694853,
-          8.01074219
-        ]
-      ],
-      "texture": "sonnet_crystal_2"
-    },
-    {
-      "vertices": [
-        [
-          2.59726225,
-          13.67895134,
-          8.01074219
-        ],
-        [
-          2.55681171,
-          13.63850079,
-          7.87263539
-        ],
-        [
-          1.6305147,
-          14.3694853,
-          8.01074219
-        ]
-      ],
-      "texture": "sonnet_crystal_4"
-    },
-    {
-      "vertices": [
-        [
-          2.55681171,
-          13.63850079,
-          7.87263539
-        ],
-        [
-          2.45915546,
-          13.54084454,
-          7.81542969
-        ],
-        [
-          1.6305147,
-          14.3694853,
-          8.01074219
-        ]
-      ],
-      "texture": "sonnet_crystal_0"
-    },
-    {
-      "vertices": [
-        [
-          2.45915546,
-          13.54084454,
-          7.81542969
-        ],
-        [
-          2.36149921,
-          13.44318829,
-          7.87263539
-        ],
-        [
-          1.6305147,
-          14.3694853,
-          8.01074219
-        ]
-      ],
-      "texture": "sonnet_crystal_3"
-    },
-    {
-      "vertices": [
-        [
-          2.36149921,
-          13.44318829,
-          7.87263539
-        ],
-        [
-          2.32104866,
-          13.40273775,
-          8.01074219
-        ],
-        [
-          1.6305147,
-          14.3694853,
-          8.01074219
-        ]
-      ],
-      "texture": "sonnet_crystal_1"
-    },
-    {
-      "vertices": [
-        [
-          2.45915546,
-          13.54084454,
-          8.20605469
-        ],
-        [
-          2.36149921,
-          13.44318829,
-          8.14884898
-        ],
-        [
-          2.32104866,
-          13.40273775,
-          8.01074219
-        ],
-        [
-          2.45915546,
-          13.54084454,
-          8.01074219
-        ]
-      ],
-      "texture": "sonnet_crystal_0"
-    },
-    {
-      "vertices": [
-        [
-          2.59726225,
-          13.67895134,
-          8.01074219
-        ],
-        [
-          2.55681171,
-          13.63850079,
-          8.14884898
-        ],
-        [
-          2.45915546,
-          13.54084454,
-          8.20605469
-        ],
-        [
-          2.45915546,
-          13.54084454,
-          8.01074219
-        ]
-      ],
-      "texture": "sonnet_crystal_0"
-    },
-    {
-      "vertices": [
-        [
-          2.45915546,
-          13.54084454,
-          7.81542969
-        ],
-        [
-          2.55681171,
-          13.63850079,
-          7.87263539
-        ],
-        [
-          2.59726225,
-          13.67895134,
-          8.01074219
-        ],
-        [
-          2.45915546,
-          13.54084454,
-          8.01074219
-        ]
-      ],
-      "texture": "sonnet_crystal_0"
-    },
-    {
-      "vertices": [
-        [
-          2.32104866,
-          13.40273775,
-          8.01074219
-        ],
-        [
-          2.36149921,
-          13.44318829,
-          7.87263539
-        ],
-        [
-          2.45915546,
-          13.54084454,
-          7.81542969
-        ],
-        [
-          2.45915546,
-          13.54084454,
-          8.01074219
-        ]
-      ],
-      "texture": "sonnet_crystal_0"
+      "scale": [
+        1.4,
+        1.4,
+        1.4
+      ]
     }
-  ]
+  },
+  "render_type": "minecraft:translucent"
 }

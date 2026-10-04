@@ -1,0 +1,37 @@
+{
+  "display": {
+    "icon": {
+      "id": "lyycore:item_collector"
+    },
+    "title": {
+      "translate": "advancement.lyycore.production.collector.title"
+    },
+    "description": {
+      "translate": "advancement.lyycore.production.collector.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "collector": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "lyycore:item_collector"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "collector"
+    ]
+  ],
+  "parent": "lyycore:progression/production"
+}

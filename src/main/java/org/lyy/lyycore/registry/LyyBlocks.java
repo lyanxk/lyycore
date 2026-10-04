@@ -15,7 +15,11 @@ import org.lyy.lyycore.content.blocks.BaseImaginaryGenerator;
 import org.lyy.lyycore.content.blocks.EnergyCellBlock;
 import org.lyy.lyycore.content.blocks.ImaginaryAlloyForge;
 import org.lyy.lyycore.content.blocks.ImaginaryCraftingTableBlock;
+import org.lyy.lyycore.content.blocks.ImaginaryResearchTableBlock;
+import org.lyy.lyycore.content.blocks.ProductionLabBlock;
 import org.lyy.lyycore.content.blocks.ImaginaryGateBlock;
+import org.lyy.lyycore.content.blocks.AdvancedImaginaryGateBlock;
+import org.lyy.lyycore.content.blocks.EnderSentryBlock;
 import org.lyy.lyycore.content.blocks.ItemCollectorBlock;
 import org.lyy.lyycore.content.blocks.ResourceGatheringFrameBlock;
 import java.util.EnumMap;
@@ -23,6 +27,9 @@ import java.util.Map;
 
 public class LyyBlocks {
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(LyyCore.MODID);
+    public static final DeferredBlock<ProductionLabBlock> PRODUCTION_LAB = BLOCKS.register("production_lab", ProductionLabBlock::new);
+    public static final DeferredBlock<ImaginaryResearchTableBlock> IMAGINARY_RESEARCH_TABLE =
+            BLOCKS.register("imaginary_research_table", ImaginaryResearchTableBlock::new);
     public static final DeferredBlock<Block> CRYSTAL_CONDENSING_FRAME =
             BLOCKS.register("crystal_condensing_frame", () -> new CrystalCondensingFrameBlock(FrameProduction.STANDARD));
     public static final DeferredBlock<Block> MINIATURE_CRYSTAL_FACTORY =
@@ -55,6 +62,9 @@ public class LyyBlocks {
             () -> new Block(BlockBehaviour.Properties.of().strength(5).sound(SoundType.METAL)));
     public static final DeferredBlock<ImaginaryGateBlock> IMAGINARY_GATE =
             BLOCKS.register("imaginary_gate", ImaginaryGateBlock::new);
+    public static final DeferredBlock<AdvancedImaginaryGateBlock> ADVANCED_IMAGINARY_GATE =
+            BLOCKS.register("advanced_imaginary_gate", AdvancedImaginaryGateBlock::new);
+    public static final DeferredBlock<EnderSentryBlock> ENDER_SENTRY = BLOCKS.register("ender_sentry", EnderSentryBlock::new);
     public static final DeferredBlock<ImaginaryCraftingTableBlock> IMAGINARY_CRAFTING_TABLE =
             BLOCKS.register("imaginary_crafting_table", ImaginaryCraftingTableBlock::new);
 

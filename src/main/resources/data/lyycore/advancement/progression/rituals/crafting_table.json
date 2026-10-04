@@ -1,0 +1,31 @@
+{
+  "display": {
+    "icon": {
+      "id": "lyycore:imaginary_crafting_table"
+    },
+    "title": {
+      "translate": "advancement.lyycore.rituals.crafting_table.title"
+    },
+    "description": {
+      "translate": "advancement.lyycore.rituals.crafting_table.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "crafted": {
+      "trigger": "minecraft:recipe_crafted",
+      "conditions": {
+        "recipe_id": "lyycore:imaginary_crafting_table"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "crafted"
+    ]
+  ],
+  "parent": "lyycore:progression/rituals"
+}

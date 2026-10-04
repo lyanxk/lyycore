@@ -1,0 +1,36 @@
+{
+  "type": "lyycore:imaginary_crafting",
+  "ingredients": [
+    {
+      "item": "lyycore:alloy_block"
+    },
+    {
+      "item": "minecraft:book"
+    },
+    {
+      "item": "minecraft:obsidian"
+    },
+    {
+      "item": "minecraft:gold_ingot"
+    },
+    {
+      "item": "minecraft:obsidian"
+    },
+    {
+      "item": "minecraft:gold_ingot"
+    },
+    {
+      "item": "minecraft:obsidian"
+    },
+    {
+      "item": "minecraft:gold_ingot"
+    },
+    {
+      "item": "minecraft:obsidian"
+    }
+  ],
+  "result": {
+    "id": "lyycore:imaginary_research_table",
+    "count": 1
+  }
+}

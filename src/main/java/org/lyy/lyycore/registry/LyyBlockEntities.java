@@ -11,12 +11,23 @@ import org.lyy.lyycore.content.blockEntities.EnergyCellBlockEntity;
 import org.lyy.lyycore.content.blockEntities.ImaginaryAlloyForgeBlockEntity;
 import org.lyy.lyycore.content.blockEntities.ImaginaryCraftingTableBlockEntity;
 import org.lyy.lyycore.content.blockEntities.ImaginaryGateBlockEntity;
+import org.lyy.lyycore.content.blockEntities.AdvancedImaginaryGateBlockEntity;
 import org.lyy.lyycore.content.blockEntities.ItemCollectorBlockEntity;
 import org.lyy.lyycore.content.blockEntities.ResourceGatheringFrameBlockEntity;
+import org.lyy.lyycore.content.blockEntities.ResearchTableBlockEntity;
+import org.lyy.lyycore.content.blockEntities.ProductionLabBlockEntity;
 
 public class LyyBlockEntities {
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES =
             DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, LyyCore.MODID);
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<AdvancedImaginaryGateBlockEntity>> ADVANCED_IMAGINARY_GATE =
+            BLOCK_ENTITIES.register("advanced_imaginary_gate", () -> BlockEntityType.Builder.of(AdvancedImaginaryGateBlockEntity::new,
+                    LyyBlocks.ADVANCED_IMAGINARY_GATE.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ProductionLabBlockEntity>> PRODUCTION_LAB =
+            BLOCK_ENTITIES.register("production_lab", () -> BlockEntityType.Builder.of(ProductionLabBlockEntity::new, LyyBlocks.PRODUCTION_LAB.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ResearchTableBlockEntity>> RESEARCH_TABLE =
+            BLOCK_ENTITIES.register("imaginary_research_table", () -> BlockEntityType.Builder.of(
+                    ResearchTableBlockEntity::new, LyyBlocks.IMAGINARY_RESEARCH_TABLE.get()).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ImaginaryGateBlockEntity>> IMAGINARY_GATE =
             BLOCK_ENTITIES.register("imaginary_gate", () -> BlockEntityType.Builder.of(ImaginaryGateBlockEntity::new,
                     LyyBlocks.IMAGINARY_GATE.get()).build(null));

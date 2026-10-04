@@ -8,7 +8,6 @@ import net.minecraft.client.renderer.entity.*;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.texture.*;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import org.lyy.lyycore.content.entity.SonnetVolley;
 
@@ -42,9 +41,8 @@ public class SonnetVolleyRenderer extends EntityRenderer<SonnetVolley> {
             pose.mulPose(Axis.ZP.rotationDegrees((float) Math.toDegrees(Math.atan2(direction.y, direction.horizontalDistance()))));
             pose.translate(-0.5, -0.5, -0.5);
             var mc = Minecraft.getInstance();
-            mc.getItemRenderer().renderModelLists(mc.getModelManager().getModel(MODEL), ItemStack.EMPTY,
-                    LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, pose,
-                    buffers.getBuffer(RenderType.entityTranslucentEmissive(TextureAtlas.LOCATION_BLOCKS)));
+            SonnetMaterialRenderer.render(mc.getModelManager().getModel(MODEL), pose, buffers,
+                    LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, true, false);
             pose.popPose();
         }
     }

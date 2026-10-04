@@ -1,0 +1,38 @@
+{
+  "type": "lyycore:research",
+  "icon": {
+    "id": "lyycore:ender_sentry"
+  },
+  "title": "research.lyycore.ender_sentry.title",
+  "summary": "research.lyycore.ender_sentry.summary",
+  "description": "research.lyycore.ender_sentry.description",
+  "rarity": "medium",
+  "materials": [
+    {
+      "id": "minecraft:dragon_egg"
+    },
+    {
+      "id": "lyycore:crystal_block",
+      "count": 16
+    },
+    {
+      "id": "minecraft:glass_bottle",
+      "count": 64
+    },
+    {
+      "id": "minecraft:paper",
+      "count": 64
+    },
+    {
+      "id": "minecraft:iron_ingot",
+      "count": 64
+    }
+  ],
+  "experience_points": 0,
+  "production": {
+    "result": {
+      "id": "lyycore:ender_sentry"
+    },
+    "duration": 2000
+  }
+}

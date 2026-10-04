@@ -1,0 +1,2071 @@
+{
+  "multipart": [
+    {
+      "when": {
+        "facing": "south",
+        "part": "0"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_0"
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "0"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_0",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "0"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_0",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "0"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_0",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "1"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_1"
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "1"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_1",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "1"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_1",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "1"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_1",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "2"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_2"
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "2"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_2",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "2"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_2",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "2"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_2",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "3"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_3"
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "3"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_3",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "3"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_3",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "3"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_3",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "4"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_4"
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "4"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_4",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "4"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_4",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "4"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_4",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "5"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_5"
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "5"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_5",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "5"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_5",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "5"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_5",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "6"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_6"
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "6"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_6",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "6"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_6",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "6"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_6",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "7"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_7"
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "7"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_7",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "7"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_7",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "7"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_7",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "8"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_8"
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "8"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_8",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "8"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_8",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "8"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_8",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "9"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_9"
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "9"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_9",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "9"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_9",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "9"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_9",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "10"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_10"
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "10"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_10",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "10"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_10",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "10"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_10",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "11"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_11"
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "11"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_11",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "11"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_11",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "11"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_11",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "12"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_12"
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "12"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_12",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "12"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_12",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "12"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_12",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "13"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_13"
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "13"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_13",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "13"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_13",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "13"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_13",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "14"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_14"
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "14"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_14",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "14"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_14",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "14"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_14",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "15"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_15"
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "15"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_15",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "15"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_15",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "15"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_15",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "16"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_16"
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "16"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_16",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "16"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_16",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "16"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_16",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "17"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_17"
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "17"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_17",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "17"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_17",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "17"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_17",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "18"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_18"
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "18"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_18",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "18"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_18",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "18"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_18",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "19"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_19"
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "19"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_19",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "19"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_19",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "19"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_19",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "20"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_20"
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "20"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_20",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "20"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_20",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "20"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_20",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "21"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_21"
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "21"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_21",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "21"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_21",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "21"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_21",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "22"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_22"
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "22"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_22",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "22"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_22",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "22"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_22",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "23"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_23"
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "23"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_23",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "23"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_23",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "23"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_23",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "24"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_24"
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "24"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_24",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "24"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_24",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "24"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_24",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "25"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_25"
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "25"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_25",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "25"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_25",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "25"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_25",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "26"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_26"
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "26"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_26",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "26"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_26",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "26"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_26",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "27"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_27"
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "27"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_27",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "27"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_27",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "27"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_27",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "28"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_28"
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "28"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_28",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "28"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_28",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "28"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_28",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "29"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_29"
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "29"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_29",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "29"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_29",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "29"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_29",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "30"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_30"
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "30"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_30",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "30"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_30",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "30"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_30",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "31"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_31"
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "31"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_31",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "31"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_31",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "31"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_31",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "32"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_32"
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "32"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_32",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "32"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_32",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "32"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_32",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "33"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_33"
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "33"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_33",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "33"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_33",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "33"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_33",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "34"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_34"
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "34"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_34",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "34"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_34",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "34"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_34",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "35"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_35"
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "35"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_35",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "35"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_35",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "35"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_35",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "36"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_36"
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "36"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_36",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "36"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_36",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "36"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_36",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "37"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_37"
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "37"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_37",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "37"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_37",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "37"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_37",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "38"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_38"
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "38"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_38",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "38"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_38",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "38"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_38",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "39"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_39"
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "39"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_39",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "39"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_39",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "39"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_39",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "40"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_40"
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "40"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_40",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "40"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_40",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "40"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_40",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "41"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_41"
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "41"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_41",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "41"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_41",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "41"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_41",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "42"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_42"
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "42"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_42",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "42"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_42",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "42"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_42",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "43"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_43"
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "43"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_43",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "43"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_43",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "43"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_43",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "44"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_44"
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "44"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_44",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "44"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_44",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "44"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/body_44",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "16"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/glass_16"
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "16"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/glass_16",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "16"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/glass_16",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "16"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/glass_16",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "17"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/glass_17"
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "17"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/glass_17",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "17"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/glass_17",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "17"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/glass_17",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "18"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/glass_18"
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "18"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/glass_18",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "18"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/glass_18",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "18"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/glass_18",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "23"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/glass_23"
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "23"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/glass_23",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "23"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/glass_23",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "23"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/glass_23",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "31"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/glass_31"
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "31"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/glass_31",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "31"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/glass_31",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "31"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/glass_31",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "32"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/glass_32"
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "32"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/glass_32",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "32"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/glass_32",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "32"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/glass_32",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "33"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/glass_33"
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "33"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/glass_33",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "33"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/glass_33",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "33"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/glass_33",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "38"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/glass_38"
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "38"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/glass_38",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "38"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/glass_38",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "38"
+      },
+      "apply": {
+        "model": "lyycore:block/production_lab/static/glass_38",
+        "y": 270
+      }
+    }
+  ]
+}

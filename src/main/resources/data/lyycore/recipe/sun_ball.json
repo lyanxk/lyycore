@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "lyycore:storm_ball"
+    }
+  ],
+  "result": {
+    "id": "lyycore:sun_ball",
+    "count": 1
+  }
+}

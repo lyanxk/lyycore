@@ -1,0 +1,41 @@
+{
+  "display": {
+    "icon": {
+      "id": "lyycore:crystal_condensing_frame"
+    },
+    "title": {
+      "translate": "advancement.lyycore.production.gathering.title"
+    },
+    "description": {
+      "translate": "advancement.lyycore.production.gathering.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "frame": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "lyycore:crystal_condensing_frame",
+              "lyycore:tree_gathering_frame",
+              "lyycore:overworld_gathering_frame",
+              "lyycore:mineral_gathering_frame",
+              "lyycore:nether_gathering_frame"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "frame"
+    ]
+  ],
+  "parent": "lyycore:progression/production"
+}

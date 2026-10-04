@@ -1,0 +1,37 @@
+{
+  "display": {
+    "icon": {
+      "id": "lyycore:imaginary_crystal"
+    },
+    "title": {
+      "translate": "advancement.lyycore.root.title"
+    },
+    "description": {
+      "translate": "advancement.lyycore.root.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false,
+    "background": "minecraft:textures/gui/advancements/backgrounds/stone.png"
+  },
+  "criteria": {
+    "crystal": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "lyycore:imaginary_crystal"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "crystal"
+    ]
+  ]
+}

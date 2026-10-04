@@ -1,0 +1,36 @@
+{
+  "type": "lyycore:imaginary_crafting",
+  "ingredients": [
+    {
+      "item": "lyycore:alloy_block"
+    },
+    {
+      "item": "lyycore:crystal_block"
+    },
+    {
+      "item": "lyycore:imaginary_alloy_ingot"
+    },
+    {
+      "item": "minecraft:glass_bottle"
+    },
+    {
+      "item": "minecraft:iron_block"
+    },
+    {
+      "item": "minecraft:iron_block"
+    },
+    {
+      "item": "minecraft:iron_block"
+    },
+    {
+      "item": "minecraft:glass_bottle"
+    },
+    {
+      "item": "lyycore:imaginary_alloy_ingot"
+    }
+  ],
+  "result": {
+    "id": "lyycore:production_lab",
+    "count": 1
+  }
+}

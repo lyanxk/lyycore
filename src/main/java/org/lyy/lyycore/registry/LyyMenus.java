@@ -11,11 +11,25 @@ import org.lyy.lyycore.content.menu.EnergyCellMenu;
 import org.lyy.lyycore.content.menu.IAFMenu;
 import org.lyy.lyycore.content.menu.ImaginaryCraftingMenu;
 import org.lyy.lyycore.content.menu.ImaginaryGateMenu;
+import org.lyy.lyycore.content.menu.AdvancedImaginaryGateMenu;
 import org.lyy.lyycore.content.menu.ResourceGatheringMenu;
+import org.lyy.lyycore.content.menu.ResearchMenu;
+import org.lyy.lyycore.content.menu.ProductionLabMenu;
+import org.lyy.lyycore.content.menu.ImaginaryReaperMenu;
 
 public class LyyMenus {
     public static final DeferredRegister<MenuType<?>> MENUS =
             DeferredRegister.create(Registries.MENU, LyyCore.MODID);
+    public static final DeferredHolder<MenuType<?>, MenuType<ImaginaryReaperMenu>> IMAGINARY_REAPER =
+            MENUS.register("imaginary_reaper", () -> IMenuTypeExtension.create(ImaginaryReaperMenu::new));
+    public static final DeferredHolder<MenuType<?>, MenuType<AdvancedImaginaryGateMenu>> ADVANCED_IMAGINARY_GATE =
+            MENUS.register("advanced_imaginary_gate", () -> IMenuTypeExtension.create(AdvancedImaginaryGateMenu::new));
+    public static final DeferredHolder<MenuType<?>, MenuType<ResearchMenu>> MEMORY =
+            MENUS.register("memory", () -> IMenuTypeExtension.create(ResearchMenu::memory));
+    public static final DeferredHolder<MenuType<?>, MenuType<ProductionLabMenu>> PRODUCTION_LAB =
+            MENUS.register("production_lab", () -> IMenuTypeExtension.create(ProductionLabMenu::new));
+    public static final DeferredHolder<MenuType<?>, MenuType<ResearchMenu>> RESEARCH =
+            MENUS.register("research", () -> IMenuTypeExtension.create(ResearchMenu::new));
     public static final DeferredHolder<MenuType<?>, MenuType<ImaginaryGateMenu>> IMAGINARY_GATE =
             MENUS.register("imaginary_gate", () -> IMenuTypeExtension.create(ImaginaryGateMenu::new));
     public static final DeferredHolder<MenuType<?>, MenuType<ImaginaryCraftingMenu>> IMAGINARY_CRAFTING =

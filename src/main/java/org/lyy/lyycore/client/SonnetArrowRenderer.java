@@ -5,7 +5,6 @@ import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -14,7 +13,6 @@ import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.projectile.AbstractArrow;
-import net.minecraft.world.item.ItemStack;
 import org.lyy.lyycore.LyyCore;
 
 public class SonnetArrowRenderer<T extends AbstractArrow> extends EntityRenderer<T> {
@@ -35,8 +33,8 @@ public class SonnetArrowRenderer<T extends AbstractArrow> extends EntityRenderer
         pose.translate(-0.5, -0.5, -0.5);
         var minecraft = Minecraft.getInstance();
         var model = minecraft.getModelManager().getModel(MODEL);
-        minecraft.getItemRenderer().renderModelLists(model, ItemStack.EMPTY, LightTexture.FULL_BRIGHT,
-                OverlayTexture.NO_OVERLAY, pose, buffers.getBuffer(RenderType.entityTranslucentEmissive(TextureAtlas.LOCATION_BLOCKS)));
+        SonnetMaterialRenderer.render(model, pose, buffers, LightTexture.FULL_BRIGHT,
+                OverlayTexture.NO_OVERLAY, true, false);
         pose.popPose();
         super.render(arrow, yaw, partialTick, pose, buffers, light);
     }

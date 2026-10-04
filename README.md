@@ -21,6 +21,11 @@ Minecraft 1.21.1 / NeoForge utility mod for modpack progression.
   the `lyycore:disassembler_vein_excluded` block tag)
 - Imaginary Grapple with a 20-block hook, contact input, gradual traction and automatic landing retraction
 - Optional JEI integration
+- Ten milestone advancements grouped into materials, production and building,
+  and rituals and crafting
+- Client-only Origin Sea sky test with a fractured pink firmament, blue nebulae,
+  mirrored horizon and GPU-animated falling shards: `/originsea on`.
+  See [controls and rendering notes](docs/origin-sea.md).
 
 Natural generation, internal transfers, machine storage and recipe costs use IE.
 The generator supplies **512 FE (5.12 IE) per target per tick** by default, and the alloy forge
@@ -38,7 +43,7 @@ recipe progress also retain their numerical values in IE.
 Alloy ingots take 20 seconds and consume 100 IE per recipe; imaginary batteries
 consume 50 IE per recipe and take 100 seconds.
 
-The former Raw Imaginium item is now **Imaginary Crystal** (虚水晶), registered as
+The former Raw Imaginium item is now **Imaginary Crystal** (虚晶), registered as
 `lyycore:imaginary_crystal`. The legacy item ID `lyycore:raw_imaginium` is a registry
 alias, so existing item stacks load as the new item and save with its new ID while
 retaining their count and components. Built-in recipes, ore drops, catalyst tags,
@@ -46,6 +51,27 @@ models and textures use the new ID. The condensation recipe is now
 `lyycore:crystal_condensing/imaginary_crystal`; update datapack overrides to its new path.
 
 ## Development
+
+### Advancement guide
+
+Obtaining an imaginary crystal opens the `lyycore:progression/root` advancement
+tab. Three silent grouping nodes arrange the remaining milestones side by side;
+parents organize the display and do not impose completion prerequisites.
+Titles, descriptions and short completion instructions are localized in Chinese
+and English. Existing recipe-unlock advancements remain separate.
+
+Materials reward workbench alloy crafting and crafting the alloy forge.
+Production covers obtaining any of the five basic frames, an item collector,
+crafting a basic imaginary energy generator, and obtaining any of the nine
+miniature production blocks. Rituals cover a successful guardian summon,
+defeating a guardian and obtaining a pure crystal (both required), and crafting
+the imaginary crafting table.
+
+Crafting milestones use recipe-crafted criteria, not possession checks. The
+imaginary crafting table records its completed recipe and grants crafting credit
+when a player takes the actual result, including shift-click and after save/load.
+The gate records who inserted the crystal block and credits that player only
+after a successful summon; a closer bystander receives no summon credit.
 
 ### Journey's End?
 
@@ -226,6 +252,16 @@ Requires Java 21.
 .\gradlew.bat runServer
 ```
 
+Run the four headless gameplay regression tests (mining permissions, crafting
+credit, offering ownership and weather balls) with:
+
+```powershell
+.\gradlew.bat -I tools/review-regressions/init.gradle runReviewRegressions --console=plain
+```
+
+These checks use a separate world under `build/review-regressions/run`; their
+classes and generated structure are excluded from normal mod builds.
+
 The built mod is written to `build/libs`. Runtime balance settings are generated in
 `config/lyycore-common.toml`.
 
@@ -299,3 +335,56 @@ imaginary alloy ingots around it (5 seconds); JEI displays the same recipe.
 The prepared `F:/misc/BlockBench/grapple_chain` models provide the held item,
 animated four-claw head and alternating chain links. The grab animation uses the
 supplied contact/rebound keyframes, oriented to the hit surface.
+
+## Imaginary Research Table
+
+`lyycore:imaginary_research_table` provides a paginated research interface with
+material and experience-level or experience-point costs, confirmation, and persistent player unlocks.
+Its floating book smoothly faces the nearest player within three blocks.
+Research entries are supplied by data packs. The Advanced Imaginary Gate,
+Ender Sentry, Imaginary Reaper and Change the Weather are built in.
+See [research definitions and behavior](docs/research.md).
+
+Memory (default K) lists completed research and can transcribe supported entries
+into owner-bound notes. The Laboratory (`lyycore:production_lab`) occupies
+a 5×3 footprint and converts those notes into the research-defined product using
+a single slot and circular progress display. Skill-unlocking research enables
+the style HUD, style cycling (default V), and the shared special-skill key
+(default mouse button 5). The laboratory is made with imaginary crafting: alloy ingot / crystal block /
+alloy ingot on top, glass bottle / alloy block / glass bottle in the middle, and
+three iron blocks below. The style HUD uses B/M/T/O letter glyphs in a diamond.
+Skill-unlocking research and concrete skill effects remain undefined and are not prefilled.
+
+The Advanced Imaginary Gate research costs blue ice, a mushroom stem, one water
+bottle, 64 nether wart and 300 XP points. The Ender Sentry research costs a dragon
+egg, 16 crystal blocks, 64 glass bottles, 64 paper and 64 iron ingots, with no XP
+cost. Each transcribed report takes 100 seconds to process in the Laboratory.
+
+The advanced gate adds a searchable biome selector and converts one full-height
+column per second within an eight-block radius. Progress is saved and can be
+paused. It uses vanilla biome storage granularity and does not replace terrain
+blocks. Existing guardian summoning is shared with the ordinary gate; additional
+summons await defined offerings and targets.
+
+The sentry uses the vanilla dragon egg appearance. Research unlocks a personal,
+invulnerable dragon that can be summoned or recalled at any sentry. It grows only
+while summoned: one day per 24,000 ticks, adulthood at day five and the final
+stage at day ten. It guards against monsters within five blocks, attacking once
+per second for 5/10 damage. Adults can fly and hover; final-stage dragons drop
+an egg every 1200 seconds spent summoned. Growth and egg progress survive recall
+and death. `/lyy ender day <0-10>` changes the command user's age with operator
+permission. Mining the sentry produces no drop.
+
+The epic Imaginary Reaper keeps single-block, 5×5 and vein mining modes (right-click).
+Shift + right-click opens its settings: efficiency 8–128, attack damage 2–42, and
+Fortune V / Silk Touch. It is unbreakable and rejects additional enchantments.
+Melee attacks chain to at most five targets in total, with three-block links and
+90% damage retained per link. Research costs 64 lightning bottles, one disassembler
+and four netherite ingots, followed by 100 seconds of laboratory processing.
+Collect lightning bottles by right-clicking glass bottles during a thunderstorm;
+collection brings a real lightning strike to the player.
+
+Change the Weather costs blue ice, a magma block and 2000 XP points. Its report
+produces a Storm Ball after 20 seconds. Storm Balls and Sun Balls convert 1:1
+through shapeless crafting; throwing one sets an hour of thunderstorms or clear
+weather respectively.

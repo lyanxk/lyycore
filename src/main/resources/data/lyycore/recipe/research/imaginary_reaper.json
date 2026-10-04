@@ -1,0 +1,30 @@
+{
+  "type": "lyycore:research",
+  "icon": {
+    "id": "lyycore:imaginary_reaper"
+  },
+  "title": "research.lyycore.imaginary_reaper.title",
+  "summary": "research.lyycore.imaginary_reaper.summary",
+  "description": "research.lyycore.imaginary_reaper.description",
+  "rarity": "high",
+  "materials": [
+    {
+      "id": "lyycore:lightning_bottle",
+      "count": 64
+    },
+    {
+      "id": "lyycore:imaginary_disassembler"
+    },
+    {
+      "id": "minecraft:netherite_ingot",
+      "count": 4
+    }
+  ],
+  "experience_points": 0,
+  "production": {
+    "result": {
+      "id": "lyycore:imaginary_reaper"
+    },
+    "duration": 2000
+  }
+}

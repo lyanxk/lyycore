@@ -10,6 +10,7 @@ import org.lyy.lyycore.content.entity.GuardianCrystal;
 import org.lyy.lyycore.content.entity.GrappleHook;
 import org.lyy.lyycore.content.entity.GuardianSpikes;
 import org.lyy.lyycore.content.entity.ImaginaryGuardian;
+import org.lyy.lyycore.content.entity.EnderCompanion;
 import org.lyy.lyycore.content.entity.SonnetArrow;
 import org.lyy.lyycore.content.entity.SonnetDome;
 import org.lyy.lyycore.content.entity.SonnetVolley;
@@ -17,6 +18,9 @@ import org.lyy.lyycore.content.entity.SonnetVolley;
 public class LyyEntities {
     public static final DeferredRegister<EntityType<?>> ENTITIES =
             DeferredRegister.create(Registries.ENTITY_TYPE, LyyCore.MODID);
+    public static final DeferredHolder<EntityType<?>, EntityType<EnderCompanion>> ENDER_COMPANION =
+            ENTITIES.register("ender_companion", () -> EntityType.Builder.<EnderCompanion>of(EnderCompanion::new, MobCategory.CREATURE)
+                    .sized(0.7F, 0.8F).clientTrackingRange(10).updateInterval(2).fireImmune().build("lyycore:ender_companion"));
 
     public static final DeferredHolder<EntityType<?>, EntityType<GrappleHook>> GRAPPLE_HOOK =
             ENTITIES.register("grapple_hook", () -> EntityType.Builder.<GrappleHook>of(

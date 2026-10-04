@@ -1,0 +1,45 @@
+{
+  "display": {
+    "icon": {
+      "id": "lyycore:miniature_crystal_factory"
+    },
+    "title": {
+      "translate": "advancement.lyycore.production.miniatures.title"
+    },
+    "description": {
+      "translate": "advancement.lyycore.production.miniatures.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "miniature": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "lyycore:miniature_crystal_factory",
+              "lyycore:miniature_tree_factory",
+              "lyycore:miniature_overworld_factory",
+              "lyycore:miniature_mineral_factory",
+              "lyycore:miniature_nether_factory",
+              "lyycore:miniature_concrete_factory",
+              "lyycore:miniature_garden",
+              "lyycore:miniature_ocean",
+              "lyycore:miniature_monument"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "miniature"
+    ]
+  ],
+  "parent": "lyycore:progression/production"
+}

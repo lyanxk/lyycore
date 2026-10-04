@@ -1,0 +1,89 @@
+{
+  "ambientocclusion": false,
+  "textures": {
+    "0": "lyycore:block/production_lab/white",
+    "1": "lyycore:block/production_lab/gold",
+    "2": "lyycore:block/production_lab/dark",
+    "3": "lyycore:block/production_lab/pink",
+    "4": "lyycore:block/production_lab/panel",
+    "5": "lyycore:block/production_lab/column",
+    "6": "lyycore:block/production_lab/belt",
+    "7": "lyycore:block/production_lab/vent",
+    "8": "lyycore:block/production_lab/control",
+    "9": "lyycore:block/production_lab/product",
+    "10": "lyycore:block/production_lab/sample",
+    "11": "lyycore:block/production_lab/glass",
+    "12": "lyycore:block/production_lab/production_light",
+    "particle": "lyycore:block/production_lab/white"
+  },
+  "elements": [
+    {
+      "from": [
+        7.675,
+        7.86875,
+        7.97625
+      ],
+      "to": [
+        8.325,
+        8.131250000000001,
+        8.02375
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#12"
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#12"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#12"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#12"
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#12"
+        },
+        "down": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#12"
+        }
+      }
+    }
+  ]
+}

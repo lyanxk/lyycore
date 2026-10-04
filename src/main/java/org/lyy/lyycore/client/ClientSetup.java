@@ -1,7 +1,12 @@
 package org.lyy.lyycore.client;
 
 import org.lyy.lyycore.content.menu.ImaginaryGateScreen;
+import org.lyy.lyycore.content.menu.AdvancedImaginaryGateScreen;
 import org.lyy.lyycore.content.menu.ImaginaryCraftingScreen;
+import org.lyy.lyycore.content.menu.ResearchScreen;
+import org.lyy.lyycore.content.menu.ProductionLabScreen;
+import org.lyy.lyycore.content.menu.ImaginaryReaperScreen;
+import org.lyy.lyycore.registry.LyyBlockEntities;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.api.distmarker.Dist;
@@ -23,17 +28,18 @@ public class ClientSetup {
     @SubscribeEvent
     public static void uploadDomeMeshes(ModelEvent.BakingCompleted event) {
         SonnetDomeMesh.reload(event.getModelManager());
+        ProductionLabRenderer.reload();
     }
 
     @SubscribeEvent
-    public static void addCrystalBowGlow(ModelEvent.ModifyBakingResult event) {
+    public static void wrapCustomItemModels(ModelEvent.ModifyBakingResult event) {
         var grapple = new net.minecraft.client.resources.model.ModelResourceLocation(
                 LyyItems.IMAGINARY_GRAPPLE.getId(), "inventory");
         var empty = event.getModels().get(GrappleRenderer.EMPTY_HELD_MODEL);
         if (empty != null) event.getModels().computeIfPresent(grapple, (id, model) -> GrappleHeldModel.wrap(model, empty));
         var itemModel = new net.minecraft.client.resources.model.ModelResourceLocation(
                 ResourceLocation.fromNamespaceAndPath(LyyCore.MODID, "whisper_of_the_past"), "inventory");
-        event.getModels().computeIfPresent(itemModel, (id, model) -> SonnetCrystalGlowModel.wrapItem(model));
+        event.getModels().computeIfPresent(itemModel, (id, model) -> SonnetBowModel.wrapItem(model));
     }
 
     @SubscribeEvent
@@ -48,10 +54,15 @@ public class ClientSetup {
         event.register(SonnetArrowRenderer.MODEL);
         event.register(SonnetVolleyRenderer.MODEL);
         for (var model : SonnetDomeRenderer.MODELS) event.register(model);
+        for (var model : ResearchTableRenderer.MODELS) event.register(model);
+        for (var model : ProductionLabRenderer.MODELS) event.register(model);
     }
 
     @SubscribeEvent
     public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
+        event.registerEntityRenderer(LyyEntities.ENDER_COMPANION.get(), EnderCompanionRenderer::new);
+        event.registerBlockEntityRenderer(LyyBlockEntities.RESEARCH_TABLE.get(), ResearchTableRenderer::new);
+        event.registerBlockEntityRenderer(LyyBlockEntities.PRODUCTION_LAB.get(), ProductionLabRenderer::new);
         event.registerEntityRenderer(LyyEntities.GRAPPLE_HOOK.get(), GrappleRenderer::new);
         event.registerEntityRenderer(LyyEntities.IMAGINARY_GUARDIAN.get(), context -> new GuardianRenderer<>(context, "boss"));
         event.registerEntityRenderer(LyyEntities.GUARDIAN_CRYSTAL.get(), context -> new GuardianRenderer<>(context, "projectile"));
@@ -82,11 +93,22 @@ public class ClientSetup {
 
     @SubscribeEvent
     public static void registerScreens(RegisterMenuScreensEvent event) {
+        event.register(LyyMenus.IMAGINARY_REAPER.get(), ImaginaryReaperScreen::new);
+        event.register(LyyMenus.ADVANCED_IMAGINARY_GATE.get(), AdvancedImaginaryGateScreen::new);
+        event.register(LyyMenus.RESEARCH.get(), ResearchScreen::new);
+        event.register(LyyMenus.MEMORY.get(), ResearchScreen::new);
+        event.register(LyyMenus.PRODUCTION_LAB.get(), ProductionLabScreen::new);
         event.register(LyyMenus.IMAGINARY_ENERGY_CELL.get(), EnergyCellScreen::new);
         event.register(LyyMenus.IAF_MENU.get(), IAFScreen::new);
         event.register(LyyMenus.IMAGINARY_GATE.get(), ImaginaryGateScreen::new);
         event.register(LyyMenus.IMAGINARY_CRAFTING.get(), ImaginaryCraftingScreen::new);
         event.register(LyyMenus.CRYSTAL_CONDENSING.get(), org.lyy.lyycore.content.menu.CrystalCondensingScreen::new);
         event.register(LyyMenus.RESOURCE_GATHERING.get(), org.lyy.lyycore.content.menu.ResourceGatheringScreen::new);
+    }
+
+    @SubscribeEvent
+    public static void registerWeatherColors(net.neoforged.neoforge.client.event.RegisterColorHandlersEvent.Item event) {
+        event.register((stack, layer) -> 0xFF94BFFF, LyyItems.STORM_BALL.get());
+        event.register((stack, layer) -> 0xFFFFD45F, LyyItems.SUN_BALL.get());
     }
 }

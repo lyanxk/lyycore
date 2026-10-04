@@ -1,0 +1,20 @@
+// Run only on request; the render-check mod classes are excluded from normal builds.
+allprojects {
+    afterEvaluate {
+        def checks = sourceSets.create('sonnetRenderCheck') {
+            java.srcDir(file('tools/sonnet-render-check/java'))
+            compileClasspath += sourceSets.main.output + sourceSets.main.compileClasspath
+            runtimeClasspath += output + compileClasspath
+        }
+        neoForge.mods.lyycore.sourceSet(checks)
+        neoForge.runs {
+            sonnetRenderCheck {
+                client()
+                gameDirectory = file('build/sonnet-render-check/run')
+                programArguments.addAll '--width', '960', '--height', '540'
+                systemProperty 'lyycore.sonnetRenderCheck', 'true'
+                systemProperty 'lyycore.sonnetRenderOutput', file('build/sonnet-render-check').absolutePath
+            }
+        }
+    }
+}

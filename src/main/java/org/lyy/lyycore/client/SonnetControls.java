@@ -40,6 +40,9 @@ public final class SonnetControls {
     }
     @SubscribeEvent public static void extensions(RegisterClientExtensionsEvent event) {
         event.registerItem(new IClientItemExtensions() {
+            @Override public net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer getCustomRenderer() {
+                return SonnetItemRenderer.instance();
+            }
             @Override public boolean applyForgeHandTransform(com.mojang.blaze3d.vertex.PoseStack pose,
                     net.minecraft.client.player.LocalPlayer player, net.minecraft.world.entity.HumanoidArm arm,
                     ItemStack stack, float partialTick, float equip, float swing) {

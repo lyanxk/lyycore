@@ -23,8 +23,16 @@ public class LyyCreativeTab {
                         output.accept(LyyBlocks.CRYSTAL_BLOCK.get());
                         output.accept(LyyBlocks.ALLOY_BLOCK.get());
                         output.accept(LyyBlocks.IMAGINARY_GATE.get());
+                        output.accept(LyyBlocks.ADVANCED_IMAGINARY_GATE.get());
+                        output.accept(LyyBlocks.ENDER_SENTRY.get());
                         output.accept(LyyBlocks.IMAGINARY_CRAFTING_TABLE.get());
+                        output.accept(LyyBlocks.IMAGINARY_RESEARCH_TABLE.get());
+                        output.accept(LyyBlocks.PRODUCTION_LAB.get());
                         output.accept(LyyItems.IMAGINARY_DISASSEMBLER.get());
+                        output.accept(LyyItems.IMAGINARY_REAPER.get());
+                        output.accept(LyyItems.LIGHTNING_BOTTLE.get());
+                        output.accept(LyyItems.STORM_BALL.get());
+                        output.accept(LyyItems.SUN_BALL.get());
                         output.accept(LyyItems.IMAGINARY_GRAPPLE.get());
                         output.accept(LyyItems.WHISPER_OF_THE_PAST.get());
                         output.accept(LyyItems.IMAGINARY_CRYSTAL.get());

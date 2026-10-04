@@ -22,14 +22,14 @@ import org.lyy.lyycore.content.blockEntities.ImaginaryGateBlockEntity;
 import org.lyy.lyycore.registry.LyyBlockEntities;
 
 /** One placed item occupies a 5x5 plane. Only the bottom center owns inventory. */
-public final class ImaginaryGateBlock extends BaseEntityBlock {
+public class ImaginaryGateBlock extends BaseEntityBlock {
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
     public static final IntegerProperty COLUMN = IntegerProperty.create("column", 0, 4);
     public static final IntegerProperty ROW = IntegerProperty.create("row", 0, 4);
     public static final MapCodec<ImaginaryGateBlock> CODEC = simpleCodec(p -> new ImaginaryGateBlock());
 
     public ImaginaryGateBlock() {
-        super(Properties.of().strength(4).sound(SoundType.AMETHYST).noOcclusion().pushReaction(PushReaction.BLOCK));
+        super(Properties.of().strength(4).sound(SoundType.AMETHYST).noOcclusion().lightLevel(state -> 15).pushReaction(PushReaction.BLOCK));
         registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(COLUMN, 2).setValue(ROW, 0));
     }
     @Override protected MapCodec<? extends BaseEntityBlock> codec() { return CODEC; }

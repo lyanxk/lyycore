@@ -12,15 +12,19 @@
 
 ## 素材
 
-Blockbench 源工程、参考图、预览及导出脚本统一存放在独立目录 `F:/misc/BlockBench/`，模组项目只保留游戏运行资源。水晶弓与配套箭来自 `F:/misc/BlockBench/crystal_sanctuary/bow/neoforge/assets/lyycore/`，穹顶来自 `F:/misc/BlockBench/crystal_sanctuary/neoforge/assets/lyycore/`。常态飞花模型保留。
+Blockbench 源工程、参考图、预览及导出脚本统一存放在独立目录 `F:/misc/BlockBench/`，模组项目只保留游戏运行资源。普通飞花、水晶弓与配套箭使用 `pmx_bow_replacement/neoforge/assets/lyycore/` 导出的 PMX 替换素材；原始参考模型保留在 `pmx_reference_review/`。穹顶继续使用 `crystal_sanctuary/neoforge/assets/lyycore/`。
 
-水晶弓编辑并导出后，可运行 `python F:/misc/BlockBench/crystal_sanctuary/bow/install_bow_assets.py` 更新模组。该脚本会备份原水晶弓资源，保留已有显示设置和物品切换规则，并重新生成四档横持姿态。
+弓与箭的动画工程、四档姿态、备份、校验结果和安装清单位于 `F:/misc/BlockBench/pmx_bow_replacement/`。使用该目录的 `scripts/build_assets.py`、`scripts/validate_assets.py` 和 `scripts/install_assets.py` 导出、验证和更新资源；安装脚本检查目标文件哈希，保留旧素材备份与现有显示设置、切换规则。旧 `crystal_sanctuary/bow/install_bow_assets.py` 对应此前的模型，不用于这套 PMX 素材。
 
-水晶形态运行入口为 `lyycore:item/sanctuary_bow/horizontal`，从新素材的 `pulling_2.obj` 转换。先撤销源文件的 XY 平面 225° 旋转，再将源设计的 -Y（箭头）转向游戏 -Z，+Z（装饰正面）转向 +Y。顶点和法线使用同一个正交变换。第一人称使用独立手持变换，避免叠加原版弓的斜向动作。射击时间戳随物品同步，驱动四档弦/箭模型、第一人称回弹和第三人称拉弦手臂动作；无需持续按住右键。`F:/misc/BlockBench/crystal_sanctuary/bow/export_horizontal.py` 可重新生成全部横持动画姿态。
+水晶形态满弓运行入口为 `lyycore:item/sanctuary_bow/horizontal`，其余三档为 `horizontal_idle`、`horizontal_pulling_0`、`horizontal_pulling_1`。导出器统一处理横持顶点与法线，箭头朝游戏 -Z、装饰正面朝 +Y。第一人称使用独立手持变换，避免叠加原版弓的斜向动作。射击时间戳随物品同步，驱动四档弦/箭模型、第一人称回弹和第三人称拉弦手臂动作；无需持续按住右键。
 
 第三人称左右手的四档模型使用零额外旋转，避免与持握层的 180° 转向重复。原版人物继续使用自定义弩持握和拉弦手臂姿势。YSM 人物使用其模型原有的持握动画，不再注入 YSM 内部代码；已移除 YSM 动画兼容 Mixin，仅保留物品模型朝向修正。
 
-水晶弓使用新版半透明淡紫晶面和粉白亮边。淡粉色微光只在晶核及亮边外扩 0.006 格、强度约 14%，保留深度测试与贴图透明度；主体保持原有自发光材质。单层光晕覆盖 1,776 个素材面，替代原先两次整模型的 35,574 个附加面。加法混合无需透明排序，四个拉弦姿态按模型缓存光层。
+飞花与水晶弓使用 `SonnetBowModel` / `SonnetItemRenderer` / `SonnetMaterialRenderer`。保留 JSON 的姿态谓词与 display 变换，每个已解析姿态首次显示时上传静态 GPU 顶点缓冲；F3+T 完成模型烘焙后释放旧缓冲。普通弓使用基础贴图与轻量 Toon 明暗，水晶材质在同一次绘制中合成基础色、`ExCrystal.png` 加法球面映射与 `toon_defo.png`。辅助纹理位于 `textures/item/sonnet_material/`，来自 `F:/misc/BlockBench/pmx_reference_review/originals/水晶弓矢/`。没有全屏泛光、实时反射捕获或整模型光晕复制。
+
+水晶弓使用半透明混合，基础表面不透明度为 0.28，晶面边缘、球面映射高光和贴图亮纹提高不透明度，保留弓弦与轮廓的可读性。多层晶面叠加后的实际不透明度高于基础值。普通弓与飞行箭矢继续使用不透明通道。透明弓按观察方向从后向前排序，只更新索引，不重新上传顶点；方向相同时复用排序。第三人称、掉落物和展示框通过独立实体批次在不透明实体后绘制，极佳画质使用原版物品实体透明目标；第一人称与 GUI 先提交手臂或界面背景，再绘制弓体。
+
+渲染器直接读取动画导出的烘焙模型，支持普通弓的 composite 弓体/箭矢结构，不自行重算拉弓进度。纹理名以 `/pmx_crystal` 结尾的面使用水晶材质，因此普通形态搭箭时也能在同一次绘制中正确区分弓体和箭。水晶形态与飞行箭矢整体使用水晶材质。保留 OBJ 顶点法线；导出器已为双面 PMX 材质添加反向面，GPU 开启背面剔除以避免同一晶面重复着色。世界绘制保留深度写入、光照、雾和遮挡，GUI 单独处理绘制顺序；实体轮廓等特殊缓冲采用标准模型绘制回退。
 
 穹顶渲染器分别加载 shell、fractures、crown、trails 四层 OBJ；晶壳使用不透明材质及深度写入遮蔽天空，内部纹章与裂纹使用独立的深度测试和偏移避免穿层。穹顶的四层静态网格在资源加载时上传至 GPU，所有穹顶共享，F3+T 时释放旧缓冲并重建；每帧只绘制缓存，离开视锥或距离范围时跳过。弹射箭使用新素材的 companion_arrow；轨迹按实体 UUID、起点和穹顶位置缓存，输入同步改变才重建，伤害由服务端穹顶判定。
 
@@ -29,3 +33,5 @@ Blockbench 源工程、参考图、预览及导出脚本统一存放在独立目
 运行 `./gradlew.bat build --console=plain` 检查编译与打包。在游戏中手动验证免费射击、悬空恢复、穿透双目标、结晶解除、箭矢重载后的 8 秒到期、终结技启动与 15 秒到期。
 
 性能验证需检查弹射轨迹缓存复用、边界与输入变化后的失效行为，并在相同地点、视角和设置下对比展开前后，以及展开后切换空手与持弓时的帧率。
+
+运行 `./gradlew.bat -I tools/sonnet-render-check/init.gradle runSonnetRenderCheck --console=plain` 可在独立开发客户端验证着色器、八档姿态、GPU 缓存复用、资源重载、背景透射与透明/不透明物体的前后遮挡、第一/第三人称、左手与极佳画质。测试窗口自动隐藏，通过游戏渲染 API 生成截图，不使用桌面输入自动化。截图与结果保存到 `build/sonnet-render-check/`，测试源码不参与普通构建。该检查验证显示和资源生命周期，不作为游戏帧率基准。

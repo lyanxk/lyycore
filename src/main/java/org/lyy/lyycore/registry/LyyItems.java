@@ -9,13 +9,19 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import org.lyy.lyycore.LyyCore;
 import org.lyy.lyycore.content.ResourceFrameKind;
 import org.lyy.lyycore.content.item.ImaginaryDisassemblerItem;
+import org.lyy.lyycore.content.item.ImaginaryReaperItem;
+import org.lyy.lyycore.content.item.WeatherBallItem;
 import org.lyy.lyycore.content.item.ImaginaryGrappleItem;
 import org.lyy.lyycore.content.item.SonnetBowItem;
+import org.lyy.lyycore.content.item.ResearchNotesItem;
 import java.util.EnumMap;
 import java.util.Map;
 
 public class LyyItems {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(LyyCore.MODID);
+    public static final DeferredItem<BlockItem> PRODUCTION_LAB = ITEMS.registerSimpleBlockItem(LyyBlocks.PRODUCTION_LAB);
+    public static final DeferredItem<ResearchNotesItem> RESEARCH_NOTES = ITEMS.registerItem("research_notes", ResearchNotesItem::new, new Item.Properties().stacksTo(1));
+    public static final DeferredItem<BlockItem> IMAGINARY_RESEARCH_TABLE = ITEMS.registerSimpleBlockItem(LyyBlocks.IMAGINARY_RESEARCH_TABLE);
     public static final Map<ResourceFrameKind, DeferredItem<Item>> RESOURCE_CORES = new EnumMap<>(ResourceFrameKind.class);
     public static final Map<ResourceFrameKind, DeferredItem<BlockItem>> RESOURCE_FACTORY_ITEMS = new EnumMap<>(ResourceFrameKind.class);
     public static final Map<ResourceFrameKind, DeferredItem<BlockItem>> RESOURCE_FRAME_ITEMS = new EnumMap<>(ResourceFrameKind.class);
@@ -45,10 +51,21 @@ public class LyyItems {
             ITEMS.registerItem("imaginary_disassembler", ImaginaryDisassemblerItem::new,
                     new Item.Properties().stacksTo(1).rarity(Rarity.RARE).fireResistant());
 
+    public static final DeferredItem<ImaginaryReaperItem> IMAGINARY_REAPER =
+            ITEMS.registerItem("imaginary_reaper", ImaginaryReaperItem::new,
+                    new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant());
+    public static final DeferredItem<Item> LIGHTNING_BOTTLE = ITEMS.registerSimpleItem("lightning_bottle");
+    public static final DeferredItem<WeatherBallItem> STORM_BALL = ITEMS.registerItem("storm_ball",
+            properties -> new WeatherBallItem(properties, true), new Item.Properties().stacksTo(16));
+    public static final DeferredItem<WeatherBallItem> SUN_BALL = ITEMS.registerItem("sun_ball",
+            properties -> new WeatherBallItem(properties, false), new Item.Properties().stacksTo(16));
+
     public static final DeferredItem<Item> PURE_CRYSTAL = ITEMS.registerSimpleItem("pure_crystal", new Item.Properties().rarity(Rarity.RARE));
     public static final DeferredItem<BlockItem> CRYSTAL_BLOCK = ITEMS.registerSimpleBlockItem(LyyBlocks.CRYSTAL_BLOCK);
     public static final DeferredItem<BlockItem> ALLOY_BLOCK = ITEMS.registerSimpleBlockItem(LyyBlocks.ALLOY_BLOCK);
     public static final DeferredItem<BlockItem> IMAGINARY_GATE = ITEMS.registerSimpleBlockItem(LyyBlocks.IMAGINARY_GATE);
+    public static final DeferredItem<BlockItem> ADVANCED_IMAGINARY_GATE = ITEMS.registerSimpleBlockItem(LyyBlocks.ADVANCED_IMAGINARY_GATE);
+    public static final DeferredItem<BlockItem> ENDER_SENTRY = ITEMS.registerSimpleBlockItem(LyyBlocks.ENDER_SENTRY);
     public static final DeferredItem<BlockItem> IMAGINARY_CRAFTING_TABLE = ITEMS.registerSimpleBlockItem(LyyBlocks.IMAGINARY_CRAFTING_TABLE);
 
     // Simple items

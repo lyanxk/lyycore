@@ -20,6 +20,10 @@
     "lyycore:miniature_tree_factory",
     "lyycore:miniature_overworld_factory",
     "lyycore:miniature_mineral_factory",
-    "lyycore:miniature_nether_factory"
+    "lyycore:miniature_nether_factory",
+    "lyycore:imaginary_research_table",
+    "lyycore:production_lab",
+    "lyycore:advanced_imaginary_gate",
+    "lyycore:ender_sentry"
   ]
 }

@@ -31,6 +31,18 @@ public final class ImaginaryCraftingMenu extends AbstractContainerMenu {
                 @Override public boolean mayPlace(ItemStack stack) { return progress() == 0; }
                 @Override public boolean mayPickup(Player player) { return progress() == 0; }
                 @Override public int getMaxStackSize() { return 1; }
+                @Override public void setByPlayer(ItemStack stack, ItemStack previous) {
+                    super.setByPlayer(stack, previous);
+                    // Cursor swaps replace the result without calling onTake.
+                    if (getSlotIndex() == 0 && !previous.isEmpty()
+                            && (!ItemStack.isSameItemSameComponents(stack, previous)
+                            || stack.getCount() < previous.getCount()))
+                        table.awardCraftedResult(inventory.player, previous);
+                }
+                @Override public void onTake(Player player, ItemStack stack) {
+                    if (getSlotIndex() == 0) table.awardCraftedResult(player, stack);
+                    super.onTake(player, stack);
+                }
             });
         }
         for (int row = 0; row < 3; row++)

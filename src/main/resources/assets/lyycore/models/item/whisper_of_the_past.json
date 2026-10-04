@@ -9,30 +9,9 @@
   "ambientocclusion": false,
   "gui_light": "front",
   "textures": {
-    "sonnet_dark": "lyycore:item/whisper_of_the_past/sonnet_dark",
-    "sonnet_darklight": "lyycore:item/whisper_of_the_past/sonnet_darklight",
-    "sonnet_darkedge": "lyycore:item/whisper_of_the_past/sonnet_darkedge",
-    "sonnet_purple": "lyycore:item/whisper_of_the_past/sonnet_purple",
-    "sonnet_purpledark": "lyycore:item/whisper_of_the_past/sonnet_purpledark",
-    "sonnet_purplelight": "lyycore:item/whisper_of_the_past/sonnet_purplelight",
-    "sonnet_violet": "lyycore:item/whisper_of_the_past/sonnet_violet",
-    "sonnet_lilac": "lyycore:item/whisper_of_the_past/sonnet_lilac",
-    "sonnet_pink": "lyycore:item/whisper_of_the_past/sonnet_pink",
-    "sonnet_ivory": "lyycore:item/whisper_of_the_past/sonnet_ivory",
-    "sonnet_ivoryshade": "lyycore:item/whisper_of_the_past/sonnet_ivoryshade",
-    "sonnet_white": "lyycore:item/whisper_of_the_past/sonnet_white",
-    "sonnet_whiteshade": "lyycore:item/whisper_of_the_past/sonnet_whiteshade",
-    "sonnet_teal": "lyycore:item/whisper_of_the_past/sonnet_teal",
-    "sonnet_tealdark": "lyycore:item/whisper_of_the_past/sonnet_tealdark",
-    "sonnet_ice": "lyycore:item/whisper_of_the_past/sonnet_ice",
-    "sonnet_silver": "lyycore:item/whisper_of_the_past/sonnet_silver",
-    "sonnet_ink": "lyycore:item/whisper_of_the_past/sonnet_ink",
-    "sonnet_crystal_0": "lyycore:item/whisper_of_the_past/sonnet_crystal_0",
-    "sonnet_crystal_1": "lyycore:item/whisper_of_the_past/sonnet_crystal_1",
-    "sonnet_crystal_2": "lyycore:item/whisper_of_the_past/sonnet_crystal_2",
-    "sonnet_crystal_3": "lyycore:item/whisper_of_the_past/sonnet_crystal_3",
-    "sonnet_crystal_4": "lyycore:item/whisper_of_the_past/sonnet_crystal_4",
-    "particle": "lyycore:item/whisper_of_the_past/sonnet_purple"
+    "pmx_sonnet": "lyycore:item/whisper_of_the_past/pmx_sonnet",
+    "pmx_crystal": "lyycore:item/whisper_of_the_past/pmx_crystal",
+    "particle": "lyycore:item/whisper_of_the_past/pmx_sonnet"
   },
   "display": {
     "thirdperson_righthand": {

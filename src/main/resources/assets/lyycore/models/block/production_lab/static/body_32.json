@@ -1,0 +1,127 @@
+{
+  "ambientocclusion": false,
+  "render_type": "minecraft:cutout",
+  "textures": {
+    "0": "lyycore:block/production_lab/white",
+    "1": "lyycore:block/production_lab/gold",
+    "2": "lyycore:block/production_lab/dark",
+    "3": "lyycore:block/production_lab/pink",
+    "4": "lyycore:block/production_lab/panel",
+    "5": "lyycore:block/production_lab/column",
+    "6": "lyycore:block/production_lab/belt",
+    "7": "lyycore:block/production_lab/vent",
+    "8": "lyycore:block/production_lab/control",
+    "9": "lyycore:block/production_lab/product",
+    "10": "lyycore:block/production_lab/sample",
+    "11": "lyycore:block/production_lab/glass",
+    "12": "lyycore:block/production_lab/production_light",
+    "particle": "lyycore:block/production_lab/white"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        4.7,
+        1.7
+      ],
+      "to": [
+        16,
+        7.0,
+        16
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            2.88,
+            0.0,
+            13.12,
+            16.0
+          ],
+          "texture": "#0"
+        },
+        "up": {
+          "uv": [
+            2.88,
+            0.0,
+            13.12,
+            11.106796
+          ],
+          "texture": "#0"
+        },
+        "down": {
+          "uv": [
+            2.88,
+            4.893204,
+            13.12,
+            16.0
+          ],
+          "texture": "#0"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        7.0,
+        2.0
+      ],
+      "to": [
+        16,
+        7.4,
+        16
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            2.754098,
+            0.0,
+            13.245902,
+            16.0
+          ],
+          "texture": "#1"
+        },
+        "up": {
+          "uv": [
+            2.754098,
+            0.0,
+            13.245902,
+            11.2
+          ],
+          "texture": "#1"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        7.4,
+        3.4
+      ],
+      "to": [
+        16,
+        8.0,
+        16
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            2.074074,
+            0.0,
+            13.925926,
+            16.0
+          ],
+          "texture": "#0"
+        },
+        "up": {
+          "uv": [
+            2.074074,
+            0.0,
+            13.925926,
+            11.72093
+          ],
+          "texture": "#0"
+        }
+      }
+    }
+  ]
+}

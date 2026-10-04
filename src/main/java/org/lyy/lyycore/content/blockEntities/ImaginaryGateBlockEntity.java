@@ -1,6 +1,7 @@
 package org.lyy.lyycore.content.blockEntities;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -11,8 +12,10 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -23,21 +26,34 @@ import org.lyy.lyycore.content.menu.ImaginaryGateMenu;
 import org.lyy.lyycore.registry.*;
 import java.util.UUID;
 
-public final class ImaginaryGateBlockEntity extends BlockEntity implements MenuProvider {
+public class ImaginaryGateBlockEntity extends BlockEntity implements MenuProvider {
     public static final int READY = 0, WRONG_DIMENSION = 1, PEACEFUL = 2, OCCUPIED = 3, BLOCKED = 4;
     private int status;
     private UUID activeGuardian;
+    private UUID offeringPlayer;
     private final ItemStackHandler items = new ItemStackHandler(1) {
         @Override public int getSlotLimit(int slot) { return 1; }
-        @Override protected void onContentsChanged(int slot) { setChanged(); }
+        @Override protected void onContentsChanged(int slot) { offeringPlayer = null; setChanged(); }
     };
-    private final ContainerData data = new ContainerData() {
+    protected final ContainerData data = new ContainerData() {
         @Override public int get(int index) { return status; }
         @Override public void set(int index, int value) { }
         @Override public int getCount() { return 1; }
     };
-    public ImaginaryGateBlockEntity(BlockPos pos, BlockState state) { super(LyyBlockEntities.IMAGINARY_GATE.get(), pos, state); }
+    public ImaginaryGateBlockEntity(BlockPos pos, BlockState state) { this(LyyBlockEntities.IMAGINARY_GATE.get(), pos, state); }
+    protected ImaginaryGateBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) { super(type, pos, state); }
     public ItemStackHandler items() { return items; }
+    public void setOffering(Player player, ItemStack stack) {
+        // Vanilla can write an unchanged stack after clicking a full slot. Keep
+        // its contributor, but still replace the stack reference for hotbar swaps.
+        boolean unchanged = ItemStack.matches(items.getStackInSlot(0), stack);
+        UUID previousContributor = offeringPlayer;
+        items.setStackInSlot(0, stack);
+        if (unchanged) offeringPlayer = previousContributor;
+        else if (level != null && !level.isClientSide && stack.is(LyyItems.CRYSTAL_BLOCK.get())) {
+            offeringPlayer = player.getUUID();
+        }
+    }
 
     public static void serverTick(Level level, BlockPos pos, BlockState state, ImaginaryGateBlockEntity gate) {
         if (level.getGameTime() % 10 != 0) return;
@@ -61,6 +77,9 @@ public final class ImaginaryGateBlockEntity extends BlockEntity implements MenuP
         guardian.moveTo(spawn.x, spawn.y, spawn.z, state.getValue(ImaginaryGateBlock.FACING).toYRot(), 0);
         guardian.beginSummoning(summoner);
         if (server.addFreshEntity(guardian)) {
+            // Credit the player who supplied the offering, not a nearby spectator.
+            var contributor = gate.offeringPlayer == null ? null : server.getServer().getPlayerList().getPlayer(gate.offeringPlayer);
+            if (contributor != null) CriteriaTriggers.SUMMONED_ENTITY.trigger(contributor, guardian);
             gate.activeGuardian = guardian.getUUID();
             gate.items.extractItem(0, 1, false);
             gate.status = OCCUPIED;
@@ -73,10 +92,12 @@ public final class ImaginaryGateBlockEntity extends BlockEntity implements MenuP
         super.saveAdditional(tag, registries);
         tag.put("Items", items.serializeNBT(registries));
         if (activeGuardian != null) tag.putUUID("Guardian", activeGuardian);
+        if (offeringPlayer != null) tag.putUUID("OfferingPlayer", offeringPlayer);
     }
     @Override protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
         items.deserializeNBT(registries, tag.getCompound("Items"));
         activeGuardian = tag.hasUUID("Guardian") ? tag.getUUID("Guardian") : null;
+        offeringPlayer = tag.hasUUID("OfferingPlayer") ? tag.getUUID("OfferingPlayer") : null;
     }
 }

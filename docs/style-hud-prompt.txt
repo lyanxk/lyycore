@@ -1,0 +1,7 @@
+Tool: built-in image_gen, transparent_background=true.
+Output: src/main/resources/assets/lyycore/textures/gui/style_letters.png
+Atlas: B upper-left, M upper-right, T lower-left, O lower-right.
+The source reference was the first generated monochrome gothic B/M/T/O atlas.
+
+Final edit prompt:
+Edit the attached four-letter game HUD sprite atlas. Preserve the exact original sharp, stylish, slanted serif letter silhouettes, and exact four cells: B upper-left, M upper-right, T lower-left, O lower-right. Keep equal 2x2 square grid, same placements, true transparent background, no extra elements. Replace the grey weathered silver/stone treatment with a clean pink-and-white CRYSTAL treatment matching a magical pink crystal Minecraft mod: luminous pearl-white broad faces, pale blush-pink beveled facets, soft rose-pink inner edges, and a narrow desaturated deep-rose silhouette outline for legibility. High contrast crisp graphic shapes, stylish and cool, elegant rather than cute, retain angular pointed terminals and original serif cuts. Smooth polished crystal facets with restrained sharp white highlights. NO cracks, NO grunge, NO rough stone, NO black heavy metal, NO bubble or marshmallow shapes, NO exterior glow or particles, NO ornaments or badges. Keep open counter spaces clearly transparent. Designed to be read as B M T O at 24 pixels; preserve strong simple silhouettes. Output only these four isolated glyphs, no titles or labels, no colored background, no checkerboard pixels; genuine alpha transparency. This is a production texture atlas, not a screenshot.

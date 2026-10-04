@@ -1,0 +1,48 @@
+{
+  "display": {
+    "icon": {
+      "id": "lyycore:pure_crystal"
+    },
+    "title": {
+      "translate": "advancement.lyycore.rituals.journeys_end.title"
+    },
+    "description": {
+      "translate": "advancement.lyycore.rituals.journeys_end.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "guardian": {
+      "trigger": "minecraft:player_killed_entity",
+      "conditions": {
+        "entity": {
+          "type": "lyycore:imaginary_guardian"
+        }
+      }
+    },
+    "pure_crystal": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "lyycore:pure_crystal"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "guardian"
+    ],
+    [
+      "pure_crystal"
+    ]
+  ],
+  "parent": "lyycore:progression/rituals"
+}

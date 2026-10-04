@@ -10,18 +10,26 @@ import org.lyy.lyycore.content.blockEntities.ImaginaryGateBlockEntity;
 import org.lyy.lyycore.registry.LyyBlocks;
 import org.lyy.lyycore.registry.LyyMenus;
 
-public final class ImaginaryGateMenu extends AbstractContainerMenu {
+public class ImaginaryGateMenu extends AbstractContainerMenu {
     private final ImaginaryGateBlockEntity gate;
     private final ContainerData data;
     public ImaginaryGateMenu(int id, Inventory inventory, RegistryFriendlyByteBuf buffer) {
         this(id, inventory, (ImaginaryGateBlockEntity) inventory.player.level().getBlockEntity(buffer.readBlockPos()), new SimpleContainerData(1));
     }
     public ImaginaryGateMenu(int id, Inventory inventory, ImaginaryGateBlockEntity gate, ContainerData data) {
-        super(LyyMenus.IMAGINARY_GATE.get(), id);
+        this(LyyMenus.IMAGINARY_GATE.get(), id, inventory, gate, data);
+    }
+    protected ImaginaryGateMenu(MenuType<?> type, int id, Inventory inventory, ImaginaryGateBlockEntity gate, ContainerData data) {
+        super(type, id);
         this.gate = gate;
         this.data = data;
         addDataSlots(data);
-        addSlot(new SlotItemHandler(gate.items(), 0, 80, 39));
+        addSlot(new SlotItemHandler(gate.items(), 0, 80, 39) {
+            @Override public void set(ItemStack stack) {
+                gate.setOffering(inventory.player, stack);
+                setChanged();
+            }
+        });
         for (int row = 0; row < 3; row++)
             for (int col = 0; col < 9; col++) addSlot(new Slot(inventory, 9 + row * 9 + col, 8 + col * 18, 104 + row * 18));
         for (int col = 0; col < 9; col++) addSlot(new Slot(inventory, col, 8 + col * 18, 162));

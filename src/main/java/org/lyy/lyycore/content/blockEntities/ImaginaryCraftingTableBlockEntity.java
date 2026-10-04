@@ -1,6 +1,8 @@
 package org.lyy.lyycore.content.blockEntities;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -24,6 +26,7 @@ import org.lyy.lyycore.registry.LyyRecipes;
 public final class ImaginaryCraftingTableBlockEntity extends BlockEntity implements MenuProvider {
     private int progress;
     private ResourceLocation activeRecipe;
+    private ResourceLocation completedRecipe;
     private final ItemStackHandler items = new ItemStackHandler(9) {
         @Override public int getSlotLimit(int slot) { return 1; }
         @Override protected void onContentsChanged(int slot) {
@@ -48,6 +51,17 @@ public final class ImaginaryCraftingTableBlockEntity extends BlockEntity impleme
     public ItemStackHandler items() { return items; }
     public ContainerData data() { return data; }
 
+    /** Like a furnace, crafting credit goes to the player taking the actual result. */
+    public void awardCraftedResult(Player player, ItemStack taken) {
+        if (!(player instanceof ServerPlayer server) || completedRecipe == null) return;
+        var recipe = level.getRecipeManager().byKey(completedRecipe).orElse(null);
+        if (recipe != null && recipe.value() instanceof ImaginaryCraftingRecipe crafting
+                && ItemStack.isSameItemSameComponents(taken, crafting.result()))
+            CriteriaTriggers.RECIPE_CRAFTED.trigger(server, completedRecipe, java.util.List.of());
+        completedRecipe = null;
+        setChanged();
+    }
+
     public static void serverTick(Level level, BlockPos pos, BlockState state, ImaginaryCraftingTableBlockEntity table) {
         var recipe = level.getRecipeManager().getAllRecipesFor(LyyRecipes.IMAGINARY_CRAFTING.get()).stream()
                 .filter(holder -> holder.value().matches(table.input, level))
@@ -68,6 +82,7 @@ public final class ImaginaryCraftingTableBlockEntity extends BlockEntity impleme
             ItemStack result = recipe.value().assemble(table.input, level.registryAccess());
             for (int slot = 0; slot < 9; slot++) table.items.setStackInSlot(slot, ItemStack.EMPTY);
             table.items.setStackInSlot(0, result);
+            table.completedRecipe = recipe.id();
         }
         table.setChanged();
     }
@@ -81,11 +96,13 @@ public final class ImaginaryCraftingTableBlockEntity extends BlockEntity impleme
         tag.put("Items", items.serializeNBT(registries));
         tag.putInt("Progress", progress);
         if (activeRecipe != null) tag.putString("Recipe", activeRecipe.toString());
+        if (completedRecipe != null) tag.putString("CompletedRecipe", completedRecipe.toString());
     }
     @Override protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
         items.deserializeNBT(registries, tag.getCompound("Items"));
         progress = Math.clamp(tag.getInt("Progress"), 0, ImaginaryCraftingRecipe.DURATION - 1);
         activeRecipe = ResourceLocation.tryParse(tag.getString("Recipe"));
+        completedRecipe = ResourceLocation.tryParse(tag.getString("CompletedRecipe"));
     }
 }

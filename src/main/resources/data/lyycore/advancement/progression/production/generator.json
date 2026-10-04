@@ -1,0 +1,31 @@
+{
+  "display": {
+    "icon": {
+      "id": "lyycore:im_generator"
+    },
+    "title": {
+      "translate": "advancement.lyycore.production.generator.title"
+    },
+    "description": {
+      "translate": "advancement.lyycore.production.generator.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "crafted": {
+      "trigger": "minecraft:recipe_crafted",
+      "conditions": {
+        "recipe_id": "lyycore:im_generator"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "crafted"
+    ]
+  ],
+  "parent": "lyycore:progression/production"
+}
