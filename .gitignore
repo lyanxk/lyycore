@@ -43,3 +43,7 @@ repo/
 /designdoc.docx
 ~$*.docx
 ~WRL*.tmp
+
+# Python bytecode
+__pycache__/
+*.py[cod]
