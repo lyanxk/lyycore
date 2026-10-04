@@ -205,6 +205,7 @@
   "gui.lyycore.research.transcribe": "抄写",
   "gui.lyycore.research.memory_empty": "还没有已完成的研究",
   "message.lyycore.foreign_research": "这份知识不属于你",
+  "message.lyycore.foreign_production": "这件研究产物不属于你",
   "message.lyycore.research_copied": "已抄写研究记录",
   "gui.lyycore.lab.insert": "放入研究记录",
   "gui.lyycore.lab.complete": "产物已完成",

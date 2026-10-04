@@ -7,6 +7,7 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.AABB;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -22,6 +23,7 @@ public final class FeatherAttackRenderer {
     private static final List<WingsNetwork.Attack> ATTACKS = new ArrayList<>();
     private static ClientLevel level;
     private static AnimatedMeshModel mesh;
+    private static final double RENDER_DISTANCE_SQUARED = 128 * 128;
     private FeatherAttackRenderer() { }
     private static void refreshLevel() {
         if (level != Minecraft.getInstance().level) {
@@ -75,23 +77,30 @@ public final class FeatherAttackRenderer {
     }
     @SubscribeEvent public static void render(RenderLevelStageEvent event) {
         if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_ENTITIES || level == null || ATTACKS.isEmpty()) return;
-        if (mesh == null) mesh = new AnimatedMeshModel("white_feather_projectile");
         float partial = event.getPartialTick().getGameTimeDeltaPartialTick(false);
         var buffers = Minecraft.getInstance().renderBuffers().bufferSource();
         var pose = event.getPoseStack();
         Vec3 camera = event.getCamera().getPosition();
         for (var attack : ATTACKS) {
             if (!(level.getEntity(attack.playerId()) instanceof Player owner) || owner.isInvisible()) continue;
+            // Include the launch, target, current return position and Bezier control-point margins.
+            // Culling only the owner would hide feathers flying into the camera from off screen.
+            double margin = Math.max(4, Math.max(0.6, attack.width() * 0.7) * 4 + 4);
+            AABB bounds = new AABB(attack.origin(), attack.target()).minmax(owner.getBoundingBox()).inflate(margin);
+            if (bounds.distanceToSqr(camera) > RENDER_DISTANCE_SQUARED || !event.getFrustum().isVisible(bounds)) continue;
             float age = (level.getGameTime() - attack.started() + partial) / 20;
             for (int feather = 0; feather < 4; feather++) {
                 float time = age - FeatherAttack.release(feather);
                 if (time < 0 || time >= FeatherAttack.FLIGHT) continue;
                 Vec3 position = point(attack, owner, feather, time, partial);
+                if (position.distanceToSqr(camera) > RENDER_DISTANCE_SQUARED
+                        || !event.getFrustum().isVisible(AABB.ofSize(position, 4, 4, 4))) continue;
                 Vec3 direction = point(attack, owner, feather, Math.min(time + 0.002F, FeatherAttack.FLIGHT), partial).subtract(position).normalize();
                 if (direction.lengthSqr() < 0.01) continue;
                 pose.pushPose();
                 pose.translate(position.x - camera.x, position.y - camera.y, position.z - camera.z);
                 pose.mulPose(new Quaternionf().rotationTo(new Vector3f(0, 0, -1), direction.toVector3f()));
+                if (mesh == null) mesh = new AnimatedMeshModel("white_feather_projectile");
                 mesh.render(pose, buffers, LightTexture.FULL_BRIGHT, "fly", time);
                 pose.popPose();
             }

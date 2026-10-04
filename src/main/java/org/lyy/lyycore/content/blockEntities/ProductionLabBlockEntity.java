@@ -17,6 +17,7 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.items.ItemStackHandler;
+import org.lyy.lyycore.content.ProductionOwnership;
 import org.lyy.lyycore.content.item.ResearchNotesItem;
 import org.lyy.lyycore.content.menu.ProductionLabMenu;
 import org.lyy.lyycore.registry.LyyBlockEntities;
@@ -59,16 +60,20 @@ public final class ProductionLabBlockEntity extends BlockEntity implements MenuP
     }
     public static void serverTick(Level level, BlockPos pos, BlockState state, ProductionLabBlockEntity lab) {
         if (lab.output) return;
-        var research = ResearchNotesItem.research(lab.items.getStackInSlot(0), level);
+        var notes = lab.items.getStackInSlot(0);
+        var owner = ResearchNotesItem.owner(notes);
+        var research = ResearchNotesItem.research(notes, level);
         var production = research == null ? null : research.production().orElse(null);
-        if (production == null) {
+        if (production == null || owner == null) {
             if (lab.progress != 0 || lab.duration != 0) { lab.progress = lab.duration = 0; lab.changed(); }
             return;
         }
         lab.duration = production.duration();
         lab.progress++;
         if (lab.progress >= lab.duration) {
-            lab.items.setStackInSlot(0, production.result());
+            var result = production.result();
+            ProductionOwnership.bind(result, owner);
+            lab.items.setStackInSlot(0, result);
             lab.output = true;
             lab.changed();
         } else if (lab.progress == 1 || lab.progress % 10 == 0) lab.changed();

@@ -24,6 +24,8 @@ import net.minecraft.world.item.ItemStack;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public final class AdvancedImaginaryGateBlockEntity extends ImaginaryGateBlockEntity {
     public static final int RADIUS = 8;
@@ -31,6 +33,7 @@ public final class AdvancedImaginaryGateBlockEntity extends ImaginaryGateBlockEn
     private ResourceLocation selectedBiome = ResourceLocation.withDefaultNamespace("plains");
     private int completedColumns, elapsedTicks;
     private boolean running, waitingForChunk;
+    private final Set<Long> convertedQuartColumns = new HashSet<>();
 
     public AdvancedImaginaryGateBlockEntity(BlockPos pos, BlockState state) {
         super(LyyBlockEntities.ADVANCED_IMAGINARY_GATE.get(), pos, state);
@@ -52,13 +55,13 @@ public final class AdvancedImaginaryGateBlockEntity extends ImaginaryGateBlockEn
     public boolean waitingForChunk() { return waitingForChunk; }
     public void selectBiome(ResourceLocation id) {
         if (running || level == null || !level.registryAccess().registryOrThrow(Registries.BIOME).containsKey(id)) return;
-        if (!id.equals(selectedBiome)) { selectedBiome = id; completedColumns = 0; elapsedTicks = 0; }
+        if (!id.equals(selectedBiome)) { selectedBiome = id; completedColumns = 0; elapsedTicks = 0; convertedQuartColumns.clear(); }
         setChanged();
     }
     public void setRunning(boolean value) {
         running = value;
         waitingForChunk = false;
-        if (value && completedColumns == COLUMNS.size()) completedColumns = 0;
+        if (value && completedColumns == COLUMNS.size()) { completedColumns = 0; convertedQuartColumns.clear(); }
         setChanged();
     }
     public static void serverTick(Level level, BlockPos pos, BlockState state, AdvancedImaginaryGateBlockEntity gate) {
@@ -71,15 +74,25 @@ public final class AdvancedImaginaryGateBlockEntity extends ImaginaryGateBlockEn
         var biome = server.registryAccess().registryOrThrow(Registries.BIOME).getHolder(selectedBiome).orElse(null);
         if (biome == null) { setRunning(false); return; }
         BlockPos column = worldPosition.offset(COLUMNS.get(completedColumns));
+        int quartX = QuartPos.fromBlock(column.getX()), quartZ = QuartPos.fromBlock(column.getZ());
+        long quartKey = net.minecraft.world.level.ChunkPos.asLong(quartX, quartZ);
+        if (convertedQuartColumns.contains(quartKey)) {
+            waitingForChunk = false;
+            finishColumn();
+            return;
+        }
         var chunk = server.getChunk(column.getX() >> 4, column.getZ() >> 4, ChunkStatus.FULL, false);
         waitingForChunk = chunk == null;
         if (chunk == null) return; // Never generate or force-load a neighbouring chunk.
-        int quartX = QuartPos.fromBlock(column.getX()), quartZ = QuartPos.fromBlock(column.getZ());
         // Vanilla stores biomes in 4x4x4 cells. Preserve every other column at every height.
         chunk.fillBiomesFromNoise((x, y, z, sampler) -> x == quartX && z == quartZ
                 ? biome : chunk.getNoiseBiome(x, y, z), server.getChunkSource().randomState().sampler());
         chunk.setUnsaved(true);
         server.getChunkSource().chunkMap.resendBiomesForChunks(List.of(chunk));
+        convertedQuartColumns.add(quartKey);
+        finishColumn();
+    }
+    private void finishColumn() {
         if (++completedColumns == COLUMNS.size()) running = false;
         setChanged();
     }
@@ -101,5 +114,13 @@ public final class AdvancedImaginaryGateBlockEntity extends ImaginaryGateBlockEn
         completedColumns = Math.clamp(tag.getInt("Columns"), 0, COLUMNS.size());
         elapsedTicks = Math.clamp(tag.getInt("Elapsed"), 0, 19);
         running = tag.getBoolean("Running") && completedColumns < COLUMNS.size();
+        // Each completed legacy block column already wrote its whole quart column.
+        // Reconstructing from progress also preserves de-duplication after a restart.
+        convertedQuartColumns.clear();
+        for (int i = 0; i < completedColumns; i++) {
+            var column = worldPosition.offset(COLUMNS.get(i));
+            convertedQuartColumns.add(net.minecraft.world.level.ChunkPos.asLong(
+                    QuartPos.fromBlock(column.getX()), QuartPos.fromBlock(column.getZ())));
+        }
     }
 }

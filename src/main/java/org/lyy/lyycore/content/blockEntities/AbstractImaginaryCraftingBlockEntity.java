@@ -21,17 +21,22 @@ import net.neoforged.neoforge.items.ItemStackHandler;
 import org.lyy.lyycore.content.menu.ImaginaryCraftingMenu;
 import org.lyy.lyycore.content.recipes.OctagonalRecipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 
 public abstract class AbstractImaginaryCraftingBlockEntity extends BlockEntity implements MenuProvider {
     private int progress, duration = 100, recipeEnergy;
     private ResourceLocation activeRecipe;
     private ResourceLocation completedRecipe;
+    private RecipeManager cachedManager;
+    private RecipeHolder<? extends OctagonalRecipe> cachedRecipe;
+    private boolean recipeDirty = true;
     private final ItemStackHandler items = new ItemStackHandler(9) {
         @Override public int getSlotLimit(int slot) { return 1; }
         @Override protected void onContentsChanged(int slot) {
             progress = 0;
             activeRecipe = null;
+            recipeDirty = true;
             setChanged();
         }
     };
@@ -73,7 +78,25 @@ public abstract class AbstractImaginaryCraftingBlockEntity extends BlockEntity i
     }
 
     public static void serverTick(Level level, BlockPos pos, BlockState state, AbstractImaginaryCraftingBlockEntity table) {
-        var recipe = table.findRecipe(table.input);
+        var manager = level.getRecipeManager();
+        boolean reloaded = false;
+        if (table.cachedManager != manager || table.cachedRecipe != null
+                && manager.byKey(table.cachedRecipe.id()).orElse(null) != table.cachedRecipe) {
+            reloaded = table.cachedManager != null;
+            table.cachedManager = manager;
+            table.recipeDirty = true;
+        }
+        if (table.recipeDirty) {
+            var previous = table.cachedRecipe;
+            table.cachedRecipe = table.findRecipe(table.input);
+            table.recipeDirty = false; // Cache misses as well as successful matches.
+            if (reloaded && !sameProcessing(previous, table.cachedRecipe)) {
+                table.progress = 0;
+                table.activeRecipe = null;
+                table.setChanged();
+            }
+        }
+        var recipe = table.cachedRecipe;
         if (recipe == null) {
             table.recipeEnergy = 0;
             table.duration = 100;
@@ -100,6 +123,11 @@ public abstract class AbstractImaginaryCraftingBlockEntity extends BlockEntity i
         }
         table.setChanged();
     }
+    private static boolean sameProcessing(RecipeHolder<? extends OctagonalRecipe> before, RecipeHolder<? extends OctagonalRecipe> after) {
+        return before != null && after != null && before.id().equals(after.id())
+                && before.value().duration() == after.value().duration() && before.value().energy() == after.value().energy()
+                && ItemStack.matches(before.value().result(), after.value().result());
+    }
 
     @Override public Component getDisplayName() { return getBlockState().getBlock().getName(); }
     @Override public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player) {
@@ -114,6 +142,9 @@ public abstract class AbstractImaginaryCraftingBlockEntity extends BlockEntity i
     }
     @Override protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
+        cachedManager = null;
+        cachedRecipe = null;
+        recipeDirty = true;
         items.deserializeNBT(registries, tag.getCompound("Items"));
         progress = Math.clamp(tag.getInt("Progress"), 0, 32766);
         activeRecipe = ResourceLocation.tryParse(tag.getString("Recipe"));

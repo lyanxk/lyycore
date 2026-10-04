@@ -62,6 +62,10 @@ public final class LifeRevel extends RevelMob {
     public Vec3 beam() { return new Vec3(entityData.get(BEAM)); }
     public Set<UUID> dancers() { return Set.copyOf(dancers); }
     public Set<UUID> blinds() { return Set.copyOf(blinds); }
+    @Override public void onAddedToLevel() {
+        super.onAddedToLevel();
+        if (level() instanceof ServerLevel server) RevelSummons.get(server).register(getUUID(), dancers, blinds);
+    }
     @Override protected void animationFinished(String name) {
         if (name.equals("summon")) animate("summon_recover", 16);
         else super.animationFinished(name);
@@ -102,9 +106,8 @@ public final class LifeRevel extends RevelMob {
                 && !(target instanceof RevelMob) && !(target instanceof Player player && (player.isCreative() || player.isSpectator()));
     }
     private void updateSummons() {
-        // Allow chunk entities to finish loading before reconciling saved UUIDs. This also
-        // handles minions removed while the boss's chunk was unloaded, without world scans.
-        if (tickCount >= 40 && tickCount % 20 == 0) reconcileSummons();
+        // A missing loaded entity is not proof of death. Consume explicit lifecycle notifications only.
+        if (tickCount % 20 == 0) reconcileSummons();
         if (--dancerTicks <= 0) {
             dancerTicks = DANCER_INTERVAL;
             if (dancers.size() < 8) summonDancers();
@@ -112,13 +115,14 @@ public final class LifeRevel extends RevelMob {
         if (blinds.isEmpty() && blindTicks >= 0 && --blindTicks <= 0) summonBlinds();
     }
     private void reconcileSummons() {
-        ServerLevel server = (ServerLevel) level();
-        boolean hadDancers = !dancers.isEmpty(), hadBlinds = !blinds.isEmpty();
-        java.util.function.Predicate<UUID> absent = id -> !(server.getEntity(id) instanceof RevelMinion minion) || !minion.isAlive();
-        dancers.removeIf(absent);
-        blinds.removeIf(absent);
-        if (hadDancers && dancers.isEmpty()) dancerTicks = Math.max(0, dancerTicks - 100);
-        if (hadBlinds && blinds.isEmpty()) blindTicks = BLIND_INTERVAL;
+        RevelSummons.get((ServerLevel) level()).drain(getUUID()).forEach(this::minionRemoved);
+    }
+    void minionAvailable(RevelMinion minion) {
+        if (cleaningUp || !isAlive()) return;
+        // Reattach survivors from older saves whose owner previously forgot unloaded UUIDs.
+        if (minion instanceof RevelDancer) dancers.add(minion.getUUID());
+        else if (minion instanceof RevelBlind) blinds.add(minion.getUUID());
+        RevelSummons.get((ServerLevel) level()).track(getUUID(), minion.getUUID());
     }
     private void summonBlinds() {
         for (int corner = 0; corner < 4; corner++) {
@@ -145,13 +149,19 @@ public final class LifeRevel extends RevelMob {
         for (int height = 0; height < 4; height++) {
             minion.setPos(desired.add(0, height, 0));
             if (level().hasChunkAt(BlockPos.containing(minion.position())) && level().noCollision(minion)
-                    && level().addFreshEntity(minion)) return true;
+                    && level().addFreshEntity(minion)) {
+                minionAvailable(minion);
+                return true;
+            }
         }
         return false;
     }
     public void minionRemoved(RevelMinion minion, boolean died) {
-        boolean dancer = dancers.remove(minion.getUUID());
-        boolean blind = blinds.remove(minion.getUUID());
+        minionRemoved(minion.getUUID(), died);
+    }
+    private void minionRemoved(UUID id, boolean died) {
+        boolean dancer = dancers.remove(id);
+        boolean blind = blinds.remove(id);
         if (cleaningUp || !isAlive()) return;
         if (dancer && died) {
             if (++dancerDeaths == 3) { dancerDeaths = 0; pendingLasers++; }
@@ -214,6 +224,7 @@ public final class LifeRevel extends RevelMob {
     private void clearMinions(boolean killed) {
         if (cleaningUp || !(level() instanceof ServerLevel server)) return;
         cleaningUp = true;
+        RevelSummons.get(server).end(getUUID(), killed);
         for (Set<UUID> group : List.of(dancers, blinds)) for (UUID id : List.copyOf(group)) {
             if (server.getEntity(id) instanceof RevelMinion minion) {
                 if (killed && minion.isAlive()) minion.kill(); else minion.discard();

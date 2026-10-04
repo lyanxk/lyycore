@@ -28,12 +28,20 @@ public abstract class RevelMinion extends RevelMob {
     @Override protected final void customServerAiStep() {
         LifeRevel boss = boss();
         if (boss == null) {
+            var summons = RevelSummons.get((ServerLevel) level());
+            if (summons.ended(bossId)) {
+                if (summons.killed(bossId)) kill(); else discard();
+                return;
+            }
+            // A known owner can remain unloaded indefinitely without killing its summons.
+            if (summons.active(bossId)) { missingBossTicks = 0; setDeltaMovement(Vec3.ZERO); return; }
             // Chunk loading may recreate the minion before its owner. Do not destroy it on that first tick.
             if (++missingBossTicks >= 200) discard();
             return;
         }
         missingBossTicks = 0;
         if (!boss.isAlive()) { kill(); return; }
+        boss.minionAvailable(this);
         updateWithBoss(boss);
     }
     protected abstract void updateWithBoss(LifeRevel boss);
@@ -51,6 +59,7 @@ public abstract class RevelMinion extends RevelMob {
         if (reportedRemoval || level().isClientSide) return;
         reportedRemoval = true;
         LifeRevel boss = boss();
+        RevelSummons.get((ServerLevel) level()).removed(bossId, getUUID(), died, boss == null);
         if (boss != null) boss.minionRemoved(this, died);
     }
     @Override public void die(DamageSource source) {
@@ -58,7 +67,7 @@ public abstract class RevelMinion extends RevelMob {
         if (dead) reportRemoval(true);
     }
     @Override public void remove(RemovalReason reason) {
-        if (reason.shouldDestroy()) reportRemoval(false);
+        if (reason.shouldDestroy() || reason == RemovalReason.CHANGED_DIMENSION) reportRemoval(false);
         super.remove(reason);
     }
     @Override public void addAdditionalSaveData(CompoundTag tag) {

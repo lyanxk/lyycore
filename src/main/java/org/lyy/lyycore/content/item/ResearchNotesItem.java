@@ -38,6 +38,12 @@ public final class ResearchNotesItem extends Item {
         return holder == null ? null : holder.value();
     }
 
+    @Nullable public static UUID owner(ItemStack stack) {
+        if (!stack.is(LyyItems.RESEARCH_NOTES.get())) return null;
+        var data = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
+        return data.hasUUID("Owner") ? data.getUUID("Owner") : null;
+    }
+
     @Override public void inventoryTick(ItemStack stack, Level level, Entity entity, int slot, boolean selected) {
         // Ownership is deliberately not checked in containers, on the ground, or in other inventory slots.
         if (level.isClientSide || !(entity instanceof Player player) || !(selected || player.getOffhandItem() == stack)) return;

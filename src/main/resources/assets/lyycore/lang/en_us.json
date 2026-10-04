@@ -205,6 +205,7 @@
   "gui.lyycore.research.transcribe": "Transcribe",
   "gui.lyycore.research.memory_empty": "No completed research yet",
   "message.lyycore.foreign_research": "This knowledge does not belong to you",
+  "message.lyycore.foreign_production": "This research product does not belong to you",
   "message.lyycore.research_copied": "Research notes transcribed",
   "gui.lyycore.lab.insert": "Insert research notes",
   "gui.lyycore.lab.complete": "Product ready",
