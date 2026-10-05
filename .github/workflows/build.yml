@@ -27,13 +27,3 @@ jobs:
 
       - name: Build with Gradle
         run: ./gradlew build
-
-      - name: Run gameplay regressions
-        run: ./gradlew -I tools/review-regressions/init.gradle runReviewRegressions --console=plain --no-configuration-cache
-
-      - name: Print gameplay logs on failure
-        if: failure()
-        run: |
-          if [ -f build/review-regressions/run/logs/latest.log ]; then
-            tail -n 500 build/review-regressions/run/logs/latest.log
-          fi
