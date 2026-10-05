@@ -56,14 +56,6 @@ public final class WingsScoop {
         return true;
     }
 
-    /** Called after a server teleport has actually relocated the player, regardless of distance. */
-    public static void teleported(ServerPlayer player) {
-        var attack = ACTIVE.get(player);
-        if (attack == null) return;
-        if (!current(player, attack)) { stop(player); return; }
-        attack.feathers.forEach(ScoopFeather::resetSweep);
-    }
-
     private static void stop(ServerPlayer player) {
         var attack = ACTIVE.remove(player);
         if (attack != null) attack.feathers.forEach(ScoopFeather::discard);

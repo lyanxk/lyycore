@@ -33,12 +33,6 @@ public final class ScoopFeather extends Entity {
 
     private void moveCenter(Vec3 center) { setPos(center.x, center.y - SIZE / 2, center.z); }
 
-    /** Relocate the previous sample, never sweep across a discontinuous player movement. */
-    void resetSweep() {
-        if (!isRemoved() && owner != null)
-            moveCenter(ScoopPaths.position(path, previousAge, owner.position(), owner.getYRot()));
-    }
-
     @Override public void tick() {
         super.tick();
         if (level().isClientSide) return;

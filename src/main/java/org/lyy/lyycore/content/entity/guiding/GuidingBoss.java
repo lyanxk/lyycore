@@ -3,7 +3,6 @@ package org.lyy.lyycore.content.entity.guiding;
 import java.util.List;
 import java.util.UUID;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.*;
@@ -48,22 +47,6 @@ public final class GuidingBoss extends GuidingMob {
                 .add(Attributes.ARMOR, second ? 30 : 20).add(Attributes.ARMOR_TOUGHNESS, second ? 30 : 20)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 1).add(Attributes.MOVEMENT_SPEED, second ? .25 : 0)
                 .add(Attributes.FOLLOW_RANGE, 20);
-    }
-    @Override public double getAttributeValue(Holder<Attribute> attribute) {
-        if (!attribute.equals(Attributes.MAX_HEALTH) && !attribute.equals(Attributes.ARMOR_TOUGHNESS))
-            return super.getAttributeValue(attribute);
-        // Vanilla caps these at 1024 and 20. Lift those caps only for this boss,
-        // preserving modifier order without changing attributes for other entities.
-        var instance = getAttribute(attribute);
-        double base = instance.getBaseValue();
-        for (var modifier : instance.getModifiers())
-            if (modifier.operation() == AttributeModifier.Operation.ADD_VALUE) base += modifier.amount();
-        double value = base;
-        for (var modifier : instance.getModifiers())
-            if (modifier.operation() == AttributeModifier.Operation.ADD_MULTIPLIED_BASE) value += base * modifier.amount();
-        for (var modifier : instance.getModifiers())
-            if (modifier.operation() == AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL) value *= 1 + modifier.amount();
-        return Double.isFinite(value) ? Math.max(0, value) : base;
     }
     @Override protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder); builder.define(ACTION, Action.WAIT.ordinal()); builder.define(TARGET, -1);

@@ -25,7 +25,7 @@ public final class BuildingSkills {
         }
     }
     @SubscribeEvent public static void damage(LivingDamageEvent.Post event) {
-        if (event.getNewDamage() <= 0 || applyingPenalty || !(event.getEntity() instanceof ServerPlayer player)
+        if (applyingPenalty || !(event.getEntity() instanceof ServerPlayer player)
                 || !BasicSkills.active(player, StyleSystem.Style.BUILDING)) return;
         int invulnerability = player.invulnerableTime;
         applyingPenalty = true;

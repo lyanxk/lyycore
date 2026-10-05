@@ -2,9 +2,6 @@ modLoader="javafml"
 loaderVersion="${loader_version_range}"
 license="${mod_license}"
 
-[[mixins]]
-config="lyycore.flight_speed.mixins.json"
-
 [[mods]]
 modId="${mod_id}"
 version="${mod_version}"
@@ -17,6 +14,13 @@ description='''${mod_description}'''
     modId="caelus"
     type="required"
     versionRange="[7.0.1,8)"
+    ordering="AFTER"
+    side="BOTH"
+
+[[dependencies.${mod_id}]]
+    modId="attributefix"
+    type="required"
+    versionRange="[${attributefix_version},21.2)"
     ordering="AFTER"
     side="BOTH"
 

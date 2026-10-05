@@ -112,6 +112,11 @@ configurations {
 dependencies {
     compileOnly "com.illusivesoulworks.caelus:caelus-neoforge:${caelus_version}:api"
     runtimeOnly "com.illusivesoulworks.caelus:caelus-neoforge:${caelus_version}"
+    runtimeOnly("net.darkhax.attributefix:attributefix-neoforge-${minecraft_version}:${attributefix_version}") {
+        // AttributeFix publishes its optional JEI integration as a runtime dependency.
+        // Keep JEI under this project's existing optional development configuration.
+        exclude group: "mezz.jei"
+    }
     // JEI (optional, compile-time API + runtime full jar)
     compileOnly "mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"
     compileOnly "mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}"
@@ -147,6 +152,7 @@ var generateModMetadata = tasks.register("generateModMetadata", ProcessResources
             mod_version            : mod_version,
             mod_authors            : mod_authors,
             mod_description        : mod_description,
+            attributefix_version   : attributefix_version,
     ]
     inputs.properties replaceProperties
     expand replaceProperties
