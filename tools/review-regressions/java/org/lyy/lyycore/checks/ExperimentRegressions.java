@@ -157,8 +157,13 @@ public final class ExperimentRegressions {
         MindControl.bind(phantom, binding);
         test.assertTrue(MindControl.binding(phantom) == binding, "Monster did not bind");
         saved.execute(binding);
-        test.assertTrue(binding.mobs.isEmpty() && saved.takeExecution(phantom.getUUID()), "Unloaded execution was not retained");
-        test.assertFalse(saved.takeExecution(phantom.getUUID()), "Execution was applied twice");
+        test.assertTrue(binding.mobs.contains(phantom.getUUID()) && saved.execution(phantom.getUUID()) != null,
+                "Execution released control before death was confirmed");
+        var attempt = saved.beginExecution(phantom.getUUID());
+        test.assertTrue(attempt != null && attempt.owner().equals(owner), "Execution lost its issuing owner");
+        test.assertTrue(saved.beginExecution(phantom.getUUID()) == null, "Execution was attempted twice");
+        saved.finishExecution(attempt, true);
+        test.assertTrue(binding.mobs.isEmpty() && saved.execution(phantom.getUUID()) == null, "Successful execution was not acknowledged");
         saved.release(owner, binding.beacon);
         test.succeed();
     }

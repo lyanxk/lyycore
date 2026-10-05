@@ -17,16 +17,19 @@ public final class GuidingGrab extends Entity {
     private int age;
     public GuidingGrab(EntityType<? extends GuidingGrab> type, Level level) { super(type, level); noPhysics = true; }
     @Override protected void defineSynchedData(SynchedEntityData.Builder builder) { }
-    public static void launch(GuidingBoss boss, Player target, boolean fast) {
+    /** Null means that no projectile was admitted to the world. */
+    public static UUID launch(GuidingBoss boss, Player target, boolean fast) {
         var grab = LyyEntities.GUIDING_GRAB.get().create(boss.level());
-        if (grab == null) return;
+        if (grab == null) return null;
         grab.bossId = boss.getUUID(); grab.targetId = target.getUUID(); grab.fast = fast;
-        grab.setPos(boss.getEyePosition()); boss.level().addFreshEntity(grab);
+        grab.setPos(boss.getEyePosition());
+        return boss.level().addFreshEntity(grab) ? grab.getUUID() : null;
     }
     @Override public void tick() {
         super.tick();
         if (!(level() instanceof ServerLevel server)) return;
-        if (bossId == null || targetId == null || !(server.getEntity(bossId) instanceof GuidingBoss boss) || !boss.isAlive() || !boss.grabbing()
+        if (bossId == null || targetId == null || !(server.getEntity(bossId) instanceof GuidingBoss boss)
+                || !boss.isAlive() || !boss.ownsGrab(getUUID())
                 || !(server.getEntity(targetId) instanceof Player target) || !target.isAlive()) { discard(); return; }
         Vec3 start = position(), offset = target.getBoundingBox().getCenter().subtract(start);
         Vec3 end = start.add(offset.normalize().scale(Math.min(offset.length(), fast ? .5 : .1)));
@@ -35,7 +38,13 @@ public final class GuidingGrab extends Entity {
         if (bounds.contains(start) || bounds.clip(start, end).isPresent()) {
             boss.captured(target); discard(); return;
         }
-        if (!fast && ++age >= 200) { boss.grabMissed(); discard(); }
+        if (!fast && ++age >= 200) { boss.grabMissed(getUUID()); discard(); }
+    }
+    @Override public void remove(RemovalReason reason) {
+        // Permanent removal is an action failure, but ordinary chunk unload is not death.
+        if (reason.shouldDestroy() && bossId != null && level() instanceof ServerLevel server
+                && server.getEntity(bossId) instanceof GuidingBoss boss) boss.grabMissed(getUUID());
+        super.remove(reason);
     }
     @Override protected void addAdditionalSaveData(CompoundTag tag) {
         if (bossId != null) tag.putUUID("Boss", bossId);

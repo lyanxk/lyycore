@@ -17,7 +17,6 @@ public final class ScoopFeather extends Entity {
     private ServerPlayer owner;
     private WingsScoop.Attack attack;
     private int path, previousAge;
-    private Vec3 previousOwnerPosition;
 
     public ScoopFeather(EntityType<? extends ScoopFeather> type, Level level) {
         super(type, level);
@@ -29,11 +28,16 @@ public final class ScoopFeather extends Entity {
         this.owner = owner;
         this.attack = attack;
         this.path = path;
-        previousOwnerPosition = owner.position();
         moveCenter(ScoopPaths.position(path, 0, owner.position(), owner.getYRot()));
     }
 
     private void moveCenter(Vec3 center) { setPos(center.x, center.y - SIZE / 2, center.z); }
+
+    /** Relocate the previous sample, never sweep across a discontinuous player movement. */
+    void resetSweep() {
+        if (!isRemoved() && owner != null)
+            moveCenter(ScoopPaths.position(path, previousAge, owner.position(), owner.getYRot()));
+    }
 
     @Override public void tick() {
         super.tick();
@@ -44,13 +48,9 @@ public final class ScoopFeather extends Entity {
         if (age <= previousAge) return;
         Vec3 start = getBoundingBox().getCenter();
         Vec3 end = ScoopPaths.position(path, age, owner.position(), owner.getYRot());
-        // Teleports relocate the attack without cutting through everything between dimensions/positions.
-        if (owner.position().distanceToSqr(previousOwnerPosition) > 64)
-            start = ScoopPaths.position(path, previousAge, owner.position(), owner.getYRot());
         if (age >= 2 && age <= 33) strike(start, end);
         moveCenter(end);
         previousAge = age;
-        previousOwnerPosition = owner.position();
     }
 
     private void strike(Vec3 start, Vec3 end) {

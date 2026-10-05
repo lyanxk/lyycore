@@ -2,18 +2,19 @@ package org.lyy.lyycore.content.control;
 
 import java.util.*;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.monster.*;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.phys.AABB;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.util.FakePlayerFactory;
 import com.mojang.authlib.GameProfile;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
+import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent;
 import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import org.lyy.lyycore.registry.LyyBlocks;
@@ -34,13 +35,19 @@ public final class MindControl {
         var binding = MindControlData.get(level).active(tag.getUUID(OWNER));
         return binding != null && binding.id.equals(tag.getUUID(BINDING)) && binding.mobs.contains(mob.getUUID()) ? binding : null;
     }
+    private static void resolveLegacyExecution(Mob mob, MindControlData data) {
+        var tag = mob.getPersistentData();
+        if (data.hasLegacyExecution(mob.getUUID()) && tag.hasUUID(OWNER) && tag.hasUUID(BINDING))
+            data.resolveLegacyExecution(mob.getUUID(), tag.getUUID(OWNER), tag.getUUID(BINDING));
+    }
     public static void bind(Mob mob, MindControlData.Binding binding) {
-        if (!eligible(mob)) return;
-        var previous = binding(mob);
-        // Repeated passive scans must not reset an already controlled monster's combat target.
-        if (previous != null) return;
+        if (!(mob.level() instanceof ServerLevel server) || !eligible(mob)) return;
+        var data = MindControlData.get(server);
+        resolveLegacyExecution(mob, data);
+        // Do not overwrite the only attribution in an incomplete legacy execution record.
+        if (data.hasLegacyExecution(mob.getUUID())) return;
+        if (binding(mob) != null || !data.addMob(binding, mob.getUUID())) return;
         mob.getPersistentData().putUUID(OWNER, binding.owner); mob.getPersistentData().putUUID(BINDING, binding.id);
-        binding.mobs.add(mob.getUUID()); MindControlData.get((ServerLevel)mob.level()).setDirty();
         mob.setTarget(null); install(mob);
     }
     private static void install(Mob mob) {
@@ -59,20 +66,40 @@ public final class MindControl {
         return target instanceof Enemy && !(target instanceof Creeper) && target != mob && target.isAlive()
                 && !(target instanceof Mob other && binding(other) != null);
     }
-    /** Use the normal player-kill path so loot, experience and kill credit are preserved. */
-    public static void execute(Mob mob, Player player) {
-        if (!mob.isAlive()) return;
-        mob.invulnerableTime = 0;
-        mob.hurt(mob.damageSources().playerAttack(player), Float.MAX_VALUE);
+    /** Normal player-kill damage: canceled damage and custom death rules remain authoritative. */
+    public static boolean execute(Mob mob, Player player) {
+        if (!mob.isAlive()) return true;
+        int invulnerability = mob.invulnerableTime;
+        try {
+            mob.invulnerableTime = 0;
+            mob.hurt(mob.damageSources().playerAttack(player), Float.MAX_VALUE);
+            return !mob.isAlive();
+        } finally { mob.invulnerableTime = invulnerability; }
     }
-    private static Player executionOwner(Mob mob, ServerLevel level) {
-        UUID owner = mob.getPersistentData().getUUID(OWNER);
-        var player = level.getServer().getPlayerList().getPlayer(owner);
-        // A deferred execution may run after its owner logs out; retain the recorded player's UUID.
-        return player != null ? player : FakePlayerFactory.get(level, new GameProfile(owner, "[Mind Control]"));
+    private static Player executionOwner(MindControlData.Execution request, ServerLevel level) {
+        var player = level.getServer().getPlayerList().getPlayer(request.owner());
+        return player != null ? player : FakePlayerFactory.get(level, new GameProfile(request.owner(), "[Mind Control]"));
+    }
+    /** One attempt only. A failed request remains recorded until an explicit retry or removal. */
+    public static void processExecution(Mob mob) {
+        if (!(mob.level() instanceof ServerLevel level)) return;
+        var data = MindControlData.get(level);
+        resolveLegacyExecution(mob, data);
+        var request = data.beginExecution(mob.getUUID());
+        if (request == null) return;
+        boolean died = execute(mob, executionOwner(request, level));
+        data.finishExecution(request, died);
+        if (!died) {
+            var player = level.getServer().getPlayerList().getPlayer(request.owner());
+            if (player != null) player.displayClientMessage(Component.translatableWithFallback(
+                    "message.lyycore.mind_execution_failed", "处决 %s 失败；仍有效的控制关系已保留。", mob.getDisplayName()), true);
+        }
     }
     @SubscribeEvent public static void join(EntityJoinLevelEvent event) {
-        if (event.getEntity() instanceof Mob mob && !event.getLevel().isClientSide && mob.getPersistentData().hasUUID(OWNER)) install(mob);
+        if (event.getEntity() instanceof Mob mob && event.getLevel() instanceof ServerLevel level && mob.getPersistentData().hasUUID(OWNER)) {
+            resolveLegacyExecution(mob, MindControlData.get(level));
+            install(mob);
+        }
     }
     @SubscribeEvent public static void despawn(MobDespawnEvent event) {
         if (binding(event.getEntity()) != null) event.setResult(MobDespawnEvent.Result.DENY);
@@ -80,36 +107,41 @@ public final class MindControl {
     @SubscribeEvent public static void target(LivingChangeTargetEvent event) {
         if (!(event.getEntity() instanceof Mob mob)) return;
         var binding = binding(mob); if (binding == null || event.getNewAboutToBeSetTarget() == null) return;
-        if (binding.mode != MindControlData.Mode.ATTACK || !validEnemy(mob, event.getNewAboutToBeSetTarget())) event.setNewAboutToBeSetTarget(null);
+        if (binding.mode() != MindControlData.Mode.ATTACK || !validEnemy(mob, event.getNewAboutToBeSetTarget())) event.setNewAboutToBeSetTarget(null);
     }
     @SubscribeEvent public static void friendlyFire(LivingIncomingDamageEvent event) {
-        if (event.getSource().getEntity() instanceof Mob attacker && binding(attacker) != null) {
-            if (event.getEntity() instanceof Mob victim && binding(victim) != null
-                    || event.getEntity().getUUID().equals(binding(attacker).owner)) event.setCanceled(true);
-        }
+        if (!(event.getSource().getEntity() instanceof Mob attacker)) return;
+        var binding = binding(attacker);
+        if (binding == null) return;
+        if (event.getEntity().getUUID().equals(binding.owner)
+                || event.getEntity() instanceof Mob victim && binding(victim) != null) event.setCanceled(true);
     }
     @SubscribeEvent public static void tick(EntityTickEvent.Pre event) {
         if (!(event.getEntity() instanceof Mob mob) || !(mob.level() instanceof ServerLevel level) || !mob.getPersistentData().hasUUID(OWNER)) return;
+        processExecution(mob);
+        if (!mob.isAlive()) return;
         var data = MindControlData.get(level);
-        if (data.takeExecution(mob.getUUID())) { execute(mob, executionOwner(mob, level)); return; }
         var binding = binding(mob);
         if (binding == null) { release(mob); return; }
         var beaconLevel = level.getServer().getLevel(binding.beacon.dimension());
         if (beaconLevel != null && beaconLevel.hasChunkAt(binding.beacon.pos()) && !beaconLevel.getBlockState(binding.beacon.pos()).is(LyyBlocks.MIND_CONTROL_BEACON)) {
             data.release(binding.owner, binding.beacon); release(mob); return;
         }
-        if (binding.mode != MindControlData.Mode.ATTACK) { if (mob.getTarget() != null) mob.setTarget(null); }
+        if (binding.mode() != MindControlData.Mode.ATTACK) { if (mob.getTarget() != null) mob.setTarget(null); }
         else if (mob.tickCount % 20 == 0 && (mob.getTarget() == null || !validEnemy(mob, mob.getTarget()) || mob.distanceToSqr(mob.getTarget()) > 1024)) {
             var target = level.getEntitiesOfClass(LivingEntity.class, mob.getBoundingBox().inflate(24), entity -> validEnemy(mob, entity)).stream()
                     .min(Comparator.comparingDouble(mob::distanceToSqr)).orElse(null);
             mob.setTarget(target);
         }
     }
-    @SubscribeEvent public static void died(LivingDeathEvent event) {
-        if (event.getEntity() instanceof Mob mob && mob.level() instanceof ServerLevel level) {
-            var binding = binding(mob);
-            if (binding != null && binding.mobs.remove(mob.getUUID())) MindControlData.get(level).setDirty();
-        }
+    /** Cancellable death events are not final. Cleanup follows permanent entity removal only. */
+    @SubscribeEvent public static void left(EntityLeaveLevelEvent event) {
+        if (!(event.getEntity() instanceof Mob mob) || !(event.getLevel() instanceof ServerLevel level)
+                || mob.getRemovalReason() == null || !mob.getRemovalReason().shouldDestroy()) return;
+        var data = MindControlData.get(level);
+        var binding = binding(mob);
+        if (binding != null) data.removeMob(binding, mob.getUUID());
+        data.forgetExecution(mob.getUUID());
     }
     private static final class GatherGoal extends Goal {
         private final Mob mob;
@@ -120,14 +152,15 @@ public final class MindControl {
             if (mob.tickCount < nextSearch) return false;
             nextSearch = mob.tickCount + 20;
             var binding = binding(mob);
-            if (binding == null || binding.mode != MindControlData.Mode.GATHER || !binding.beacon.dimension().equals(mob.level().dimension())) return false;
+            if (binding == null || binding.mode() != MindControlData.Mode.GATHER || !binding.beacon.dimension().equals(mob.level().dimension())) return false;
             if (mob.distanceToSqr(binding.beacon.pos().getCenter()) < 25) return false;
             destination = standable(mob, binding.beacon.pos()); return destination != null;
         }
         @Override public void start() { mob.setTarget(null); mob.getNavigation().moveTo(destination.getX() + .5, destination.getY(), destination.getZ() + .5, 1.2); }
         @Override public boolean canContinueToUse() {
             var binding = binding(mob);
-            return binding != null && binding.mode == MindControlData.Mode.GATHER && mob.distanceToSqr(destination.getCenter()) > 2;
+            return binding != null && binding.mode() == MindControlData.Mode.GATHER && binding.beacon.dimension().equals(mob.level().dimension())
+                    && mob.distanceToSqr(destination.getCenter()) > 2;
         }
         @Override public void tick() {
             if (mob instanceof Phantom) mob.getMoveControl().setWantedPosition(destination.getX() + .5, destination.getY() + 1, destination.getZ() + .5, 1.2);

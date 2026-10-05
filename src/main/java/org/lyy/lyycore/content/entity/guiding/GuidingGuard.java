@@ -36,25 +36,22 @@ public final class GuidingGuard extends GuidingMob {
     public boolean down() { return entityData.get(DOWN); }
     public int conviction() { return conviction; }
     private void standing(boolean value) {
-        if (!(level() instanceof ServerLevel server) || encounter == null) return;
-        var data = GuidingEncounter.get(server); var battle = data.battle(encounter);
-        if (battle == null) return;
-        if (value) battle.standing.add(getUUID()); else battle.standing.remove(getUUID());
-        data.setDirty();
+        if (level() instanceof ServerLevel server && encounter != null)
+            GuidingEncounter.get(server).setStanding(encounter, getUUID(), value);
     }
     @Override public void aiStep() {
         super.aiStep();
         if (!(level() instanceof ServerLevel server) || !isAlive()) return;
         var data = GuidingEncounter.get(server); var battle = encounter == null ? null : data.battle(encounter);
-        if (battle == null || battle.phase == GuidingEncounter.Phase.ENDED) { discard(); return; }
-        if (battle.phase == GuidingEncounter.Phase.ABSORB || battle.phase == GuidingEncounter.Phase.DEMAND) {
+        if (battle == null || battle.phase() == GuidingEncounter.Phase.ENDED) { discard(); return; }
+        if (battle.phase() == GuidingEncounter.Phase.ABSORB || battle.phase() == GuidingEncounter.Phase.DEMAND) {
             animate("absorbed");
             setNoAi(true);
-            if (server.getEntity(battle.boss) instanceof GuidingBoss boss) {
+            if (server.getEntity(battle.boss()) instanceof GuidingBoss boss) {
                 var offset = boss.getBoundingBox().getCenter().subtract(position());
                 noPhysics = true; setNoGravity(true);
                 setPos(position().add(offset.scale(.2)));
-                if (offset.lengthSqr() < 1 || battle.phase == GuidingEncounter.Phase.DEMAND) consume();
+                if (offset.lengthSqr() < 1 || battle.phase() == GuidingEncounter.Phase.DEMAND) consume();
             }
             return;
         }
@@ -67,7 +64,7 @@ public final class GuidingGuard extends GuidingMob {
             }
             return;
         }
-        if (!(server.getEntity(battle.boss) instanceof GuidingBoss boss)) { getNavigation().stop(); setTarget(null); return; }
+        if (!(server.getEntity(battle.boss()) instanceof GuidingBoss boss)) { getNavigation().stop(); setTarget(null); return; }
         var target = boss.getTarget();
         setTarget(target instanceof Player && target.isAlive() ? target : null);
         if (!playing("revive", 1.05F) && !playing("attack", .72F) && !playing("conviction", .6F)

@@ -1,5 +1,6 @@
 package org.lyy.lyycore.content.entity.guiding;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -9,14 +10,25 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.*;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.saveddata.SavedData;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.entity.EntityTravelToDimensionEvent;
 
 /** Encounter membership survives separately loaded boss and guard chunks. */
+@EventBusSubscriber(modid = "lyycore")
 public final class GuidingEncounter extends SavedData {
     public enum Phase { LIGHT, ABSORB, DEMAND, ENDED }
     public static final class Battle {
-        public UUID boss, target;
-        public Phase phase = Phase.LIGHT;
-        public final Set<UUID> guards = new HashSet<>(), standing = new HashSet<>();
+        private UUID boss, target;
+        private Phase phase = Phase.LIGHT;
+        private final Set<UUID> guards = new HashSet<>(), standing = new HashSet<>();
+        private final Set<UUID> guardView = Collections.unmodifiableSet(guards);
+        private final Set<UUID> standingView = Collections.unmodifiableSet(standing);
+        public UUID boss() { return boss; }
+        public UUID target() { return target; }
+        public Phase phase() { return phase; }
+        public Set<UUID> guards() { return guardView; }
+        public Set<UUID> standing() { return standingView; }
     }
     private static final Factory<GuidingEncounter> FACTORY = new Factory<>(GuidingEncounter::new, GuidingEncounter::load);
     private final Map<UUID, Battle> battles = new HashMap<>();
@@ -28,6 +40,30 @@ public final class GuidingEncounter extends SavedData {
         var battle = new Battle(); battle.boss = boss; battle.target = target;
         battles.put(id, battle); setDirty(); return battle;
     }
+    public void setTarget(UUID id, UUID target) {
+        var battle = battles.get(id);
+        if (battle != null && !java.util.Objects.equals(battle.target, target)) {
+            battle.target = target; setDirty();
+        }
+    }
+    public void transition(UUID id, UUID boss, Phase phase) {
+        var battle = battles.get(id);
+        if (battle != null && (!java.util.Objects.equals(battle.boss, boss) || battle.phase != phase)) {
+            battle.boss = boss; battle.phase = phase; setDirty();
+        }
+    }
+    public void addGuard(UUID id, UUID guard) {
+        var battle = battles.get(id);
+        if (battle == null) return;
+        boolean changed = battle.guards.add(guard);
+        changed |= battle.standing.add(guard);
+        if (changed) setDirty();
+    }
+    public void setStanding(UUID id, UUID guard, boolean value) {
+        var battle = battles.get(id);
+        if (battle == null || !battle.guards.contains(guard)) return;
+        if (value ? battle.standing.add(guard) : battle.standing.remove(guard)) setDirty();
+    }
     public void end(UUID id) {
         var battle = battles.get(id);
         if (battle == null) return;
@@ -38,9 +74,15 @@ public final class GuidingEncounter extends SavedData {
     public void removeGuard(UUID id, UUID guard) {
         var battle = battles.get(id);
         if (battle == null) return;
-        battle.guards.remove(guard); battle.standing.remove(guard);
-        if (battle.phase == Phase.ENDED && battle.guards.isEmpty()) battles.remove(id);
-        setDirty();
+        boolean changed = battle.guards.remove(guard);
+        changed |= battle.standing.remove(guard);
+        if (battle.phase == Phase.ENDED && battle.guards.isEmpty()) { battles.remove(id); changed = true; }
+        if (changed) setDirty();
+    }
+    /** These entities belong to dimension-local encounter data; chunk unloads remain allowed. */
+    @SubscribeEvent public static void travel(EntityTravelToDimensionEvent event) {
+        if ((event.getEntity() instanceof GuidingBoss || event.getEntity() instanceof GuidingGuard)
+                && !event.getDimension().equals(event.getEntity().level().dimension())) event.setCanceled(true);
     }
     @Override public CompoundTag save(CompoundTag tag, HolderLookup.Provider registries) {
         var list = new ListTag();
@@ -64,6 +106,7 @@ public final class GuidingEncounter extends SavedData {
             battle.phase = Phase.valueOf(entry.getString("Phase"));
             for (var id : entry.getList("Guards", Tag.TAG_INT_ARRAY)) battle.guards.add(NbtUtils.loadUUID(id));
             for (var id : entry.getList("Standing", Tag.TAG_INT_ARRAY)) battle.standing.add(NbtUtils.loadUUID(id));
+            battle.standing.retainAll(battle.guards);
             data.battles.put(entry.getUUID("Id"), battle);
         }
         return data;
