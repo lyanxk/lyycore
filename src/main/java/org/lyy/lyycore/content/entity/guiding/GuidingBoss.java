@@ -28,6 +28,8 @@ public final class GuidingBoss extends GuidingMob {
     private static final int MISSING_GRAB_GRACE_TICKS = 20;
     private static final EntityDataAccessor<Integer> ACTION = SynchedEntityData.defineId(GuidingBoss.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> TARGET = SynchedEntityData.defineId(GuidingBoss.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Long> ACTION_STARTED = SynchedEntityData.defineId(GuidingBoss.class, EntityDataSerializers.LONG);
+    public static final int GRAB_WRAP_TICKS = 8;
     private static final DustParticleOptions RED = new DustParticleOptions(new Vector3f(1, .08F, .18F), 1.5F);
     private final ServerBossEvent bar = new ServerBossEvent(getDisplayName(), BossEvent.BossBarColor.PINK, BossEvent.BossBarOverlay.PROGRESS);
     private UUID encounter, targetId, activeGrab;
@@ -50,10 +52,13 @@ public final class GuidingBoss extends GuidingMob {
     }
     @Override protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder); builder.define(ACTION, Action.WAIT.ordinal()); builder.define(TARGET, -1);
+        builder.define(ACTION_STARTED, 0L);
     }
     public Action action() { return Action.values()[entityData.get(ACTION)]; }
     private void action(Action action) {
-        activeGrab = null; missingGrabTicks = 0;
+        if (action != Action.PULL && action != Action.DEVOUR) activeGrab = null;
+        missingGrabTicks = 0;
+        entityData.set(ACTION_STARTED, level().getGameTime());
         entityData.set(ACTION, action.ordinal()); actionTicks = 0; getNavigation().stop();
         noPhysics = action == Action.ABSORB; setNoGravity(!secondPhase() || noPhysics); refreshDimensions();
         animate(switch (action) {
@@ -76,6 +81,14 @@ public final class GuidingBoss extends GuidingMob {
     public void beginSummoning(Player player, BlockPos gate) { targetId = valid(player) ? player.getUUID() : null; this.gate = gate.immutable(); }
     public boolean grabbing() { return action() == Action.GRAB; }
     public boolean ownsGrab(UUID id) { return grabbing() && id.equals(activeGrab); }
+    public boolean maintainsGrab(UUID id) {
+        return id.equals(activeGrab) && (grabbing() || action() == Action.PULL || action() == Action.DEVOUR);
+    }
+    public boolean wrapping() {
+        return action() == Action.PULL && (level().isClientSide
+                ? level().getGameTime() - entityData.get(ACTION_STARTED) < GRAB_WRAP_TICKS
+                : actionTicks < GRAB_WRAP_TICKS);
+    }
     public void captured(Player player) {
         if (grabbing() && player.getUUID().equals(targetId)) { player.stopFallFlying(); action(Action.PULL); }
     }
@@ -83,12 +96,13 @@ public final class GuidingBoss extends GuidingMob {
         return player.getId() == entityData.get(TARGET) && (action() == Action.PULL || action() == Action.DEVOUR);
     }
     public Vec3 pullVelocity(Player player) {
+        if (wrapping()) return Vec3.ZERO;
         var destination = action() == Action.PULL
                 ? position().add(Vec3.directionFromRotation(0, getYRot()).scale(2)).add(0, .5, 0) : position();
         var offset = destination.subtract(player.position());
-        return offset.normalize().scale(Math.min(action() == Action.PULL ? .25 : .02, offset.length()));
+        return offset.normalize().scale(Math.min(action() == Action.PULL ? 6.0 / 20.0 : .02, offset.length()));
     }
-    public void grabMissed(UUID id) { if (ownsGrab(id)) finishAction(); }
+    public void grabMissed(UUID id) { if (maintainsGrab(id)) finishAction(); }
     private GuidingEncounter.Battle battle() {
         return encounter == null || !(level() instanceof ServerLevel server) ? null : GuidingEncounter.get(server).battle(encounter);
     }
@@ -168,6 +182,12 @@ public final class GuidingBoss extends GuidingMob {
                 else if (++missingGrabTicks >= MISSING_GRAB_GRACE_TICKS) finishAction();
             }
             case PULL -> {
+                if (activeGrab == null || !(server.getEntity(activeGrab) instanceof GuidingGrab grab) || grab.isRemoved()) {
+                    if (++missingGrabTicks >= MISSING_GRAB_GRACE_TICKS) finishAction();
+                    break;
+                }
+                missingGrabTicks = 0;
+                if (wrapping()) { pull(target); break; }
                 Vec3 destination = position().add(Vec3.directionFromRotation(0, getYRot()).scale(2)).add(0, .5, 0);
                 var offset = destination.subtract(target.position());
                 pull(target);
@@ -306,6 +326,6 @@ public final class GuidingBoss extends GuidingMob {
         // A transient capture is not resumed across a boss reload. Any late projectile
         // has an obsolete token and retires rather than capturing for the next action.
         activeGrab = null; missingGrabTicks = 0;
-        if (grabbing()) finishAction();
+        if (grabbing() || action() == Action.PULL || action() == Action.DEVOUR) finishAction();
     }
 }

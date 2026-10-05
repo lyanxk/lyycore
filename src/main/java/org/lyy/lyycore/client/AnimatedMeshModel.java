@@ -187,6 +187,24 @@ final class AnimatedMeshModel {
         }
     }
     float[] newPose() { return new float[bones.length * 9]; }
+    int boneIndex(String name) {
+        for (int i = 0; i < bones.length; i++) if (bones[i].name.equals(name)) return i;
+        throw new IllegalArgumentException("Missing bone: " + name);
+    }
+    Vec3 bonePivot(int index) { var p = bones[index].pivot; return new Vec3(p[0], p[1], p[2]); }
+    Vec3 boneRotation(int index) { var r = bones[index].rotation; return new Vec3(r[0], r[1], r[2]); }
+    float boneLength(int index) {
+        float length = 0;
+        for (var face : bones[index].faces) for (var vertex : face.vertices) length = Math.max(length, vertex[2] * 16);
+        return length;
+    }
+    /** Render a sampled pose after adapting its anchors to gameplay positions. */
+    void renderPose(PoseStack pose, MultiBufferSource buffers, int light, float[] sampled) {
+        System.arraycopy(sampled, 0, wingValues, 0, sampled.length);
+        Arrays.fill(hidden, false);
+        for (int i = 0; i < bones.length; i++) if (bones[i].parent < 0) updateWingPose(pose, i);
+        drawFaces(buffers, light);
+    }
     void sample(String animation, float time, float[] result) {
         var clip = clips.getOrDefault(animation, clips.get("idle"));
         for (int bone = 0; bone < bones.length; bone++) for (int channel = 0; channel < 3; channel++) for (int axis = 0; axis < 3; axis++)

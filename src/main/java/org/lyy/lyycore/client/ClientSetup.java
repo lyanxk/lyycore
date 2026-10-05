@@ -74,7 +74,7 @@ public class ClientSetup {
         event.registerEntityRenderer(LyyEntities.LOST_ADHERENT.get(), context -> new GuidingMobRenderer<>(context, "lost_follower"));
         event.registerEntityRenderer(LyyEntities.FANATICAL_SUPPORTER.get(), context -> new GuidingMobRenderer<>(context, "fanatic_supporter"));
         event.registerEntityRenderer(LyyEntities.GUIDING_LASER.get(), GuidingEffectRenderer::new);
-        event.registerEntityRenderer(LyyEntities.GUIDING_GRAB.get(), GuidingEffectRenderer::new);
+        event.registerEntityRenderer(LyyEntities.GUIDING_GRAB.get(), GuidingGrabRenderer::new);
         event.registerBlockEntityRenderer(LyyBlockEntities.MIND_CONTROL_BEACON.get(), context -> new EnergyMachineRenderer<>("mind_control_beacon", "idle"));
         event.registerBlockEntityRenderer(LyyBlockEntities.ALLOY_CAULDRON.get(), AlloyCauldronRenderer::new);
         event.registerBlockEntityRenderer(LyyBlockEntities.IMAGINARY_CONDENSING_BEACON.get(), context -> new EnergyMachineRenderer<>("imaginary_condensing_beacon", "idle"));
