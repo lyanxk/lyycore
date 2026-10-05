@@ -56,6 +56,14 @@ public final class WingsScoop {
         return true;
     }
 
+    /** Called after a server teleport has actually relocated the player, regardless of distance. */
+    public static void teleported(ServerPlayer player) {
+        var attack = ACTIVE.get(player);
+        if (attack == null) return;
+        if (!current(player, attack)) { stop(player); return; }
+        attack.feathers.forEach(ScoopFeather::resetSweep);
+    }
+
     private static void stop(ServerPlayer player) {
         var attack = ACTIVE.remove(player);
         if (attack != null) attack.feathers.forEach(ScoopFeather::discard);
@@ -65,6 +73,9 @@ public final class WingsScoop {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
         var attack = ACTIVE.get(player);
         if (attack != null && (!current(player, attack) || player.tickCount - attack.started >= DURATION)) stop(player);
+    }
+    @SubscribeEvent public static void dimension(PlayerEvent.PlayerChangedDimensionEvent event) {
+        if (event.getEntity() instanceof ServerPlayer player) stop(player);
     }
     @SubscribeEvent public static void logout(PlayerEvent.PlayerLoggedOutEvent event) {
         if (event.getEntity() instanceof ServerPlayer player) stop(player);

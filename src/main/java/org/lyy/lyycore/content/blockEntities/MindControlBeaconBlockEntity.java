@@ -1,5 +1,6 @@
 package org.lyy.lyycore.content.blockEntities;
 
+import java.util.List;
 import java.util.UUID;
 import net.minecraft.core.*;
 import net.minecraft.nbt.CompoundTag;
@@ -21,12 +22,14 @@ public final class MindControlBeaconBlockEntity extends BlockEntity implements M
     private static final int PASSIVE_SCAN_INTERVAL = 60;
     private UUID owner;
     private int passiveScanDelay = PASSIVE_SCAN_INTERVAL;
+    // Execution, active scanning and mode changes each share one server-tick budget per beacon.
+    private final long[] commandTicks = {Long.MIN_VALUE, Long.MIN_VALUE, Long.MIN_VALUE};
     private final ContainerData data = new ContainerData() {
         public int get(int index) {
             var binding = binding();
             return switch (index) {
                 case 0 -> binding == null ? 0 : binding.mobs.size();
-                case 1 -> binding == null ? 0 : binding.mode.ordinal();
+                case 1 -> binding == null ? 0 : binding.mode().ordinal();
                 default -> 0;
             };
         }
@@ -56,30 +59,37 @@ public final class MindControlBeaconBlockEntity extends BlockEntity implements M
             MindControlData.get(server).release(owner, GlobalPos.of(level.dimension(), worldPosition));
     }
     public boolean command(Player player, int command) {
+        if (!(player instanceof ServerPlayer) || !(level instanceof ServerLevel server)
+                || player.level() != level || !player.isAlive() || player.isSpectator()
+                || !player.getUUID().equals(owner) || command < 0 || command > 4) return false;
         var binding = binding();
-        if (!canUse(player) || binding == null || command < 0 || command > 4) return false;
-        var server = (ServerLevel)level;
+        if (binding == null) return false;
+        var mode = switch (command) {
+            case 1 -> MindControlData.Mode.GATHER;
+            case 4 -> MindControlData.Mode.ATTACK;
+            default -> MindControlData.Mode.WANDER;
+        };
+        if (command != 0 && command != 2 && binding.mode() == mode) return true;
+        int category = command == 0 ? 0 : command == 2 ? 1 : 2;
+        long tick = server.getServer().getTickCount();
+        if (commandTicks[category] == tick) return false;
+        // Consume before dispatch: entity and damage callbacks may reenter this method.
+        commandTicks[category] = tick;
         var saved = MindControlData.get(server);
         if (command == 0) {
-            var victims = java.util.List.copyOf(binding.mobs);
+            var victims = List.copyOf(binding.mobs);
             saved.execute(binding);
-            for (var dimension : server.getServer().getAllLevels()) for (var id : victims)
-                if (dimension.getEntity(id) instanceof Mob mob && saved.takeExecution(id)) MindControl.execute(mob, player);
+            for (var id : victims) for (var dimension : server.getServer().getAllLevels()) {
+                if (dimension.getEntity(id) instanceof Mob mob) { MindControl.processExecution(mob); break; }
+            }
         } else if (command == 2) {
-            // Active control scans the entire volume immediately, independently of the passive timer.
             scan(binding, new AABB(worldPosition.getX() - 30, worldPosition.getY() - 10, worldPosition.getZ() - 30,
                     worldPosition.getX() + 30, worldPosition.getY() + 70, worldPosition.getZ() + 30));
-        } else {
-            binding.mode = switch (command) {
-                case 1 -> MindControlData.Mode.GATHER;
-                case 4 -> MindControlData.Mode.ATTACK;
-                default -> MindControlData.Mode.WANDER;
-            };
-            for (var dimension : server.getServer().getAllLevels()) for (var id : binding.mobs)
-                if (dimension.getEntity(id) instanceof Mob mob) { mob.setTarget(null); mob.getNavigation().stop(); }
-            saved.setDirty();
+        } else if (saved.setMode(binding, mode)) {
+            for (var id : List.copyOf(binding.mobs)) for (var dimension : server.getServer().getAllLevels()) {
+                if (dimension.getEntity(id) instanceof Mob mob) { mob.setTarget(null); mob.getNavigation().stop(); break; }
+            }
         }
-        setChanged();
         return true;
     }
     public static void serverTick(Level level, BlockPos pos, BlockState state, MindControlBeaconBlockEntity beacon) {
@@ -90,7 +100,6 @@ public final class MindControlBeaconBlockEntity extends BlockEntity implements M
         beacon.setChanged();
     }
     private void scan(MindControlData.Binding binding, AABB area) {
-        // Binding stores a set of UUIDs: scans accumulate every eligible monster without replacing earlier ones.
         for (var mob : level.getEntitiesOfClass(Mob.class, area, MindControl::eligible)) MindControl.bind(mob, binding);
     }
     @Override protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
