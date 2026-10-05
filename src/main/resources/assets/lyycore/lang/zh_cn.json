@@ -271,6 +271,8 @@
   "tooltip.lyycore.description.lightning_bottle": "雷雨天手持玻璃瓶右键收集；收集时会招致雷击",
   "commands.lyycore.research.get": "已获取研究：%s（%s）",
   "commands.lyycore.research.forget": "已遗忘研究：%s（%s）",
+  "commands.lyycore.research.get_all": "已获取全部研究，本次新增 %s 项",
+  "commands.lyycore.research.forget_all": "已遗忘全部研究，本次遗忘 %s 项",
   "commands.lyycore.research.unknown": "未知的研究 ID：%s",
   "commands.lyycore.research.already_completed": "已经完成该研究：%s",
   "commands.lyycore.research.not_completed": "尚未完成该研究：%s",

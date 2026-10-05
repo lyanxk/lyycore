@@ -35,7 +35,9 @@ public final class ResearchCommands {
     }
 
     private static LiteralArgumentBuilder<CommandSourceStack> action(String name, boolean completed) {
-        return Commands.literal(name).then(Commands.argument("research", ResourceLocationArgument.id())
+        return Commands.literal(name)
+                .then(Commands.literal("all").executes(context -> changeAll(context.getSource(), completed)))
+                .then(Commands.argument("research", ResourceLocationArgument.id())
                 .suggests((context, builder) -> {
                     var player = context.getSource().getPlayerOrException();
                     return SharedSuggestionProvider.suggestResource(ResearchManager.all(player.level()).stream()
@@ -43,6 +45,19 @@ public final class ResearchCommands {
                             .filter(id -> ResearchProgress.completed(player, id) != completed), builder);
                 })
                 .executes(context -> change(context.getSource(), ResourceLocationArgument.getId(context, "research"), completed)));
+    }
+
+    private static int changeAll(CommandSourceStack source, boolean completed) throws CommandSyntaxException {
+        var player = source.getPlayerOrException();
+        int changed = 0;
+        for (var entry : ResearchManager.all(player.level())) {
+            if (ResearchProgress.setCompleted(player, entry.id(), entry.value(), completed)) changed++;
+        }
+        if (changed > 0 && player.containerMenu instanceof ResearchMenu) player.closeContainer();
+        int count = changed;
+        source.sendSuccess(() -> Component.translatable("commands.lyycore.research." + (completed ? "get_all" : "forget_all"),
+                count), true);
+        return changed;
     }
 
     private static int change(CommandSourceStack source, ResourceLocation id, boolean completed) throws CommandSyntaxException {

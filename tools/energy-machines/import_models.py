@@ -12,7 +12,7 @@ from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[2]
 ASSETS = ROOT / "src/main/resources/assets/lyycore"
-SOURCE = Path("F:/misc/BlockBench")
+SOURCE = ROOT.parent / "blockbench"
 helpers = runpy.run_path(str(ROOT / "tools/research-content/import_models.py"))
 write, rotate, bake = (helpers[k] for k in ("write", "rotate", "bake_mesh"))
 

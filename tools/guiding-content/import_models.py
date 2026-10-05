@@ -6,7 +6,7 @@ import shutil
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-SOURCE = Path("F:/misc/BlockBench/guiding_light_boss")
+SOURCE = ROOT.parent / "blockbench" / "guiding_light_boss"
 ASSETS = ROOT / "src/main/resources/assets/lyycore"
 helpers = runpy.run_path(str(ROOT / "tools/research-content/import_models.py"))
 sample = runpy.run_path(str(ROOT / "tools/experiment-content/bake_scoop_paths.py"))["sample"]

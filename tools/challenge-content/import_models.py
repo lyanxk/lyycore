@@ -1,7 +1,8 @@
 """Import the supplied wings and independent Life Revel models.
 
 Run from any directory: python tools/challenge-content/import_models.py
-The editable originals stay in F:/misc/BlockBench; only baked runtime data is shipped.
+The editable originals stay in the workspace's blockbench/ directory, alongside lyycore/;
+only baked runtime data is shipped.
 """
 import json
 import runpy
@@ -10,7 +11,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 ASSETS = ROOT / "src/main/resources/assets/lyycore"
-SOURCE = Path("F:/misc/BlockBench")
+SOURCE = ROOT.parent / "blockbench"
 bake = runpy.run_path(str(ROOT / "tools/research-content/import_models.py"))["bake_mesh"]
 
 for folder, source_name, name in [

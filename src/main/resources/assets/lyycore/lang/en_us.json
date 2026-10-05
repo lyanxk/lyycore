@@ -271,6 +271,8 @@
   "tooltip.lyycore.description.lightning_bottle": "Right-click a glass bottle during a thunderstorm to collect; summons a lightning strike",
   "commands.lyycore.research.get": "Granted research: %s (%s)",
   "commands.lyycore.research.forget": "Forgot research: %s (%s)",
+  "commands.lyycore.research.get_all": "Granted all research: %s newly completed",
+  "commands.lyycore.research.forget_all": "Forgot all research: %s cleared",
   "commands.lyycore.research.unknown": "Unknown research ID: %s",
   "commands.lyycore.research.already_completed": "Research already completed: %s",
   "commands.lyycore.research.not_completed": "Research not completed: %s",

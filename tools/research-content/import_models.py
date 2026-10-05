@@ -15,7 +15,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 ASSETS = ROOT / "src/main/resources/assets/lyycore"
-SOURCE = Path(sys.argv[1]) if len(sys.argv) > 1 else Path("F:/misc/BlockBench")
+SOURCE = Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT.parent / "blockbench"
 uv_helpers = runpy.run_path(str(ROOT / "tools/production-lab/generate_static_models.py"))
 FACES, crop_uv = uv_helpers["FACES"], uv_helpers["crop_uv"]
 
