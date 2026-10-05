@@ -9,6 +9,9 @@ import org.lyy.lyycore.registry.LyyEffects;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.WeakHashMap;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.function.Predicate;
 
 /** All skill requests pass through the server's unlock checks and current-style dispatch. */
@@ -17,8 +20,17 @@ public final class SkillSystem {
     private static final String FACTOR_UNLOCKED = "lyycore:factor_unlocked";
     private static final String UNLOCKED = "lyycore:skills_unlocked";
     private static final Map<StyleSystem.Style, Map<ResourceLocation, Skill>> BINDINGS = new EnumMap<>(StyleSystem.Style.class);
+    private static final Map<ServerPlayer, Actions> ACTIONS = new WeakHashMap<>();
+    private static final class Actions {
+        int tick;
+        final Set<ResourceLocation> consumed = new HashSet<>();
+    }
 
-    public record Skill(ResourceLocation research, Predicate<ServerPlayer> cast) { }
+    public record Skill(Predicate<ServerPlayer> available, Predicate<ServerPlayer> cast) {
+        public Skill(ResourceLocation research, Predicate<ServerPlayer> cast) {
+            this(player -> ResearchProgress.completed(player, research), cast);
+        }
+    }
     private SkillSystem() { }
 
     /** Register a key binding for a style when implementing its concrete research and effect. */
@@ -49,6 +61,18 @@ public final class SkillSystem {
     public static boolean cast(ServerPlayer player, ResourceLocation key) {
         if (!canUse(player)) return false;
         var skill = BINDINGS.getOrDefault(StyleSystem.current(player), Map.of()).get(key);
-        return skill != null && ResearchProgress.completed(player, skill.research()) && skill.cast().test(player);
+        return skill != null && skill.available().test(player)
+                && consumeAction(player, key.withSuffix("/" + StyleSystem.current(player).key)) && skill.cast().test(player);
     }
+
+    /** Reserve before calling a handler, so reentrant calls and repeated input edges cannot double-cast. */
+    public static boolean consumeAction(ServerPlayer player, ResourceLocation action) {
+        var actions = ACTIONS.computeIfAbsent(player, ignored -> new Actions());
+        int tick = player.server.getTickCount();
+        if (actions.tick != tick) { actions.tick = tick; actions.consumed.clear(); }
+        return actions.consumed.add(action);
+    }
+
+    static void forget(ServerPlayer player) { ACTIONS.remove(player); }
+    static void clear() { ACTIONS.clear(); }
 }

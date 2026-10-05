@@ -14,38 +14,66 @@ import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import org.lyy.lyycore.content.AegisWings;
+import org.lyy.lyycore.content.wings.WingsFlight;
 
-/** Send only unlock/preference changes and hits, never per-tick animation packets. */
+/** Sync wing state changes, guard starts and attacks, never per-tick animation packets. */
 @EventBusSubscriber(modid = "lyycore")
 public final class WingsNetwork {
-    public record Attack(int playerId, long started, Vec3 origin, float yaw, Vec3 target, float width) implements CustomPacketPayload {
+    public record Scoop(int playerId, long started, Vec3 origin, float yaw) implements CustomPacketPayload {
+        public static final Type<Scoop> TYPE = new Type<>(ResourceLocation.parse("lyycore:wings_scoop"));
+        public static final StreamCodec<RegistryFriendlyByteBuf, Scoop> CODEC = StreamCodec.of((buf, value) -> {
+            buf.writeVarInt(value.playerId); buf.writeLong(value.started); buf.writeVec3(value.origin); buf.writeFloat(value.yaw);
+        }, buf -> new Scoop(buf.readVarInt(), buf.readLong(), buf.readVec3(), buf.readFloat()));
+        @Override public Type<Scoop> type() { return TYPE; }
+    }
+    public static void scoop(ServerPlayer player, float yaw) {
+        PacketDistributor.sendToPlayersTrackingEntityAndSelf(player,
+                new Scoop(player.getId(), player.level().getGameTime(), player.position(), yaw));
+    }
+    public record Boost(boolean held) implements CustomPacketPayload {
+        public static final Type<Boost> TYPE = new Type<>(ResourceLocation.parse("lyycore:wings_boost"));
+        public static final StreamCodec<RegistryFriendlyByteBuf, Boost> CODEC = StreamCodec.of((buf, value) -> buf.writeBoolean(value.held), buf -> new Boost(buf.readBoolean()));
+        @Override public Type<Boost> type() { return TYPE; }
+    }
+    public record Attack(int playerId, long started, Vec3 origin, float yaw, Vec3 target, float width, int featherCount) implements CustomPacketPayload {
         public static final Type<Attack> TYPE = new Type<>(ResourceLocation.parse("lyycore:feather_attack"));
         public static final StreamCodec<RegistryFriendlyByteBuf, Attack> CODEC = StreamCodec.of((buf, attack) -> {
             buf.writeVarInt(attack.playerId); buf.writeLong(attack.started); buf.writeVec3(attack.origin);
-            buf.writeFloat(attack.yaw); buf.writeVec3(attack.target); buf.writeFloat(attack.width);
-        }, buf -> new Attack(buf.readVarInt(), buf.readLong(), buf.readVec3(), buf.readFloat(), buf.readVec3(), buf.readFloat()));
+            buf.writeFloat(attack.yaw); buf.writeVec3(attack.target); buf.writeFloat(attack.width); buf.writeVarInt(attack.featherCount);
+        }, buf -> new Attack(buf.readVarInt(), buf.readLong(), buf.readVec3(), buf.readFloat(), buf.readVec3(), buf.readFloat(), buf.readVarInt()));
         @Override public Type<Attack> type() { return TYPE; }
     }
-    public static void attack(ServerPlayer player, LivingEntity target) {
+    public static void attack(ServerPlayer player, LivingEntity target, int featherCount) {
         PacketDistributor.sendToPlayersTrackingEntityAndSelf(player, new Attack(player.getId(), player.level().getGameTime(),
-                player.position(), player.yBodyRot, target.getBoundingBox().getCenter(), target.getBbWidth()));
+                player.position(), player.yBodyRot, target.getBoundingBox().getCenter(), target.getBbWidth(), featherCount));
     }
-    public record State(int entityId, boolean unlocked, boolean visible, long shieldStarted) implements CustomPacketPayload {
+    public record State(int entityId, int level, boolean visible, long shieldStarted, boolean guarding, boolean boosting) implements CustomPacketPayload {
         public static final Type<State> TYPE = new Type<>(ResourceLocation.parse("lyycore:wings_state"));
         public static final StreamCodec<RegistryFriendlyByteBuf, State> CODEC = StreamCodec.of((buf, state) -> {
-            buf.writeVarInt(state.entityId); buf.writeBoolean(state.unlocked); buf.writeBoolean(state.visible); buf.writeLong(state.shieldStarted);
-        }, buf -> new State(buf.readVarInt(), buf.readBoolean(), buf.readBoolean(), buf.readLong()));
+            buf.writeVarInt(state.entityId); buf.writeVarInt(state.level); buf.writeBoolean(state.visible); buf.writeLong(state.shieldStarted); buf.writeBoolean(state.guarding); buf.writeBoolean(state.boosting);
+        }, buf -> new State(buf.readVarInt(), buf.readVarInt(), buf.readBoolean(), buf.readLong(), buf.readBoolean(), buf.readBoolean()));
         @Override public Type<State> type() { return TYPE; }
     }
     private static State state(Player player) {
-        return new State(player.getId(), AegisWings.unlocked(player), AegisWings.visible(player), AegisWings.shieldStarted(player));
+        return new State(player.getId(), AegisWings.level(player), AegisWings.visible(player), AegisWings.shieldStarted(player),
+                player instanceof ServerPlayer server && org.lyy.lyycore.content.skills.GuardSkill.guarding(server), WingsFlight.boosting(player));
     }
-    public static void sync(ServerPlayer player) { PacketDistributor.sendToPlayersTrackingEntityAndSelf(player, state(player)); }
+    public static void sync(ServerPlayer player) {
+        WingsFlight.update(player);
+        PacketDistributor.sendToPlayersTrackingEntityAndSelf(player, state(player));
+    }
     @SubscribeEvent public static void register(RegisterPayloadHandlersEvent event) {
-        event.registrar("1").playToClient(Attack.TYPE, Attack.CODEC, (payload, context) -> org.lyy.lyycore.client.FeatherAttackRenderer.add(payload));
-        event.registrar("1").playToClient(State.TYPE, State.CODEC, (payload, context) -> {
-            if (context.player().level().getEntity(payload.entityId) instanceof Player player)
-                AegisWings.receive(player, payload.unlocked, payload.visible, payload.shieldStarted);
+        event.registrar("4").playToClient(Scoop.TYPE, Scoop.CODEC, (payload, context) -> org.lyy.lyycore.client.WingsScoopRenderer.add(payload));
+        event.registrar("4").playToServer(Boost.TYPE, Boost.CODEC, (payload, context) -> {
+            if (context.player() instanceof ServerPlayer player) WingsFlight.input(player, payload.held);
+        });
+        event.registrar("4").playToClient(Attack.TYPE, Attack.CODEC, (payload, context) -> org.lyy.lyycore.client.FeatherAttackRenderer.add(payload));
+        event.registrar("4").playToClient(State.TYPE, State.CODEC, (payload, context) -> {
+            if (context.player().level().getEntity(payload.entityId) instanceof Player player) {
+                AegisWings.receive(player, payload.level, payload.visible, payload.shieldStarted);
+                player.getPersistentData().putBoolean("lyycore:wings_guarding", payload.guarding);
+                player.getPersistentData().putBoolean("lyycore:wings_boosting", payload.boosting);
+            }
         });
     }
     @SubscribeEvent public static void tracking(PlayerEvent.StartTracking event) {

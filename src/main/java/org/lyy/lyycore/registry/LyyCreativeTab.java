@@ -17,6 +17,11 @@ public class LyyCreativeTab {
                     .icon(() -> new ItemStack(LyyItems.IMAGINARY_ALLOY_INGOT.get()))
                     .title(Component.literal("LyyCore"))
                     .displayItems((params, output) -> {
+                        output.accept(LyyBlocks.ALLOY_CAULDRON.get()); output.accept(LyyBlocks.MIND_CONTROL_BEACON.get());
+                        output.accept(LyyItems.CONTROL_CRYSTAL.get()); output.accept(LyyItems.CONTROL_ENHANCEMENT_POTION.get());
+                        output.accept(LyyItems.ADHESIVE_POTION.get()); output.accept(LyyItems.BLUE_POTION.get());
+                        output.accept(LyyItems.SILVER_POTION.get()); output.accept(LyyItems.STRANGE_POTION.get());
+                        output.accept(LyyItems.INCOMPLETE_POTION.get());
                         output.accept(LyyItems.IMAGINARY_ALLOY_INGOT.get());
                         output.accept(LyyItems.IM_BATTERY.get());
                         output.accept(LyyItems.PURE_CRYSTAL.get());
@@ -25,6 +30,9 @@ public class LyyCreativeTab {
                         output.accept(LyyBlocks.IMAGINARY_GATE.get());
                         output.accept(LyyBlocks.ADVANCED_IMAGINARY_GATE.get());
                         output.accept(LyyItems.SMALL_IMAGINARY_CORE.get());
+                        output.accept(LyyItems.GUIDING_REAGENT.get());
+                        output.accept(LyyItems.PROOF.get());
+                        output.accept(LyyItems.UNEXTINGUISHED_DESIRE.get());
                         output.accept(LyyItems.HEART_OF_NOTHINGNESS.get());
                         output.accept(LyyItems.IMAGINARY_CONDENSING_BEACON.get());
                         output.accept(LyyItems.SPATIAL_TRANSMISSION_TOWER.get());

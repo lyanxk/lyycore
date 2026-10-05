@@ -1,0 +1,12 @@
+{
+  "icon": {
+    "id": "minecraft:ender_pearl"
+  },
+  "title": "research.lyycore.behind_you.title",
+  "summary": "research.lyycore.behind_you.summary",
+  "description": "research.lyycore.behind_you.description",
+  "experience_points": 3000,
+  "prerequisites": [
+    "lyycore:research/adaptive_enhancement"
+  ]
+}

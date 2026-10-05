@@ -19,6 +19,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.component.CustomData;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
@@ -71,12 +72,12 @@ public final class ProductionOwnershipRegressions {
                 ProductionLabBlockEntity.serverTick(level, lab.getBlockPos(), lab.getBlockState(), lab);
             var result = lab.items().getStackInSlot(0);
             test.assertTrue(result.is(production.result().getItem()) && result.getCount() == production.result().getCount(), "Wrong result: " + entry.id());
-            boolean weather = result.getItem() instanceof WeatherBallItem;
+            boolean exempt = result.getItem() instanceof WeatherBallItem || result.getItem() instanceof BlockItem;
             test.assertFalse(ProductionOwnership.isForeign(result, owner), "Result rejects notes owner: " + entry.id());
-            test.assertTrue(ProductionOwnership.isForeign(result, stranger) != weather, "Missing binding/weather exception: " + entry.id());
+            test.assertTrue(ProductionOwnership.isForeign(result, stranger) != exempt, "Missing binding/placeable/weather exception: " + entry.id());
             test.assertFalse(ProductionOwnership.isForeign(production.result(), stranger), "Shared research result was modified");
             lab.loadWithComponents(lab.saveWithoutMetadata(level.registryAccess()), level.registryAccess());
-            test.assertTrue(ProductionOwnership.isForeign(lab.items().getStackInSlot(0), stranger) != weather, "Output binding lost on reload");
+            test.assertTrue(ProductionOwnership.isForeign(lab.items().getStackInSlot(0), stranger) != exempt, "Output binding lost on reload");
             checked++;
         }
         test.assertTrue(checked >= 4, "Expected production definitions missing");
@@ -94,7 +95,7 @@ public final class ProductionOwnershipRegressions {
         ImaginaryReaperItem.setAttackDamage(reaper, 20);
         test.assertTrue(ProductionOwnership.isForeign(reaper, player.getUUID()), "Settings overwrote binding");
         player.setItemInHand(InteractionHand.MAIN_HAND, reaper);
-        var offhand = new ItemStack(Items.STONE, 16);
+        var offhand = new ItemStack(Items.DIAMOND, 16);
         ProductionOwnership.bind(offhand, owner);
         player.setItemInHand(InteractionHand.OFF_HAND, offhand);
         player.getInventory().setItem(9, offhand.copy());
@@ -128,10 +129,11 @@ public final class ProductionOwnershipRegressions {
     }
 
     @GameTest(template = "empty")
-    public static void weatherBallsRemainTransferable(GameTestHelper test) {
+    public static void weatherBallsAndPlaceablesRemainTransferable(GameTestHelper test) {
         var player = player(test.getLevel());
         var owner = UUID.randomUUID();
-        for (var item : new net.minecraft.world.item.Item[]{LyyItems.STORM_BALL.get(), LyyItems.SUN_BALL.get()}) {
+        for (var item : new net.minecraft.world.item.Item[]{LyyItems.STORM_BALL.get(), LyyItems.SUN_BALL.get(), Items.STONE,
+                LyyBlocks.ADVANCED_IMAGINARY_GATE.get().asItem(), LyyBlocks.ENDER_SENTRY.get().asItem()}) {
             var ball = new ItemStack(item, 16);
             ProductionOwnership.bind(ball, owner);
             test.assertFalse(ball.has(DataComponents.CUSTOM_DATA), "Weather ball acquired binding");

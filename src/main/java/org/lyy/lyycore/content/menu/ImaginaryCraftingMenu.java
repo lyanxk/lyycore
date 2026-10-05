@@ -21,7 +21,7 @@ public final class ImaginaryCraftingMenu extends AbstractContainerMenu {
     private final boolean condensing;
 
     public ImaginaryCraftingMenu(int id, Inventory inventory, RegistryFriendlyByteBuf buffer) {
-        this(id, inventory, (AbstractImaginaryCraftingBlockEntity) inventory.player.level().getBlockEntity(buffer.readBlockPos()), new SimpleContainerData(6));
+        this(id, inventory, (AbstractImaginaryCraftingBlockEntity) inventory.player.level().getBlockEntity(buffer.readBlockPos()), new SimpleContainerData(7));
     }
     public ImaginaryCraftingMenu(int id, Inventory inventory, AbstractImaginaryCraftingBlockEntity table, ContainerData data) {
         super(LyyMenus.IMAGINARY_CRAFTING.get(), id);
@@ -54,6 +54,7 @@ public final class ImaginaryCraftingMenu extends AbstractContainerMenu {
         for (int col = 0; col < 9; col++) addSlot(new Slot(inventory, col, 8 + col * 18, HOTBAR_Y));
     }
     public boolean condensing() { return condensing; }
+    public boolean energyPerTick() { return data.get(6) != 0; }
     public int duration() { return Math.max(1, data.get(1)); }
     public int energyCost() { return (data.get(2) & 0xFFFF) | (data.get(3) & 0xFFFF) << 16; }
     public int storedEnergy() { return (data.get(4) & 0xFFFF) | (data.get(5) & 0xFFFF) << 16; }

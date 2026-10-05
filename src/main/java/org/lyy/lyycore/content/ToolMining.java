@@ -7,7 +7,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -41,7 +40,7 @@ public final class ToolMining {
         }
     }
 
-    private static int aoeMine(Level level, Player player, BlockPos origin, int r, Direction.Axis axis,
+    private static int aoeMine(Level level, ServerPlayer player, BlockPos origin, int r, Direction.Axis axis,
                         int maxExtraBlocks, int maxBreakEffects) {
         if (maxExtraBlocks <= 0 || r <= 0) return 0;
         int total = 0;
@@ -61,7 +60,7 @@ public final class ToolMining {
         return total;
     }
 
-    private static int veinMine(Level level, Player player, BlockPos origin, BlockState target,
+    private static int veinMine(Level level, ServerPlayer player, BlockPos origin, BlockState target,
                          int limit, int maxBreakEffects) {
         if (limit <= 0 || target.is(VEIN_EXCLUDED)) return 0;
         int broken = 0;
@@ -100,20 +99,19 @@ public final class ToolMining {
         return broken;
     }
 
-    private static int tryBreak(Level level, Player player, BlockPos pos, boolean playBreakEffect) {
+    private static int tryBreak(Level level, ServerPlayer player, BlockPos pos, boolean playBreakEffect) {
         if (!level.hasChunkAt(pos)) return 0;
         BlockState state = level.getBlockState(pos);
         if (state.isAir() || state.getDestroySpeed(level, pos) < 0) return 0;
         if (!player.getMainHandItem().isCorrectToolForDrops(state)) return 0;
         if (!player.mayBuild()) return 0;
-        if (!(player instanceof ServerPlayer serverPlayer)) return 0;
         if (!level.mayInteract(player, pos)) return 0;
 
         BREAKING_EXTRA_BLOCK.set(true);
         try {
-            if (!serverPlayer.gameMode.destroyBlock(pos)) return 0;
+            if (!player.gameMode.destroyBlock(pos)) return 0;
             if (playBreakEffect) {
-                serverPlayer.serverLevel().levelEvent(null, 2001, pos,
+                player.serverLevel().levelEvent(null, 2001, pos,
                         net.minecraft.world.level.block.Block.getId(state));
             }
             return 1;

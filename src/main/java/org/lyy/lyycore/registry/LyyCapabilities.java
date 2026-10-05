@@ -13,6 +13,7 @@ public class LyyCapabilities {
             ResourceLocation.fromNamespaceAndPath(LyyCore.MODID, "imaginary_energy"), ImaginaryEnergy.class);
 
     public static void register(RegisterCapabilitiesEvent event) {
+        event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, LyyBlockEntities.ALLOY_CAULDRON.get(), (be, side) -> be.water);
         event.registerBlock(IMAGINARY_ENERGY, (level, pos, state, be, side) -> {
             var center = org.lyy.lyycore.content.blocks.SquareMachineBlock.center(pos, state);
             return level.getBlockEntity(center) instanceof org.lyy.lyycore.content.blockEntities.ImaginaryCondensingBeaconBlockEntity beacon ? beacon.energy() : null;

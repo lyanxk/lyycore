@@ -11,7 +11,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import org.lyy.lyycore.content.menu.ForgeGui;
+import org.lyy.lyycore.client.screen.ForgeGui;
 import org.lyy.lyycore.content.FrameProduction;
 import net.minecraft.world.level.block.Block;
 import org.lyy.lyycore.content.recipes.CrystalCondensingRecipe;

@@ -2,6 +2,9 @@ modLoader="javafml"
 loaderVersion="${loader_version_range}"
 license="${mod_license}"
 
+[[mixins]]
+config="lyycore.flight_speed.mixins.json"
+
 [[mods]]
 modId="${mod_id}"
 version="${mod_version}"
@@ -10,8 +13,12 @@ enumExtensions="META-INF/enumextensions.json"
 authors="${mod_authors}"
 description='''${mod_description}'''
 
-[[mixins]]
-config="lyycore.mixins.json"
+[[dependencies.${mod_id}]]
+    modId="caelus"
+    type="required"
+    versionRange="[7.0.1,8)"
+    ordering="AFTER"
+    side="BOTH"
 
 [[dependencies.${mod_id}]]
     modId="neoforge"

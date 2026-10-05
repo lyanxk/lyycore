@@ -1,11 +1,11 @@
 package org.lyy.lyycore.client;
 
-import org.lyy.lyycore.content.menu.ImaginaryGateScreen;
-import org.lyy.lyycore.content.menu.AdvancedImaginaryGateScreen;
-import org.lyy.lyycore.content.menu.ImaginaryCraftingScreen;
-import org.lyy.lyycore.content.menu.ResearchScreen;
-import org.lyy.lyycore.content.menu.ProductionLabScreen;
-import org.lyy.lyycore.content.menu.ImaginaryReaperScreen;
+import org.lyy.lyycore.client.screen.ImaginaryGateScreen;
+import org.lyy.lyycore.client.screen.AdvancedImaginaryGateScreen;
+import org.lyy.lyycore.client.screen.ImaginaryCraftingScreen;
+import org.lyy.lyycore.client.screen.ResearchScreen;
+import org.lyy.lyycore.client.screen.ProductionLabScreen;
+import org.lyy.lyycore.client.screen.ImaginaryReaperScreen;
 import org.lyy.lyycore.registry.LyyBlockEntities;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
@@ -15,8 +15,8 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import org.lyy.lyycore.LyyCore;
-import org.lyy.lyycore.content.menu.EnergyCellScreen;
-import org.lyy.lyycore.content.menu.IAFScreen;
+import org.lyy.lyycore.client.screen.EnergyCellScreen;
+import org.lyy.lyycore.client.screen.IAFScreen;
 import org.lyy.lyycore.registry.LyyMenus;
 import org.lyy.lyycore.registry.LyyItems;
 import org.lyy.lyycore.registry.LyyEntities;
@@ -68,6 +68,15 @@ public class ClientSetup {
 
     @SubscribeEvent
     public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
+        event.registerEntityRenderer(LyyEntities.SCOOP_FEATHER.get(), net.minecraft.client.renderer.entity.NoopRenderer::new);
+        event.registerEntityRenderer(LyyEntities.GUIDING_LIGHT.get(), context -> new GuidingMobRenderer<>(context, "guiding_light"));
+        event.registerEntityRenderer(LyyEntities.ENDLESS_DEMAND.get(), context -> new GuidingMobRenderer<>(context, "endless_demand"));
+        event.registerEntityRenderer(LyyEntities.LOST_ADHERENT.get(), context -> new GuidingMobRenderer<>(context, "lost_follower"));
+        event.registerEntityRenderer(LyyEntities.FANATICAL_SUPPORTER.get(), context -> new GuidingMobRenderer<>(context, "fanatic_supporter"));
+        event.registerEntityRenderer(LyyEntities.GUIDING_LASER.get(), GuidingEffectRenderer::new);
+        event.registerEntityRenderer(LyyEntities.GUIDING_GRAB.get(), GuidingEffectRenderer::new);
+        event.registerBlockEntityRenderer(LyyBlockEntities.MIND_CONTROL_BEACON.get(), context -> new EnergyMachineRenderer<>("mind_control_beacon", "idle"));
+        event.registerBlockEntityRenderer(LyyBlockEntities.ALLOY_CAULDRON.get(), AlloyCauldronRenderer::new);
         event.registerBlockEntityRenderer(LyyBlockEntities.IMAGINARY_CONDENSING_BEACON.get(), context -> new EnergyMachineRenderer<>("imaginary_condensing_beacon", "idle"));
         event.registerBlockEntityRenderer(LyyBlockEntities.SPATIAL_TRANSMISSION_TOWER.get(), context -> new EnergyMachineRenderer<>("spatial_transmission_tower", "working"));
         event.registerEntityRenderer(LyyEntities.LIFE_REVEL.get(), context -> new RevelRenderer<>(context, "life_revel"));
@@ -115,10 +124,16 @@ public class ClientSetup {
         event.register(LyyMenus.IAF_MENU.get(), IAFScreen::new);
         event.register(LyyMenus.IMAGINARY_GATE.get(), ImaginaryGateScreen::new);
         event.register(LyyMenus.IMAGINARY_CRAFTING.get(), ImaginaryCraftingScreen::new);
-        event.register(LyyMenus.CRYSTAL_CONDENSING.get(), org.lyy.lyycore.content.menu.CrystalCondensingScreen::new);
-        event.register(LyyMenus.RESOURCE_GATHERING.get(), org.lyy.lyycore.content.menu.ResourceGatheringScreen::new);
+        event.register(LyyMenus.MIND_CONTROL.get(), org.lyy.lyycore.client.screen.MindControlScreen::new);
+        event.register(LyyMenus.CRYSTAL_CONDENSING.get(), org.lyy.lyycore.client.screen.CrystalCondensingScreen::new);
+        event.register(LyyMenus.RESOURCE_GATHERING.get(), org.lyy.lyycore.client.screen.ResourceGatheringScreen::new);
     }
 
+    @SubscribeEvent
+    public static void registerWaterColors(net.neoforged.neoforge.client.event.RegisterColorHandlersEvent.Block event) {
+        event.register((state, level, pos, tint) -> level != null && pos != null
+                ? net.minecraft.client.renderer.BiomeColors.getAverageWaterColor(level, pos) : 0x3F76E4, org.lyy.lyycore.registry.LyyBlocks.ALLOY_CAULDRON.get());
+    }
     @SubscribeEvent
     public static void registerWeatherColors(net.neoforged.neoforge.client.event.RegisterColorHandlersEvent.Item event) {
         event.register((stack, layer) -> 0xFF94BFFF, LyyItems.STORM_BALL.get());

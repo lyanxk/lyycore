@@ -5,6 +5,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import org.lyy.lyycore.content.skills.SkillSystem;
@@ -16,10 +17,11 @@ import java.util.List;
 public final class StyleHud {
     private static final ResourceLocation LETTERS = ResourceLocation.parse("lyycore:textures/gui/style_letters.png");
     private record Glyph(StyleSystem.Style style, int u, int v, int x, int y) { }
+    private static final Glyph TECHNIQUE = new Glyph(StyleSystem.Style.TECHNIQUE, 0, 1, 0, 25);
     private static final List<Glyph> GLYPHS = List.of(
             new Glyph(StyleSystem.Style.BUILDING, 0, 0, -25, 0),
             new Glyph(StyleSystem.Style.MOBILITY, 1, 0, 0, -25),
-            new Glyph(StyleSystem.Style.TECHNIQUE, 0, 1, 0, 25),
+            TECHNIQUE,
             new Glyph(StyleSystem.Style.OFFENSE, 1, 1, 25, 0));
     private static StyleSystem.Style selected, previous;
     private static float changedAt;
@@ -50,21 +52,12 @@ public final class StyleHud {
         int centerX = 52, centerY = 52;
 
         if (style == StyleSystem.Style.TECHNIQUE && BasicSkills.available(mc.player)) {
-            int guard = BasicSkills.guard(mc.player);
-            for (int i = 0; i < 100; i++) {
-                double angle = i * Math.PI * 2 / 100 - Math.PI / 2;
-                int x = centerX + (int)Math.round(Math.cos(angle) * 49);
-                int y = centerY + (int)Math.round(Math.sin(angle) * 49);
-                graphics.fill(x - 1, y - 1, x + 1, y + 1, i < guard ? 0xFFFFD4EE : 0x88524C62);
-            }
-            graphics.drawCenteredString(mc.font, Integer.toString(guard), centerX, centerY + 55, 0xFFFFE5F4);
+            int guard = org.lyy.lyycore.content.skills.GuardSkill.value(mc.player);
+            int guardX = centerX + TECHNIQUE.x + 1, guardY = centerY + TECHNIQUE.y - 2;
+            drawGuardArc(graphics, guardX, guardY, 100, 0x88524C62);
+            if (guard > 0) drawGuardArc(graphics, guardX, guardY, guard, 0xFFFFD4EE);
+            graphics.drawCenteredString(mc.font, Integer.toString(guard), guardX, guardY + 26, 0xFFFFE5F4);
         }
-        // A small crystal connects the four glyphs while keeping the world visible.
-        for (int row = -4; row <= 4; row++) {
-            int halfWidth = 4 - Math.abs(row);
-            graphics.fill(centerX - halfWidth, centerY + row, centerX + halfWidth + 1, centerY + row + 1, 0xC0EBA4CD);
-        }
-        graphics.fill(centerX - 1, centerY - 2, centerX + 1, centerY + 1, 0xFFFFF2FC);
         graphics.flush();
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
@@ -79,5 +72,34 @@ public final class StyleHud {
         }
         RenderSystem.setShaderColor(1, 1, 1, 1);
         RenderSystem.disableBlend();
+    }
+
+    private static void drawGuardArc(GuiGraphics graphics, int centerX, int centerY, int value, int color) {
+        float radius = 20, halfWidth = .65F;
+        // Fade each edge across one screen pixel, independent of the GUI scale.
+        float feather = (float)(1 / Minecraft.getInstance().getWindow().getGuiScale());
+        int transparent = color & 0x00FFFFFF;
+        drawGuardBand(graphics, centerX, centerY, value, radius - halfWidth - feather, radius - halfWidth, transparent, color);
+        drawGuardBand(graphics, centerX, centerY, value, radius - halfWidth, radius + halfWidth, color, color);
+        drawGuardBand(graphics, centerX, centerY, value, radius + halfWidth, radius + halfWidth + feather, color, transparent);
+    }
+
+    private static void drawGuardBand(GuiGraphics graphics, int centerX, int centerY, int value,
+                                      float innerRadius, float outerRadius, int innerColor, int outerColor) {
+        var vertices = graphics.bufferSource().getBuffer(RenderType.gui());
+        var pose = graphics.pose().last().pose();
+        double sweep = Math.PI * 2 * value / 100;
+        int segments = (int)Math.ceil(128 * value / 100.0);
+        // Adjacent quads share floating-point edges instead of stamping rounded pixel squares.
+        for (int i = 0; i < segments; i++) {
+            double start = sweep * i / segments - Math.PI / 2;
+            double end = sweep * (i + 1) / segments - Math.PI / 2;
+            float startX = (float)Math.cos(start), startY = (float)Math.sin(start);
+            float endX = (float)Math.cos(end), endY = (float)Math.sin(end);
+            vertices.addVertex(pose, centerX + startX * outerRadius, centerY + startY * outerRadius, 0).setColor(outerColor);
+            vertices.addVertex(pose, centerX + startX * innerRadius, centerY + startY * innerRadius, 0).setColor(innerColor);
+            vertices.addVertex(pose, centerX + endX * innerRadius, centerY + endY * innerRadius, 0).setColor(innerColor);
+            vertices.addVertex(pose, centerX + endX * outerRadius, centerY + endY * outerRadius, 0).setColor(outerColor);
+        }
     }
 }

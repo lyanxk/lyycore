@@ -13,8 +13,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import org.lyy.lyycore.content.menu.ForgeGui;
-import org.lyy.lyycore.content.menu.ImaginaryCraftingGui;
+import org.lyy.lyycore.client.screen.ForgeGui;
+import org.lyy.lyycore.client.screen.ImaginaryCraftingGui;
 import org.lyy.lyycore.content.menu.ImaginaryCraftingMenu;
 import org.lyy.lyycore.content.recipes.OctagonalRecipe;
 import net.minecraft.world.level.block.Block;
@@ -62,7 +62,7 @@ public final class ImaginaryCraftingCategory<R extends OctagonalRecipe> implemen
         var font = Minecraft.getInstance().font;
         Component outputLabel = Component.translatable("tooltip.lyycore.forge.output");
         g.drawString(font, outputLabel, OUTPUT_X + 8 - font.width(outputLabel) / 2, 34, ForgeGui.TEXT, false);
-        if (recipe.energy() > 0) g.drawString(font, Component.translatable("screen.lyycore.condensing.cost", recipe.energy()), 8, 146, ForgeGui.TEXT, false);
+        if (recipe.energy() > 0) g.drawString(font, Component.translatable(recipe.energyPerTick() ? "screen.lyycore.condensing.rate" : "screen.lyycore.condensing.cost", recipe.energy()), 8, 146, ForgeGui.TEXT, false);
         g.fill(8, 116, getWidth() - 8, 117, ForgeGui.TRACK);
         g.drawString(font, Component.translatable("screen.lyycore.imaginary_crafting.time",
                 recipe.duration() / 20), 8, 121, ForgeGui.TEXT, false);

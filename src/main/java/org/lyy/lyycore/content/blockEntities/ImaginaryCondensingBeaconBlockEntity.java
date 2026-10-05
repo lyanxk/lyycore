@@ -13,17 +13,8 @@ import org.lyy.lyycore.registry.LyyBlockEntities;
 import org.lyy.lyycore.registry.LyyRecipes;
 
 public final class ImaginaryCondensingBeaconBlockEntity extends AbstractImaginaryCraftingBlockEntity {
-    public static final int CAPACITY = 100000;
-    private final ImaginaryEnergyStorage energy = new ImaginaryEnergyStorage(0, 0, 0) {
-        @Override public int getMaxImaginaryEnergyStored() { return CAPACITY; }
-        @Override public boolean canExtractImaginaryEnergy() { return false; }
-        @Override public int extractImaginaryEnergy(int amount, boolean simulate) { return 0; }
-        @Override public int receiveImaginaryEnergy(int amount, boolean simulate) {
-            int received = super.receiveImaginaryEnergy(amount, simulate);
-            if (!simulate && received > 0) setChanged();
-            return received;
-        }
-    };
+    public static final int CAPACITY = 1_000_000;
+    private final ImaginaryEnergyStorage energy = new ImaginaryEnergyStorage(CAPACITY, Integer.MAX_VALUE, 0, this::setChanged);
     private final ImaginaryEnergyFeAdapter fe = new ImaginaryEnergyFeAdapter(energy, this::setChanged, Integer.MAX_VALUE, 0);
     public ImaginaryCondensingBeaconBlockEntity(BlockPos pos, BlockState state) {
         super(LyyBlockEntities.IMAGINARY_CONDENSING_BEACON.get(), pos, state);

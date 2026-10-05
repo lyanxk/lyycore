@@ -18,6 +18,7 @@ public final class UtilityTooltips {
         var id = BuiltInRegistries.ITEM.getKey(event.getItemStack().getItem());
         if (!id.getNamespace().equals(LyyCore.MODID)) return;
         String hint = switch (id.getPath()) {
+            case "mind_control_beacon" -> "open";
             case "imaginary_energy_cell", "imaginary_alloy_forge", "crystal_condensing_frame" -> "open";
             case "tree_gathering_frame", "overworld_gathering_frame", "mineral_gathering_frame", "nether_gathering_frame" -> "open";
             case "miniature_concrete_factory", "miniature_garden", "miniature_ocean", "miniature_monument" -> "open";

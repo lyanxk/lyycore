@@ -1,0 +1,22 @@
+{
+  "icon": {
+    "id": "lyycore:control_enhancement_potion"
+  },
+  "title": "research.lyycore.wings_enhancement.title",
+  "summary": "research.lyycore.wings_enhancement.summary",
+  "description": "research.lyycore.wings_enhancement.description",
+  "rarity": "special",
+  "materials": [
+    {
+      "id": "lyycore:control_enhancement_potion"
+    },
+    {
+      "id": "minecraft:feather",
+      "count": 64
+    }
+  ],
+  "experience_points": 3000,
+  "prerequisites": [
+    "lyycore:research/hot_pot"
+  ]
+}

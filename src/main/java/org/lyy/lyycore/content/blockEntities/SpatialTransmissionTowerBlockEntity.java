@@ -11,6 +11,7 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.lyy.lyycore.energy.ImaginaryEnergy;
+import org.lyy.lyycore.energy.EnergyReceiver;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.IdentityHashMap;
@@ -27,6 +28,7 @@ public final class SpatialTransmissionTowerBlockEntity extends BlockEntity {
     private final List<BlockCapabilityCache<IEnergyStorage, Direction>> feCaches = new ArrayList<>();
     private final Set<Object> visited = Collections.newSetFromMap(new IdentityHashMap<>());
     private ServerLevel cachedLevel;
+    private BlockPos cachedReceiver;
     private int cacheGeneration;
     public SpatialTransmissionTowerBlockEntity(BlockPos pos, BlockState state) { super(LyyBlockEntities.SPATIAL_TRANSMISSION_TOWER.get(), pos, state); }
     public GlobalPos target() { return target; }
@@ -34,17 +36,19 @@ public final class SpatialTransmissionTowerBlockEntity extends BlockEntity {
     private void clearCaches() {
         cacheGeneration++;
         cachedLevel = null;
+        cachedReceiver = null;
         ieCaches.clear(); feCaches.clear(); visited.clear();
     }
-    private void prepareCaches(ServerLevel destination) {
-        if (cachedLevel == destination) return;
+    private void prepareCaches(ServerLevel destination, BlockPos receiver) {
+        if (cachedLevel == destination && receiver.equals(cachedReceiver)) return;
         clearCaches();
         cachedLevel = destination;
+        cachedReceiver = receiver.immutable();
         int generation = cacheGeneration;
         for (Direction side : SIDES) {
-            ieCaches.add(BlockCapabilityCache.create(LyyCapabilities.IMAGINARY_ENERGY, destination, target.pos(), side,
+            ieCaches.add(BlockCapabilityCache.create(LyyCapabilities.IMAGINARY_ENERGY, destination, receiver, side,
                     () -> !isRemoved() && cacheGeneration == generation, () -> {}));
-            feCaches.add(BlockCapabilityCache.create(Capabilities.EnergyStorage.BLOCK, destination, target.pos(), side,
+            feCaches.add(BlockCapabilityCache.create(Capabilities.EnergyStorage.BLOCK, destination, receiver, side,
                     () -> !isRemoved() && cacheGeneration == generation, () -> {}));
         }
     }
@@ -53,7 +57,9 @@ public final class SpatialTransmissionTowerBlockEntity extends BlockEntity {
         if (tower.target == null || !(level instanceof ServerLevel server)) return;
         ServerLevel destination = server.getServer().getLevel(tower.target.dimension());
         if (destination == null || !destination.hasChunkAt(tower.target.pos())) return;
-        tower.prepareCaches(destination);
+        var receiver = EnergyReceiver.controller(destination, tower.target.pos());
+        if (!destination.hasChunkAt(receiver)) return;
+        tower.prepareCaches(destination, receiver);
         // All faces (and the unsided interface) share one budget. A full face is not a successful transfer.
         boolean supported = false;
         int remaining = 10000;

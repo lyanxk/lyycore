@@ -27,19 +27,19 @@ public final class ImaginaryEnergyFeAdapter implements IEnergyStorage {
     @Override
     public int receiveEnergy(int offered, boolean simulate) {
         offered = Math.min(offered, maxReceive);
-        int room = storage.getMaxImaginaryEnergyStored() - storage.getImaginaryEnergyStored();
+        long room = (long) (storage.getMaxImaginaryEnergyStored() - storage.getImaginaryEnergyStored()) * FE_PER_IE - remainder;
         if (offered <= 0 || room <= 0 || !canReceive()) return 0;
-        int accepted = offered;
-        int partial = offered % FE_PER_IE + remainder;
-        int ie = offered / FE_PER_IE + partial / FE_PER_IE;
-        if (ie >= room) {
-            accepted = (room - 1) * FE_PER_IE + (FE_PER_IE - remainder);
-            ie = room;
-            partial = 0;
+        int accepted = (int) Math.min(offered, room);
+        int ie = (int) (((long) accepted + remainder) / FE_PER_IE);
+        int allowed = storage.receiveImaginaryEnergy(ie, true);
+        if (allowed < ie) {
+            accepted = (int) Math.max(0, (long) allowed * FE_PER_IE - remainder);
+            ie = allowed;
         }
-        if (!simulate) {
-            storage.receiveImaginaryEnergy(ie, false);
-            remainder = (byte) (partial % FE_PER_IE);
+        if (!simulate && accepted > 0) {
+            int received = storage.receiveImaginaryEnergy(ie, false);
+            if (received < ie) accepted = (int) Math.max(0, (long) received * FE_PER_IE - remainder);
+            remainder = (byte) (remainder + (long) accepted - (long) received * FE_PER_IE);
             changed.run();
         }
         return accepted;
@@ -49,14 +49,17 @@ public final class ImaginaryEnergyFeAdapter implements IEnergyStorage {
     public int extractEnergy(int amount, boolean simulate) {
         if (amount <= 0 || !canExtract()) return 0;
         int extracted = Math.min(Math.min(amount, maxExtract), getEnergyStored());
+        int needed = Math.max(0, extracted - remainder);
+        int ie = needed / FE_PER_IE + (needed % FE_PER_IE == 0 ? 0 : 1);
+        int allowed = storage.extractImaginaryEnergy(ie, true);
+        if (allowed < ie) {
+            extracted = (int) Math.min(extracted, (long) allowed * FE_PER_IE + remainder);
+            ie = allowed;
+        }
         if (!simulate && extracted > 0) {
-            if (extracted <= remainder) remainder -= (byte) extracted;
-            else {
-                int needed = extracted - remainder;
-                int ie = needed / FE_PER_IE + (needed % FE_PER_IE == 0 ? 0 : 1);
-                storage.extractImaginaryEnergy(ie, false);
-                remainder = (byte) ((FE_PER_IE - needed % FE_PER_IE) % FE_PER_IE);
-            }
+            int removed = storage.extractImaginaryEnergy(ie, false);
+            extracted = (int) Math.min(extracted, (long) removed * FE_PER_IE + remainder);
+            remainder = (byte) (remainder + (long) removed * FE_PER_IE - extracted);
             changed.run();
         }
         return extracted;

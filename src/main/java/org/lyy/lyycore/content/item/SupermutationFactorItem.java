@@ -9,7 +9,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import org.lyy.lyycore.content.skills.SkillSystem;
-import org.lyy.lyycore.network.ResearchNetwork;
+import org.lyy.lyycore.network.SkillNetwork;
 
 public final class SupermutationFactorItem extends Item {
     public SupermutationFactorItem(Properties properties) { super(properties); }
@@ -22,7 +22,7 @@ public final class SupermutationFactorItem extends Item {
     @Override public ItemStack finishUsingItem(ItemStack stack, Level level, LivingEntity entity) {
         if (entity instanceof ServerPlayer player) {
             SkillSystem.unlockFromFactor(player);
-            ResearchNetwork.sync(player);
+            SkillNetwork.sync(player);
             stack.consume(1, player);
         }
         return stack;

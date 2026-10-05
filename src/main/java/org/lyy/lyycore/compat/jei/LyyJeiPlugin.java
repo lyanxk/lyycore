@@ -14,11 +14,11 @@ import net.minecraft.world.item.crafting.RecipeManager;
 import org.lyy.lyycore.LyyCore;
 import org.lyy.lyycore.content.ResourceFrameKind;
 import org.lyy.lyycore.content.FrameProduction;
-import org.lyy.lyycore.content.menu.CrystalCondensingScreen;
+import org.lyy.lyycore.client.screen.CrystalCondensingScreen;
 import org.lyy.lyycore.content.menu.IAFMenu;
-import org.lyy.lyycore.content.menu.IAFScreen;
-import org.lyy.lyycore.content.menu.ImaginaryCraftingScreen;
-import org.lyy.lyycore.content.menu.ResourceGatheringScreen;
+import org.lyy.lyycore.client.screen.IAFScreen;
+import org.lyy.lyycore.client.screen.ImaginaryCraftingScreen;
+import org.lyy.lyycore.client.screen.ResourceGatheringScreen;
 import org.lyy.lyycore.content.recipes.ImaginaryAlloyingRecipe;
 import org.lyy.lyycore.registry.LyyBlocks;
 import org.lyy.lyycore.registry.LyyMenus;
@@ -35,6 +35,7 @@ public class LyyJeiPlugin implements IModPlugin {
 
     @Override
     public void registerCategories(IRecipeCategoryRegistration reg) {
+        reg.addRecipeCategories(new AlloyCauldronCategory(reg.getJeiHelpers().getGuiHelper()));
         reg.addRecipeCategories(new ImaginaryAlloyingCategory(reg.getJeiHelpers().getGuiHelper()));
         reg.addRecipeCategories(new ImaginaryCraftingCategory<>(reg.getJeiHelpers().getGuiHelper(), LyyJeiTypes.IMAGINARY_CRAFTING, LyyBlocks.IMAGINARY_CRAFTING_TABLE.get()));
         reg.addRecipeCategories(new ImaginaryCraftingCategory<>(reg.getJeiHelpers().getGuiHelper(), LyyJeiTypes.IMAGINARY_CONDENSING, LyyBlocks.IMAGINARY_CONDENSING_BEACON.get()));
@@ -46,6 +47,7 @@ public class LyyJeiPlugin implements IModPlugin {
 
     @Override
     public void registerRecipes(IRecipeRegistration reg) {
+        reg.addRecipes(AlloyCauldronCategory.TYPE, org.lyy.lyycore.content.cauldron.CauldronMixes.specials());
         Minecraft mc = Minecraft.getInstance();
         RecipeManager rm = null;
         if (mc.level != null) rm = mc.level.getRecipeManager();
@@ -123,6 +125,7 @@ public class LyyJeiPlugin implements IModPlugin {
 
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration reg) {
+        reg.addRecipeCatalyst(new ItemStack(LyyBlocks.ALLOY_CAULDRON.get()), AlloyCauldronCategory.TYPE);
         reg.addRecipeCatalyst(new ItemStack(LyyBlocks.IMAGINARY_CONDENSING_BEACON.get()), LyyJeiTypes.IMAGINARY_CONDENSING, LyyJeiTypes.IMAGINARY_CRAFTING);
         reg.addRecipeCatalyst(new ItemStack(LyyBlocks.IMAGINARY_CRAFTING_TABLE.get()), LyyJeiTypes.IMAGINARY_CRAFTING);
         for (var kind : ResourceFrameKind.values()) reg.addRecipeCatalyst(new ItemStack(kind.block()), LyyJeiTypes.RESOURCE_GATHERING.get(kind));

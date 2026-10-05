@@ -27,11 +27,17 @@ import org.lyy.lyycore.registry.LyyItems;
 public final class ProductionLabBlockEntity extends BlockEntity implements MenuProvider {
     private int progress, duration;
     private boolean output;
+    private boolean updatingInventory;
     private long lastUpdate;
     private final ItemStackHandler items = new ItemStackHandler(1) {
         @Override public int getSlotLimit(int slot) { return 64; }
         @Override public boolean isItemValid(int slot, ItemStack stack) { return stack.is(LyyItems.RESEARCH_NOTES.get()); }
-        @Override protected void onContentsChanged(int slot) { progress = duration = 0; output = false; changed(); }
+        @Override protected void onContentsChanged(int slot) {
+            if (updatingInventory) return;
+            progress = duration = 0;
+            output = false;
+            changed();
+        }
     };
     private final ContainerData data = new ContainerData() {
         @Override public int get(int index) {
@@ -58,6 +64,18 @@ public final class ProductionLabBlockEntity extends BlockEntity implements MenuP
                 player.connection.send(packet);
         }
     }
+    private void finishProduction(ItemStack result) {
+        updatingInventory = true;
+        try {
+            items.setStackInSlot(0, result);
+            progress = duration = 0;
+            output = true;
+        } finally {
+            updatingInventory = false;
+        }
+        changed();
+    }
+
     public static void serverTick(Level level, BlockPos pos, BlockState state, ProductionLabBlockEntity lab) {
         if (lab.output) return;
         var notes = lab.items.getStackInSlot(0);
@@ -73,9 +91,7 @@ public final class ProductionLabBlockEntity extends BlockEntity implements MenuP
         if (lab.progress >= lab.duration) {
             var result = production.result();
             ProductionOwnership.bind(result, owner);
-            lab.items.setStackInSlot(0, result);
-            lab.output = true;
-            lab.changed();
+            lab.finishProduction(result);
         } else if (lab.progress == 1 || lab.progress % 10 == 0) lab.changed();
         else lab.setChanged();
     }
@@ -88,7 +104,9 @@ public final class ProductionLabBlockEntity extends BlockEntity implements MenuP
     }
     @Override protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
-        items.deserializeNBT(registries, tag.getCompound("Items"));
+        updatingInventory = true;
+        try { items.deserializeNBT(registries, tag.getCompound("Items")); }
+        finally { updatingInventory = false; }
         duration = Math.clamp(tag.getInt("Duration"), 0, 72000);
         progress = Math.clamp(tag.getInt("Progress"), 0, duration);
         output = tag.getBoolean("Output");

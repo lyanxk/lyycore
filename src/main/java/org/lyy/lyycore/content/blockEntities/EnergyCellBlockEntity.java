@@ -31,23 +31,7 @@ import net.minecraft.world.level.block.Block;
 import javax.annotation.Nullable;
 
 public class EnergyCellBlockEntity extends BlockEntity implements MenuProvider {
-    private final ImaginaryEnergyStorage storage = new ImaginaryEnergyStorage(0, 0, 0) {
-
-        @Override
-        public int receiveImaginaryEnergy(int amount, boolean simulate) {
-            int accepted = super.receiveImaginaryEnergy(amount, simulate);
-            if (!simulate && accepted > 0) setChanged();
-            return accepted;
-        }
-
-        @Override
-        public int extractImaginaryEnergy(int amount, boolean simulate) {
-            int extracted = super.extractImaginaryEnergy(amount, simulate);
-            if (!simulate && extracted > 0) setChanged();
-            return extracted;
-        }
-
-    };
+    private final ImaginaryEnergyStorage storage = new ImaginaryEnergyStorage(Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE, this::setChanged);
     private final ImaginaryEnergyFeAdapter feAdapter = new ImaginaryEnergyFeAdapter(
             storage, this::setChanged, 1_000_000_000, 1_000_000_000);
     // Only old saves can contain an extra whole-FE buffer. Preserve any amount
@@ -193,7 +177,6 @@ public class EnergyCellBlockEntity extends BlockEntity implements MenuProvider {
             if (target == null) continue;
 
             int feSendCap = IEnergyConversion.toFE(remainingIE);
-            if (feSendCap <= 0) continue;
 
             int feAcceptedSim = target.receiveEnergy(feSendCap, true);
             if (feAcceptedSim <= 0) continue;
@@ -233,7 +216,6 @@ public class EnergyCellBlockEntity extends BlockEntity implements MenuProvider {
         if (ieBudget <= 0) return false;
 
         int fePlan = IEnergyConversion.toFE(ieBudget);
-        if (fePlan <= 0) return false;
 
         int feAcceptedSim = batt.receiveEnergy(fePlan, true);
         if (feAcceptedSim <= 0) return false;

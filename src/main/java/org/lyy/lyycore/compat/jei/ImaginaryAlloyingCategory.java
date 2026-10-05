@@ -13,7 +13,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import org.lyy.lyycore.content.menu.ForgeGui;
+import org.lyy.lyycore.client.screen.ForgeGui;
 import org.lyy.lyycore.content.recipes.ImaginaryAlloyingRecipe;
 import org.lyy.lyycore.registry.LyyBlocks;
 

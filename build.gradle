@@ -28,6 +28,10 @@ sourceSets.main.resources {
 
 repositories {
     maven { url "https://maven.blamejared.com" }
+    maven {
+        url "https://maven.theillusivec4.top/"
+        content { includeGroup "com.illusivesoulworks.caelus" }
+    }
 }
 
 base {
@@ -106,6 +110,8 @@ configurations {
 }
 
 dependencies {
+    compileOnly "com.illusivesoulworks.caelus:caelus-neoforge:${caelus_version}:api"
+    runtimeOnly "com.illusivesoulworks.caelus:caelus-neoforge:${caelus_version}"
     // JEI (optional, compile-time API + runtime full jar)
     compileOnly "mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"
     compileOnly "mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}"

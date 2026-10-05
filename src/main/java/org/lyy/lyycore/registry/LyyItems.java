@@ -20,6 +20,22 @@ import java.util.Map;
 
 public class LyyItems {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(LyyCore.MODID);
+    public static final DeferredItem<BlockItem> ALLOY_CAULDRON = ITEMS.registerSimpleBlockItem(LyyBlocks.ALLOY_CAULDRON);
+    public static final DeferredItem<BlockItem> MIND_CONTROL_BEACON = ITEMS.registerSimpleBlockItem(LyyBlocks.MIND_CONTROL_BEACON);
+    public static final DeferredItem<Item> CONTROL_CRYSTAL = ITEMS.registerSimpleItem("control_crystal", new Item.Properties().rarity(Rarity.EPIC));
+    public static final DeferredItem<ExperimentPotionItem> BLUE_POTION = potion("blue_potion", ExperimentPotionItem.Kind.BLUE);
+    public static final DeferredItem<ExperimentPotionItem> SILVER_POTION = potion("silver_potion", ExperimentPotionItem.Kind.SILVER);
+    public static final DeferredItem<ExperimentPotionItem> STRANGE_POTION = potion("strange_potion", ExperimentPotionItem.Kind.STRANGE);
+    public static final DeferredItem<ExperimentPotionItem> INCOMPLETE_POTION = potion("incomplete_potion", ExperimentPotionItem.Kind.INCOMPLETE);
+    public static final DeferredItem<ExperimentPotionItem> CONTROL_ENHANCEMENT_POTION = potion("control_enhancement_potion", ExperimentPotionItem.Kind.ENHANCEMENT);
+    public static final DeferredItem<ExperimentPotionItem> ADHESIVE_POTION = potion("adhesive_potion", ExperimentPotionItem.Kind.ADHESIVE);
+    public static final DeferredItem<Item> GUIDING_REAGENT = ITEMS.registerSimpleItem("guiding_reagent", new Item.Properties().stacksTo(1));
+    public static final DeferredItem<Item> PROOF = ITEMS.registerSimpleItem("proof", new Item.Properties().rarity(Rarity.EPIC));
+    public static final DeferredItem<ExperienceFoodItem> UNEXTINGUISHED_DESIRE = ITEMS.registerItem("unextinguished_desire",
+            properties -> new ExperienceFoodItem(properties, 1000), new Item.Properties().rarity(Rarity.EPIC));
+    private static DeferredItem<ExperimentPotionItem> potion(String name, ExperimentPotionItem.Kind kind) {
+        return ITEMS.registerItem(name, properties -> new ExperimentPotionItem(properties, kind), new Item.Properties());
+    }
     public static final DeferredItem<BlockItem> IMAGINARY_CONDENSING_BEACON = ITEMS.registerSimpleBlockItem(LyyBlocks.IMAGINARY_CONDENSING_BEACON);
     public static final DeferredItem<BlockItem> SPATIAL_TRANSMISSION_TOWER = ITEMS.registerSimpleBlockItem(LyyBlocks.SPATIAL_TRANSMISSION_TOWER);
     public static final DeferredItem<CoordinateDeviceItem> COORDINATE_DEVICE = ITEMS.registerItem("coordinate_device", CoordinateDeviceItem::new, new Item.Properties().stacksTo(1));
@@ -61,13 +77,15 @@ public class LyyItems {
                     new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant());
     public static final DeferredItem<Item> LIGHTNING_BOTTLE = ITEMS.registerSimpleItem("lightning_bottle");
     public static final DeferredItem<Item> SMALL_IMAGINARY_CORE = ITEMS.registerSimpleItem("small_imaginary_core");
-    public static final DeferredItem<Item> HEART_OF_NOTHINGNESS = ITEMS.registerSimpleItem("heart_of_nothingness");
+    public static final DeferredItem<ExperienceFoodItem> HEART_OF_NOTHINGNESS = ITEMS.registerItem("heart_of_nothingness",
+            properties -> new ExperienceFoodItem(properties, 500));
     public static final DeferredItem<WeatherBallItem> STORM_BALL = ITEMS.registerItem("storm_ball",
             properties -> new WeatherBallItem(properties, true), new Item.Properties().stacksTo(16));
     public static final DeferredItem<WeatherBallItem> SUN_BALL = ITEMS.registerItem("sun_ball",
             properties -> new WeatherBallItem(properties, false), new Item.Properties().stacksTo(16));
 
-    public static final DeferredItem<Item> PURE_CRYSTAL = ITEMS.registerSimpleItem("pure_crystal", new Item.Properties().rarity(Rarity.RARE));
+    public static final DeferredItem<ExperienceFoodItem> PURE_CRYSTAL = ITEMS.registerItem("pure_crystal",
+            properties -> new ExperienceFoodItem(properties, 300), new Item.Properties().rarity(Rarity.RARE));
     public static final DeferredItem<BlockItem> CRYSTAL_BLOCK = ITEMS.registerSimpleBlockItem(LyyBlocks.CRYSTAL_BLOCK);
     public static final DeferredItem<BlockItem> ALLOY_BLOCK = ITEMS.registerSimpleBlockItem(LyyBlocks.ALLOY_BLOCK);
     public static final DeferredItem<BlockItem> IMAGINARY_GATE = ITEMS.registerSimpleBlockItem(LyyBlocks.IMAGINARY_GATE);

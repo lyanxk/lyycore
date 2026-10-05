@@ -1,8 +1,0 @@
-{
-  "required": true,
-  "package": "org.lyy.lyycore.mixin",
-  "compatibilityLevel": "JAVA_21",
-  "mixins": ["PlayerFlightMixin", "LivingFlightMixin"],
-  "client": ["client.LocalPlayerFlightMixin"],
-  "injectors": {"defaultRequire": 1}
-}

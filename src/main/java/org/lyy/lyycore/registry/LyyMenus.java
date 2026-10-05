@@ -20,6 +20,8 @@ import org.lyy.lyycore.content.menu.ImaginaryReaperMenu;
 public class LyyMenus {
     public static final DeferredRegister<MenuType<?>> MENUS =
             DeferredRegister.create(Registries.MENU, LyyCore.MODID);
+    public static final DeferredHolder<MenuType<?>, MenuType<org.lyy.lyycore.content.menu.MindControlMenu>> MIND_CONTROL =
+            MENUS.register("mind_control", () -> IMenuTypeExtension.create(org.lyy.lyycore.content.menu.MindControlMenu::new));
     public static final DeferredHolder<MenuType<?>, MenuType<ImaginaryReaperMenu>> IMAGINARY_REAPER =
             MENUS.register("imaginary_reaper", () -> IMenuTypeExtension.create(ImaginaryReaperMenu::new));
     public static final DeferredHolder<MenuType<?>, MenuType<AdvancedImaginaryGateMenu>> ADVANCED_IMAGINARY_GATE =

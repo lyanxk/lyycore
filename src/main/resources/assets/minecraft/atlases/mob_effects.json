@@ -1,0 +1,29 @@
+{
+  "sources": [
+    {
+      "type": "minecraft:single",
+      "resource": "minecraft:mob_effect/speed",
+      "sprite": "lyycore:flight_speed"
+    },
+    {
+      "type": "minecraft:single",
+      "resource": "minecraft:mob_effect/nausea",
+      "sprite": "lyycore:nether_vision"
+    },
+    {
+      "type": "minecraft:single",
+      "resource": "minecraft:mob_effect/levitation",
+      "sprite": "lyycore:stomach_thunder"
+    },
+    {
+      "type": "minecraft:single",
+      "resource": "minecraft:mob_effect/darkness",
+      "sprite": "lyycore:spatial_confusion"
+    },
+    {
+      "type": "minecraft:single",
+      "resource": "minecraft:mob_effect/wither",
+      "sprite": "lyycore:world_destruction"
+    }
+  ]
+}

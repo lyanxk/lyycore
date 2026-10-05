@@ -1,0 +1,24 @@
+{
+  "icon": {
+    "id": "lyycore:guiding_reagent"
+  },
+  "title": "research.lyycore.any_more.title",
+  "summary": "research.lyycore.any_more.summary",
+  "description": "research.lyycore.any_more.description",
+  "rarity": "unknown",
+  "dangerous": true,
+  "materials": [
+    {
+      "id": "lyycore:guiding_reagent"
+    }
+  ],
+  "prerequisites": [
+    "lyycore:research/hot_pot"
+  ],
+  "production": {
+    "result": {
+      "id": "lyycore:proof"
+    },
+    "duration": 600
+  }
+}

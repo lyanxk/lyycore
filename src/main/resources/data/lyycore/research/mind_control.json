@@ -1,0 +1,32 @@
+{
+  "icon": {
+    "id": "lyycore:control_crystal"
+  },
+  "title": "research.lyycore.mind_control.title",
+  "summary": "research.lyycore.mind_control.summary",
+  "description": "research.lyycore.mind_control.description",
+  "rarity": "high",
+  "materials": [
+    {
+      "id": "lyycore:heart_of_nothingness",
+      "count": 4
+    },
+    {
+      "id": "lyycore:alloy_block",
+      "count": 64
+    },
+    {
+      "id": "lyycore:adhesive_potion"
+    }
+  ],
+  "experience_points": 0,
+  "prerequisites": [
+    "lyycore:research/exploration"
+  ],
+  "production": {
+    "result": {
+      "id": "lyycore:control_crystal"
+    },
+    "duration": 12000
+  }
+}

@@ -26,6 +26,8 @@
     "lyycore:advanced_imaginary_gate",
     "lyycore:ender_sentry",
     "lyycore:imaginary_condensing_beacon",
-    "lyycore:spatial_transmission_tower"
+    "lyycore:spatial_transmission_tower",
+    "lyycore:alloy_cauldron",
+    "lyycore:mind_control_beacon"
   ]
 }

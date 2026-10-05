@@ -13,6 +13,7 @@ public interface OctagonalRecipe extends Recipe<RecipeInput> {
     ItemStack result();
     default int duration() { return 100; }
     default int energy() { return 0; }
+    default boolean energyPerTick() { return false; }
     static void validate(List<Ingredient> ingredients, ItemStack result) {
         if (ingredients.size() != 9 || result.isEmpty() || result.getCount() != 1)
             throw new IllegalArgumentException("Octagonal crafting requires nine positions and one output");

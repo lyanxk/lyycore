@@ -188,9 +188,9 @@ def bake_mesh(source, name, texture_paths, strip_motion=()):
             channels = {}
             for key in animator.get("keyframes", []):
                 if key["channel"] not in ("position", "rotation", "scale"): continue
-                assert key.get("interpolation", "linear") in ("linear", "step")
+                assert key.get("interpolation", "linear") in ("linear", "step", "catmullrom")
                 value = [float(key["data_points"][0][axis]) for axis in "xyz"]
-                channels.setdefault(key["channel"], []).append([key["time"], *value, *([1] if key.get("interpolation") == "step" else [])])
+                channels.setdefault(key["channel"], []).append([key["time"], *value, *({"step": [1], "catmullrom": [2]}.get(key.get("interpolation"), []))])
             for values in channels.values(): values.sort(key=lambda v:v[0])
             if (bones[indexes[uuid]]["name"], kind) in strip_motion:
                 channels.pop("position", None)

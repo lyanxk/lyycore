@@ -74,6 +74,10 @@ public final class ReviewRegressions {
     }
 
     static ServerPlayer player(ServerLevel level) {
+        return player(level, packet -> {});
+    }
+
+    static ServerPlayer player(ServerLevel level, java.util.function.Consumer<Packet<?>> sent) {
         // Use a real player for advancement criteria, with a silent transport and
         // no login/handshake; these checks exercise menus rather than networking.
         var cookie = CommonListenerCookie.createInitial(new GameProfile(UUID.randomUUID(), "review-player"), false);
@@ -82,8 +86,8 @@ public final class ReviewRegressions {
             @Override public void setListenerForServerboundHandshake(PacketListener listener) { }
         };
         player.connection = new ServerGamePacketListenerImpl(level.getServer(), connection, player, cookie) {
-            @Override public void send(Packet<?> packet) { }
-            @Override public void send(Packet<?> packet, PacketSendListener listener) { }
+            @Override public void send(Packet<?> packet) { sent.accept(packet); }
+            @Override public void send(Packet<?> packet, PacketSendListener listener) { sent.accept(packet); }
         };
         player.setGameMode(GameType.SURVIVAL);
         return player;

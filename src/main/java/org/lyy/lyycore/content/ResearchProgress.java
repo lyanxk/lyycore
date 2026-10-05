@@ -8,9 +8,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.lyy.lyycore.content.research.ResearchDefinition;
 import org.lyy.lyycore.content.skills.SkillSystem;
-import org.lyy.lyycore.network.ResearchNetwork;
+import org.lyy.lyycore.network.SkillNetwork;
 import org.lyy.lyycore.network.WingsNetwork;
 import org.lyy.lyycore.content.research.ResearchManager;
+import org.lyy.lyycore.content.research.ResearchMaterial;
+import java.util.Comparator;
 
 public final class ResearchProgress {
     private static final String KEY = "lyycore:research";
@@ -29,7 +31,10 @@ public final class ResearchProgress {
     /** Plan the entire payment before changing anything, including duplicate material costs. */
     private static int[] payment(Player player, ResearchDefinition research) {
         int[] consumed = new int[player.getInventory().items.size()];
-        for (ItemStack cost : research.materials()) {
+        // Stream sorting is stable: absent/equal priorities retain data-pack order.
+        var materials = research.materials().stream().sorted(Comparator.comparingInt(ResearchMaterial::priority).reversed()).toList();
+        for (var material : materials) {
+            ItemStack cost = material.stack();
             int remaining = cost.getCount();
             for (int slot = 0; slot < consumed.length && remaining > 0; slot++) {
                 ItemStack held = player.getInventory().items.get(slot);
@@ -89,18 +94,15 @@ public final class ResearchProgress {
         if (research.unlocksSkills()) {
             boolean unlocked = value || ResearchManager.all(player.level()).stream()
                     .anyMatch(entry -> entry.value().unlocksSkills() && completed(player, entry.id()));
-            if (SkillSystem.unlocked(player) != unlocked) {
-                SkillSystem.setUnlocked(player, unlocked);
-                ResearchNetwork.sync(player);
-            }
+            SkillSystem.setUnlocked(player, unlocked);
         }
         if (!value && id.equals(EnderCompanions.RESEARCH)) EnderCompanions.recall(player);
-        if (id.equals(AegisWings.RESEARCH)) WingsNetwork.sync(player);
+        if (id.equals(AegisWings.RESEARCH) || id.equals(AegisWings.ENHANCEMENT)) WingsNetwork.sync(player);
         if (id.equals(BasicSkills.RESEARCH)) {
-            BasicSkills.resetInput(player);
-            BasicSkills.updateFlight(player);
-            ResearchNetwork.sync(player);
+            org.lyy.lyycore.content.skills.GuardSkill.reset(player);
+            org.lyy.lyycore.content.skills.BuildingSkills.updateFlight(player);
         }
+        if (research.unlocksSkills() || id.equals(BasicSkills.RESEARCH)) SkillNetwork.sync(player);
         if (value && id.equals(ResourceLocation.parse("lyycore:research/adaptive_enhancement"))) {
             var advancement = player.server.getAdvancements().get(ResourceLocation.parse("lyycore:progression/well_fed"));
             if (advancement != null) player.getAdvancements().award(advancement, "research");

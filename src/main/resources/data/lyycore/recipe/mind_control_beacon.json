@@ -1,0 +1,38 @@
+{
+  "type": "lyycore:imaginary_condensing",
+  "ingredients": [
+    {
+      "item": "lyycore:crystal_block"
+    },
+    {
+      "item": "lyycore:control_crystal"
+    },
+    {
+      "item": "minecraft:diamond"
+    },
+    {
+      "item": "lyycore:control_crystal"
+    },
+    {
+      "item": "minecraft:diamond"
+    },
+    {
+      "item": "lyycore:control_crystal"
+    },
+    {
+      "item": "minecraft:diamond"
+    },
+    {
+      "item": "lyycore:control_crystal"
+    },
+    {
+      "item": "minecraft:diamond"
+    }
+  ],
+  "result": {
+    "id": "lyycore:mind_control_beacon"
+  },
+  "duration": 2400,
+  "energy": 20000,
+  "energy_per_tick": true
+}

@@ -1,0 +1,35 @@
+{
+  "icon": {
+    "id": "lyycore:alloy_cauldron"
+  },
+  "title": "research.lyycore.hot_pot.title",
+  "summary": "research.lyycore.hot_pot.summary",
+  "description": "research.lyycore.hot_pot.description",
+  "rarity": "common",
+  "materials": [
+    {
+      "id": "minecraft:cauldron"
+    },
+    {
+      "id": "lyycore:imaginary_alloy_ingot",
+      "count": 4
+    },
+    {
+      "id": "minecraft:flint_and_steel"
+    },
+    {
+      "id": "minecraft:ice",
+      "count": 2
+    }
+  ],
+  "experience_points": 0,
+  "prerequisites": [
+    "lyycore:research/exploration"
+  ],
+  "production": {
+    "result": {
+      "id": "lyycore:alloy_cauldron"
+    },
+    "duration": 2400
+  }
+}

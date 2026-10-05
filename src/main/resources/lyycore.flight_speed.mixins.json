@@ -1,0 +1,7 @@
+{
+  "required": true,
+  "package": "org.lyy.lyycore.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": ["FlightSpeedEffectMixin"],
+  "injectors": {"defaultRequire": 1}
+}

@@ -62,6 +62,9 @@ public class ImaginaryGateBlockEntity extends BlockEntity implements MenuProvide
         return offering.is(LyyItems.CRYSTAL_BLOCK.get()) ? LyyEntities.IMAGINARY_GUARDIAN.get() : null;
     }
     public boolean acceptsOffering(ItemStack stack) { return summonType(stack) != null; }
+    public void replaceActiveBoss(UUID previous, UUID replacement) {
+        if (previous.equals(activeBoss)) { activeBoss = replacement; setChanged(); }
+    }
 
     public static void serverTick(Level level, BlockPos pos, BlockState state, ImaginaryGateBlockEntity gate) {
         if (level.getGameTime() % 10 != 0) return;
@@ -86,6 +89,7 @@ public class ImaginaryGateBlockEntity extends BlockEntity implements MenuProvide
         boss.moveTo(spawn.x, spawn.y, spawn.z, state.getValue(ImaginaryGateBlock.FACING).toYRot(), 0);
         if (boss instanceof ImaginaryGuardian guardian) guardian.beginSummoning(summoner);
         if (boss instanceof LifeRevel revel) revel.beginSummoning(summoner);
+        if (boss instanceof org.lyy.lyycore.content.entity.guiding.GuidingBoss guiding) guiding.beginSummoning(summoner, pos);
         if (server.addFreshEntity(boss)) {
             // Credit the player who supplied the offering, not a nearby spectator.
             var contributor = gate.offeringPlayer == null ? null : server.getServer().getPlayerList().getPlayer(gate.offeringPlayer);

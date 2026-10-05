@@ -50,11 +50,12 @@ public abstract class AbstractImaginaryCraftingBlockEntity extends BlockEntity i
                 case 0 -> progress; case 1 -> duration;
                 case 2 -> recipeEnergy & 0xFFFF; case 3 -> recipeEnergy >>> 16;
                 case 4 -> storedEnergy() & 0xFFFF; case 5 -> storedEnergy() >>> 16;
+                case 6 -> cachedRecipe != null && cachedRecipe.value().energyPerTick() ? 1 : 0;
                 default -> 0;
             };
         }
         @Override public void set(int index, int value) { }
-        @Override public int getCount() { return 6; }
+        @Override public int getCount() { return 7; }
     };
 
     protected AbstractImaginaryCraftingBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
@@ -114,8 +115,9 @@ public abstract class AbstractImaginaryCraftingBlockEntity extends BlockEntity i
         table.duration = recipe.value().duration();
         table.recipeEnergy = recipe.value().energy();
         if (!table.consumeEnergy(table.recipeEnergy, true)) return;
+        if (recipe.value().energyPerTick()) table.consumeEnergy(table.recipeEnergy, false);
         if (++table.progress >= table.duration) {
-            table.consumeEnergy(table.recipeEnergy, false);
+            if (!recipe.value().energyPerTick()) table.consumeEnergy(table.recipeEnergy, false);
             ItemStack result = recipe.value().assemble(table.input, level.registryAccess());
             for (int slot = 0; slot < 9; slot++) table.items.setStackInSlot(slot, ItemStack.EMPTY);
             table.items.setStackInSlot(0, result);
@@ -126,6 +128,7 @@ public abstract class AbstractImaginaryCraftingBlockEntity extends BlockEntity i
     private static boolean sameProcessing(RecipeHolder<? extends OctagonalRecipe> before, RecipeHolder<? extends OctagonalRecipe> after) {
         return before != null && after != null && before.id().equals(after.id())
                 && before.value().duration() == after.value().duration() && before.value().energy() == after.value().energy()
+                && before.value().energyPerTick() == after.value().energyPerTick()
                 && ItemStack.matches(before.value().result(), after.value().result());
     }
 

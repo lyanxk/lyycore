@@ -110,10 +110,8 @@ public final class TransmissionRegressions {
     public static void nativeEnergyDoesNotAlsoGenerateFe(GameTestHelper test) {
         var pos = test.absolutePos(new BlockPos(4, 1, 4));
         var receiver = receiver(test, pos);
-        var small = new ImaginaryEnergyStorage(0, 0, 0) {
-            @Override public int getMaxImaginaryEnergyStored() { return 3000; }
-        };
-        var large = new ImaginaryEnergyStorage(0, 0, 0);
+        var small = new ImaginaryEnergyStorage(3000, Integer.MAX_VALUE, Integer.MAX_VALUE);
+        var large = new ImaginaryEnergyStorage(Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE);
         var fe = new EnergyStorage(3000000);
         receiver.ie.put(Direction.DOWN, small); receiver.ie.put(null, large); receiver.fe.put(null, fe);
         var tower = tower(test, pos);

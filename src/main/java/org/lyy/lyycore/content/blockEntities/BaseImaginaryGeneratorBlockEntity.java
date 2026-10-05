@@ -14,9 +14,11 @@ import org.lyy.lyycore.registry.LyyBlockEntities;
 import org.lyy.lyycore.registry.LyyCapabilities;
 import org.lyy.lyycore.energy.ImaginaryEnergy;
 import org.lyy.lyycore.energy.IEnergyConversion;
+import org.lyy.lyycore.energy.EnergyReceiver;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.HashSet;
 
 public class BaseImaginaryGeneratorBlockEntity extends BlockEntity {
     private static final int SUPPLY_RADIUS = 5;
@@ -25,7 +27,7 @@ public class BaseImaginaryGeneratorBlockEntity extends BlockEntity {
     private long nextScanGameTime;
     private int generationRemainderFE;
 
-    private record Target(BlockPos pos, Direction side, boolean nativeIE) { }
+    private record Target(BlockPos connection, BlockPos pos, Direction side, boolean nativeIE) { }
 
     public BaseImaginaryGeneratorBlockEntity(BlockPos pos, BlockState state) {
         super(LyyBlockEntities.IGB.get(), pos, state);
@@ -63,6 +65,7 @@ public class BaseImaginaryGeneratorBlockEntity extends BlockEntity {
     private void scanTargets() {
         if (level == null || level.isClientSide) return;
         savedTargets.clear();
+        var receivers = new HashSet<BlockPos>();
         BlockPos origin = getBlockPos();
         int distance = SUPPLY_RADIUS;
         for (int dx = -distance; dx <= distance; dx++) {
@@ -72,22 +75,28 @@ public class BaseImaginaryGeneratorBlockEntity extends BlockEntity {
                     if (cur.equals(origin)) continue;
                     if (!level.hasChunkAt(cur)) continue;
 
-                    Target nativeTarget = findImaginaryTarget(cur);
+                    BlockPos receiver = EnergyReceiver.controller(level, cur);
+                    if (!level.hasChunkAt(receiver) || receivers.contains(receiver)) continue;
+
+                    Target nativeTarget = findImaginaryTarget(cur, receiver);
                     if (nativeTarget != null) {
                         savedTargets.add(nativeTarget);
+                        receivers.add(receiver);
                         continue;
                     }
 
-                    IEnergyStorage unsided = level.getCapability(Capabilities.EnergyStorage.BLOCK, cur, null);
+                    IEnergyStorage unsided = level.getCapability(Capabilities.EnergyStorage.BLOCK, receiver, null);
                     if (unsided != null && unsided.canReceive()) {
-                        savedTargets.add(new Target(cur.immutable(), null, false));
+                        savedTargets.add(new Target(cur.immutable(), receiver.immutable(), null, false));
+                        receivers.add(receiver);
                         continue;
                     }
 
                     for (Direction side : Direction.values()) {
-                        IEnergyStorage sided = level.getCapability(Capabilities.EnergyStorage.BLOCK, cur, side);
+                        IEnergyStorage sided = level.getCapability(Capabilities.EnergyStorage.BLOCK, receiver, side);
                         if (sided != null && sided.canReceive()) {
-                            savedTargets.add(new Target(cur.immutable(), side, false));
+                            savedTargets.add(new Target(cur.immutable(), receiver.immutable(), side, false));
+                            receivers.add(receiver);
                             break;
                         }
                     }
@@ -98,12 +107,12 @@ public class BaseImaginaryGeneratorBlockEntity extends BlockEntity {
         nextScanGameTime = level.getGameTime() + Config.GENERATOR_RESCAN_INTERVAL.get();
     }
 
-    private Target findImaginaryTarget(BlockPos pos) {
+    private Target findImaginaryTarget(BlockPos connection, BlockPos pos) {
         ImaginaryEnergy unsided = level.getCapability(LyyCapabilities.IMAGINARY_ENERGY, pos, null);
-        if (unsided != null && unsided.canReceiveImaginaryEnergy()) return new Target(pos.immutable(), null, true);
+        if (unsided != null && unsided.canReceiveImaginaryEnergy()) return new Target(connection.immutable(), pos.immutable(), null, true);
         for (Direction side : Direction.values()) {
             ImaginaryEnergy sided = level.getCapability(LyyCapabilities.IMAGINARY_ENERGY, pos, side);
-            if (sided != null && sided.canReceiveImaginaryEnergy()) return new Target(pos.immutable(), side, true);
+            if (sided != null && sided.canReceiveImaginaryEnergy()) return new Target(connection.immutable(), pos.immutable(), side, true);
         }
         return null;
     }
@@ -128,7 +137,8 @@ public class BaseImaginaryGeneratorBlockEntity extends BlockEntity {
         Iterator<Target> iterator = be.savedTargets.iterator();
         while (iterator.hasNext()) {
             Target target = iterator.next();
-            if (!level.hasChunkAt(target.pos())) {
+            if (!level.hasChunkAt(target.connection()) || !level.hasChunkAt(target.pos())
+                    || !EnergyReceiver.controller(level, target.connection()).equals(target.pos())) {
                 iterator.remove();
                 continue;
             }

@@ -12,7 +12,7 @@ import java.util.Optional;
 
 /** A research definition. Completing it unlocks its stable research ID for that player. */
 public record ResearchDefinition(ItemStack icon, String title, String summary, String description,
-                             Rarity rarity, List<ItemStack> materials, int experienceLevels, int experiencePoints, boolean dangerous,
+                             Rarity rarity, List<ResearchMaterial> materials, int experienceLevels, int experiencePoints, boolean dangerous,
                              Optional<Production> production, boolean unlocksSkills,
                              List<ResourceLocation> prerequisites, Optional<ResourceLocation> requiredAdvancement) {
     /** A present production definition also enables free transcription in the memory screen. */
@@ -36,10 +36,10 @@ public record ResearchDefinition(ItemStack icon, String title, String summary, S
     }
     public ResearchDefinition {
         if (icon.isEmpty() || experienceLevels < 0 || experiencePoints < 0
-                || experienceLevels > 0 && experiencePoints > 0 || materials.stream().anyMatch(ItemStack::isEmpty))
+                || experienceLevels > 0 && experiencePoints > 0)
             throw new IllegalArgumentException("Research requires an icon, nonempty materials and either a level or point cost");
         icon = icon.copy();
-        materials = materials.stream().map(ItemStack::copy).toList();
+        materials = List.copyOf(materials);
         prerequisites = List.copyOf(prerequisites);
     }
     public static final Codec<ResearchDefinition> CODEC = RecordCodecBuilder.create(i -> i.group(
@@ -48,7 +48,7 @@ public record ResearchDefinition(ItemStack icon, String title, String summary, S
             Codec.STRING.fieldOf("summary").forGetter(ResearchDefinition::summary),
             Codec.STRING.fieldOf("description").forGetter(ResearchDefinition::description),
             StringRepresentable.fromEnum(Rarity::values).optionalFieldOf("rarity", Rarity.COMMON).forGetter(ResearchDefinition::rarity),
-            ItemStack.CODEC.listOf().optionalFieldOf("materials", List.of()).forGetter(ResearchDefinition::materials),
+            ResearchMaterial.CODEC.listOf().optionalFieldOf("materials", List.of()).forGetter(ResearchDefinition::materials),
             Codec.intRange(0, 10000).optionalFieldOf("experience_levels", 0).forGetter(ResearchDefinition::experienceLevels),
             Codec.intRange(0, 1000000).optionalFieldOf("experience_points", 0).forGetter(ResearchDefinition::experiencePoints),
             Codec.BOOL.optionalFieldOf("dangerous", false).forGetter(ResearchDefinition::dangerous),
@@ -61,7 +61,7 @@ public record ResearchDefinition(ItemStack icon, String title, String summary, S
         ItemStack.STREAM_CODEC.encode(b, r.icon);
         b.writeUtf(r.title); b.writeUtf(r.summary); b.writeUtf(r.description);
         b.writeEnum(r.rarity);
-        b.writeCollection(r.materials, (buf, stack) -> ItemStack.STREAM_CODEC.encode((RegistryFriendlyByteBuf) buf, stack));
+        b.writeCollection(r.materials, (buf, material) -> ResearchMaterial.STREAM_CODEC.encode((RegistryFriendlyByteBuf) buf, material));
         b.writeVarInt(r.experienceLevels); b.writeVarInt(r.experiencePoints); b.writeBoolean(r.dangerous);
         b.writeBoolean(r.production.isPresent());
         r.production.ifPresent(p -> { ItemStack.STREAM_CODEC.encode(b, p.result); b.writeVarInt(p.duration); });
@@ -69,7 +69,7 @@ public record ResearchDefinition(ItemStack icon, String title, String summary, S
         b.writeCollection(r.prerequisites, (buf, id) -> buf.writeResourceLocation(id));
         b.writeOptional(r.requiredAdvancement, (buf, id) -> buf.writeResourceLocation(id));
     }, b -> new ResearchDefinition(ItemStack.STREAM_CODEC.decode(b), b.readUtf(), b.readUtf(), b.readUtf(),
-            b.readEnum(Rarity.class), b.readList(buf -> ItemStack.STREAM_CODEC.decode((RegistryFriendlyByteBuf) buf)),
+            b.readEnum(Rarity.class), b.readList(buf -> ResearchMaterial.STREAM_CODEC.decode((RegistryFriendlyByteBuf) buf)),
             b.readVarInt(), b.readVarInt(), b.readBoolean(), b.readBoolean()
                     ? Optional.of(new Production(ItemStack.STREAM_CODEC.decode(b), b.readVarInt())) : Optional.empty(), b.readBoolean(),
             b.readList(buf -> buf.readResourceLocation()), b.readOptional(buf -> buf.readResourceLocation())));

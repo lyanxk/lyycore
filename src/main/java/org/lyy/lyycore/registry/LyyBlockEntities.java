@@ -21,6 +21,10 @@ import org.lyy.lyycore.content.blockEntities.ProductionLabBlockEntity;
 public class LyyBlockEntities {
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES =
             DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, LyyCore.MODID);
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<AlloyCauldronBlockEntity>> ALLOY_CAULDRON =
+            BLOCK_ENTITIES.register("alloy_cauldron", () -> BlockEntityType.Builder.of(AlloyCauldronBlockEntity::new, LyyBlocks.ALLOY_CAULDRON.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<MindControlBeaconBlockEntity>> MIND_CONTROL_BEACON =
+            BLOCK_ENTITIES.register("mind_control_beacon", () -> BlockEntityType.Builder.of(MindControlBeaconBlockEntity::new, LyyBlocks.MIND_CONTROL_BEACON.get()).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ImaginaryCondensingBeaconBlockEntity>> IMAGINARY_CONDENSING_BEACON =
             BLOCK_ENTITIES.register("imaginary_condensing_beacon", () -> BlockEntityType.Builder.of(ImaginaryCondensingBeaconBlockEntity::new, LyyBlocks.IMAGINARY_CONDENSING_BEACON.get()).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SpatialTransmissionTowerBlockEntity>> SPATIAL_TRANSMISSION_TOWER =

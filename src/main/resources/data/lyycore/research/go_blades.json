@@ -1,0 +1,12 @@
+{
+  "icon": {
+    "id": "minecraft:feather"
+  },
+  "title": "research.lyycore.go_blades.title",
+  "summary": "research.lyycore.go_blades.summary",
+  "description": "research.lyycore.go_blades.description",
+  "experience_points": 3000,
+  "prerequisites": [
+    "lyycore:research/wings_enhancement"
+  ]
+}

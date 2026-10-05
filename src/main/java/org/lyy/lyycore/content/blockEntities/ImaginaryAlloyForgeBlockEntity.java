@@ -44,24 +44,7 @@ public class ImaginaryAlloyForgeBlockEntity extends BlockEntity implements MenuP
     @Nullable private RecipeManager cachedRecipeManager;
     @Nullable private ResourceLocation activeRecipeId;
 
-    private final ImaginaryEnergyStorage energyStorage = new ImaginaryEnergyStorage(0, 0, 0) {
-        @Override public int getMaxImaginaryEnergyStored() { return 1_000_000; }
-        @Override public void setImaginaryEnergy(int value) { imaginaryEnergy = Math.clamp(value, 0, getMaxImaginaryEnergyStored()); }
-
-        @Override
-        public int receiveImaginaryEnergy(int maxReceive, boolean simulate) {
-            int received = super.receiveImaginaryEnergy(maxReceive, simulate);
-            if (!simulate && received > 0) setChanged();
-            return received;
-        }
-
-        @Override
-        public int extractImaginaryEnergy(int maxExtract, boolean simulate) {
-            int extracted = super.extractImaginaryEnergy(maxExtract, simulate);
-            if (!simulate && extracted > 0) setChanged();
-            return extracted;
-        }
-    };
+    private final ImaginaryEnergyStorage energyStorage = new ImaginaryEnergyStorage(1_000_000, Integer.MAX_VALUE, Integer.MAX_VALUE, this::setChanged);
     private final ImaginaryEnergyFeAdapter feAdapter = new ImaginaryEnergyFeAdapter(energyStorage, this::setChanged);
 
     private final ItemStackHandler items = new ItemStackHandler(4) {

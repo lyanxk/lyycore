@@ -9,6 +9,10 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 import org.lyy.lyycore.LyyCore;
+import org.lyy.lyycore.content.entity.guiding.GuidingGrab;
+import org.lyy.lyycore.content.entity.guiding.GuidingLaser;
+import org.lyy.lyycore.content.entity.guiding.GuidingGuard;
+import org.lyy.lyycore.content.entity.guiding.GuidingBoss;
 import org.lyy.lyycore.content.entity.GuardianCrystal;
 import org.lyy.lyycore.content.entity.GrappleHook;
 import org.lyy.lyycore.content.entity.GuardianSpikes;
@@ -20,12 +24,39 @@ import org.lyy.lyycore.content.entity.RevelBlind;
 import org.lyy.lyycore.content.entity.SonnetArrow;
 import org.lyy.lyycore.content.entity.SonnetDome;
 import org.lyy.lyycore.content.entity.SonnetVolley;
+import org.lyy.lyycore.content.wings.ScoopFeather;
 
 @EventBusSubscriber(modid = LyyCore.MODID)
 public class LyyEntities {
     public static final DeferredRegister<EntityType<?>> ENTITIES =
             DeferredRegister.create(Registries.ENTITY_TYPE, LyyCore.MODID);
+    public static final DeferredHolder<EntityType<?>, EntityType<ScoopFeather>> SCOOP_FEATHER =
+            ENTITIES.register("scoop_feather", () -> EntityType.Builder.of(ScoopFeather::new, MobCategory.MISC)
+                    .sized(ScoopFeather.SIZE, ScoopFeather.SIZE).clientTrackingRange(12).updateInterval(3)
+                    .noSave().fireImmune().build("lyycore:scoop_feather"));
+    public static final DeferredHolder<EntityType<?>, EntityType<GuidingBoss>> GUIDING_LIGHT =
+            ENTITIES.register("guiding_light", () -> EntityType.Builder.of(GuidingBoss::new, MobCategory.MONSTER)
+                    .sized(2, 3.5F).clientTrackingRange(16).fireImmune().build("lyycore:guiding_light"));
+    public static final DeferredHolder<EntityType<?>, EntityType<GuidingBoss>> ENDLESS_DEMAND =
+            ENTITIES.register("endless_demand", () -> EntityType.Builder.of(GuidingBoss::new, MobCategory.MONSTER)
+                    .sized(2, 3.5F).clientTrackingRange(16).updateInterval(1).fireImmune().build("lyycore:endless_demand"));
+    public static final DeferredHolder<EntityType<?>, EntityType<GuidingGuard>> LOST_ADHERENT =
+            ENTITIES.register("lost_adherent", () -> EntityType.Builder.of(GuidingGuard::new, MobCategory.MONSTER)
+                    .sized(.7F, 2.4F).clientTrackingRange(16).build("lyycore:lost_adherent"));
+    public static final DeferredHolder<EntityType<?>, EntityType<GuidingGuard>> FANATICAL_SUPPORTER =
+            ENTITIES.register("fanatical_supporter", () -> EntityType.Builder.of(GuidingGuard::new, MobCategory.MONSTER)
+                    .sized(.6F, 2).clientTrackingRange(16).build("lyycore:fanatical_supporter"));
+    public static final DeferredHolder<EntityType<?>, EntityType<GuidingLaser>> GUIDING_LASER =
+            ENTITIES.register("guiding_laser", () -> EntityType.Builder.<GuidingLaser>of(GuidingLaser::new, MobCategory.MISC)
+                    .sized(.1F, .1F).clientTrackingRange(20).updateInterval(1).build("lyycore:guiding_laser"));
+    public static final DeferredHolder<EntityType<?>, EntityType<GuidingGrab>> GUIDING_GRAB =
+            ENTITIES.register("guiding_grab", () -> EntityType.Builder.<GuidingGrab>of(GuidingGrab::new, MobCategory.MISC)
+                    .sized(.6F, .6F).clientTrackingRange(20).updateInterval(1).build("lyycore:guiding_grab"));
     @SubscribeEvent public static void attributes(EntityAttributeCreationEvent event) {
+        event.put(GUIDING_LIGHT.get(), GuidingBoss.attributes(false).build());
+        event.put(ENDLESS_DEMAND.get(), GuidingBoss.attributes(true).build());
+        event.put(LOST_ADHERENT.get(), GuidingGuard.attributes(false).build());
+        event.put(FANATICAL_SUPPORTER.get(), GuidingGuard.attributes(true).build());
         event.put(LIFE_REVEL.get(), LifeRevel.attributes().build());
         event.put(REVEL_DANCER.get(), RevelDancer.attributes().build());
         event.put(REVEL_BLIND.get(), RevelBlind.attributes().build());

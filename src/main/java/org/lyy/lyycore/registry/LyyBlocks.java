@@ -28,6 +28,8 @@ import java.util.Map;
 
 public class LyyBlocks {
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(LyyCore.MODID);
+    public static final DeferredBlock<AlloyCauldronBlock> ALLOY_CAULDRON = BLOCKS.register("alloy_cauldron", AlloyCauldronBlock::new);
+    public static final DeferredBlock<MindControlBeaconBlock> MIND_CONTROL_BEACON = BLOCKS.register("mind_control_beacon", MindControlBeaconBlock::new);
     public static final DeferredBlock<ImaginaryCondensingBeaconBlock> IMAGINARY_CONDENSING_BEACON = BLOCKS.register("imaginary_condensing_beacon", ImaginaryCondensingBeaconBlock::new);
     public static final DeferredBlock<SpatialTransmissionTowerBlock> SPATIAL_TRANSMISSION_TOWER = BLOCKS.register("spatial_transmission_tower", SpatialTransmissionTowerBlock::new);
     public static final DeferredBlock<ProductionLabBlock> PRODUCTION_LAB = BLOCKS.register("production_lab", ProductionLabBlock::new);
