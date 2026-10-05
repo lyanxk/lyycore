@@ -10,7 +10,6 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
-import org.lyy.lyycore.content.wings.FeatherAttack;
 import java.io.IOException;
 import java.util.*;
 
@@ -24,7 +23,6 @@ final class AnimatedMeshModel {
             if (keys.length == 0) return channel == 2 ? 1 : 0;
             time = loop && length > 0 ? time % length : Mth.clamp(time, 0, length);
             if (time <= keys[0][0]) return keys[0][axis + 1];
-            // Binary search the sampled walk tracks (up to 101 keys per channel).
             int low = 0, high = keys.length - 1;
             while (low + 1 < high) {
                 int middle = (low + high) >>> 1;
@@ -44,18 +42,25 @@ final class AnimatedMeshModel {
     }
     private final ResourceLocation[] textures;
     private final Set<Integer> emissiveTextures = new HashSet<>();
+    private final Set<Integer> additiveTextures = new HashSet<>();
     private final Bone[] bones;
     private final int[][] children;
     private final PoseStack.Pose[] poses;
     private final float[][] values = new float[3][3];
     private final Map<String, Clip> clips = new HashMap<>();
-    private record Locator(int bone, float[] position) { }
+    private record Locator(float[] position, int[] chain) { }
     private final Map<String, Locator> locators = new HashMap<>();
-    private final Set<Integer> additiveTextures = new HashSet<>();
-    private final List<String> attackBones = new ArrayList<>();
-    private final List<Integer> attackBoneIndices = new ArrayList<>();
-    private float[] wingValues;
-    private boolean[] hidden;
+    private final int[] attackBoneIndices;
+    private final WingAttackAnimation wingAttack;
+    private final WingAttackAnimation.Sampler attackSampler = this::sampleBone;
+    private final float[] wingValues;
+    private final boolean[] hidden;
+    // Locator queries share a sampled pose but never mutate the pose/visibility used for drawing.
+    private final float[] locatorBase, locatorValues;
+    private final Map<String, Vec3> locatorResults = new HashMap<>();
+    private final PoseStack locatorPose = new PoseStack();
+    private float locatorAttackTime;
+    private boolean locatorCacheValid;
 
     AnimatedMeshModel(String name) {
         ResourceLocation path = ResourceLocation.parse("lyycore:geometry/" + name + ".json");
@@ -68,8 +73,10 @@ final class AnimatedMeshModel {
             JsonArray entries = root.getAsJsonArray("bones");
             bones = new Bone[entries.size()];
             wingValues = new float[bones.length * 9];
+            locatorBase = new float[wingValues.length]; locatorValues = new float[wingValues.length];
             hidden = new boolean[bones.length];
             poses = new PoseStack.Pose[entries.size()];
+            var boneIndices = new HashMap<String, Integer>();
             for (int i = 0; i < bones.length; i++) {
                 JsonObject bone = entries.get(i).getAsJsonObject();
                 JsonArray surfaces = bone.getAsJsonArray("faces");
@@ -79,6 +86,7 @@ final class AnimatedMeshModel {
                     faces[f] = new Face(face.get("texture").getAsInt(), matrix(face.getAsJsonArray("vertices")));
                 }
                 bones[i] = new Bone(bone.get("name").getAsString(), bone.get("parent").getAsInt(), vector(bone.getAsJsonArray("pivot")), vector(bone.getAsJsonArray("rotation")), faces);
+                boneIndices.putIfAbsent(bones[i].name, i);
             }
             children = new int[bones.length][];
             for (int i = 0; i < bones.length; i++) {
@@ -99,21 +107,31 @@ final class AnimatedMeshModel {
             }
             if (root.has("locators")) for (var entry : root.getAsJsonObject("locators").entrySet()) {
                 var locator = entry.getValue().getAsJsonObject();
-                locators.put(entry.getKey(), new Locator(locator.get("bone").getAsInt(), vector(locator.getAsJsonArray("position"))));
+                locators.put(entry.getKey(), new Locator(vector(locator.getAsJsonArray("position")), ancestorChain(locator.get("bone").getAsInt())));
             }
+            var attackIndices = new ArrayList<Integer>();
             if (root.has("attack_feathers")) for (var entry : root.getAsJsonArray("attack_feathers")) {
-                var feather = entry.getAsJsonObject();
-                attackBones.add(feather.get("bone").getAsString());
-                for (int bone = 0; bone < bones.length; bone++) {
-                    if (bones[bone].name.equals(feather.get("bone").getAsString())) {
-                        attackBoneIndices.add(bone);
-                        break;
-                    }
-                }
+                var boneName = entry.getAsJsonObject().get("bone").getAsString();
+                var index = boneIndices.get(boneName);
+                if (index == null) throw new IllegalArgumentException("Unknown attack feather bone: " + boneName);
+                attackIndices.add(index);
             }
+            attackBoneIndices = attackIndices.stream().mapToInt(Integer::intValue).toArray();
+            wingAttack = new WingAttackAnimation(attackBoneIndices);
         } catch (IOException | RuntimeException error) {
             throw new IllegalStateException("Cannot load animated mesh " + path, error);
         }
+    }
+    /** Resolve parent walks once at the resource boundary rather than on every locator query. */
+    private int[] ancestorChain(int bone) {
+        var chain = new ArrayList<Integer>();
+        for (int current = bone; current >= 0; current = bones[current].parent) {
+            if (current >= bones.length || chain.size() >= bones.length)
+                throw new IllegalArgumentException("Invalid locator bone hierarchy");
+            chain.add(current);
+        }
+        Collections.reverse(chain);
+        return chain.stream().mapToInt(Integer::intValue).toArray();
     }
     private static float[] vector(JsonArray array) {
         float[] result = new float[array.size()];
@@ -126,6 +144,7 @@ final class AnimatedMeshModel {
         return result;
     }
     void renderBlended(PoseStack pose, MultiBufferSource buffers, int light, float age, float walkTime, float walking, float flying, float gliding) {
+        Arrays.fill(hidden, false);
         Clip idle = clips.get("idle"), walk = clips.get("walk"), fly = clips.getOrDefault("fly", idle), glide = clips.getOrDefault("glide", fly);
         for (int i = 0; i < bones.length; i++) if (bones[i].parent < 0)
             updatePoses(pose, i, idle, walk, fly, glide, age / 20, walkTime, walking, flying, gliding);
@@ -139,27 +158,16 @@ final class AnimatedMeshModel {
         drawFaces(buffers, light);
     }
     void renderWings(PoseStack pose, MultiBufferSource buffers, int light, String base, float baseTime, float attackTime, int featherCount) {
+        Arrays.fill(hidden, false);
         for (int i = 0; i < bones.length; i++) if (bones[i].parent < 0)
             updateWings(pose, i, clips.get(base), baseTime, attackTime, featherCount);
         drawFaces(buffers, light);
     }
     private void updateWings(PoseStack pose, int index, Clip base, float baseTime, float attackTime, int featherCount) {
-        int feather = switch (bones[index].name) {
-            case "left_primary_04" -> 0;
-            case "right_primary_04" -> 1;
-            case "left_primary_06" -> 2;
-            case "right_primary_06" -> 3;
-            default -> -1;
-        };
-        Clip clip = base;
-        float time = baseTime;
-        if (feather >= 0 && feather < featherCount) {
-            float returnedAt = FeatherAttack.returnedAt(feather, featherCount);
-            if (attackTime < FeatherAttack.PREPARE) { clip = clips.get("attack_prepare"); time = attackTime; }
-            else if (attackTime < FeatherAttack.PREPARE + FeatherAttack.RELEASE) { clip = clips.get("attack_release"); time = attackTime - FeatherAttack.PREPARE; }
-            else if (attackTime < returnedAt) { clip = clips.get("attack_wait"); time = 0; }
-            else if (attackTime < returnedAt + FeatherAttack.RETURN) { clip = clips.get("attack_return"); time = attackTime - returnedAt; }
-        }
+        int feather = WingAttackAnimation.legacyFeather(bones[index].name);
+        var phase = WingAttackAnimation.phase(feather, attackTime, featherCount);
+        Clip clip = phase == null ? base : clips.get(phase.clip);
+        float time = phase == null ? baseTime : WingAttackAnimation.seconds(phase, feather, attackTime, featherCount);
         pose.pushPose();
         transform(pose, index, clip, clip, clip, clip, time, time, 0, 0, 0);
         poses[index] = pose.last().copy();
@@ -170,8 +178,6 @@ final class AnimatedMeshModel {
         // Finish one texture before requesting another; these render types share a backing buffer.
         for (int texture = 0; texture < textures.length; texture++) {
             boolean effect = additiveTextures.contains(texture) || textures[texture].getPath().endsWith("_fx.png");
-            // Blockbench's emissive FX have very low alpha. Cutout (including translucent
-            // emissive) discards them; the additive eyes pass preserves their light geometry.
             VertexConsumer vertices = buffers.getBuffer(effect ? RenderType.eyes(textures[texture]) : RenderType.entityCutoutNoCull(textures[texture]));
             int illumination = (emissiveTextures.contains(texture) || textures[texture].getPath().endsWith("eye_light.png") || effect) ? LightTexture.FULL_BRIGHT : light;
             for (int bone = 0; bone < bones.length; bone++) if (!hidden[bone]) for (Face face : bones[bone].faces) if (face.texture == texture)
@@ -186,30 +192,17 @@ final class AnimatedMeshModel {
         for (int bone = 0; bone < bones.length; bone++) for (int channel = 0; channel < 3; channel++) for (int axis = 0; axis < 3; axis++)
             result[bone * 9 + channel * 3 + axis] = clip.sample(bone, channel, axis, time);
     }
+    private void sampleBone(String animation, int bone, float time, float[] result) {
+        var clip = clips.get(animation);
+        for (int channel = 0; channel < 3; channel++) for (int axis = 0; axis < 3; axis++)
+            result[bone * 9 + channel * 3 + axis] = clip.sample(bone, channel, axis, time);
+    }
     void renderWingPose(PoseStack pose, MultiBufferSource buffers, int light, float[] base, float attackTime, int count) {
         System.arraycopy(base, 0, wingValues, 0, base.length);
         Arrays.fill(hidden, false);
-        applyAttack(wingValues, attackTime, count);
+        wingAttack.apply(wingValues, hidden, attackTime, count, attackSampler);
         for (int i = 0; i < bones.length; i++) if (bones[i].parent < 0) updateWingPose(pose, i);
         drawFaces(buffers, light);
-    }
-    private void applyAttack(float[] result, float time, int count) {
-        if (time < 0 || time >= FeatherAttack.duration(count)) return;
-        for (int bone = 0; bone < bones.length; bone++) {
-            int feather = attackBones.indexOf(bones[bone].name);
-            if (feather < 0 || feather >= count) continue;
-            float returned = FeatherAttack.returnedAt(feather, count);
-            String animation; float seconds;
-            if (time < FeatherAttack.PREPARE) { animation = "attack_prepare"; seconds = time; }
-            else if (time < FeatherAttack.PREPARE + FeatherAttack.RELEASE) { animation = "attack_release"; seconds = time - FeatherAttack.PREPARE; }
-            else if (time < returned) { animation = "attack_wait"; seconds = 0; }
-            else if (time < returned + FeatherAttack.RETURN) { animation = "attack_return"; seconds = time - returned; }
-            else continue;
-            var clip = clips.get(animation);
-            for (int channel = 0; channel < 3; channel++) for (int axis = 0; axis < 3; axis++)
-                result[bone*9+channel*3+axis] = clip.sample(bone, channel, axis, seconds);
-            hidden[bone] = time >= FeatherAttack.release(feather, count) && time < returned;
-        }
     }
     private void updateWingPose(PoseStack pose, int bone) {
         pose.pushPose();
@@ -220,39 +213,49 @@ final class AnimatedMeshModel {
     }
     private void transformPose(PoseStack pose, int index, float[] values, boolean ignoreScale) {
         var bone = bones[index];
-        float[] parent = bone.parent < 0 ? new float[3] : bones[bone.parent].pivot;
+        float[] parent = bone.parent < 0 ? null : bones[bone.parent].pivot;
         int offset = index * 9;
-        pose.translate((bone.pivot[0]-parent[0]+values[offset])/16, (bone.pivot[1]-parent[1]+values[offset+1])/16, (bone.pivot[2]-parent[2]+values[offset+2])/16);
-        pose.mulPose(Axis.ZP.rotationDegrees(bone.rotation[2]+values[offset+5]));
-        pose.mulPose(Axis.YP.rotationDegrees(bone.rotation[1]+values[offset+4]));
-        pose.mulPose(Axis.XP.rotationDegrees(bone.rotation[0]+values[offset+3]));
-        if (!ignoreScale) pose.scale(values[offset+6], values[offset+7], values[offset+8]);
+        pose.translate((bone.pivot[0] - (parent == null ? 0 : parent[0]) + values[offset]) / 16,
+                (bone.pivot[1] - (parent == null ? 0 : parent[1]) + values[offset + 1]) / 16,
+                (bone.pivot[2] - (parent == null ? 0 : parent[2]) + values[offset + 2]) / 16);
+        pose.mulPose(Axis.ZP.rotationDegrees(bone.rotation[2] + values[offset + 5]));
+        pose.mulPose(Axis.YP.rotationDegrees(bone.rotation[1] + values[offset + 4]));
+        pose.mulPose(Axis.XP.rotationDegrees(bone.rotation[0] + values[offset + 3]));
+        if (!ignoreScale) pose.scale(values[offset + 6], values[offset + 7], values[offset + 8]);
     }
     Vec3 attackLocator(int feather, String kind, float[] base, float attackTime) {
-        var locator = locators.get("attack_" + kind + "_" + (feather + 1));
+        String name = "attack_" + kind + "_" + (feather + 1);
+        var locator = locators.get(name);
         if (locator == null) return Vec3.ZERO;
-        System.arraycopy(base, 0, wingValues, 0, base.length);
-        applyAttack(wingValues, attackTime, 16);
-        var chain = new ArrayList<Integer>();
-        for (int bone = locator.bone; bone >= 0; bone = bones[bone].parent) chain.add(bone);
-        var pose = new PoseStack();
-        for (int i = chain.size() - 1; i >= 0; i--) transformPose(pose, chain.get(i), wingValues, true);
-        var point = pose.last().pose().transformPosition(new org.joml.Vector3f(locator.position[0], locator.position[1], locator.position[2]));
-        return new Vec3(point.x, point.y, point.z);
+        // Base arrays are reused and mutated by the caller: identity alone is not a valid cache key.
+        if (!locatorCacheValid || Float.compare(attackTime, locatorAttackTime) != 0 || !Arrays.equals(base, locatorBase)) {
+            System.arraycopy(base, 0, locatorBase, 0, base.length);
+            System.arraycopy(base, 0, locatorValues, 0, base.length);
+            wingAttack.apply(locatorValues, null, attackTime, 16, attackSampler);
+            locatorAttackTime = attackTime; locatorCacheValid = true; locatorResults.clear();
+        }
+        var cached = locatorResults.get(name);
+        if (cached != null) return cached;
+        locatorPose.pushPose();
+        try {
+            for (int bone : locator.chain) transformPose(locatorPose, bone, locatorValues, true);
+            var point = locatorPose.last().pose().transformPosition(new org.joml.Vector3f(locator.position[0], locator.position[1], locator.position[2]));
+            var result = new Vec3(point.x, point.y, point.z);
+            locatorResults.put(name, result);
+            return result;
+        } finally { locatorPose.popPose(); }
     }
     /** Draw the actual detached feather, with its tip along projectile-local -Z. */
     void renderAttackFeather(PoseStack pose, MultiBufferSource buffers, int light, int feather) {
-        var bone = bones[attackBoneIndices.get(feather)];
+        var bone = bones[attackBoneIndices[feather]];
         pose.pushPose();
-        // Feather vertices are already relative to their root, pointing along local -Y.
         pose.mulPose(Axis.XP.rotationDegrees(90));
         for (int texture = 0; texture < textures.length; texture++) {
             var vertices = buffers.getBuffer(RenderType.entityCutoutNoCull(textures[texture]));
-            for (Face face : bone.faces) if (face.texture == texture) {
+            for (Face face : bone.faces) if (face.texture == texture)
                 for (float[] v : face.vertices) vertices.addVertex(pose.last(), v[0], v[1], v[2])
                         .setColor(255, 255, 255, 255).setUv(v[3], v[4]).setOverlay(OverlayTexture.NO_OVERLAY)
                         .setLight(light).setNormal(pose.last(), v[5], v[6], v[7]);
-            }
         }
         pose.popPose();
     }
