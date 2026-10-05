@@ -53,8 +53,8 @@ public final class GuidingRegressions {
             step(boss);
             test.assertTrue(boss.animation().equals("summon"), "Opening summon animation did not start");
             var battle = GuidingEncounter.get(level).battle(boss.getUUID());
-            test.assertTrue(battle.guards.size() == 4 && battle.standing.size() == 4, "Opening wave was incomplete");
-            var guards = battle.guards.stream().map(id -> (GuidingGuard)level.getEntity(id)).toList();
+            test.assertTrue(battle.guards().size() == 4 && battle.standing().size() == 4, "Opening wave was incomplete");
+            var guards = battle.guards().stream().map(id -> (GuidingGuard)level.getEntity(id)).toList();
             test.assertTrue(guards.stream().filter(GuidingGuard::ranged).count() == 2, "Opening guards have wrong types");
             var melee = guards.stream().filter(g -> !g.ranged()).findFirst().orElseThrow();
             melee.setHealth(100); player.getAttribute(Attributes.MAX_HEALTH).setBaseValue(1000); player.setHealth(1000);
@@ -79,7 +79,7 @@ public final class GuidingRegressions {
             test.assertFalse(boss.hurt(player.damageSources().playerAttack(player), 100), "Revived guard did not restore boss protection");
             first.invulnerableTime = 0; first.hurt(player.damageSources().playerAttack(player), 10000);
             test.assertTrue(boss.hurt(player.damageSources().playerAttack(player), 10000), "Boss remained invulnerable after all guards fell");
-            next = (GuidingBoss)level.getEntity(battle.boss);
+            next = (GuidingBoss)level.getEntity(battle.boss());
             test.assertTrue(next != boss && next.secondPhase() && next.action() == GuidingBoss.Action.ABSORB, "Second phase did not start absorbing");
             test.assertTrue(next.animation().equals("hatch"), "Second phase did not start hatching");
             test.assertTrue(next.getBbWidth() == 0 && !next.isPickable(), "Absorption still has a collision volume");
@@ -109,9 +109,12 @@ public final class GuidingRegressions {
         var boss = LyyEntities.ENDLESS_DEMAND.get().create(level); boss.moveTo(origin); boss.beginSummoning(player, BlockPos.ZERO); level.addFreshEntity(boss);
         try {
             step(boss);
-            var data = new CompoundTag(); boss.addAdditionalSaveData(data); data.putString("Action", "GRAB"); boss.readAdditionalSaveData(data);
+            // A saved GRAB is deliberately canceled on load. Start a real live grab instead.
+            var begin = GuidingBoss.class.getDeclaredMethod("beginGrab", net.minecraft.world.entity.player.Player.class, boolean.class);
+            begin.setAccessible(true); begin.invoke(boss, player, false);
             boss.captured(player);
             test.assertTrue(Math.abs(boss.pullVelocity(player).length() - .25) < .0001, "Captured player is not pulled at five meters/second");
+            var data = new CompoundTag(); boss.addAdditionalSaveData(data);
             data.putString("Action", "DEVOUR"); data.putInt("ActionTicks", 0); boss.readAdditionalSaveData(data);
             test.assertTrue(Math.abs(boss.pullVelocity(player).length() - .02) < .0001, "Devour approach is not 0.4 meters/second");
             for (int i = 0; i < 80; i++) step(boss);
