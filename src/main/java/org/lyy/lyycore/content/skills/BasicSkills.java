@@ -44,11 +44,12 @@ public final class BasicSkills {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
         SkillInput.forget(player);
         MovementSkill.forget(player);
+        OffenseSkills.forget(player);
         GuardSkill.forget(player);
         SkillSystem.forget(player);
         SkillNetwork.forget(player);
     }
     @SubscribeEvent public static void stopped(ServerStoppedEvent event) {
-        SkillInput.clear(); GuardSkill.clear(); MovementSkill.clear(); SkillSystem.clear(); SkillNetwork.clear();
+        SkillInput.clear(); GuardSkill.clear(); MovementSkill.clear(); OffenseSkills.clear(); SkillSystem.clear(); SkillNetwork.clear();
     }
 }
