@@ -6,9 +6,9 @@
 
 ## 研究定义
 
-正式资源包含高级门、末影岗哨、收割者、天气、羽翼、挑战，以及新增的“适应性强化”和“探索”等研究。研究使用独立的数据包分类，在 `data/<命名空间>/research/<路径>.json` 添加定义，不属于配方，无需 `type` 字段。研究 ID 为 `<命名空间>:research/<路径>`，例如 `data/lyycore/research/change_weather.json` 对应 `lyycore:research/change_weather`。保留 `research/` 前缀是为了兼容已有存档和研究记录，发布后的 ID 应保持稳定。
+正式资源包含高级门、末影岗哨、收割者、天气、羽翼、挑战，以及新增的“适应性强化”和“探索”等研究。研究使用独立的数据包分类，在 `data/<命名空间>/lyycore/research/<路径>.json` 添加定义，不属于配方，无需 `type` 字段。研究 ID 为 `<命名空间>:research/<路径>`，例如 `data/lyycore/lyycore/research/change_weather.json` 对应 `lyycore:research/change_weather`。保留 `research/` 前缀是为了兼容已有存档和研究记录，发布后的 ID 应保持稳定。
 
-旧数据包需要将 `recipe/research/*.json` 移到 `research/*.json` 并移除 `type` 字段。定义在登录和 `/reload` 时单独同步到客户端；客户端不需要安装服务端数据包。中文文案位于 `assets/lyycore/lang/zh_cn.json`，英文位于 `assets/lyycore/lang/en_us.json`，通过定义中的 `title`、`summary`、`description` 语言键引用。
+仍兼容 `data/lyycore/research/*.json`，正式内置研究也沿用此路径；相同 ID 在专属目录中存在定义时，优先使用专属目录。其他命名空间下的通用 `research/*.json` 不再读取，以免误扫描星辉魔法等模组的研究。使用自定义命名空间的旧数据包需将 `research/*.json` 移到 `lyycore/research/*.json`，研究 ID 无需修改；更早的 `recipe/research/*.json` 也需移到专属目录并移除 `type` 字段。定义在登录和 `/reload` 时单独同步到客户端；客户端不需要安装服务端数据包。中文文案位于 `assets/lyycore/lang/zh_cn.json`，英文位于 `assets/lyycore/lang/en_us.json`，通过定义中的 `title`、`summary`、`description` 语言键引用。
 
 以下仅为格式示例，不是正式研究：
 
