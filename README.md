@@ -2,7 +2,9 @@
 
 面向 **Minecraft 1.21.1 / NeoForge** 的便利与扩展模组。
 
-客户端与服务端均需安装 NeoForge 版 [Caelus](https://www.curseforge.com/minecraft/mc-mods/caelus) 7.0.1 和 [AttributeFix（属性修复）](https://www.curseforge.com/minecraft/mc-mods/attributefix) 21.1.3 或兼容的 21.1.x 更新版本。AttributeFix 还需要 Bookshelf 与 Prickle，请一并安装对应 Minecraft 1.21.1 的 NeoForge 版本。开发运行时由 Gradle 自动解析这些前置；JEI 为可选配方查询支持。
+客户端与服务端均需安装 NeoForge 版 [Caelus](https://www.curseforge.com/minecraft/mc-mods/caelus) 7.0.1、[AttributeFix（属性修复）](https://www.curseforge.com/minecraft/mc-mods/attributefix) 21.1.3 或兼容的 21.1.x 更新版本，以及 [Polymorph（多态合成）](https://modrinth.com/mod/polymorph/version/VEburL70) 1.1.0+1.21.1 或兼容的 1.x 更新版本。AttributeFix 还需要 Bookshelf 与 Prickle，请一并安装对应 Minecraft 1.21.1 的 NeoForge 版本。开发运行时由 Gradle 自动解析这些前置；JEI 为可选配方查询支持。开发环境固定使用 Polymorph 1.1.0，以兼容当前 JEI 19.27；使用 Polymorph 1.2.0 时，JEI 也需更新到 19.52 或更高版本。
+
+工作台同时匹配多个配方时，通过多态合成提供的选择按钮切换产物，例如在钻石块与矿物核心之间选择。
 
 LyyCore 希望让采集、建造和探索更轻松：从原版旅途中顺手发现的一块虚晶开始，逐步获得资源生产、实用工具和无线供能。你可以用这些便利继续建造、探索其他模组，也可以踏上由仪式、研究和异界力量组成的后续旅途。这里还藏着一些二创同人内容，希望能让熟悉原作的玩家会心一笑。
 

@@ -29,6 +29,10 @@ sourceSets.main.resources {
 repositories {
     maven { url "https://maven.blamejared.com" }
     maven {
+        url "https://api.modrinth.com/maven"
+        content { includeGroup "maven.modrinth" }
+    }
+    maven {
         url "https://maven.theillusivec4.top/"
         content { includeGroup "com.illusivesoulworks.caelus" }
     }
@@ -112,6 +116,7 @@ configurations {
 dependencies {
     compileOnly "com.illusivesoulworks.caelus:caelus-neoforge:${caelus_version}:api"
     runtimeOnly "com.illusivesoulworks.caelus:caelus-neoforge:${caelus_version}"
+    runtimeOnly "maven.modrinth:polymorph:${polymorph_version_id}"
     runtimeOnly("net.darkhax.attributefix:attributefix-neoforge-${minecraft_version}:${attributefix_version}") {
         // AttributeFix publishes its optional JEI integration as a runtime dependency.
         // Keep JEI under this project's existing optional development configuration.
@@ -153,6 +158,7 @@ var generateModMetadata = tasks.register("generateModMetadata", ProcessResources
             mod_authors            : mod_authors,
             mod_description        : mod_description,
             attributefix_version   : attributefix_version,
+            polymorph_version      : polymorph_version,
     ]
     inputs.properties replaceProperties
     expand replaceProperties

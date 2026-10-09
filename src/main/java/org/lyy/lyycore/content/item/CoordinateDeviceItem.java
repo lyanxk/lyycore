@@ -29,7 +29,12 @@ public final class CoordinateDeviceItem extends Item {
         if (level.getBlockEntity(controller) instanceof SpatialTransmissionTowerBlockEntity tower && !player.isShiftKeyDown()) {
             var target = target(context.getItemInHand());
             if (target == null) player.displayClientMessage(Component.translatable("message.lyycore.coordinates.empty"), true);
-            else { tower.setTarget(target); player.displayClientMessage(Component.translatable("message.lyycore.coordinates.bound", describe(target)), true); }
+            else {
+                boolean added = tower.addTarget(target);
+                player.displayClientMessage(Component.translatable(added ? "message.lyycore.coordinates.bound"
+                        : "message.lyycore.coordinates.already_bound", describe(target), tower.getTargetCount()), true);
+                if (added) context.getItemInHand().consume(1, player);
+            }
         } else {
             var target = GlobalPos.of(level.dimension(), pos);
             CustomData.update(DataComponents.CUSTOM_DATA, context.getItemInHand(), tag ->
