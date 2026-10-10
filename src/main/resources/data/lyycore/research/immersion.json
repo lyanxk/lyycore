@@ -1,0 +1,24 @@
+{
+  "icon": {
+    "id": "lyycore:erosion_core"
+  },
+  "rarity": "high",
+  "experience_points": 12000,
+  "prerequisites": [
+    "lyycore:research/ritual"
+  ],
+  "materials": [
+    {
+      "id": "lyycore:endless_erosion"
+    }
+  ],
+  "title": "research.lyycore.immersion.title",
+  "summary": "research.lyycore.immersion.summary",
+  "description": "research.lyycore.immersion.description",
+  "production": {
+    "result": {
+      "id": "lyycore:erosion_core"
+    },
+    "duration": 6000
+  }
+}

@@ -58,31 +58,32 @@ public final class WingsNetwork {
         PacketDistributor.sendToPlayersTrackingEntityAndSelf(player, new Attack(player.getId(), player.level().getGameTime(),
                 player.position(), player.yBodyRot, target.getBoundingBox().getCenter(), target.getBbWidth(), featherCount));
     }
-    public record State(int entityId, int level, boolean visible, long shieldStarted, boolean guarding, boolean boosting) implements CustomPacketPayload {
+    public record State(int entityId, int level, boolean visible, long shieldStarted, boolean guarding, boolean boosting, boolean flight, int acceleration) implements CustomPacketPayload {
         public static final Type<State> TYPE = new Type<>(ResourceLocation.parse("lyycore:wings_state"));
         public static final StreamCodec<RegistryFriendlyByteBuf, State> CODEC = StreamCodec.of((buf, state) -> {
-            buf.writeVarInt(state.entityId); buf.writeVarInt(state.level); buf.writeBoolean(state.visible); buf.writeLong(state.shieldStarted); buf.writeBoolean(state.guarding); buf.writeBoolean(state.boosting);
-        }, buf -> new State(buf.readVarInt(), buf.readVarInt(), buf.readBoolean(), buf.readLong(), buf.readBoolean(), buf.readBoolean()));
+            buf.writeVarInt(state.entityId); buf.writeVarInt(state.level); buf.writeBoolean(state.visible); buf.writeLong(state.shieldStarted); buf.writeBoolean(state.guarding); buf.writeBoolean(state.boosting); buf.writeBoolean(state.flight); buf.writeVarInt(state.acceleration);
+        }, buf -> new State(buf.readVarInt(), buf.readVarInt(), buf.readBoolean(), buf.readLong(), buf.readBoolean(), buf.readBoolean(), buf.readBoolean(), buf.readVarInt()));
         @Override public Type<State> type() { return TYPE; }
     }
     private static State state(Player player) {
         return new State(player.getId(), AegisWings.level(player), AegisWings.visible(player), AegisWings.shieldStarted(player),
-                player instanceof ServerPlayer server && org.lyy.lyycore.content.skills.GuardSkill.guarding(server), WingsFlight.boosting(player));
+                player instanceof ServerPlayer server && org.lyy.lyycore.content.skills.GuardSkill.guarding(server), WingsFlight.boosting(player), org.lyy.lyycore.content.wings.WingsSettings.flight(player), org.lyy.lyycore.content.wings.WingsSettings.acceleration(player));
     }
     public static void sync(ServerPlayer player) {
         WingsFlight.update(player);
         PacketDistributor.sendToPlayersTrackingEntityAndSelf(player, state(player));
     }
     @SubscribeEvent public static void register(RegisterPayloadHandlersEvent event) {
-        event.registrar("4").playToClient(Pursuit.TYPE, Pursuit.CODEC, (payload, context) -> org.lyy.lyycore.client.WingsPursuitRenderer.add(payload));
-        event.registrar("4").playToClient(Scoop.TYPE, Scoop.CODEC, (payload, context) -> org.lyy.lyycore.client.WingsScoopRenderer.add(payload));
-        event.registrar("4").playToServer(Boost.TYPE, Boost.CODEC, (payload, context) -> {
+        event.registrar("5").playToClient(Pursuit.TYPE, Pursuit.CODEC, (payload, context) -> org.lyy.lyycore.client.WingsPursuitRenderer.add(payload));
+        event.registrar("5").playToClient(Scoop.TYPE, Scoop.CODEC, (payload, context) -> org.lyy.lyycore.client.WingsScoopRenderer.add(payload));
+        event.registrar("5").playToServer(Boost.TYPE, Boost.CODEC, (payload, context) -> {
             if (context.player() instanceof ServerPlayer player) WingsFlight.input(player, payload.held);
         });
-        event.registrar("4").playToClient(Attack.TYPE, Attack.CODEC, (payload, context) -> org.lyy.lyycore.client.FeatherAttackRenderer.add(payload));
-        event.registrar("4").playToClient(State.TYPE, State.CODEC, (payload, context) -> {
+        event.registrar("5").playToClient(Attack.TYPE, Attack.CODEC, (payload, context) -> org.lyy.lyycore.client.FeatherAttackRenderer.add(payload));
+        event.registrar("5").playToClient(State.TYPE, State.CODEC, (payload, context) -> {
             if (context.player().level().getEntity(payload.entityId) instanceof Player player) {
                 AegisWings.receive(player, payload.level, payload.visible, payload.shieldStarted);
+                org.lyy.lyycore.content.wings.WingsSettings.set(player, 0, payload.flight, payload.acceleration);
                 player.getPersistentData().putBoolean("lyycore:wings_guarding", payload.guarding);
                 player.getPersistentData().putBoolean("lyycore:wings_boosting", payload.boosting);
             }

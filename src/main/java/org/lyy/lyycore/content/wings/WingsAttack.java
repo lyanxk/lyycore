@@ -20,7 +20,6 @@ import org.lyy.lyycore.registry.LyyEffects;
 @EventBusSubscriber(modid = "lyycore")
 public final class WingsAttack {
     public static final int PURSUIT_HIT_TICKS = 13, PURSUIT_DURATION_TICKS = 28;
-    private static final net.minecraft.resources.ResourceLocation BLAZING_PURSUIT = net.minecraft.resources.ResourceLocation.parse("lyycore:research/blazing_pursuit");
     private static final Map<ServerPlayer, State> STATES = new WeakHashMap<>();
     private static final class State {
         int lastAttackTick = Integer.MIN_VALUE;
@@ -50,7 +49,9 @@ public final class WingsAttack {
         var state = STATES.computeIfAbsent(player, ignored -> new State());
         int tick = player.server.getTickCount();
         if (state.lastAttackTick == tick) return false;
-        if (org.lyy.lyycore.content.ResearchProgress.completed(player, BLAZING_PURSUIT)) {
+        int pursuit = WingsSettings.pursuit(player);
+        if (pursuit == 0) return false;
+        if (pursuit == 3) {
             // All feathers belong to this clip until recall finishes.
             if (busy(player)) return false;
             state.lastAttackTick = tick;
@@ -60,7 +61,7 @@ public final class WingsAttack {
             return true;
         }
         state.lastAttackTick = tick;
-        var tier = AegisWings.tier(player);
+        var tier = pursuit == 1 ? WingsTier.FIRST : WingsTier.SECOND;
         state.busyUntil = player.tickCount + (int)Math.ceil(FeatherAttack.duration(tier.featherCount()) * 20);
         // Snapshot stats so an upgrade does not change an attack already in flight.
         state.pending.add(new Volley(target, tier, player.tickCount));

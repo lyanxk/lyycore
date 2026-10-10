@@ -21,6 +21,11 @@ import org.lyy.lyycore.content.blockEntities.ProductionLabBlockEntity;
 public class LyyBlockEntities {
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES =
             DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, LyyCore.MODID);
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<org.lyy.lyycore.content.blockEntities.ExperimentTableBlockEntity>> EXPERIMENT_TABLE = BLOCK_ENTITIES.register("experiment_table", () -> BlockEntityType.Builder.of(org.lyy.lyycore.content.blockEntities.ExperimentTableBlockEntity::new, LyyBlocks.EXPERIMENT_TABLE.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ErosionFactoryBlockEntity>> EROSION_FACTORY =
+            BLOCK_ENTITIES.register("erosion_factory", () -> BlockEntityType.Builder.of(ErosionFactoryBlockEntity::new, LyyBlocks.EROSION_FACTORY.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<OtherworldChestBlockEntity>> OTHERWORLD_CHEST =
+            BLOCK_ENTITIES.register("otherworld_chest", () -> BlockEntityType.Builder.of(OtherworldChestBlockEntity::new, LyyBlocks.OTHERWORLD_CHEST.get()).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<TargetedEnergySourceBlockEntity>> PHANTOM_MATRIX =
             BLOCK_ENTITIES.register("phantom_matrix", () -> BlockEntityType.Builder.of(org.lyy.lyycore.content.blocks.PhantomMatrixBlock::create, LyyBlocks.PHANTOM_MATRIX.get()).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<FissionFurnaceBlockEntity>> FISSION_FURNACE =

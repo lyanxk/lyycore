@@ -100,8 +100,8 @@ public class SonnetDome extends Entity {
             // Each bounce is a separate physical hit. Vanilla hurt cooldown must not merge the independent hits.
             int previous = target.invulnerableTime;
             target.invulnerableTime = 0;
-            target.hurt(level().damageSources().source(net.minecraft.world.damagesource.DamageTypes.ARROW, projectile, owner), SonnetVolley.DAMAGE_PER_HIT);
-            target.invulnerableTime = previous;
+            try { org.lyy.lyycore.content.SpecialDamage.hit(owner, projectile, target, org.lyy.lyycore.content.SpecialDamage.Element.PHYSICAL, SonnetVolley.DAMAGE_PER_HIT); }
+            finally { target.invulnerableTime = previous; }
         }
     }
 

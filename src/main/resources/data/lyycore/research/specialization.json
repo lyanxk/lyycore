@@ -1,0 +1,27 @@
+{
+  "icon": {
+    "id": "lyycore:lightning_bottle"
+  },
+  "rarity": "special",
+  "experience_points": 0,
+  "prerequisites": [
+    "lyycore:research/ritual"
+  ],
+  "materials": [
+    {
+      "id": "minecraft:blue_ice"
+    },
+    {
+      "id": "minecraft:magma_block"
+    },
+    {
+      "id": "lyycore:lightning_bottle"
+    },
+    {
+      "id": "minecraft:netherite_sword"
+    }
+  ],
+  "title": "research.lyycore.specialization.title",
+  "summary": "research.lyycore.specialization.summary",
+  "description": "research.lyycore.specialization.description"
+}

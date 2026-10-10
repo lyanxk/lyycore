@@ -20,6 +20,11 @@ import java.util.Map;
 
 public class LyyItems {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(LyyCore.MODID);
+    public static final DeferredItem<BlockItem> EXPERIMENT_TABLE = ITEMS.registerSimpleBlockItem(LyyBlocks.EXPERIMENT_TABLE);
+    public static final DeferredItem<HailItem> HAIL = ITEMS.registerItem("hail", HailItem::new, new Item.Properties().stacksTo(1).rarity(Rarity.EPIC));
+    public static final DeferredItem<Item> EROSION_CORE = ITEMS.registerSimpleItem("erosion_core", new Item.Properties().rarity(Rarity.EPIC));
+    public static final DeferredItem<BlockItem> EROSION_FACTORY = ITEMS.registerSimpleBlockItem(LyyBlocks.EROSION_FACTORY);
+    public static final DeferredItem<BlockItem> OTHERWORLD_CHEST = ITEMS.registerSimpleBlockItem(LyyBlocks.OTHERWORLD_CHEST);
     public static final DeferredItem<BlockItem> PURE_SMELTING_PLANT_SHELL = ITEMS.registerSimpleBlockItem(LyyBlocks.PURE_SMELTING_PLANT_SHELL);
     public static final DeferredItem<BlockItem> PURE_SMELTING_PLANT = ITEMS.registerSimpleBlockItem(LyyBlocks.PURE_SMELTING_PLANT);
     public static final DeferredItem<BlockItem> IMAGINARY_DRAGON_NEST = ITEMS.registerSimpleBlockItem(LyyBlocks.IMAGINARY_DRAGON_NEST);

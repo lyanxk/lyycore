@@ -25,6 +25,9 @@ import net.neoforged.neoforge.client.event.ModelEvent;
 
 @EventBusSubscriber(modid = LyyCore.MODID, value = Dist.CLIENT)
 public class ClientSetup {
+    @SubscribeEvent public static void recipes(net.neoforged.neoforge.client.event.RecipesUpdatedEvent event) {
+        org.lyy.lyycore.content.ProductionCatalog.clear();
+    }
     @SubscribeEvent public static void addPlayerLayers(EntityRenderersEvent.AddLayers event) {
         for (var skin : event.getSkins()) {
             net.minecraft.client.renderer.entity.player.PlayerRenderer renderer = event.getSkin(skin);
@@ -37,10 +40,13 @@ public class ClientSetup {
         SonnetDomeMesh.reload(event.getModelManager());
         ProductionLabRenderer.reload();
         DragonMightRenderer.reload();
+        HailItemRenderer.reload();
     }
 
     @SubscribeEvent
     public static void wrapCustomItemModels(ModelEvent.ModifyBakingResult event) {
+        var hail = new net.minecraft.client.resources.model.ModelResourceLocation(LyyItems.HAIL.getId(), "inventory");
+        event.getModels().computeIfPresent(hail, (id, model) -> HailItemRenderer.wrap(model));
         var dragonMight = new net.minecraft.client.resources.model.ModelResourceLocation(LyyItems.DRAGON_MIGHT.getId(), "inventory");
         event.getModels().computeIfPresent(dragonMight, (id, model) -> DragonMightRenderer.wrap(model));
         var grapple = new net.minecraft.client.resources.model.ModelResourceLocation(
@@ -71,6 +77,9 @@ public class ClientSetup {
 
     @SubscribeEvent
     public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
+        event.registerBlockEntityRenderer(LyyBlockEntities.EXPERIMENT_TABLE.get(), ExperimentTableRenderer::new);
+        event.registerEntityRenderer(LyyEntities.HAIL_CRYSTAL.get(), HailCrystalRenderer::new);
+        event.registerEntityRenderer(LyyEntities.HAIL_FLOWER.get(), HailFlowerRenderer::new);
         event.registerEntityRenderer(LyyEntities.MAGIC_BEAM.get(), MagicBeamRenderer::new);
         event.registerEntityRenderer(LyyEntities.LIFE_DEFENDER.get(), c -> new LifeSovereignRenderer(c, "life_defender", .9F));
         event.registerEntityRenderer(LyyEntities.LIFE_COCOON.get(), c -> new LifeSovereignRenderer(c, "life_cocoon", .6F));
@@ -132,6 +141,9 @@ public class ClientSetup {
 
     @SubscribeEvent
     public static void registerScreens(RegisterMenuScreensEvent event) {
+        event.register(LyyMenus.EXPERIMENT_TABLE.get(), org.lyy.lyycore.client.screen.ExperimentTableScreen::new);
+        event.register(LyyMenus.EROSION_FACTORY.get(), org.lyy.lyycore.client.screen.ErosionFactoryScreen::new);
+        event.register(LyyMenus.OTHERWORLD_CHEST.get(), org.lyy.lyycore.client.screen.OtherworldChestScreen::new);
         event.register(LyyMenus.DRAGON_CONTROL.get(), org.lyy.lyycore.client.screen.DragonControlScreen::new);
         event.register(LyyMenus.IMAGINARY_REAPER.get(), ImaginaryReaperScreen::new);
         event.register(LyyMenus.FISSION_FURNACE.get(), org.lyy.lyycore.client.screen.FissionFurnaceScreen::new);

@@ -95,6 +95,7 @@ public final class ResearchProgress {
         else entries.remove(id.toString());
         persisted.put(KEY, entries);
         player.getPersistentData().put(Player.PERSISTED_NBT_TAG, persisted);
+        if (id.equals(PlayerAttributes.RESEARCH)) PlayerAttributes.update(player);
         if (research.unlocksSkills()) {
             boolean unlocked = value || ResearchManager.all(player.level()).stream()
                     .anyMatch(entry -> entry.value().unlocksSkills() && completed(player, entry.id()));

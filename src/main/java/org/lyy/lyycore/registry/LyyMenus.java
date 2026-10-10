@@ -20,6 +20,11 @@ import org.lyy.lyycore.content.menu.ImaginaryReaperMenu;
 public class LyyMenus {
     public static final DeferredRegister<MenuType<?>> MENUS =
             DeferredRegister.create(Registries.MENU, LyyCore.MODID);
+    public static final DeferredHolder<MenuType<?>, MenuType<org.lyy.lyycore.content.menu.ExperimentTableMenu>> EXPERIMENT_TABLE = MENUS.register("experiment_table", () -> IMenuTypeExtension.create(org.lyy.lyycore.content.menu.ExperimentTableMenu::new));
+    public static final DeferredHolder<MenuType<?>, MenuType<org.lyy.lyycore.content.menu.ErosionFactoryMenu>> EROSION_FACTORY =
+            MENUS.register("erosion_factory", () -> IMenuTypeExtension.create(org.lyy.lyycore.content.menu.ErosionFactoryMenu::new));
+    public static final DeferredHolder<MenuType<?>, MenuType<org.lyy.lyycore.content.menu.OtherworldChestMenu>> OTHERWORLD_CHEST =
+            MENUS.register("otherworld_chest", () -> IMenuTypeExtension.create(org.lyy.lyycore.content.menu.OtherworldChestMenu::new));
     public static final DeferredHolder<MenuType<?>, MenuType<org.lyy.lyycore.content.menu.DragonControlMenu>> DRAGON_CONTROL =
             MENUS.register("dragon_control", () -> IMenuTypeExtension.create(org.lyy.lyycore.content.menu.DragonControlMenu::new));
     public static final DeferredHolder<MenuType<?>, MenuType<org.lyy.lyycore.content.menu.FissionFurnaceMenu>> FISSION_FURNACE =

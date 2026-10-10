@@ -77,18 +77,9 @@ final class MovementSkill {
             direction = new Vec3(-Math.sin(yaw) * forward + Math.cos(yaw) * strafe, 0,
                     Math.cos(yaw) * forward + Math.sin(yaw) * strafe).normalize();
         }
-        Vec3 destination = player.position();
-        for (int step = 1; step <= 16; step++) {
-            Vec3 offset = direction.scale(step * .25);
-            var bounds = player.getBoundingBox().move(offset);
-            if (!player.level().hasChunkAt(BlockPos.containing(player.position().add(offset)))
-                    || !player.level().getWorldBorder().isWithinBounds(bounds) || !player.level().noCollision(player, bounds)) break;
-            destination = player.position().add(offset);
-        }
-        if (destination.distanceToSqr(player.position()) < .01) return false;
-        player.serverLevel().sendParticles(ParticleTypes.END_ROD, player.getX(), player.getY() + 1, player.getZ(), 8, .2, .2, .2, .02);
-        player.teleportTo(destination.x, destination.y, destination.z);
-        player.fallDistance = 0;
+        Vec3 origin = player.position();
+        if (!org.lyy.lyycore.content.PlayerMovement.dash(player, direction, 4)) return false;
+        player.serverLevel().sendParticles(ParticleTypes.END_ROD, origin.x, origin.y + 1, origin.z, 8, .2, .2, .2, .02);
         return true;
     }
 }

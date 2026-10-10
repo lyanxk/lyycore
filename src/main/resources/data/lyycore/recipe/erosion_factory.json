@@ -1,0 +1,38 @@
+{
+  "type": "lyycore:imaginary_condensing",
+  "ingredients": [
+    {
+      "item": "lyycore:erosion_core"
+    },
+    {
+      "item": "lyycore:imaginary_steel_block"
+    },
+    {
+      "item": "lyycore:imaginary_steel_block"
+    },
+    {
+      "item": "lyycore:imaginary_steel_block"
+    },
+    {
+      "item": "lyycore:imaginary_steel_block"
+    },
+    {
+      "item": "lyycore:imaginary_steel_block"
+    },
+    {
+      "item": "lyycore:imaginary_steel_block"
+    },
+    {
+      "item": "lyycore:imaginary_steel_block"
+    },
+    {
+      "item": "lyycore:imaginary_steel_block"
+    }
+  ],
+  "result": {
+    "id": "lyycore:erosion_factory"
+  },
+  "duration": 2400,
+  "energy": 1000000,
+  "energy_per_tick": true
+}

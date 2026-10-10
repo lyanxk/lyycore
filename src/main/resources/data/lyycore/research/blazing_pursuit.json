@@ -5,7 +5,7 @@
   "rarity": "high",
   "experience_points": 6000,
   "prerequisites": [
-    "lyycore:research/what_now"
+    "lyycore:research/ritual"
   ],
   "materials": [],
   "title": "research.lyycore.blazing_pursuit.title",

@@ -3,6 +3,8 @@ package org.lyy.lyycore.content.item;
 import java.util.*;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.*;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -41,7 +43,7 @@ public final class DragonMightItem extends Item {
         float charge = Math.clamp((getUseDuration(stack, user)-remaining)/20F, 0, 1);
         var nest = EnderCompanions.boundNest(player);
         boolean stowed = nest != null && nest.mode() == org.lyy.lyycore.content.blockEntities.ImaginaryDragonNestBlockEntity.Mode.STOWED;
-        float damage = damage(charge)*(stowed ? 1 : .25F);
+        float damage = damage(charge)*(nest == null ? 10 : stowed ? 1 : .25F);
         boolean burst = StyleSystem.current(player) == StyleSystem.Style.OFFENSE;
         CustomData.update(DataComponents.CUSTOM_DATA, stack, tag -> {
             tag.putLong("DragonReleased", level.getGameTime()); tag.putBoolean("DragonBurst", burst);
@@ -75,6 +77,7 @@ public final class DragonMightItem extends Item {
             if (damaged && burn && nearest.isAlive()) DragonFireEffect.ignite(nearest, player);
         }
         MagicBeam.show(level, start, end);
+        level.playSound(null, start.x, start.y, start.z, SoundEvents.ENDER_DRAGON_SHOOT, SoundSource.PLAYERS, 1, 1);
     }
     @SubscribeEvent public static void tick(PlayerTickEvent.Pre event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;

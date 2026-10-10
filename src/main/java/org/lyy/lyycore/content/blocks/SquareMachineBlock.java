@@ -67,13 +67,16 @@ public abstract class SquareMachineBlock extends BaseEntityBlock {
             server.openMenu(menu, controller);
         return InteractionResult.sidedSuccess(level.isClientSide);
     }
+    protected void dropContents(Level level, BlockPos pos, net.minecraft.world.level.block.entity.BlockEntity entity) {
+        if (entity instanceof AbstractImaginaryCraftingBlockEntity table) for (int i = 0; i < 9; i++)
+            Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), table.items().getStackInSlot(i));
+    }
     @Override protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState replacement, boolean moving) {
         if (!state.is(replacement.getBlock()) && !level.isClientSide) {
             var controller = center(pos, state);
             var entity = level.getBlockEntity(controller);
             if (entity != null) {
-                if (entity instanceof AbstractImaginaryCraftingBlockEntity table) for (int i = 0; i < 9; i++)
-                    Containers.dropItemStack(level, controller.getX(), controller.getY(), controller.getZ(), table.items().getStackInSlot(i));
+                dropContents(level, controller, entity);
                 level.removeBlockEntity(controller);
                 for (int part = 0; part < height * width * width; part++) {
                     var other = cellPos(controller, part);

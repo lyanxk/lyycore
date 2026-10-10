@@ -1,0 +1,18 @@
+{
+  "icon": {
+    "id": "minecraft:book"
+  },
+  "rarity": "special",
+  "experience_points": 0,
+  "prerequisites": [
+    "lyycore:research/ritual"
+  ],
+  "materials": [
+    {
+      "id": "minecraft:book"
+    }
+  ],
+  "title": "research.lyycore.self.title",
+  "summary": "research.lyycore.self.summary",
+  "description": "research.lyycore.self.description"
+}

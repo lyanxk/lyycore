@@ -1,0 +1,93 @@
+{
+  "icon": {
+    "id": "lyycore:hail"
+  },
+  "rarity": "high",
+  "materials": [
+    {
+      "id": "minecraft:blue_ice",
+      "count": 64
+    },
+    {
+      "id": "lyycore:energy_core",
+      "count": 1
+    }
+  ],
+  "experience_points": 0,
+  "prerequisites": [
+    "lyycore:research/ritual",
+    "lyycore:research/specialization",
+    "lyycore:research/in_depth_research"
+  ],
+  "title": "research.lyycore.hail.title",
+  "summary": "research.lyycore.hail.summary",
+  "description": "research.lyycore.hail.description",
+  "production": {
+    "result": {
+      "id": "lyycore:hail"
+    },
+    "duration": 100,
+    "experiment": {
+      "nodes": [
+        {
+          "element": "ice",
+          "cell": 1
+        },
+        {
+          "element": "ice",
+          "cell": 3
+        },
+        {
+          "element": "ice",
+          "cell": 10
+        },
+        {
+          "element": "ice",
+          "cell": 14
+        },
+        {
+          "element": "ice",
+          "cell": 21
+        },
+        {
+          "element": "ice",
+          "cell": 23
+        }
+      ],
+      "links": [
+        {
+          "from": 0,
+          "to": 1
+        },
+        {
+          "from": 1,
+          "to": 3
+        },
+        {
+          "from": 3,
+          "to": 5
+        },
+        {
+          "from": 5,
+          "to": 4
+        },
+        {
+          "from": 4,
+          "to": 2
+        },
+        {
+          "from": 2,
+          "to": 0
+        }
+      ],
+      "target": [
+        1,
+        21,
+        23,
+        10,
+        3,
+        14
+      ]
+    }
+  }
+}

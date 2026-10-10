@@ -35,6 +35,8 @@ public class LyyJeiPlugin implements IModPlugin {
 
     @Override
     public void registerCategories(IRecipeCategoryRegistration reg) {
+        reg.addRecipeCategories(new EnergyProductionCategory(reg.getJeiHelpers().getGuiHelper(), true));
+        reg.addRecipeCategories(new EnergyProductionCategory(reg.getJeiHelpers().getGuiHelper(), false));
         reg.addRecipeCategories(new FissionCategory(reg.getJeiHelpers().getGuiHelper()));
         reg.addRecipeCategories(new PureSmeltingCategory(reg.getJeiHelpers().getGuiHelper()));
         reg.addRecipeCategories(new AlloyCauldronCategory(reg.getJeiHelpers().getGuiHelper()));
@@ -49,6 +51,8 @@ public class LyyJeiPlugin implements IModPlugin {
 
     @Override
     public void registerRecipes(IRecipeRegistration reg) {
+        reg.addItemStackInfo(new ItemStack(org.lyy.lyycore.registry.LyyItems.EXPERIMENT_TABLE.get()), net.minecraft.network.chat.Component.translatable("jei.lyycore.experiment_table"));
+        reg.addItemStackInfo(new ItemStack(org.lyy.lyycore.registry.LyyItems.HAIL.get()), net.minecraft.network.chat.Component.translatable("jei.lyycore.hail"));
         reg.addItemStackInfo(new ItemStack(org.lyy.lyycore.registry.LyyItems.DRAGON_MIGHT.get()), net.minecraft.network.chat.Component.translatable("research.lyycore.in_our_hands.description"));
         reg.addItemStackInfo(new ItemStack(org.lyy.lyycore.registry.LyyItems.FRIENDLY_PROOF.get()), net.minecraft.network.chat.Component.translatable("research.lyycore.ritual.description"));
         reg.addRecipes(AlloyCauldronCategory.TYPE, org.lyy.lyycore.content.cauldron.CauldronMixes.specials());
@@ -61,6 +65,22 @@ public class LyyJeiPlugin implements IModPlugin {
             return;
         }
 
+        if (mc.level != null) {
+            reg.addRecipes(EnergyProductionCategory.OTHERWORLD, org.lyy.lyycore.content.ProductionCatalog.products(mc.level).stream()
+                    .map(item -> new EnergyProductionCategory.View(item, List.of())).toList());
+            var stones = List.of(net.minecraft.world.item.Items.STONE, net.minecraft.world.item.Items.COBBLESTONE,
+                    net.minecraft.world.item.Items.DEEPSLATE, net.minecraft.world.item.Items.COBBLED_DEEPSLATE);
+            var erosion = new java.util.ArrayList<EnergyProductionCategory.View>();
+            for (var item : net.minecraft.core.registries.BuiltInRegistries.ITEM) {
+                var template = new ItemStack(item);
+                var inputs = stones.stream().map(ItemStack::new)
+                        .filter(stone -> org.lyy.lyycore.content.blockEntities.ErosionFactoryBlockEntity.matches(template, stone)).toList();
+                if (!inputs.isEmpty()) erosion.add(new EnergyProductionCategory.View(template, inputs));
+            }
+            reg.addRecipes(EnergyProductionCategory.EROSION, erosion);
+        }
+        reg.addItemStackInfo(new ItemStack(LyyBlocks.EROSION_FACTORY.get()), net.minecraft.network.chat.Component.translatable("gui.lyycore.erosion.template_hint"), net.minecraft.network.chat.Component.translatable("gui.lyycore.erosion.cost"));
+        reg.addItemStackInfo(new ItemStack(LyyBlocks.OTHERWORLD_CHEST.get()), net.minecraft.network.chat.Component.translatable("gui.lyycore.otherworld.take"), net.minecraft.network.chat.Component.translatable("gui.lyycore.otherworld.cost"));
         List<ImaginaryAlloyingRecipe> recipes = rm.getAllRecipesFor(LyyRecipes.IMAGINARY_ALLOYING.get())
                 .stream().map(RecipeHolder::value).toList();
         if (recipes.isEmpty()) {
@@ -104,6 +124,7 @@ public class LyyJeiPlugin implements IModPlugin {
 
     @Override
     public void registerGuiHandlers(IGuiHandlerRegistration reg) {
+        reg.addRecipeClickArea(org.lyy.lyycore.client.screen.ErosionFactoryScreen.class, 104, 40, 26, 18, EnergyProductionCategory.EROSION);
         reg.addRecipeClickArea(org.lyy.lyycore.client.screen.FissionFurnaceScreen.class, 62, 38, 36, 20, FissionCategory.TYPE);
         reg.addGuiContainerHandler(ImaginaryCraftingScreen.class, new IGuiContainerHandler<ImaginaryCraftingScreen>() {
             @Override public java.util.Collection<IGuiClickableArea> getGuiClickableAreas(ImaginaryCraftingScreen screen, double x, double y) {
@@ -133,6 +154,8 @@ public class LyyJeiPlugin implements IModPlugin {
 
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration reg) {
+        reg.addRecipeCatalyst(new ItemStack(LyyBlocks.EROSION_FACTORY.get()), EnergyProductionCategory.EROSION);
+        reg.addRecipeCatalyst(new ItemStack(LyyBlocks.OTHERWORLD_CHEST.get()), EnergyProductionCategory.OTHERWORLD);
         reg.addRecipeCatalyst(new ItemStack(LyyBlocks.FISSION_FURNACE.get()), FissionCategory.TYPE);
         reg.addRecipeCatalyst(new ItemStack(LyyBlocks.PURE_SMELTING_PLANT.get()), PureSmeltingCategory.TYPE);
         reg.addRecipeCatalyst(new ItemStack(LyyBlocks.ALLOY_CAULDRON.get()), AlloyCauldronCategory.TYPE);

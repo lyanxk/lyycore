@@ -28,6 +28,9 @@ import java.util.Map;
 
 public class LyyBlocks {
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(LyyCore.MODID);
+    public static final DeferredBlock<ExperimentTableBlock> EXPERIMENT_TABLE = BLOCKS.register("experiment_table", ExperimentTableBlock::new);
+    public static final DeferredBlock<ErosionFactoryBlock> EROSION_FACTORY = BLOCKS.register("erosion_factory", ErosionFactoryBlock::new);
+    public static final DeferredBlock<OtherworldChestBlock> OTHERWORLD_CHEST = BLOCKS.register("otherworld_chest", OtherworldChestBlock::new);
     public static final DeferredBlock<PureSmeltingPlantBlock> PURE_SMELTING_PLANT_SHELL = BLOCKS.register("pure_smelting_plant_shell", () -> new PureSmeltingPlantBlock(false));
     public static final DeferredBlock<PureSmeltingPlantBlock> PURE_SMELTING_PLANT = BLOCKS.register("pure_smelting_plant", () -> new PureSmeltingPlantBlock(true));
     public static final DeferredBlock<ImaginaryDragonNestBlock> IMAGINARY_DRAGON_NEST = BLOCKS.register("imaginary_dragon_nest", ImaginaryDragonNestBlock::new);

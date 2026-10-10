@@ -2,8 +2,11 @@ package org.lyy.lyycore.content.entity.sovereign;
 
 import java.util.*;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.*;
 import net.minecraft.server.level.*;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.BossEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.*;
@@ -48,6 +51,7 @@ public final class LifeSovereign extends AnimatedMonster {
     private int swordCooldown;
     private boolean swordReleased;
     private int decisionTicks, dashes, dashTicks, spellTicks, missingCrystalTicks;
+    private int spellsSinceShift;
     private boolean transitioned, threshold, alternating, spellReleased;
     public LifeSovereign(EntityType<? extends LifeSovereign> type, Level level) {
         super(type, level); setPersistenceRequired(); xpReward = phase() == Phase.USURPER ? 3000 : 0;
@@ -98,7 +102,7 @@ public final class LifeSovereign extends AnimatedMonster {
         if (phase() == Phase.USURPER) {
             if (action == Action.EMERGE && elapsedTicks() < 48) return;
             if (!threshold && getHealth() < 4000) applyThreshold(players);
-            if (casting(server)) { decisionTicks++; return; }
+            if (casting(server, battle)) { decisionTicks++; return; }
             action(Action.IDLE);
         }
         if (phase() == Phase.DEFENDER && tickCount%20 == 0) heal(80);
@@ -117,19 +121,56 @@ public final class LifeSovereign extends AnimatedMonster {
     private void startCasting(ServerPlayer target, LifeSpell.Kind kind) {
         castingTarget = target.getUUID(); spellReleased = kind != LifeSpell.Kind.MISSILE;
         action(Action.forSpell(kind));
-        if (spellReleased) LifeSpell.launch(this, target, kind, null);
+        if (spellReleased && LifeSpell.launch(this, target, kind, null) != null) spellsSinceShift++;
     }
-    private boolean casting(ServerLevel server) {
+    private boolean casting(ServerLevel server, LifeEncounters.Battle battle) {
         var kind = action.spell;
         if (kind == null) return false;
         int elapsed = elapsedTicks();
-        if (elapsed >= kind.animationTicks) return false;
+        if (elapsed >= kind.animationTicks) {
+            if (spellsSinceShift >= 3) {
+                spellsSinceShift = 0;
+                randomShift(server, battle);
+            }
+            return false;
+        }
         if (!spellReleased && elapsed >= kind.impactTick) {
             spellReleased = true;
-            if (castingTarget != null && server.getPlayerByUUID(castingTarget) instanceof ServerPlayer target && target.isAlive())
-                LifeSpell.launch(this, target, kind, null);
+            if (castingTarget != null && server.getPlayerByUUID(castingTarget) instanceof ServerPlayer target && target.isAlive()
+                    && LifeSpell.launch(this, target, kind, null) != null) spellsSinceShift++;
         }
         return true;
+    }
+    private void randomShift(ServerLevel server, LifeEncounters.Battle battle) {
+        var arena = battle.bounds();
+        for (int attempt = 0; attempt < 16; attempt++) {
+            // A horizontal 3 x 3 square centred on the current position; height stays unchanged.
+            var offset = new Vec3((random.nextDouble() - .5) * 3, 0, (random.nextDouble() - .5) * 3);
+            if (offset.lengthSqr() < .25) continue;
+            var bounds = getBoundingBox().move(offset);
+            if (bounds.minX < arena.minX || bounds.maxX > arena.maxX
+                    || bounds.minY < arena.minY || bounds.maxY > arena.maxY
+                    || bounds.minZ < arena.minZ || bounds.maxZ > arena.maxZ) continue;
+            if (!server.hasChunksAt(BlockPos.containing(bounds.minX, bounds.minY, bounds.minZ),
+                    BlockPos.containing(bounds.maxX, bounds.maxY, bounds.maxZ))
+                    || !server.getWorldBorder().isWithinBounds(bounds) || !server.noCollision(this, bounds)) continue;
+            if (!server.getEntitiesOfClass(LivingEntity.class, bounds,
+                    entity -> entity != this && entity.isAlive() && !entity.isSpectator()).isEmpty()) continue;
+            var destination = position().add(offset);
+            teleportWithEffects(destination);
+            return;
+        }
+    }
+    private void teleportWithEffects(Vec3 destination) {
+        Vec3 origin = position();
+        teleportTo(destination.x, destination.y, destination.z);
+        if (position().distanceToSqr(origin) < 1e-6) return;
+        var server = (ServerLevel) level();
+        for (Vec3 point : List.of(origin, position())) {
+            server.sendParticles(ParticleTypes.PORTAL, point.x, point.y + getBbHeight() / 2, point.z,
+                    24, getBbWidth() * .35, getBbHeight() * .4, getBbWidth() * .35, .1);
+            server.playSound(null, point.x, point.y, point.z, SoundEvents.ENDERMAN_TELEPORT, SoundSource.HOSTILE, .7F, 1);
+        }
     }
     private void defender(ServerPlayer target, LifeEncounters.Battle battle) {
         decisionTicks++;
@@ -147,7 +188,7 @@ public final class LifeSovereign extends AnimatedMonster {
                     Math.signum(offset.y)*random.nextDouble()*Math.min(2, Math.abs(offset.y)),
                     Math.signum(offset.z)*random.nextDouble()*Math.min(2, Math.abs(offset.z)));
             var next = position().add(step);
-            if (battle.bounds().contains(next) && level().noCollision(this, getBoundingBox().move(step))) teleportTo(next.x, next.y, next.z);
+            if (battle.bounds().contains(next) && level().noCollision(this, getBoundingBox().move(step))) teleportWithEffects(next);
         }
         if (decisionTicks >= 40) {
             decisionTicks = 0;
@@ -266,6 +307,7 @@ public final class LifeSovereign extends AnimatedMonster {
         tag.putString("CombatAction", action.name());
         tag.putInt("SwordCooldown", swordCooldown); tag.putBoolean("SwordReleased", swordReleased);
         tag.putBoolean("SpellReleased", spellReleased);
+        tag.putInt("SpellsSinceShift", spellsSinceShift);
         tag.putBoolean("Threshold", threshold); tag.putBoolean("Alternating", alternating);
         tag.putInt("DecisionTicks", decisionTicks); tag.putInt("SpellTicks", spellTicks); tag.putInt("Dashes", dashes); tag.putInt("DashTicks", dashTicks);
         var hits = new ListTag(); hitCounts.forEach((id, count) -> { var h = new CompoundTag(); h.putUUID("Player", id); h.putInt("Count", count); hits.add(h); }); tag.put("Hits", hits);
@@ -283,6 +325,7 @@ public final class LifeSovereign extends AnimatedMonster {
         swordCooldown = Math.clamp(tag.getInt("SwordCooldown"), 0, SWORD_COOLDOWN_TICKS);
         swordReleased = tag.getBoolean("SwordReleased");
         spellReleased = tag.getBoolean("SpellReleased");
+        spellsSinceShift = Math.clamp(tag.getInt("SpellsSinceShift"), 0, 3);
         threshold = tag.getBoolean("Threshold"); alternating = tag.getBoolean("Alternating");
         decisionTicks = tag.getInt("DecisionTicks"); spellTicks = tag.getInt("SpellTicks"); dashes = tag.getInt("Dashes"); dashTicks = tag.getInt("DashTicks");
         hitCounts.clear(); for (var raw : tag.getList("Hits", Tag.TAG_COMPOUND)) { var h = (CompoundTag)raw; hitCounts.put(h.getUUID("Player"), h.getInt("Count")); }

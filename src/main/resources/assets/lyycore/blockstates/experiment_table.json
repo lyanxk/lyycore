@@ -1,0 +1,1 @@
+{"variants":{"facing=north":{"model":"lyycore:block/experiment_table","y":0},"facing=east":{"model":"lyycore:block/experiment_table","y":90},"facing=south":{"model":"lyycore:block/experiment_table","y":180},"facing=west":{"model":"lyycore:block/experiment_table","y":270}}}

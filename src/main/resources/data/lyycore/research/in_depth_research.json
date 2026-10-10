@@ -1,0 +1,29 @@
+{
+  "icon": {
+    "id": "lyycore:experiment_table"
+  },
+  "rarity": "special",
+  "materials": [
+    {
+      "id": "minecraft:glass_bottle",
+      "count": 3
+    },
+    {
+      "id": "lyycore:imaginary_steel_block",
+      "count": 4
+    }
+  ],
+  "experience_points": 3000,
+  "prerequisites": [
+    "lyycore:research/ritual"
+  ],
+  "title": "research.lyycore.in_depth_research.title",
+  "summary": "research.lyycore.in_depth_research.summary",
+  "description": "research.lyycore.in_depth_research.description",
+  "production": {
+    "result": {
+      "id": "lyycore:experiment_table"
+    },
+    "duration": 1200
+  }
+}

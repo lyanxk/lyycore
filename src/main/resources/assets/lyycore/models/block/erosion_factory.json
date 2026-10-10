@@ -1,0 +1,72 @@
+{
+  "parent": "minecraft:block/block",
+  "render_type": "minecraft:cutout",
+  "textures": {
+    "metal": "lyycore:block/imaginary_steel_block",
+    "core": "lyycore:item/erosion_core",
+    "particle": "#metal"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#metal",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#metal",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#metal",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#metal",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#metal",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#metal",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        2,
+        -0.02
+      ],
+      "to": [
+        14,
+        14,
+        0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#core",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    }
+  ]
+}

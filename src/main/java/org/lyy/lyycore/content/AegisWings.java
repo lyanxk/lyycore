@@ -60,10 +60,11 @@ public final class AegisWings {
     /** Validated boost input calls this once per movement tick on server and local client. */
     public static boolean boostFlight(Player player) {
         var tier = tier(player);
-        if (tier == null || !player.isAlive() || player.isSpectator() || !player.isFallFlying()
+        if (tier == null || !org.lyy.lyycore.content.wings.WingsSettings.flight(player) || !player.isAlive() || player.isSpectator() || !player.isFallFlying()
                 || player.hasEffect(LyyEffects.CRYSTALLIZATION)) return false;
         var velocity = player.getDeltaMovement();
-        var profile = tier.flightBoost();
+        var original = tier.flightBoost();
+        var profile = new WingsTier.FlightBoost(original.acceleration() * org.lyy.lyycore.content.wings.WingsSettings.acceleration(player) / 100.0, original.maxSpeed());
         boolean enhanced = player.level().isClientSide ? player.getPersistentData().getBoolean("lyycore:speed_up") : ResearchProgress.completed(player, SPEED_UP);
         var boosted = enhanced && profile.acceleration() > 0
                 ? velocity.add(player.getLookAngle().normalize().scale(profile.acceleration() * 2))

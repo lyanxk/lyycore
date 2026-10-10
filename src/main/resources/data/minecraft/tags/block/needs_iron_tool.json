@@ -4,6 +4,9 @@
     "lyycore:imaginium_ore",
     "lyycore:deepslate_imaginium_ore",
     "lyycore:alloy_cauldron",
-    "lyycore:mind_control_beacon"
+    "lyycore:mind_control_beacon",
+    "lyycore:erosion_factory",
+    "lyycore:otherworld_chest",
+    "lyycore:experiment_table"
   ]
 }

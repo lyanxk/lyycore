@@ -18,6 +18,21 @@ public class LyyCapabilities {
         return level.getBlockEntity(center) instanceof org.lyy.lyycore.content.blockEntities.PureSmeltingPlantBlockEntity plant && plant.active() ? plant : null;
     }
     public static void register(RegisterCapabilitiesEvent event) {
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, LyyBlockEntities.EXPERIMENT_TABLE.get(), (be, side) -> be.items());
+        event.registerBlockEntity(IMAGINARY_ENERGY, LyyBlockEntities.OTHERWORLD_CHEST.get(), (be, side) -> be.energy);
+        event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, LyyBlockEntities.OTHERWORLD_CHEST.get(), (be, side) -> be.fe);
+        event.registerBlock(IMAGINARY_ENERGY, (level, pos, state, be, side) -> {
+            var center = org.lyy.lyycore.content.blocks.SquareMachineBlock.center(pos, state);
+            return level.getBlockEntity(center) instanceof org.lyy.lyycore.content.blockEntities.ErosionFactoryBlockEntity factory ? factory.energy : null;
+        }, LyyBlocks.EROSION_FACTORY.get());
+        event.registerBlock(Capabilities.EnergyStorage.BLOCK, (level, pos, state, be, side) -> {
+            var center = org.lyy.lyycore.content.blocks.SquareMachineBlock.center(pos, state);
+            return level.getBlockEntity(center) instanceof org.lyy.lyycore.content.blockEntities.ErosionFactoryBlockEntity factory ? factory.fe : null;
+        }, LyyBlocks.EROSION_FACTORY.get());
+        event.registerBlock(Capabilities.ItemHandler.BLOCK, (level, pos, state, be, side) -> {
+            var center = org.lyy.lyycore.content.blocks.SquareMachineBlock.center(pos, state);
+            return level.getBlockEntity(center) instanceof org.lyy.lyycore.content.blockEntities.ErosionFactoryBlockEntity factory ? factory.automation : null;
+        }, LyyBlocks.EROSION_FACTORY.get());
         event.registerBlockEntity(IMAGINARY_ENERGY, LyyBlockEntities.FISSION_FURNACE.get(), (be, side) -> be.energy);
         event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, LyyBlockEntities.FISSION_FURNACE.get(), (be, side) -> be.fe);
         event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, LyyBlockEntities.FISSION_FURNACE.get(), (be, side) -> be.automation);

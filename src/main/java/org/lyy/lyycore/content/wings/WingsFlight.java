@@ -37,7 +37,7 @@ public final class WingsFlight {
     public static void update(ServerPlayer player) {
         var attribute = player.getAttribute(CaelusApi.getInstance().getFallFlyingAttribute());
         if (attribute == null) throw new IllegalStateException("Caelus flight attribute missing from player");
-        if (AegisWings.unlocked(player)) {
+        if (AegisWings.unlocked(player) && WingsSettings.flight(player)) {
             if (!attribute.hasModifier(FLIGHT.id())) attribute.addTransientModifier(FLIGHT);
         } else attribute.removeModifier(FLIGHT.id());
     }
@@ -52,6 +52,7 @@ public final class WingsFlight {
     @SubscribeEvent public static void tick(PlayerTickEvent.Post event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
         boolean boost = player.isAlive() && !player.isSpectator() && player.isFallFlying() && AegisWings.level(player) >= 2
+                && WingsSettings.flight(player) && WingsSettings.acceleration(player) > 0
                 && player.containerMenu == player.inventoryMenu && player.tickCount - BOOST_INPUT.getOrDefault(player, player.tickCount - 100) < 20;
         if (boost != boosting(player)) {
             player.getPersistentData().putBoolean("lyycore:wings_boosting", boost);

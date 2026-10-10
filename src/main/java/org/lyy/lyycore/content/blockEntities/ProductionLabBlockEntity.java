@@ -42,7 +42,7 @@ public final class ProductionLabBlockEntity extends BlockEntity implements MenuP
     private final ContainerData data = new ContainerData() {
         @Override public int get(int index) {
             return index == 0 ? duration == 0 ? 0 : progress * 1000 / duration
-                    : output ? 2 : duration > 0 ? 1 : items.getStackInSlot(0).isEmpty() ? 0 : 3;
+                    : output ? 2 : needsExperiment() ? 4 : duration > 0 ? 1 : items.getStackInSlot(0).isEmpty() ? 0 : 3;
         }
         @Override public void set(int index, int value) { }
         @Override public int getCount() { return 2; }
@@ -51,6 +51,12 @@ public final class ProductionLabBlockEntity extends BlockEntity implements MenuP
     public ItemStackHandler items() { return items; }
     public ContainerData data() { return data; }
     public boolean working() { return !output && duration > 0; }
+    private boolean needsExperiment() {
+        if (level == null) return false;
+        var notes = items.getStackInSlot(0);
+        var experiment = ResearchNotesItem.experiment(notes, level);
+        return experiment != null && !ResearchNotesItem.experimentComplete(notes, experiment);
+    }
     public float animationProgress(float partial) {
         if (!working() || level == null) return 0;
         return Math.min(1, (progress + level.getGameTime() - lastUpdate + partial) / duration);
@@ -82,7 +88,7 @@ public final class ProductionLabBlockEntity extends BlockEntity implements MenuP
         var owner = ResearchNotesItem.owner(notes);
         var research = ResearchNotesItem.research(notes, level);
         var production = research == null ? null : research.production().orElse(null);
-        if (production == null || owner == null) {
+        if (production == null || owner == null || !ResearchNotesItem.readyForProduction(notes, production)) {
             if (lab.progress != 0 || lab.duration != 0) { lab.progress = lab.duration = 0; lab.changed(); }
             return;
         }

@@ -28,6 +28,7 @@ public final class ResearchMenu extends AbstractContainerMenu {
     private final List<ResearchEntry> entries;
     private final int[] statuses;
     private final boolean memory;
+    public final SelfMenuData self;
     private final DataSlot wingsVisible = DataSlot.standalone();
     private int preview = -1, previewExperience;
     private float previewExperienceProgress;
@@ -41,6 +42,8 @@ public final class ResearchMenu extends AbstractContainerMenu {
         super(memory ? LyyMenus.MEMORY.get() : LyyMenus.RESEARCH.get(), id);
         this.owner = inventory.player;
         this.memory = memory;
+        this.self = new SelfMenuData(owner);
+        if (memory) addDataSlots(self);
         this.access = memory ? ContainerLevelAccess.NULL : ContainerLevelAccess.create(inventory.player.level(), pos);
         this.entries = List.copyOf(entries);
         wingsVisible.set(AegisWings.visible(owner) ? 1 : 0);
@@ -134,6 +137,9 @@ public final class ResearchMenu extends AbstractContainerMenu {
 
     @Override public boolean clickMenuButton(Player player, int id) {
         if (!(player instanceof ServerPlayer server) || player != owner || !stillValid(player)) return false;
+        if (memory && id <= -10000 && id >= -10300) {
+            boolean changed = self.click(server, id); broadcastChanges(); return changed;
+        }
         if (id == TOGGLE_WINGS) {
             if (!memory || !AegisWings.unlocked(player) || entries.stream().noneMatch(entry -> entry.id().equals(AegisWings.RESEARCH))) return false;
             AegisWings.setVisible(player, !AegisWings.visible(player));

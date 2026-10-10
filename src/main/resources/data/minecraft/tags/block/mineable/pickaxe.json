@@ -32,6 +32,9 @@
     "lyycore:phantom_matrix",
     "lyycore:fission_furnace",
     "lyycore:summoning_altar",
-    "lyycore:summoning_pedestal"
+    "lyycore:summoning_pedestal",
+    "lyycore:erosion_factory",
+    "lyycore:otherworld_chest",
+    "lyycore:experiment_table"
   ]
 }

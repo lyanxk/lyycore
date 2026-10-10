@@ -24,7 +24,7 @@ public final class ProductionLabScreen extends AbstractContainerScreen<Productio
             g.fill(x - 1, y - 1, x + 2, y + 2, step < progress * 96 ? 0xFFB69A55 : 0xFFE4DDCD);
         }
         Component status = menu.status() == 1 ? Component.literal(Math.round(progress * 100) + "%")
-                : Component.translatable("gui.lyycore.lab." + (menu.status() == 2 ? "complete" : menu.status() == 3 ? "invalid" : "insert"));
+                : Component.translatable("gui.lyycore.lab." + (menu.status() == 2 ? "complete" : menu.status() == 4 ? "experiment" : menu.status() == 3 ? "invalid" : "insert"));
         g.drawString(font, status, leftPos + (imageWidth - font.width(status)) / 2, topPos + 86, 0xFF68616A, false);
     }
     private void slot(GuiGraphics g, int x, int y) {

@@ -2,6 +2,10 @@
   "replace": false,
   "values": [
     "lyycore:dragon_laser",
-    "lyycore:blazing_pursuit"
+    "lyycore:blazing_pursuit",
+    "lyycore:special_physical",
+    "lyycore:special_ice",
+    "lyycore:special_fire",
+    "lyycore:special_lightning"
   ]
 }

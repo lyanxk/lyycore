@@ -22,9 +22,9 @@ def research(name, icon, rarity, prerequisites, xp=0, materials=(), result=None,
     write(RES / "data/lyycore/research" / f"{name}.json", r)
 
 
-research("in_our_hands", "dragon_might", "special", ("what_now", "giant_dragon", "ritual"), 6000,
+research("in_our_hands", "dragon_might", "special", ("ritual", "giant_dragon"), 6000,
          materials=[{"id": "lyycore:endless_erosion", "count": 1}], result="dragon_might")
-research("blazing_pursuit", "minecraft:blaze_powder", "high", ("what_now",), 6000)
+research("blazing_pursuit", "minecraft:blaze_powder", "high", ("ritual",), 6000)
 research("ritual", "friendly_proof", "high", ("what_now",), materials=[
     {"id": "lyycore:amplification_potion"}, {"id": "lyycore:control_crystal"},
     {"id": "minecraft:leather", "count": 64}, {"id": "minecraft:white_wool", "count": 64}], result="friendly_proof", seconds=30)
@@ -45,7 +45,7 @@ write(ASSETS / "models/item/amplification_potion.json", {"parent": "lyycore:item
 write(ASSETS / "models/item/endless_erosion.json", {"parent": "minecraft:item/generated", "textures": {"layer0": "lyycore:item/endless_erosion"}})
 # Geometry is rendered by the animated item renderer. Display transforms keep the -X bow horizontal in the hand.
 write(ASSETS / "models/item/dragon_might.json", {"parent": "minecraft:item/handheld", "textures": {"layer0": "lyycore:item/dragon_might/alien_dragon_might"}, "display": {
-    "gui": {"rotation": [0, 0, -30], "scale": [.35, .35, .35]},
+    "gui": {"rotation": [0, 0, -39.75], "translation": [-1.75, 2.25, 0], "scale": [.35, .35, .35]},
     "firstperson_righthand": {"rotation": [0, -90, 0], "translation": [1, 1, -1], "scale": [.5, .5, .5]},
     "firstperson_lefthand": {"rotation": [0, 90, 0], "translation": [1, 1, -1], "scale": [.5, .5, .5]},
     "thirdperson_righthand": {"rotation": [0, -90, 0], "translation": [0, 2, 0], "scale": [.5, .5, .5]},
@@ -54,13 +54,13 @@ write(ASSETS / "models/item/dragon_might.json", {"parent": "minecraft:item/handh
 
 zh = {
 "tooltip.lyycore.description.dragon_might": "焚尽一切",
-"item.lyycore.dragon_might": "异龙之力", "item.lyycore.amplification_potion": "增幅药剂", "item.lyycore.endless_erosion": "无尽的「侵蚀」",
+"item.lyycore.dragon_might": "龙", "item.lyycore.amplification_potion": "增幅药剂", "item.lyycore.endless_erosion": "无尽的「侵蚀」",
 "entity.lyycore.life_defender": "歌颂生命的捍卫者", "entity.lyycore.life_cocoon": "褪茧", "entity.lyycore.life_usurper": "腐蚀生命的篡夺者", "entity.lyycore.life_spell": "生命法术", "entity.lyycore.magic_beam": "异龙激光",
 "effect.lyycore.dragon_fire": "龙火灼烧", "effect.lyycore.life_curse": "生命诅咒",
 "gui.lyycore.dragon_control": "龙的状态", "gui.lyycore.dragon.unavailable": "无法查询绑定的龙巢，暂不能切换模式。", "gui.lyycore.dragon.full_power": "真正的力量", "gui.lyycore.dragon.quarter_power": "尚有余力",
 "message.lyycore.altar.life_materials": "外围幻祭台需要各放 1 个材料：虚钢块 ×4、水晶块 ×4。",
 "research.lyycore.in_our_hands.title": "尽在手中", "research.lyycore.in_our_hands.summary": "不仅只在空中翱翔。",
-"research.lyycore.in_our_hands.description": "我们的伙伴似乎愿意直接成为我们的力量，如此一来，我们的远程火力也大大加强了。\n异龙之力：拉弓最多蓄力 1 秒，每道激光造成（1+t）⁴×40 魔法伤害，满蓄力 640 点，射程 64 格。进攻风格发射四连激光；技巧风格拉弓期间额外减少 50% 伤害。龙处于收起模式时，命中附加 5 秒龙火灼烧，最多 3 级，每秒造成 50/100/400 点魔法伤害。未收起时，激光仅有 1/4 伤害且无灼烧。潜行右键打开龙模式界面。",
+"research.lyycore.in_our_hands.description": "我们的伙伴似乎愿意直接成为我们的力量，如此一来，我们的远程火力也大大加强了。\n龙：拉弓最多蓄力 1 秒，每道激光造成（1+t）⁴×40 魔法伤害，满蓄力 640 点，射程 64 格。进攻风格发射四连激光；技巧风格拉弓期间额外减少 50% 伤害。龙处于收起模式时，命中附加 5 秒龙火灼烧，最多 3 级，每秒造成 50/100/400 点魔法伤害。查询到龙巢但未收起时，激光仅有 1/4 伤害且无灼烧；无法查询到龙巢时为基础伤害的 10 倍，满蓄力 6400，无灼烧。潜行右键打开龙模式界面。",
 "research.lyycore.blazing_pursuit.title": "炽热追击", "research.lyycore.blazing_pursuit.summary": "燃起来了。",
 "research.lyycore.blazing_pursuit.description": "我们的羽翼足以划破长空，亦能灼烧敌人。\n进攻风格的追击改为单次 640 点火焰伤害，替换原有羽毛多次物理攻击，保留 1 秒内置冷却。",
 "research.lyycore.ritual.title": "仪式", "research.lyycore.ritual.summary": "更多用法。",
@@ -69,13 +69,13 @@ zh = {
 }
 en = {
 "tooltip.lyycore.description.dragon_might": "Burn everything to ashes",
-"item.lyycore.dragon_might": "Alien Dragon's Might", "item.lyycore.amplification_potion": "Amplification Potion", "item.lyycore.endless_erosion": "Endless Erosion",
+"item.lyycore.dragon_might": "Dragon", "item.lyycore.amplification_potion": "Amplification Potion", "item.lyycore.endless_erosion": "Endless Erosion",
 "entity.lyycore.life_defender": "Defender Who Praises Life", "entity.lyycore.life_cocoon": "Shedding Cocoon", "entity.lyycore.life_usurper": "Usurper Who Corrodes Life", "entity.lyycore.life_spell": "Life Spell", "entity.lyycore.magic_beam": "Dragon Laser",
 "effect.lyycore.dragon_fire": "Dragonfire Burn", "effect.lyycore.life_curse": "Curse of Life",
 "gui.lyycore.dragon_control": "Dragon's State", "gui.lyycore.dragon.unavailable": "The bound nest cannot be found. Mode controls are unavailable.", "gui.lyycore.dragon.full_power": "True power", "gui.lyycore.dragon.quarter_power": "Power to spare",
 "message.lyycore.altar.life_materials": "Offer 4 Imaginary Steel Blocks and 4 Crystal Blocks, one on each outer pedestal.",
 "research.lyycore.in_our_hands.title": "In Our Hands", "research.lyycore.in_our_hands.summary": "More than soaring through the sky.",
-"research.lyycore.in_our_hands.description": "Our companion is willing to become our strength. Charge for up to 1 second: each laser deals (1+t)^4 x 40 magic damage, up to 640, with a 64-block range. Offense fires four lasers; Technique adds 50% damage reduction while drawing. With the dragon stowed, hits apply a 5-second burn, stacking up to three levels for 50/100/400 magic damage per second. Otherwise, damage is quartered and the burn is disabled. Sneak-use opens the remote dragon controls.",
+"research.lyycore.in_our_hands.description": "Our companion is willing to become our strength. Charge for up to 1 second: each laser deals (1+t)^4 x 40 magic damage, up to 640, with a 64-block range. Offense fires four lasers; Technique adds 50% damage reduction while drawing. With the dragon stowed, hits apply a 5-second burn, stacking up to three levels for 50/100/400 magic damage per second. With a queryable nest but an unstowed dragon, damage is quartered without the burn. With no queryable nest, damage is multiplied by ten (6400 at full charge), without the burn. Sneak-use opens the remote dragon controls.",
 "research.lyycore.blazing_pursuit.title": "Blazing Pursuit", "research.lyycore.blazing_pursuit.summary": "Burn bright.",
 "research.lyycore.blazing_pursuit.description": "Our wings can cut through the sky and burn our enemies. Replaces Offense's feather follow-up with one 640-point fire hit, retaining the one-second internal cooldown.",
 "research.lyycore.ritual.title": "Ritual", "research.lyycore.ritual.summary": "More possibilities.",

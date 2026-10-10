@@ -17,6 +17,11 @@ public class LyyCreativeTab {
                     .icon(() -> new ItemStack(LyyItems.IMAGINARY_ALLOY_INGOT.get()))
                     .title(Component.literal("LyyCore"))
                     .displayItems((params, output) -> {
+                        output.accept(LyyItems.EXPERIMENT_TABLE.get());
+                        output.accept(LyyItems.HAIL.get());
+                        output.accept(LyyItems.EROSION_CORE.get());
+                        output.accept(LyyItems.EROSION_FACTORY.get());
+                        output.accept(LyyItems.OTHERWORLD_CHEST.get());
                         output.accept(LyyItems.PURE_SMELTING_PLANT_SHELL.get()); output.accept(LyyItems.PURE_SMELTING_PLANT.get());
                         output.accept(LyyItems.PURE_IMAGINARY_STEEL.get()); output.accept(LyyItems.IMAGINARY_STEEL_BLOCK.get());
                         output.accept(LyyItems.ENERGY_CORE.get());

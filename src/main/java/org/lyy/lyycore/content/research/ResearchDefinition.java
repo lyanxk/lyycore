@@ -16,10 +16,12 @@ public record ResearchDefinition(ItemStack icon, String title, String summary, S
                              Optional<Production> production, boolean unlocksSkills,
                              List<ResourceLocation> prerequisites, Optional<ResourceLocation> requiredAdvancement) {
     /** A present production definition also enables free transcription in the memory screen. */
-    public record Production(ItemStack result, int duration) {
+    public record Production(ItemStack result, int duration, Optional<ExperimentDefinition> experiment) {
+        public Production(ItemStack result, int duration) { this(result, duration, Optional.empty()); }
         public static final Codec<Production> CODEC = RecordCodecBuilder.create(i -> i.group(
                 ItemStack.CODEC.fieldOf("result").forGetter(Production::result),
-                Codec.intRange(1, 72000).fieldOf("duration").forGetter(Production::duration)
+                Codec.intRange(1, 72000).fieldOf("duration").forGetter(Production::duration),
+                ExperimentDefinition.CODEC.optionalFieldOf("experiment").forGetter(Production::experiment)
         ).apply(i, Production::new));
         public Production {
             if (result.isEmpty() || result.getCount() > result.getMaxStackSize() || duration < 1 || duration > 72000)
@@ -64,13 +66,17 @@ public record ResearchDefinition(ItemStack icon, String title, String summary, S
         b.writeCollection(r.materials, (buf, material) -> ResearchMaterial.STREAM_CODEC.encode((RegistryFriendlyByteBuf) buf, material));
         b.writeVarInt(r.experienceLevels); b.writeVarInt(r.experiencePoints); b.writeBoolean(r.dangerous);
         b.writeBoolean(r.production.isPresent());
-        r.production.ifPresent(p -> { ItemStack.STREAM_CODEC.encode(b, p.result); b.writeVarInt(p.duration); });
+        r.production.ifPresent(p -> {
+            ItemStack.STREAM_CODEC.encode(b, p.result); b.writeVarInt(p.duration);
+            b.writeBoolean(p.experiment.isPresent()); p.experiment.ifPresent(e -> e.write(b));
+        });
         b.writeBoolean(r.unlocksSkills);
         b.writeCollection(r.prerequisites, (buf, id) -> buf.writeResourceLocation(id));
         b.writeOptional(r.requiredAdvancement, (buf, id) -> buf.writeResourceLocation(id));
     }, b -> new ResearchDefinition(ItemStack.STREAM_CODEC.decode(b), b.readUtf(), b.readUtf(), b.readUtf(),
             b.readEnum(Rarity.class), b.readList(buf -> ResearchMaterial.STREAM_CODEC.decode((RegistryFriendlyByteBuf) buf)),
             b.readVarInt(), b.readVarInt(), b.readBoolean(), b.readBoolean()
-                    ? Optional.of(new Production(ItemStack.STREAM_CODEC.decode(b), b.readVarInt())) : Optional.empty(), b.readBoolean(),
+                    ? Optional.of(new Production(ItemStack.STREAM_CODEC.decode(b), b.readVarInt(),
+                    b.readBoolean() ? Optional.of(ExperimentDefinition.read(b)) : Optional.empty())) : Optional.empty(), b.readBoolean(),
             b.readList(buf -> buf.readResourceLocation()), b.readOptional(buf -> buf.readResourceLocation())));
 }

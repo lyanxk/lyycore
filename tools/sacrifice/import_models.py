@@ -11,7 +11,7 @@ helpers = runpy.run_path(str(ROOT / 'tools/energy-machines/import_models.py'))
 machine, bake, write = (helpers[k] for k in ('import_machine', 'bake', 'write'))
 machine.__globals__['SOURCE'] = SOURCE
 machine('phantom_matrix', 'phantom_matrix', 4, width=5)
-machine('imaginary_summoning_altar', 'summoning_altar', 1, source_name='summoning_core', width=1, source_offset=(8,0,8))
+machine('imaginary_summoning_altar', 'summoning_altar', 1, source_name='summoning_core', width=1, source_offset=(8,0,8), gui_scale=0.6)
 machine('imaginary_summoning_altar', 'summoning_pedestal', 1, source_name='summoning_pedestal', width=1, source_offset=(8,0,8))
 write(ASSETS/'blockstates/summoning_altar.json', {'variants': {'': {'model': 'lyycore:block/summoning_altar/body_0'}}})
 

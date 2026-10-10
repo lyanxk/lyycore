@@ -5,9 +5,8 @@
   "rarity": "special",
   "experience_points": 6000,
   "prerequisites": [
-    "lyycore:research/what_now",
-    "lyycore:research/giant_dragon",
-    "lyycore:research/ritual"
+    "lyycore:research/ritual",
+    "lyycore:research/giant_dragon"
   ],
   "materials": [
     {

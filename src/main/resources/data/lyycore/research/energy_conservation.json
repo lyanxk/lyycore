@@ -1,0 +1,48 @@
+{
+  "icon": {
+    "id": "lyycore:otherworld_chest"
+  },
+  "rarity": "medium",
+  "experience_points": 0,
+  "prerequisites": [
+    "lyycore:research/ritual"
+  ],
+  "materials": [
+    {
+      "id": "lyycore:miniature_concrete_factory"
+    },
+    {
+      "id": "lyycore:miniature_garden"
+    },
+    {
+      "id": "lyycore:miniature_ocean"
+    },
+    {
+      "id": "lyycore:miniature_monument"
+    },
+    {
+      "id": "lyycore:miniature_crystal_factory"
+    },
+    {
+      "id": "lyycore:miniature_tree_factory"
+    },
+    {
+      "id": "lyycore:miniature_overworld_factory"
+    },
+    {
+      "id": "lyycore:miniature_mineral_factory"
+    },
+    {
+      "id": "lyycore:miniature_nether_factory"
+    }
+  ],
+  "title": "research.lyycore.energy_conservation.title",
+  "summary": "research.lyycore.energy_conservation.summary",
+  "description": "research.lyycore.energy_conservation.description",
+  "production": {
+    "result": {
+      "id": "lyycore:otherworld_chest"
+    },
+    "duration": 1200
+  }
+}

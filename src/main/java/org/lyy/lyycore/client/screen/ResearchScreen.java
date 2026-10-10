@@ -23,6 +23,8 @@ public final class ResearchScreen extends AbstractContainerScreen<ResearchMenu> 
     private int page, selected = -1, scroll, materialRow;
     private List<Integer> visibleEntries = List.of();
     private boolean confirming;
+    private int tab;
+    private boolean selfUnlocked;
     private PaperButton researchButton, confirmButton, wingsButton;
 
     public ResearchScreen(ResearchMenu menu, Inventory inventory, Component title) {
@@ -41,6 +43,8 @@ public final class ResearchScreen extends AbstractContainerScreen<ResearchMenu> 
 
     @Override protected void init() {
         super.init();
+        selfUnlocked = menu.isMemory() && menu.entries().stream().anyMatch(e -> e.id().equals(org.lyy.lyycore.content.PlayerAttributes.RESEARCH));
+        if (selfUnlocked) leftPos = (width - imageWidth + 52) / 2;
         rebuildButtons();
     }
 
@@ -48,6 +52,15 @@ public final class ResearchScreen extends AbstractContainerScreen<ResearchMenu> 
         refreshVisibleEntries();
         clearWidgets();
         researchButton = confirmButton = wingsButton = null;
+        if (selfUnlocked) {
+            for (int i = 0; i < 3; i++) {
+                final int next = i;
+                button(-51, 24 + i * 28, 48, 24, translated("gui.lyycore.self.tab." + i), () -> {
+                    tab = next; selected = -1; confirming = false; rebuildButtons();
+                }).active = tab != i;
+            }
+            if (tab != 0) { buildSelfButtons(); return; }
+        }
         if (confirming) {
             confirmButton = button(67, 186, 76, 20, text("yes"), () -> {
                 if (minecraft.gameMode != null) minecraft.gameMode.handleInventoryButtonClick(menu.containerId, selected);
@@ -91,6 +104,75 @@ public final class ResearchScreen extends AbstractContainerScreen<ResearchMenu> 
         refreshStatus();
     }
 
+    private void sendSelf(int id) {
+        if (minecraft.gameMode != null) minecraft.gameMode.handleInventoryButtonClick(menu.containerId, id);
+    }
+    private void buildSelfButtons() {
+        if (tab == 1) {
+            button(17, 84, 78, 22, translated("gui.lyycore.self.visibility"), () -> sendSelf(ResearchMenu.TOGGLE_WINGS));
+            for (int i = 0; i < 4; i++) {
+                final int choice = i;
+                button(113 + i % 2 * 38, 81 + i / 2 * 28, 34, 24,
+                        i == 0 ? translated("gui.lyycore.self.off") : Component.literal(Integer.toString(i)),
+                        () -> sendSelf(SelfMenuData.PURSUIT - choice)).active = i <= menu.self.valueAt(7);
+            }
+            button(207, 84, 78, 22, translated("gui.lyycore.self.flight"), () -> sendSelf(SelfMenuData.FLIGHT));
+            addRenderableWidget(new net.minecraft.client.gui.components.AbstractSliderButton(leftPos + 207, topPos + 138, 78, 20,
+                    Component.empty(), menu.self.valueAt(9) / 100.0) {
+                { updateMessage(); active = menu.self.valueAt(10) >= 2; }
+                @Override protected void updateMessage() { setMessage(Component.literal(Math.round(value * 100) + "%")); }
+                @Override protected void applyValue() { sendSelf(SelfMenuData.ACCELERATION - (int)Math.round(value * 100)); }
+                @Override public void renderWidget(GuiGraphics g, int x, int y, float partial) {
+                    g.fill(getX(), getY(), getX() + width, getY() + height, active ? GOLD : 0xFFCFC8B9);
+                    g.fill(getX() + 1, getY() + 1, getX() + width - 1, getY() + height - 1, PAPER);
+                    int filled = (int)Math.round(value * (width - 4));
+                    g.fill(getX() + 2, getY() + height - 5, getX() + 2 + filled, getY() + height - 2, GOLD);
+                    drawCenteredText(g, getMessage(), getX() + width / 2, getY() + 3, active ? INK : MUTED_INK);
+                }
+            });
+        } else {
+            for (int i = 0; i < 4; i++) {
+                final int stat = i;
+                button(92, 55 + i * 31, 20, 20, Component.literal("−"), () -> sendSelf(SelfMenuData.REFUND - stat));
+                button(143, 55 + i * 31, 20, 20, Component.literal("+"), () -> sendSelf(SelfMenuData.ALLOCATE - stat));
+            }
+        }
+    }
+    private void renderSelf(GuiGraphics g) {
+        drawCenteredText(g, translated("gui.lyycore.self.tab." + tab), leftPos + 150, topPos + 17, INK);
+        g.fill(leftPos + 13, topPos + 36, leftPos + 287, topPos + 37, GOLD);
+        if (tab == 1) {
+            for (int x : new int[]{103, 198}) g.fill(leftPos + x, topPos + 49, leftPos + x + 1, topPos + 199, 0xFFE8DFC8);
+            drawCenteredText(g, translated("gui.lyycore.self.visibility"), leftPos + 56, topPos + 55, INK);
+            drawCenteredText(g, translated("gui.lyycore.self.pursuit"), leftPos + 150, topPos + 55, INK);
+            drawCenteredText(g, translated("gui.lyycore.self.flight"), leftPos + 246, topPos + 55, INK);
+            drawCenteredText(g, translated(menu.wingsVisible() ? "gui.lyycore.self.on" : "gui.lyycore.self.off"), leftPos + 56, topPos + 119, MUTED_INK);
+            drawCenteredText(g, translated("gui.lyycore.self.current", menu.self.valueAt(6)), leftPos + 150, topPos + 146, MUTED_INK);
+            drawCenteredText(g, translated(menu.self.valueAt(8) != 0 ? "gui.lyycore.self.on" : "gui.lyycore.self.off"), leftPos + 246, topPos + 119, MUTED_INK);
+            drawCenteredText(g, translated("gui.lyycore.self.acceleration"), leftPos + 246, topPos + 168, MUTED_INK);
+        } else {
+            g.drawString(font, translated("gui.lyycore.self.points", menu.self.valueAt(1)), leftPos + 17, topPos + 42, INK, false);
+            var player = minecraft.player;
+            if (player == null) return;
+            var stats = org.lyy.lyycore.content.PlayerAttributes.Stat.values();
+            for (int i = 0; i < stats.length; i++) {
+                int y = topPos + 59 + i * 31;
+                g.drawString(font, translated("gui.lyycore.self.stat." + i), leftPos + 17, y, INK, false);
+                g.drawString(font, String.format(java.util.Locale.ROOT, "%.0f", player.getAttributeValue(stats[i].attribute)), leftPos + 61, y, INK, false);
+                drawCenteredText(g, Component.literal(Integer.toString(menu.self.valueAt(i + 2))), leftPos + 127, y, MUTED_INK);
+            }
+            var multipliers = java.util.List.of(org.lyy.lyycore.registry.LyyAttributes.DAMAGE,
+                    org.lyy.lyycore.registry.LyyAttributes.PHYSICAL, org.lyy.lyycore.registry.LyyAttributes.ICE,
+                    org.lyy.lyycore.registry.LyyAttributes.FIRE, org.lyy.lyycore.registry.LyyAttributes.LIGHTNING);
+            for (int i = 0; i < multipliers.size(); i++) {
+                int y = topPos + 59 + i * 24;
+                g.drawString(font, translated("gui.lyycore.self.multiplier." + i), leftPos + 179, y, INK, false);
+                String percent = String.format(java.util.Locale.ROOT, "%+.0f%%", (player.getAttributeValue(multipliers.get(i)) - 1) * 100);
+                g.drawString(font, percent, leftPos + 283 - font.width(percent), y + 10, MUTED_INK, false);
+            }
+        }
+    }
+
     private PaperButton button(int x, int y, int width, int height, Component label, Runnable action) {
         return addRenderableWidget(new PaperButton(leftPos + x, topPos + y, width, height, label, action));
     }
@@ -128,12 +210,14 @@ public final class ResearchScreen extends AbstractContainerScreen<ResearchMenu> 
 
     @Override protected void containerTick() {
         super.containerTick();
+        if (tab != 0) return;
         if (refreshVisibleEntries()) rebuildButtons();
         else refreshStatus();
     }
 
     @Override protected void renderBg(GuiGraphics g, float partial, int mouseX, int mouseY) {
         panel(g, leftPos, topPos, imageWidth, imageHeight, PAPER);
+        if (tab != 0) { renderSelf(g); return; }
         // Inset rules and diamond ornaments echo the supplied white-and-gold table.
         g.fill(leftPos + 13, topPos + 37, leftPos + 287, topPos + 38, GOLD);
         g.fill(leftPos + 13, topPos + 180, leftPos + 287, topPos + 181, GOLD);
@@ -213,6 +297,7 @@ public final class ResearchScreen extends AbstractContainerScreen<ResearchMenu> 
 
     @Override public void render(GuiGraphics g, int mouseX, int mouseY, float partial) {
         super.render(g, mouseX, mouseY, partial);
+        if (tab != 0) return;
         if (confirming) {
             var costs = research().materials();
             for (int i = materialRow * 8; i < Math.min(costs.size(), (materialRow + 3) * 8); i++) {

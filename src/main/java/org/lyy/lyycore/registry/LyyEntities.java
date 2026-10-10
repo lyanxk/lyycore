@@ -37,6 +37,8 @@ import org.lyy.lyycore.content.entity.sovereign.DefenderSword;
 public class LyyEntities {
     public static final DeferredRegister<EntityType<?>> ENTITIES =
             DeferredRegister.create(Registries.ENTITY_TYPE, LyyCore.MODID);
+    public static final DeferredHolder<EntityType<?>, EntityType<org.lyy.lyycore.content.entity.HailCrystal>> HAIL_CRYSTAL = ENTITIES.register("hail_crystal", () -> EntityType.Builder.of(org.lyy.lyycore.content.entity.HailCrystal::new, MobCategory.MISC).sized(.25F, .25F).clientTrackingRange(8).noSave().build("lyycore:hail_crystal"));
+    public static final DeferredHolder<EntityType<?>, EntityType<org.lyy.lyycore.content.entity.HailFlower>> HAIL_FLOWER = ENTITIES.register("hail_flower", () -> EntityType.Builder.of(org.lyy.lyycore.content.entity.HailFlower::new, MobCategory.MISC).sized(4, 2).clientTrackingRange(8).noSave().build("lyycore:hail_flower"));
     public static final DeferredHolder<EntityType<?>, EntityType<MagicBeam>> MAGIC_BEAM = ENTITIES.register("magic_beam", () ->
             EntityType.Builder.of(MagicBeam::new, MobCategory.MISC).sized(.1F, .1F).clientTrackingRange(32).updateInterval(1).noSave().build("lyycore:magic_beam"));
     public static final DeferredHolder<EntityType<?>, EntityType<LifeSovereign>> LIFE_DEFENDER = sovereign("life_defender", 2, 3);

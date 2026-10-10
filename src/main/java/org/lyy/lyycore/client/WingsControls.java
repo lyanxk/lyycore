@@ -25,7 +25,9 @@ public final class WingsControls {
         var mc = Minecraft.getInstance();
         if (mc.player == null) return;
         while (BOOST.consumeClick()) { }
-        boolean held = mc.screen == null && mc.isWindowActive() && BOOST.isDown() && mc.player.isFallFlying() && AegisWings.level(mc.player) >= 2;
+        boolean held = mc.screen == null && mc.isWindowActive() && BOOST.isDown() && mc.player.isFallFlying() && AegisWings.level(mc.player) >= 2
+                && org.lyy.lyycore.content.wings.WingsSettings.flight(mc.player)
+                && org.lyy.lyycore.content.wings.WingsSettings.acceleration(mc.player) > 0;
         if (held != sent || held && mc.player.tickCount % 10 == 0) {
             PacketDistributor.sendToServer(new WingsNetwork.Boost(held)); sent = held;
         }

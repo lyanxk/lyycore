@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/orientable",
+  "textures": {
+    "top": "lyycore:block/imaginary_steel_block",
+    "front": "lyycore:block/collector_front",
+    "side": "lyycore:block/imaginary_steel_block"
+  }
+}
