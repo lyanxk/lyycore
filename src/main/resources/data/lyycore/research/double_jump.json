@@ -1,0 +1,21 @@
+{
+  "icon": {
+    "id": "lyycore:jump_potion",
+    "components": {
+      "minecraft:custom_model_data": 1
+    }
+  },
+  "rarity": "common",
+  "materials": [
+    {
+      "id": "lyycore:jump_potion"
+    }
+  ],
+  "experience_points": 0,
+  "prerequisites": [
+    "lyycore:research/what_now"
+  ],
+  "title": "research.lyycore.double_jump.title",
+  "summary": "research.lyycore.double_jump.summary",
+  "description": "research.lyycore.double_jump.description"
+}

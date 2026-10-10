@@ -36,10 +36,13 @@ public class ClientSetup {
     public static void uploadDomeMeshes(ModelEvent.BakingCompleted event) {
         SonnetDomeMesh.reload(event.getModelManager());
         ProductionLabRenderer.reload();
+        DragonMightRenderer.reload();
     }
 
     @SubscribeEvent
     public static void wrapCustomItemModels(ModelEvent.ModifyBakingResult event) {
+        var dragonMight = new net.minecraft.client.resources.model.ModelResourceLocation(LyyItems.DRAGON_MIGHT.getId(), "inventory");
+        event.getModels().computeIfPresent(dragonMight, (id, model) -> DragonMightRenderer.wrap(model));
         var grapple = new net.minecraft.client.resources.model.ModelResourceLocation(
                 LyyItems.IMAGINARY_GRAPPLE.getId(), "inventory");
         var empty = event.getModels().get(GrappleRenderer.EMPTY_HELD_MODEL);
@@ -68,6 +71,20 @@ public class ClientSetup {
 
     @SubscribeEvent
     public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
+        event.registerEntityRenderer(LyyEntities.MAGIC_BEAM.get(), MagicBeamRenderer::new);
+        event.registerEntityRenderer(LyyEntities.LIFE_DEFENDER.get(), c -> new LifeSovereignRenderer(c, "life_defender", .9F));
+        event.registerEntityRenderer(LyyEntities.LIFE_COCOON.get(), c -> new LifeSovereignRenderer(c, "life_cocoon", .6F));
+        event.registerEntityRenderer(LyyEntities.LIFE_USURPER.get(), c -> new LifeSovereignRenderer(c, "life_usurper", .76F));
+        event.registerEntityRenderer(LyyEntities.LIFE_SPELL.get(), LifeSpellRenderer::new);
+        event.registerEntityRenderer(LyyEntities.DEFENDER_SWORD.get(), DefenderSwordRenderer::new);
+        event.registerEntityRenderer(LyyEntities.RECON_CRYSTAL.get(), context -> new CrystalTroopRenderer(context, false));
+        event.registerEntityRenderer(LyyEntities.ASSAULT_CRYSTAL.get(), context -> new CrystalTroopRenderer(context, true));
+        event.registerEntityRenderer(LyyEntities.IMAGINARY_DRAGON.get(), ImaginaryDragonRenderer::new);
+        event.registerEntityRenderer(LyyEntities.GATE_METEOR.get(), GateMeteorRenderer::new);
+        event.registerBlockEntityRenderer(LyyBlockEntities.PHANTOM_MATRIX.get(), context -> new EnergyMachineRenderer<>("phantom_matrix", "working"));
+        event.registerBlockEntityRenderer(LyyBlockEntities.SUMMONING_ALTAR.get(), context -> new SummoningPedestalRenderer<>());
+        event.registerBlockEntityRenderer(LyyBlockEntities.SUMMONING_PEDESTAL.get(), context -> new SummoningPedestalRenderer<>());
+        event.registerBlockEntityRenderer(LyyBlockEntities.PURE_SMELTING_PLANT.get(), PureSmeltingRenderer::new);
         event.registerEntityRenderer(LyyEntities.SCOOP_FEATHER.get(), net.minecraft.client.renderer.entity.NoopRenderer::new);
         event.registerEntityRenderer(LyyEntities.GUIDING_LIGHT.get(), context -> new GuidingMobRenderer<>(context, "guiding_light"));
         event.registerEntityRenderer(LyyEntities.ENDLESS_DEMAND.get(), context -> new GuidingMobRenderer<>(context, "endless_demand"));
@@ -115,7 +132,11 @@ public class ClientSetup {
 
     @SubscribeEvent
     public static void registerScreens(RegisterMenuScreensEvent event) {
+        event.register(LyyMenus.DRAGON_CONTROL.get(), org.lyy.lyycore.client.screen.DragonControlScreen::new);
         event.register(LyyMenus.IMAGINARY_REAPER.get(), ImaginaryReaperScreen::new);
+        event.register(LyyMenus.FISSION_FURNACE.get(), org.lyy.lyycore.client.screen.FissionFurnaceScreen::new);
+        event.register(LyyMenus.PURE_SMELTING.get(), org.lyy.lyycore.client.screen.PureSmeltingScreen::new);
+        event.register(LyyMenus.DRAGON_NEST.get(), org.lyy.lyycore.client.screen.DragonNestScreen::new);
         event.register(LyyMenus.ADVANCED_IMAGINARY_GATE.get(), AdvancedImaginaryGateScreen::new);
         event.register(LyyMenus.RESEARCH.get(), ResearchScreen::new);
         event.register(LyyMenus.MEMORY.get(), ResearchScreen::new);

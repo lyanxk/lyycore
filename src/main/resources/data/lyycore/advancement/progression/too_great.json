@@ -1,0 +1,33 @@
+{
+  "parent": "lyycore:progression/better",
+  "display": {
+    "icon": {
+      "id": "lyycore:unextinguished_desire"
+    },
+    "title": {
+      "translate": "advancement.lyycore.too_great.title"
+    },
+    "description": {
+      "translate": "advancement.lyycore.too_great.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "defeated": {
+      "trigger": "minecraft:player_killed_entity",
+      "conditions": {
+        "entity": {
+          "type": "lyycore:endless_demand"
+        }
+      }
+    }
+  },
+  "requirements": [
+    [
+      "defeated"
+    ]
+  ]
+}

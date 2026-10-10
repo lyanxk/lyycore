@@ -8,7 +8,7 @@
   ],
   "key": {
     "A": {
-      "item": "lyycore:imaginary_alloy_ingot"
+      "tag": "lyycore:imaginary_alloy"
     },
     "K": {
       "item": "lyycore:tree_core"

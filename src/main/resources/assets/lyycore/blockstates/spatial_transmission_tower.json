@@ -1,1 +1,804 @@
-{"multipart":[{"when":{"part":"0"},"apply":{"model":"lyycore:block/spatial_transmission_tower/body_0"}},{"when":{"part":"1"},"apply":{"model":"lyycore:block/spatial_transmission_tower/body_1"}},{"when":{"part":"2"},"apply":{"model":"lyycore:block/spatial_transmission_tower/body_2"}},{"when":{"part":"3"},"apply":{"model":"lyycore:block/spatial_transmission_tower/body_3"}},{"when":{"part":"4"},"apply":{"model":"lyycore:block/spatial_transmission_tower/body_4"}},{"when":{"part":"5"},"apply":{"model":"lyycore:block/spatial_transmission_tower/body_5"}},{"when":{"part":"6"},"apply":{"model":"lyycore:block/spatial_transmission_tower/body_6"}},{"when":{"part":"7"},"apply":{"model":"lyycore:block/spatial_transmission_tower/body_7"}},{"when":{"part":"8"},"apply":{"model":"lyycore:block/spatial_transmission_tower/body_8"}},{"when":{"part":"9"},"apply":{"model":"lyycore:block/spatial_transmission_tower/body_9"}},{"when":{"part":"10"},"apply":{"model":"lyycore:block/spatial_transmission_tower/body_10"}},{"when":{"part":"11"},"apply":{"model":"lyycore:block/spatial_transmission_tower/body_11"}},{"when":{"part":"12"},"apply":{"model":"lyycore:block/spatial_transmission_tower/body_12"}},{"when":{"part":"13"},"apply":{"model":"lyycore:block/spatial_transmission_tower/body_13"}},{"when":{"part":"14"},"apply":{"model":"lyycore:block/spatial_transmission_tower/body_14"}},{"when":{"part":"15"},"apply":{"model":"lyycore:block/spatial_transmission_tower/body_15"}},{"when":{"part":"16"},"apply":{"model":"lyycore:block/spatial_transmission_tower/body_16"}},{"when":{"part":"17"},"apply":{"model":"lyycore:block/spatial_transmission_tower/body_17"}},{"when":{"part":"18"},"apply":{"model":"lyycore:block/spatial_transmission_tower/body_18"}},{"when":{"part":"19"},"apply":{"model":"lyycore:block/spatial_transmission_tower/body_19"}},{"when":{"part":"20"},"apply":{"model":"lyycore:block/spatial_transmission_tower/body_20"}},{"when":{"part":"21"},"apply":{"model":"lyycore:block/spatial_transmission_tower/body_21"}},{"when":{"part":"22"},"apply":{"model":"lyycore:block/spatial_transmission_tower/body_22"}},{"when":{"part":"23"},"apply":{"model":"lyycore:block/spatial_transmission_tower/body_23"}},{"when":{"part":"24"},"apply":{"model":"lyycore:block/spatial_transmission_tower/body_24"}},{"when":{"part":"25"},"apply":{"model":"lyycore:block/spatial_transmission_tower/body_25"}},{"when":{"part":"26"},"apply":{"model":"lyycore:block/spatial_transmission_tower/body_26"}},{"when":{"part":"28"},"apply":{"model":"lyycore:block/spatial_transmission_tower/body_28"}},{"when":{"part":"30"},"apply":{"model":"lyycore:block/spatial_transmission_tower/body_30"}},{"when":{"part":"31"},"apply":{"model":"lyycore:block/spatial_transmission_tower/body_31"}},{"when":{"part":"32"},"apply":{"model":"lyycore:block/spatial_transmission_tower/body_32"}},{"when":{"part":"34"},"apply":{"model":"lyycore:block/spatial_transmission_tower/body_34"}},{"when":{"part":"37"},"apply":{"model":"lyycore:block/spatial_transmission_tower/body_37"}},{"when":{"part":"39"},"apply":{"model":"lyycore:block/spatial_transmission_tower/body_39"}},{"when":{"part":"40"},"apply":{"model":"lyycore:block/spatial_transmission_tower/body_40"}},{"when":{"part":"41"},"apply":{"model":"lyycore:block/spatial_transmission_tower/body_41"}},{"when":{"part":"43"},"apply":{"model":"lyycore:block/spatial_transmission_tower/body_43"}},{"when":{"part":"48"},"apply":{"model":"lyycore:block/spatial_transmission_tower/body_48"}},{"when":{"part":"49"},"apply":{"model":"lyycore:block/spatial_transmission_tower/body_49"}},{"when":{"part":"50"},"apply":{"model":"lyycore:block/spatial_transmission_tower/body_50"}},{"when":{"part":"55"},"apply":{"model":"lyycore:block/spatial_transmission_tower/body_55"}},{"when":{"part":"57"},"apply":{"model":"lyycore:block/spatial_transmission_tower/body_57"}},{"when":{"part":"58"},"apply":{"model":"lyycore:block/spatial_transmission_tower/body_58"}},{"when":{"part":"59"},"apply":{"model":"lyycore:block/spatial_transmission_tower/body_59"}},{"when":{"part":"61"},"apply":{"model":"lyycore:block/spatial_transmission_tower/body_61"}},{"when":{"part":"64"},"apply":{"model":"lyycore:block/spatial_transmission_tower/body_64"}},{"when":{"part":"66"},"apply":{"model":"lyycore:block/spatial_transmission_tower/body_66"}},{"when":{"part":"67"},"apply":{"model":"lyycore:block/spatial_transmission_tower/body_67"}},{"when":{"part":"68"},"apply":{"model":"lyycore:block/spatial_transmission_tower/body_68"}},{"when":{"part":"70"},"apply":{"model":"lyycore:block/spatial_transmission_tower/body_70"}},{"when":{"part":"27"},"apply":{"model":"lyycore:block/spatial_transmission_tower"}},{"when":{"part":"29"},"apply":{"model":"lyycore:block/spatial_transmission_tower"}},{"when":{"part":"33"},"apply":{"model":"lyycore:block/spatial_transmission_tower"}},{"when":{"part":"35"},"apply":{"model":"lyycore:block/spatial_transmission_tower"}},{"when":{"part":"36"},"apply":{"model":"lyycore:block/spatial_transmission_tower"}},{"when":{"part":"38"},"apply":{"model":"lyycore:block/spatial_transmission_tower"}},{"when":{"part":"42"},"apply":{"model":"lyycore:block/spatial_transmission_tower"}},{"when":{"part":"44"},"apply":{"model":"lyycore:block/spatial_transmission_tower"}},{"when":{"part":"45"},"apply":{"model":"lyycore:block/spatial_transmission_tower"}},{"when":{"part":"46"},"apply":{"model":"lyycore:block/spatial_transmission_tower"}},{"when":{"part":"47"},"apply":{"model":"lyycore:block/spatial_transmission_tower"}},{"when":{"part":"51"},"apply":{"model":"lyycore:block/spatial_transmission_tower"}},{"when":{"part":"52"},"apply":{"model":"lyycore:block/spatial_transmission_tower"}},{"when":{"part":"53"},"apply":{"model":"lyycore:block/spatial_transmission_tower"}},{"when":{"part":"54"},"apply":{"model":"lyycore:block/spatial_transmission_tower"}},{"when":{"part":"56"},"apply":{"model":"lyycore:block/spatial_transmission_tower"}},{"when":{"part":"60"},"apply":{"model":"lyycore:block/spatial_transmission_tower"}},{"when":{"part":"62"},"apply":{"model":"lyycore:block/spatial_transmission_tower"}},{"when":{"part":"63"},"apply":{"model":"lyycore:block/spatial_transmission_tower"}},{"when":{"part":"65"},"apply":{"model":"lyycore:block/spatial_transmission_tower"}},{"when":{"part":"69"},"apply":{"model":"lyycore:block/spatial_transmission_tower"}},{"when":{"part":"71"},"apply":{"model":"lyycore:block/spatial_transmission_tower"}}]}
+{
+  "multipart": [
+    {
+      "when": {
+        "part": "0"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower/body_0"
+      }
+    },
+    {
+      "when": {
+        "part": "1"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower/body_1"
+      }
+    },
+    {
+      "when": {
+        "part": "2"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower/body_2"
+      }
+    },
+    {
+      "when": {
+        "part": "3"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower/body_3"
+      }
+    },
+    {
+      "when": {
+        "part": "4"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower/body_4"
+      }
+    },
+    {
+      "when": {
+        "part": "5"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower/body_5"
+      }
+    },
+    {
+      "when": {
+        "part": "6"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower/body_6"
+      }
+    },
+    {
+      "when": {
+        "part": "7"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower/body_7"
+      }
+    },
+    {
+      "when": {
+        "part": "8"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower/body_8"
+      }
+    },
+    {
+      "when": {
+        "part": "9"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower/body_9"
+      }
+    },
+    {
+      "when": {
+        "part": "10"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower/body_10"
+      }
+    },
+    {
+      "when": {
+        "part": "11"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower/body_11"
+      }
+    },
+    {
+      "when": {
+        "part": "12"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower/body_12"
+      }
+    },
+    {
+      "when": {
+        "part": "13"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower/body_13"
+      }
+    },
+    {
+      "when": {
+        "part": "14"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower/body_14"
+      }
+    },
+    {
+      "when": {
+        "part": "15"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower/body_15"
+      }
+    },
+    {
+      "when": {
+        "part": "16"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower/body_16"
+      }
+    },
+    {
+      "when": {
+        "part": "17"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower/body_17"
+      }
+    },
+    {
+      "when": {
+        "part": "18"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower/body_18"
+      }
+    },
+    {
+      "when": {
+        "part": "19"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower/body_19"
+      }
+    },
+    {
+      "when": {
+        "part": "20"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower/body_20"
+      }
+    },
+    {
+      "when": {
+        "part": "21"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower/body_21"
+      }
+    },
+    {
+      "when": {
+        "part": "22"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower/body_22"
+      }
+    },
+    {
+      "when": {
+        "part": "23"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower/body_23"
+      }
+    },
+    {
+      "when": {
+        "part": "24"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower/body_24"
+      }
+    },
+    {
+      "when": {
+        "part": "25"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower/body_25"
+      }
+    },
+    {
+      "when": {
+        "part": "26"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower/body_26"
+      }
+    },
+    {
+      "when": {
+        "part": "28"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower/body_28"
+      }
+    },
+    {
+      "when": {
+        "part": "30"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower/body_30"
+      }
+    },
+    {
+      "when": {
+        "part": "31"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower/body_31"
+      }
+    },
+    {
+      "when": {
+        "part": "32"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower/body_32"
+      }
+    },
+    {
+      "when": {
+        "part": "34"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower/body_34"
+      }
+    },
+    {
+      "when": {
+        "part": "37"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower/body_37"
+      }
+    },
+    {
+      "when": {
+        "part": "39"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower/body_39"
+      }
+    },
+    {
+      "when": {
+        "part": "40"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower/body_40"
+      }
+    },
+    {
+      "when": {
+        "part": "41"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower/body_41"
+      }
+    },
+    {
+      "when": {
+        "part": "43"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower/body_43"
+      }
+    },
+    {
+      "when": {
+        "part": "48"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower/body_48"
+      }
+    },
+    {
+      "when": {
+        "part": "49"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower/body_49"
+      }
+    },
+    {
+      "when": {
+        "part": "50"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower/body_50"
+      }
+    },
+    {
+      "when": {
+        "part": "55"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower/body_55"
+      }
+    },
+    {
+      "when": {
+        "part": "57"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower/body_57"
+      }
+    },
+    {
+      "when": {
+        "part": "58"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower/body_58"
+      }
+    },
+    {
+      "when": {
+        "part": "59"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower/body_59"
+      }
+    },
+    {
+      "when": {
+        "part": "61"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower/body_61"
+      }
+    },
+    {
+      "when": {
+        "part": "64"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower/body_64"
+      }
+    },
+    {
+      "when": {
+        "part": "66"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower/body_66"
+      }
+    },
+    {
+      "when": {
+        "part": "67"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower/body_67"
+      }
+    },
+    {
+      "when": {
+        "part": "68"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower/body_68"
+      }
+    },
+    {
+      "when": {
+        "part": "70"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower/body_70"
+      }
+    },
+    {
+      "when": {
+        "part": "27"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower"
+      }
+    },
+    {
+      "when": {
+        "part": "29"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower"
+      }
+    },
+    {
+      "when": {
+        "part": "33"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower"
+      }
+    },
+    {
+      "when": {
+        "part": "35"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower"
+      }
+    },
+    {
+      "when": {
+        "part": "36"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower"
+      }
+    },
+    {
+      "when": {
+        "part": "38"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower"
+      }
+    },
+    {
+      "when": {
+        "part": "42"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower"
+      }
+    },
+    {
+      "when": {
+        "part": "44"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower"
+      }
+    },
+    {
+      "when": {
+        "part": "45"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower"
+      }
+    },
+    {
+      "when": {
+        "part": "46"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower"
+      }
+    },
+    {
+      "when": {
+        "part": "47"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower"
+      }
+    },
+    {
+      "when": {
+        "part": "51"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower"
+      }
+    },
+    {
+      "when": {
+        "part": "52"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower"
+      }
+    },
+    {
+      "when": {
+        "part": "53"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower"
+      }
+    },
+    {
+      "when": {
+        "part": "54"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower"
+      }
+    },
+    {
+      "when": {
+        "part": "56"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower"
+      }
+    },
+    {
+      "when": {
+        "part": "60"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower"
+      }
+    },
+    {
+      "when": {
+        "part": "62"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower"
+      }
+    },
+    {
+      "when": {
+        "part": "63"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower"
+      }
+    },
+    {
+      "when": {
+        "part": "65"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower"
+      }
+    },
+    {
+      "when": {
+        "part": "69"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower"
+      }
+    },
+    {
+      "when": {
+        "part": "71"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower"
+      }
+    },
+    {
+      "when": {
+        "part": "72"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower"
+      }
+    },
+    {
+      "when": {
+        "part": "73"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower"
+      }
+    },
+    {
+      "when": {
+        "part": "74"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower"
+      }
+    },
+    {
+      "when": {
+        "part": "75"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower"
+      }
+    },
+    {
+      "when": {
+        "part": "76"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower"
+      }
+    },
+    {
+      "when": {
+        "part": "77"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower"
+      }
+    },
+    {
+      "when": {
+        "part": "78"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower"
+      }
+    },
+    {
+      "when": {
+        "part": "79"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower"
+      }
+    },
+    {
+      "when": {
+        "part": "80"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower"
+      }
+    },
+    {
+      "when": {
+        "part": "81"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower"
+      }
+    },
+    {
+      "when": {
+        "part": "82"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower"
+      }
+    },
+    {
+      "when": {
+        "part": "83"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower"
+      }
+    },
+    {
+      "when": {
+        "part": "84"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower"
+      }
+    },
+    {
+      "when": {
+        "part": "85"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower"
+      }
+    },
+    {
+      "when": {
+        "part": "86"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower"
+      }
+    },
+    {
+      "when": {
+        "part": "87"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower"
+      }
+    },
+    {
+      "when": {
+        "part": "88"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower"
+      }
+    },
+    {
+      "when": {
+        "part": "89"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower"
+      }
+    },
+    {
+      "when": {
+        "part": "90"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower"
+      }
+    },
+    {
+      "when": {
+        "part": "91"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower"
+      }
+    },
+    {
+      "when": {
+        "part": "92"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower"
+      }
+    },
+    {
+      "when": {
+        "part": "93"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower"
+      }
+    },
+    {
+      "when": {
+        "part": "94"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower"
+      }
+    },
+    {
+      "when": {
+        "part": "95"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower"
+      }
+    },
+    {
+      "when": {
+        "part": "96"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower"
+      }
+    },
+    {
+      "when": {
+        "part": "97"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower"
+      }
+    },
+    {
+      "when": {
+        "part": "98"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower"
+      }
+    },
+    {
+      "when": {
+        "part": "99"
+      },
+      "apply": {
+        "model": "lyycore:block/spatial_transmission_tower"
+      }
+    }
+  ]
+}

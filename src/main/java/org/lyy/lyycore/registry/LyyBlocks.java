@@ -28,6 +28,10 @@ import java.util.Map;
 
 public class LyyBlocks {
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(LyyCore.MODID);
+    public static final DeferredBlock<PureSmeltingPlantBlock> PURE_SMELTING_PLANT_SHELL = BLOCKS.register("pure_smelting_plant_shell", () -> new PureSmeltingPlantBlock(false));
+    public static final DeferredBlock<PureSmeltingPlantBlock> PURE_SMELTING_PLANT = BLOCKS.register("pure_smelting_plant", () -> new PureSmeltingPlantBlock(true));
+    public static final DeferredBlock<ImaginaryDragonNestBlock> IMAGINARY_DRAGON_NEST = BLOCKS.register("imaginary_dragon_nest", ImaginaryDragonNestBlock::new);
+    public static final DeferredBlock<Block> IMAGINARY_STEEL_BLOCK = BLOCKS.register("imaginary_steel_block", () -> new Block(BlockBehaviour.Properties.of().strength(6).sound(SoundType.METAL)));
     public static final DeferredBlock<AlloyCauldronBlock> ALLOY_CAULDRON = BLOCKS.register("alloy_cauldron", AlloyCauldronBlock::new);
     public static final DeferredBlock<MindControlBeaconBlock> MIND_CONTROL_BEACON = BLOCKS.register("mind_control_beacon", MindControlBeaconBlock::new);
     public static final DeferredBlock<ImaginaryCondensingBeaconBlock> IMAGINARY_CONDENSING_BEACON = BLOCKS.register("imaginary_condensing_beacon", ImaginaryCondensingBeaconBlock::new);
@@ -73,6 +77,10 @@ public class LyyBlocks {
     public static final DeferredBlock<ImaginaryCraftingTableBlock> IMAGINARY_CRAFTING_TABLE =
             BLOCKS.register("imaginary_crafting_table", ImaginaryCraftingTableBlock::new);
 
+    public static final DeferredBlock<PhantomMatrixBlock> PHANTOM_MATRIX = BLOCKS.register("phantom_matrix", PhantomMatrixBlock::new);
+    public static final DeferredBlock<FissionFurnaceBlock> FISSION_FURNACE = BLOCKS.register("fission_furnace", FissionFurnaceBlock::new);
+    public static final DeferredBlock<SummoningAltarBlock> SUMMONING_ALTAR = BLOCKS.register("summoning_altar", SummoningAltarBlock::new);
+    public static final DeferredBlock<SummoningPedestalBlock> SUMMONING_PEDESTAL = BLOCKS.register("summoning_pedestal", SummoningPedestalBlock::new);
     // Simple ore blocks — no custom class needed
     public static final DeferredBlock<Block> IMAGINIUM_ORE =
             BLOCKS.register("imaginium_ore", () -> new Block(BlockBehaviour.Properties.of()

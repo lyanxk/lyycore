@@ -1,0 +1,27 @@
+{
+  "icon": {
+    "id": "lyycore:dragon_might"
+  },
+  "rarity": "special",
+  "experience_points": 6000,
+  "prerequisites": [
+    "lyycore:research/what_now",
+    "lyycore:research/giant_dragon",
+    "lyycore:research/ritual"
+  ],
+  "materials": [
+    {
+      "id": "lyycore:endless_erosion",
+      "count": 1
+    }
+  ],
+  "title": "research.lyycore.in_our_hands.title",
+  "summary": "research.lyycore.in_our_hands.summary",
+  "description": "research.lyycore.in_our_hands.description",
+  "production": {
+    "result": {
+      "id": "lyycore:dragon_might"
+    },
+    "duration": 6000
+  }
+}

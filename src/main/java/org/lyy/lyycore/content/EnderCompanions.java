@@ -25,6 +25,7 @@ import org.lyy.lyycore.registry.LyyEntities;
 @EventBusSubscriber(modid = "lyycore")
 public final class EnderCompanions {
     public static final ResourceLocation RESEARCH = ResourceLocation.parse("lyycore:research/ender_sentry");
+    public static final ResourceLocation EVOLUTION = ResourceLocation.parse("lyycore:research/giant_dragon");
     public static final int DAY_TICKS = 24000, MAX_AGE = 10 * DAY_TICKS, EGG_INTERVAL = 1200 * 20;
     private static final String KEY = "lyycore:ender_companion";
     private EnderCompanions() { }
@@ -37,7 +38,47 @@ public final class EnderCompanions {
         }
         return persisted.getCompound(KEY);
     }
-    public static int age(Player player) { return Math.clamp(data(player).getInt("Age"), 0, MAX_AGE); }
+    public static boolean evolved(Player player) { return ResearchProgress.completed(player, EVOLUTION); }
+    public static org.lyy.lyycore.content.blockEntities.ImaginaryDragonNestBlockEntity boundNest(ServerPlayer player) {
+        var tag = data(player);
+        if (!tag.getBoolean("Nest")) return null;
+        var dimension = ResourceLocation.tryParse(tag.getString("HomeDimension"));
+        var level = dimension == null ? null : player.server.getLevel(ResourceKey.create(Registries.DIMENSION, dimension));
+        var pos = BlockPos.of(tag.getLong("Home"));
+        return level != null && level.hasChunkAt(pos)
+                && level.getBlockEntity(pos) instanceof org.lyy.lyycore.content.blockEntities.ImaginaryDragonNestBlockEntity nest
+                && nest.canUse(player) ? nest : null;
+    }
+    public static int age(Player player) { return evolved(player) ? 20 * DAY_TICKS : Math.clamp(data(player).getInt("Age"), 0, MAX_AGE); }
+    public static void evolve(ServerPlayer player) {
+        data(player).putInt("Age", 20 * DAY_TICKS);
+        data(player).putInt("EggTicks", 0);
+        var active = active(player);
+        if (active != null) active.setGrowth(age(player));
+    }
+    public static boolean isNest(Player player, net.minecraft.resources.ResourceKey<net.minecraft.world.level.Level> dimension, BlockPos pos) {
+        var tag = data(player);
+        return tag.getBoolean("Nest") && tag.getLong("Home") == pos.asLong() && tag.getString("HomeDimension").equals(dimension.location().toString());
+    }
+    public static void bindNest(ServerPlayer player, BlockPos pos) {
+        var tag = data(player);
+        var active = active(player);
+        if (!tag.contains("Home") && active != null) {
+            tag.putLong("Home", active.sentry().asLong()); tag.putString("HomeDimension", active.level().dimension().location().toString());
+        }
+        recall(player);
+        var dimension = ResourceLocation.tryParse(tag.getString("HomeDimension"));
+        var oldLevel = dimension == null ? null : player.server.getLevel(ResourceKey.create(Registries.DIMENSION, dimension));
+        if (oldLevel != null && tag.contains("Home")) {
+            var old = BlockPos.of(tag.getLong("Home"));
+            if (oldLevel != player.level() || !old.equals(pos)) {
+                var state = oldLevel.getBlockState(old);
+                boolean ownedNest = oldLevel.getBlockEntity(old) instanceof org.lyy.lyycore.content.blockEntities.ImaginaryDragonNestBlockEntity nest && nest.canUse(player);
+                if (state.is(org.lyy.lyycore.registry.LyyBlocks.ENDER_SENTRY.get()) || ownedNest) oldLevel.destroyBlock(old, false);
+            }
+        }
+        tag.putLong("Home", pos.asLong()); tag.putString("HomeDimension", player.level().dimension().location().toString()); tag.putBoolean("Nest", true);
+    }
     public static boolean ownsActive(Player player, EnderCompanion dragon) {
         CompoundTag tag = data(player);
         return tag.hasUUID("Active") && tag.getUUID("Active").equals(dragon.getUUID());
@@ -58,6 +99,7 @@ public final class EnderCompanions {
     }
     public static void toggle(ServerPlayer player, BlockPos sentry) {
         if (!player.isAlive() || player.isSpectator()) return;
+        if (evolved(player)) { message(player, "evolved"); return; }
         if (!ResearchProgress.completed(player, RESEARCH)) {
             message(player, "unknown");
             return;
@@ -71,6 +113,7 @@ public final class EnderCompanions {
         CompoundTag tag = data(player);
         tag.putUUID("Active", dragon.getUUID());
         tag.putString("Dimension", player.level().dimension().location().toString());
+        tag.putLong("Home", sentry.asLong()); tag.putString("HomeDimension", player.level().dimension().location().toString()); tag.putBoolean("Nest", false);
         message(player, "summoned", age(player) / DAY_TICKS);
     }
     private static boolean placeBesideSentry(EnderCompanion dragon, BlockPos sentry) {
@@ -85,6 +128,7 @@ public final class EnderCompanions {
     }
     /** Called only by the valid, ticking summoned entity. No background player or world scans. */
     public static void tick(ServerPlayer player, EnderCompanion dragon) {
+        if (evolved(player)) { dragon.setGrowth(20 * DAY_TICKS); return; }
         CompoundTag tag = data(player);
         int previousAge = age(player);
         if (previousAge < MAX_AGE) tag.putInt("Age", previousAge + 1);

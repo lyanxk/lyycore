@@ -17,7 +17,7 @@ public final class EnergyMachineRenderer<T extends BlockEntity> implements Block
     }
     @Override public AABB getRenderBoundingBox(T machine) {
         int height = ((SquareMachineBlock) machine.getBlockState().getBlock()).height();
-        return new AABB(machine.getBlockPos()).inflate(1, 0, 1).expandTowards(0, height - 1, 0);
+        return new AABB(machine.getBlockPos()).inflate(((SquareMachineBlock)machine.getBlockState().getBlock()).width() / 2, 0, ((SquareMachineBlock)machine.getBlockState().getBlock()).width() / 2).expandTowards(0, height - 1, 0);
     }
     @Override public void render(T machine, float partial, PoseStack pose, MultiBufferSource buffers, int light, int overlay) {
         if (machine.getLevel() == null) return;

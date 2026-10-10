@@ -19,12 +19,16 @@ import org.lyy.lyycore.registry.LyyEffects;
 /** Innate weapon execution, independent of style and skill unlocks. */
 @EventBusSubscriber(modid = "lyycore")
 public final class WingsAttack {
+    public static final int PURSUIT_HIT_TICKS = 13, PURSUIT_DURATION_TICKS = 28;
+    private static final net.minecraft.resources.ResourceLocation BLAZING_PURSUIT = net.minecraft.resources.ResourceLocation.parse("lyycore:research/blazing_pursuit");
     private static final Map<ServerPlayer, State> STATES = new WeakHashMap<>();
     private static final class State {
         int lastAttackTick = Integer.MIN_VALUE;
         int busyUntil;
+        Pursuit pursuit;
         final List<Volley> pending = new ArrayList<>();
     }
+    private record Pursuit(LivingEntity target, int hitAt) { }
     private static final class Volley {
         final LivingEntity target;
         final WingsTier tier;
@@ -46,6 +50,15 @@ public final class WingsAttack {
         var state = STATES.computeIfAbsent(player, ignored -> new State());
         int tick = player.server.getTickCount();
         if (state.lastAttackTick == tick) return false;
+        if (org.lyy.lyycore.content.ResearchProgress.completed(player, BLAZING_PURSUIT)) {
+            // All feathers belong to this clip until recall finishes.
+            if (busy(player)) return false;
+            state.lastAttackTick = tick;
+            state.busyUntil = player.tickCount + PURSUIT_DURATION_TICKS;
+            state.pursuit = new Pursuit(target, player.tickCount + PURSUIT_HIT_TICKS);
+            WingsNetwork.pursuit(player, target);
+            return true;
+        }
         state.lastAttackTick = tick;
         var tier = AegisWings.tier(player);
         state.busyUntil = player.tickCount + (int)Math.ceil(FeatherAttack.duration(tier.featherCount()) * 20);
@@ -64,6 +77,13 @@ public final class WingsAttack {
         var state = STATES.get(player);
         if (state == null) return;
         if (!canAttack(player)) { STATES.remove(player); return; }
+        var pursuit = state.pursuit;
+        if (pursuit != null && player.tickCount >= pursuit.hitAt) {
+            state.pursuit = null;
+            var target = pursuit.target;
+            if (target.isAlive() && !target.isRemoved() && target.level() == player.level())
+                CombatDamage.hit(player, target, CombatDamage.source(player, "blazing_pursuit"), 640);
+        }
         for (var iterator = state.pending.iterator(); iterator.hasNext();) {
             var volley = iterator.next();
             if (!volley.target.isAlive() || volley.target.level() != player.level() || volley.target.isRemoved()) {
@@ -79,6 +99,9 @@ public final class WingsAttack {
     }
 
     @SubscribeEvent public static void logout(PlayerEvent.PlayerLoggedOutEvent event) {
+        if (event.getEntity() instanceof ServerPlayer player) STATES.remove(player);
+    }
+    @SubscribeEvent public static void dimension(PlayerEvent.PlayerChangedDimensionEvent event) {
         if (event.getEntity() instanceof ServerPlayer player) STATES.remove(player);
     }
     @SubscribeEvent public static void stopped(ServerStoppedEvent event) { STATES.clear(); }

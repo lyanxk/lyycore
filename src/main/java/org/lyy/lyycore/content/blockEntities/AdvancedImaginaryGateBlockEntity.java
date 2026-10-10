@@ -39,8 +39,7 @@ public final class AdvancedImaginaryGateBlockEntity extends ImaginaryGateBlockEn
         super(LyyBlockEntities.ADVANCED_IMAGINARY_GATE.get(), pos, state);
     }
     @Override protected EntityType<? extends Mob> summonType(ItemStack offering) {
-        if (offering.is(LyyItems.PROOF.get())) return LyyEntities.GUIDING_LIGHT.get();
-        return offering.is(LyyItems.SMALL_IMAGINARY_CORE.get()) ? LyyEntities.LIFE_REVEL.get() : super.summonType(offering);
+        return org.lyy.lyycore.content.GateSummoning.type(offering, true);
     }
     private static List<BlockPos> columns() {
         List<BlockPos> result = new ArrayList<>();

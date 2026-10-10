@@ -71,7 +71,7 @@ public class ImaginaryGateBlock extends BaseEntityBlock {
     }
     @Override protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
         BlockPos controller = controllerPos(pos, state);
-        if (player instanceof ServerPlayer server && level.getBlockEntity(controller) instanceof ImaginaryGateBlockEntity gate)
+        if (player instanceof ServerPlayer server && level.getBlockEntity(controller) instanceof ImaginaryGateBlockEntity gate && !gate.interceptOpening(server))
             server.openMenu(gate, controller);
         return InteractionResult.sidedSuccess(level.isClientSide);
     }

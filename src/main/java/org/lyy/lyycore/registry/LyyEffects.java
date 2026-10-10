@@ -12,6 +12,9 @@ import org.lyy.lyycore.LyyCore;
 
 public final class LyyEffects {
     public static final DeferredRegister<MobEffect> EFFECTS = DeferredRegister.create(Registries.MOB_EFFECT, LyyCore.MODID);
+    public static final DeferredHolder<MobEffect, MobEffect> DRAGON_FIRE = EFFECTS.register("dragon_fire", org.lyy.lyycore.content.DragonFireEffect::new);
+    public static final DeferredHolder<MobEffect, MobEffect> LIFE_CURSE = EFFECTS.register("life_curse", () -> new MobEffect(MobEffectCategory.HARMFUL, 0x815EC7) {}
+            .addAttributeModifier(Attributes.MAX_HEALTH, ResourceLocation.parse("lyycore:life_curse"), -2, AttributeModifier.Operation.ADD_VALUE));
     public static final DeferredHolder<MobEffect, MobEffect> FLIGHT_SPEED = EFFECTS.register("flight_speed", () -> new MobEffect(MobEffectCategory.BENEFICIAL, 0xFFD1EC) {});
     public static final DeferredHolder<MobEffect, MobEffect> NETHER_VISION = harmful("nether_vision", 0x9A47C4);
     public static final DeferredHolder<MobEffect, MobEffect> STOMACH_THUNDER = harmful("stomach_thunder", 0xE9C46A);

@@ -23,7 +23,7 @@
       "item": "lyycore:imaginary_alloy_forge"
     },
     "A": {
-      "item": "lyycore:alloy_block"
+      "tag": "lyycore:imaginary_alloy_blocks"
     }
   },
   "result": {

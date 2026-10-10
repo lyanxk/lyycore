@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "lyycore:pure_imaginary_steel"
+    },
+    {
+      "item": "lyycore:pure_imaginary_steel"
+    },
+    {
+      "item": "lyycore:pure_imaginary_steel"
+    },
+    {
+      "item": "lyycore:pure_imaginary_steel"
+    }
+  ],
+  "result": {
+    "id": "lyycore:imaginary_steel_block",
+    "count": 1
+  }
+}

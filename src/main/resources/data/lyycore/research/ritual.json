@@ -1,0 +1,35 @@
+{
+  "icon": {
+    "id": "lyycore:friendly_proof"
+  },
+  "rarity": "high",
+  "experience_points": 0,
+  "prerequisites": [
+    "lyycore:research/what_now"
+  ],
+  "materials": [
+    {
+      "id": "lyycore:amplification_potion"
+    },
+    {
+      "id": "lyycore:control_crystal"
+    },
+    {
+      "id": "minecraft:leather",
+      "count": 64
+    },
+    {
+      "id": "minecraft:white_wool",
+      "count": 64
+    }
+  ],
+  "title": "research.lyycore.ritual.title",
+  "summary": "research.lyycore.ritual.summary",
+  "description": "research.lyycore.ritual.description",
+  "production": {
+    "result": {
+      "id": "lyycore:friendly_proof"
+    },
+    "duration": 600
+  }
+}

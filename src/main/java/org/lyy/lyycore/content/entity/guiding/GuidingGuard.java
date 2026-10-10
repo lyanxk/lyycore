@@ -1,5 +1,6 @@
 package org.lyy.lyycore.content.entity.guiding;
 
+import org.lyy.lyycore.content.entity.AnimatedMonster;
 import java.util.UUID;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.*;
@@ -14,7 +15,7 @@ import net.minecraft.world.phys.Vec3;
 import org.lyy.lyycore.registry.LyyEntities;
 
 /** Both guards share ownership and down/revive rules; only their attack style differs. */
-public final class GuidingGuard extends GuidingMob {
+public final class GuidingGuard extends AnimatedMonster {
     private static final EntityDataAccessor<Boolean> DOWN = SynchedEntityData.defineId(GuidingGuard.class, EntityDataSerializers.BOOLEAN);
     private UUID encounter;
     private int downTicks, conviction, shotDelay = 40;

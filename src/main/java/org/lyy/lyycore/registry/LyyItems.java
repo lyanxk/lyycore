@@ -20,6 +20,11 @@ import java.util.Map;
 
 public class LyyItems {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(LyyCore.MODID);
+    public static final DeferredItem<BlockItem> PURE_SMELTING_PLANT_SHELL = ITEMS.registerSimpleBlockItem(LyyBlocks.PURE_SMELTING_PLANT_SHELL);
+    public static final DeferredItem<BlockItem> PURE_SMELTING_PLANT = ITEMS.registerSimpleBlockItem(LyyBlocks.PURE_SMELTING_PLANT);
+    public static final DeferredItem<BlockItem> IMAGINARY_DRAGON_NEST = ITEMS.registerSimpleBlockItem(LyyBlocks.IMAGINARY_DRAGON_NEST);
+    public static final DeferredItem<BlockItem> IMAGINARY_STEEL_BLOCK = ITEMS.registerSimpleBlockItem(LyyBlocks.IMAGINARY_STEEL_BLOCK);
+    public static final DeferredItem<Item> PURE_IMAGINARY_STEEL = ITEMS.registerSimpleItem("pure_imaginary_steel");
     public static final DeferredItem<BlockItem> ALLOY_CAULDRON = ITEMS.registerSimpleBlockItem(LyyBlocks.ALLOY_CAULDRON);
     public static final DeferredItem<BlockItem> MIND_CONTROL_BEACON = ITEMS.registerSimpleBlockItem(LyyBlocks.MIND_CONTROL_BEACON);
     public static final DeferredItem<Item> CONTROL_CRYSTAL = ITEMS.registerSimpleItem("control_crystal", new Item.Properties().rarity(Rarity.EPIC));
@@ -31,6 +36,7 @@ public class LyyItems {
     public static final DeferredItem<ExperimentPotionItem> ADHESIVE_POTION = potion("adhesive_potion", ExperimentPotionItem.Kind.ADHESIVE);
     public static final DeferredItem<Item> GUIDING_REAGENT = ITEMS.registerSimpleItem("guiding_reagent", new Item.Properties().stacksTo(1));
     public static final DeferredItem<Item> PROOF = ITEMS.registerSimpleItem("proof", new Item.Properties().rarity(Rarity.EPIC));
+    public static final DeferredItem<Item> FRIENDLY_PROOF = ITEMS.registerSimpleItem("friendly_proof");
     public static final DeferredItem<ExperienceFoodItem> UNEXTINGUISHED_DESIRE = ITEMS.registerItem("unextinguished_desire",
             properties -> new ExperienceFoodItem(properties, 1000), new Item.Properties().rarity(Rarity.EPIC));
     private static DeferredItem<ExperimentPotionItem> potion(String name, ExperimentPotionItem.Kind kind) {
@@ -63,6 +69,17 @@ public class LyyItems {
             ITEMS.registerItem("imaginary_grapple", ImaginaryGrappleItem::new,
                     new Item.Properties().stacksTo(1).rarity(Rarity.RARE));
 
+    public static final DeferredItem<Item> ENERGY_CORE = ITEMS.registerSimpleItem("energy_core");
+    public static final DeferredItem<DragonMightItem> DRAGON_MIGHT = ITEMS.registerItem("dragon_might", DragonMightItem::new, new Item.Properties().stacksTo(1).rarity(Rarity.EPIC));
+    public static final DeferredItem<Item> AMPLIFICATION_POTION = ITEMS.registerSimpleItem("amplification_potion", new Item.Properties().stacksTo(1));
+    public static final DeferredItem<ExperienceFoodItem> ENDLESS_EROSION = ITEMS.registerItem("endless_erosion",
+            properties -> new ExperienceFoodItem(properties, 3000), new Item.Properties().rarity(Rarity.EPIC));
+    public static final DeferredItem<Item> JUMP_POTION = ITEMS.registerSimpleItem("jump_potion", new Item.Properties().stacksTo(1));
+    public static final DeferredItem<Item> PROPULSION_POTION = ITEMS.registerSimpleItem("propulsion_potion", new Item.Properties().stacksTo(1));
+    public static final DeferredItem<BlockItem> PHANTOM_MATRIX = ITEMS.registerSimpleBlockItem(LyyBlocks.PHANTOM_MATRIX);
+    public static final DeferredItem<BlockItem> FISSION_FURNACE = ITEMS.registerSimpleBlockItem(LyyBlocks.FISSION_FURNACE);
+    public static final DeferredItem<BlockItem> SUMMONING_ALTAR = ITEMS.registerSimpleBlockItem(LyyBlocks.SUMMONING_ALTAR);
+    public static final DeferredItem<BlockItem> SUMMONING_PEDESTAL = ITEMS.registerSimpleBlockItem(LyyBlocks.SUMMONING_PEDESTAL);
     // Custom items
     public static final DeferredItem<SonnetBowItem> WHISPER_OF_THE_PAST =
             ITEMS.registerItem("whisper_of_the_past", SonnetBowItem::new,
@@ -115,6 +132,9 @@ public class LyyItems {
             ITEMS.registerSimpleBlockItem(LyyBlocks.IGB);
 
     static {
+        // The altar material is the existing summoning crystal; migrate the former duplicate.
+        ITEMS.addAlias(ResourceLocation.fromNamespaceAndPath(LyyCore.MODID, "summoning_core"),
+                CONTROL_CRYSTAL.getId());
         // Resolve old item stacks and datapack references to the renamed item.
         // Saving those stacks again writes the canonical imaginary_crystal ID.
         ITEMS.addAlias(ResourceLocation.fromNamespaceAndPath(LyyCore.MODID, "raw_imaginium"),

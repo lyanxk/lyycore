@@ -1,0 +1,3 @@
+Built-in image_gen, transparent background.
+Endless Erosion: compact faceted violet-blue crystal core containing an endless dark magenta spiral, white-pink facets, crisp Minecraft pixel art, single centered object, no text or frame.
+Asset: src/main/resources/assets/lyycore/textures/item/endless_erosion.png

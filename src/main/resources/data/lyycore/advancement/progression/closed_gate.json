@@ -1,0 +1,28 @@
+{
+  "parent": "lyycore:progression/too_great",
+  "display": {
+    "icon": {
+      "id": "lyycore:advanced_imaginary_gate"
+    },
+    "title": {
+      "translate": "advancement.lyycore.closed_gate.title"
+    },
+    "description": {
+      "translate": "advancement.lyycore.closed_gate.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "meteor": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "requirements": [
+    [
+      "meteor"
+    ]
+  ]
+}

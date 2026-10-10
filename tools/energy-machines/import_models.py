@@ -27,8 +27,9 @@ def clip_polygon(vertices, axis, boundary, sign):
     return result
 
 
-def import_machine(folder, name, height):
-    source = json.loads((SOURCE / folder / "source" / f"{folder}.bbmodel").read_text(encoding="utf-8"))
+def import_machine(folder, name, height, source_name=None, oriented=False, width=3, source_offset=(0, 0, 0)):
+    source = json.loads((SOURCE / folder / "source" / f"{source_name or folder}.bbmodel").read_text(encoding="utf-8"))
+    source.setdefault("animations", [])
     paths, texture_map, emissive = [], {}, set()
     for i, texture in enumerate(source["textures"]):
         filename = texture["name"]
@@ -44,7 +45,7 @@ def import_machine(folder, name, height):
     texture_map["particle"] = texture_map["0"]
     bake(source, name, paths)
     mesh = json.loads((ASSETS / "geometry" / f"{name}.json").read_text(encoding="utf-8"))
-    bones, clip = mesh["bones"], next(iter(mesh["animations"].values()))
+    bones, clip = mesh["bones"], next(iter(mesh["animations"].values()), {"tracks": {}})
     moving = set()
     for i, bone in enumerate(bones):
         tracks = clip["tracks"].get(str(i), {})
@@ -63,9 +64,12 @@ def import_machine(folder, name, height):
                 parent = bones[bone["parent"]]["pivot"] if bone["parent"] >= 0 else [0, 0, 0]
                 p = [v+(pivot-origin+offset)/16 for v,pivot,origin,offset in zip(p,bone["pivot"],parent,value("position",[0,0,0]))]
             index = bone["parent"]
-        return p if normal else [p[0]+0.5, p[1], p[2]+0.5]
+        return p if normal else [p[0]+0.5-source_offset[0]/16, p[1]-source_offset[1]/16, p[2]+0.5-source_offset[2]/16]
 
-    parts = {(part, layer): [] for part in range(height*9) for layer in ("body", "glass")}
+    cell_count = height * width * width
+    def cell_origin(part):
+        return [part % width-width//2, part//(width*width), part//width%width-width//2]
+    parts = {(part, layer): [] for part in range(cell_count) for layer in ("body", "glass")}
     item = []
     def face_json(vertices, texture):
         return {"texture": str(texture), "emissive": texture in emissive,
@@ -73,14 +77,15 @@ def import_machine(folder, name, height):
     for index, bone in enumerate(bones):
         for face in bone["faces"]:
             vertices = [world(v, index) + v[3:5] for v in face["vertices"]]
-            icon = [[(v[0]-0.5)/height+0.5, v[1]/height, (v[2]-0.5)/height+0.5, *v[3:]] for v in vertices]
+            size = max(height, width)
+            icon = [[(v[0]-0.5)/size+0.5, v[1]/size, (v[2]-0.5)/size+0.5, *v[3:]] for v in vertices]
             item.append(face_json(icon, face["texture"]))
             if index in moving: continue
             layer = "glass" if "glass" in paths[face["texture"]] else "body"
-            for part in range(height*9):
-                origin = [part % 3-1, part//9, part//3%3-1]
+            for part in range(cell_count):
+                origin = cell_origin(part)
                 # Assign a surface on an exact cell boundary to only one of its neighbors.
-                limits = [2, height, 2]
+                limits = [width//2+1, height, width//2+1]
                 if any(max(v[a] for v in vertices) < origin[a]-1e-8
                        or min(v[a] for v in vertices) > origin[a]+1+1e-8
                        or (min(v[a] for v in vertices) >= origin[a]+1-1e-8 and origin[a]+1 < limits[a]) for a in range(3)): continue
@@ -106,9 +111,13 @@ def import_machine(folder, name, height):
     # A model is also needed for empty reserved cells and command-created out-of-range parts.
     write(ASSETS / "models/block" / f"{name}.json", {"textures": texture_map, "elements": []})
     used = {part for (part, layer), faces in parts.items() if faces}
-    for part in range(72):
+    for part in range(cell_count if oriented else 100):
         if part not in used:
             multipart.append({"when": {"part": str(part)}, "apply": {"model": f"lyycore:block/{name}"}})
+    if oriented:
+        multipart = [{"when": dict(entry["when"], facing=facing),
+                      "apply": dict(entry["apply"], y=angle)}
+                     for entry in multipart for facing, angle in (("north", 0), ("east", 90), ("south", 180), ("west", 270))]
     write(ASSETS / "blockstates" / f"{name}.json", {"multipart": multipart})
     write(ASSETS / "models/item" / f"{name}.json", dict(common, parent="minecraft:block/block", faces=item,
           render_type="minecraft:translucent", display={"gui": {"rotation": [20, 30, 0], "scale": [0.9]*3},
@@ -128,7 +137,7 @@ def import_machine(folder, name, height):
             else: walk(child, index_counter)
     counter = [0]
     for node in source["outliner"]: walk(node, counter)
-    boxes = [[] for _ in range(height*9)]
+    boxes = [[] for _ in range(cell_count)]
     for element in source["elements"]:
         if not element.get("export", True): continue
         if element.get("type", "cube") == "cube":
@@ -142,8 +151,8 @@ def import_machine(folder, name, height):
         if any(b-a < 0.001 for a,b in zip(low,high)): continue
         # Quantized boxes keep collision shapes compact, even on highly detailed models.
         low = [math.floor(v*16+1e-6)/16 for v in low]; high = [math.ceil(v*16-1e-6)/16 for v in high]
-        for part in range(height*9):
-            origin = [part%3-1, part//9, part//3%3-1]
+        for part in range(cell_count):
+            origin = cell_origin(part)
             a, b = [max(0,v-o) for v,o in zip(low,origin)], [min(1,v-o) for v,o in zip(high,origin)]
             if all(x<y for x,y in zip(a,b)): boxes[part].append(a+b)
     write(ASSETS / "geometry" / f"{name}_shapes.json", boxes)

@@ -17,7 +17,7 @@ final class AegisWingsLayer extends RenderLayer<AbstractClientPlayer, PlayerMode
     @Override public void render(PoseStack pose, MultiBufferSource buffers, int light, AbstractClientPlayer player,
                                  float walk, float speed, float partial, float age, float yaw, float pitch) {
         if (!AegisWings.unlocked(player) || player.isInvisible() || player.isSpectator()) return;
-        if (WingsScoopRenderer.active(player)) return;
+        if (WingsScoopRenderer.active(player) || WingsPursuitRenderer.active(player)) return;
         if (AegisWings.level(player) >= 2) {
             var animation = FourWingAnimation.get(player);
             animation.update(player, partial);

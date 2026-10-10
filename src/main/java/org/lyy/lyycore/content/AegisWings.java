@@ -17,6 +17,7 @@ import org.lyy.lyycore.registry.LyyEffects;
 public final class AegisWings {
     public static final ResourceLocation RESEARCH = ResourceLocation.parse("lyycore:research/why_cant_people_fly");
     public static final ResourceLocation ENHANCEMENT = ResourceLocation.parse("lyycore:research/wings_enhancement");
+    public static final ResourceLocation SPEED_UP = ResourceLocation.parse("lyycore:research/speed_up");
     private static final String HIDDEN = "lyycore:wings_hidden", CLIENT_LEVEL = "lyycore:wings_client_level";
     private static final String LEVEL = "lyycore:wings_level";
     private static final String SHIELD_STARTED = "lyycore:wings_shield_started";
@@ -63,7 +64,10 @@ public final class AegisWings {
                 || player.hasEffect(LyyEffects.CRYSTALLIZATION)) return false;
         var velocity = player.getDeltaMovement();
         var profile = tier.flightBoost();
-        var boosted = profile.accelerate(velocity, player.getLookAngle());
+        boolean enhanced = player.level().isClientSide ? player.getPersistentData().getBoolean("lyycore:speed_up") : ResearchProgress.completed(player, SPEED_UP);
+        var boosted = enhanced && profile.acceleration() > 0
+                ? velocity.add(player.getLookAngle().normalize().scale(profile.acceleration() * 2))
+                : profile.accelerate(velocity, player.getLookAngle());
         if (boosted.equals(velocity)) return false;
         player.setDeltaMovement(boosted);
         return true;

@@ -75,20 +75,21 @@ public class BaseImaginaryGeneratorBlockEntity extends BlockEntity {
                     if (cur.equals(origin)) continue;
                     if (!level.hasChunkAt(cur)) continue;
 
-                    BlockPos receiver = EnergyReceiver.controller(level, cur);
-                    if (!level.hasChunkAt(receiver) || receivers.contains(receiver)) continue;
+                    var endpoint = EnergyReceiver.resolve(level, cur);
+                    if (!endpoint.loaded(level) || receivers.contains(endpoint.controller())) continue;
+                    BlockPos receiver = endpoint.input();
 
                     Target nativeTarget = findImaginaryTarget(cur, receiver);
                     if (nativeTarget != null) {
                         savedTargets.add(nativeTarget);
-                        receivers.add(receiver);
+                        receivers.add(endpoint.controller());
                         continue;
                     }
 
                     IEnergyStorage unsided = level.getCapability(Capabilities.EnergyStorage.BLOCK, receiver, null);
                     if (unsided != null && unsided.canReceive()) {
                         savedTargets.add(new Target(cur.immutable(), receiver.immutable(), null, false));
-                        receivers.add(receiver);
+                        receivers.add(endpoint.controller());
                         continue;
                     }
 
@@ -96,7 +97,7 @@ public class BaseImaginaryGeneratorBlockEntity extends BlockEntity {
                         IEnergyStorage sided = level.getCapability(Capabilities.EnergyStorage.BLOCK, receiver, side);
                         if (sided != null && sided.canReceive()) {
                             savedTargets.add(new Target(cur.immutable(), receiver.immutable(), side, false));
-                            receivers.add(receiver);
+                            receivers.add(endpoint.controller());
                             break;
                         }
                     }
@@ -137,8 +138,9 @@ public class BaseImaginaryGeneratorBlockEntity extends BlockEntity {
         Iterator<Target> iterator = be.savedTargets.iterator();
         while (iterator.hasNext()) {
             Target target = iterator.next();
+            var endpoint = EnergyReceiver.resolve(level, target.connection());
             if (!level.hasChunkAt(target.connection()) || !level.hasChunkAt(target.pos())
-                    || !EnergyReceiver.controller(level, target.connection()).equals(target.pos())) {
+                    || !endpoint.loaded(level) || !endpoint.input().equals(target.pos())) {
                 iterator.remove();
                 continue;
             }

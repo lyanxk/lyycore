@@ -35,6 +35,8 @@ public class LyyJeiPlugin implements IModPlugin {
 
     @Override
     public void registerCategories(IRecipeCategoryRegistration reg) {
+        reg.addRecipeCategories(new FissionCategory(reg.getJeiHelpers().getGuiHelper()));
+        reg.addRecipeCategories(new PureSmeltingCategory(reg.getJeiHelpers().getGuiHelper()));
         reg.addRecipeCategories(new AlloyCauldronCategory(reg.getJeiHelpers().getGuiHelper()));
         reg.addRecipeCategories(new ImaginaryAlloyingCategory(reg.getJeiHelpers().getGuiHelper()));
         reg.addRecipeCategories(new ImaginaryCraftingCategory<>(reg.getJeiHelpers().getGuiHelper(), LyyJeiTypes.IMAGINARY_CRAFTING, LyyBlocks.IMAGINARY_CRAFTING_TABLE.get()));
@@ -47,6 +49,8 @@ public class LyyJeiPlugin implements IModPlugin {
 
     @Override
     public void registerRecipes(IRecipeRegistration reg) {
+        reg.addItemStackInfo(new ItemStack(org.lyy.lyycore.registry.LyyItems.DRAGON_MIGHT.get()), net.minecraft.network.chat.Component.translatable("research.lyycore.in_our_hands.description"));
+        reg.addItemStackInfo(new ItemStack(org.lyy.lyycore.registry.LyyItems.FRIENDLY_PROOF.get()), net.minecraft.network.chat.Component.translatable("research.lyycore.ritual.description"));
         reg.addRecipes(AlloyCauldronCategory.TYPE, org.lyy.lyycore.content.cauldron.CauldronMixes.specials());
         Minecraft mc = Minecraft.getInstance();
         RecipeManager rm = null;
@@ -82,6 +86,9 @@ public class LyyJeiPlugin implements IModPlugin {
                     modRecipeCount, modRecipeIds);
         }
         reg.addRecipes(LyyJeiTypes.IMAGINARY_ALLOYING, recipes);
+        reg.addRecipes(PureSmeltingCategory.TYPE, rm.getAllRecipesFor(LyyRecipes.PURE_SMELTING.get()).stream().map(RecipeHolder::value).toList());
+        reg.addRecipes(FissionCategory.TYPE, rm.getAllRecipesFor(net.minecraft.world.item.crafting.RecipeType.SMELTING).stream().map(RecipeHolder::value).toList());
+        reg.addItemStackInfo(new ItemStack(LyyBlocks.PURE_SMELTING_PLANT_SHELL.get()), net.minecraft.network.chat.Component.translatable("jei.lyycore.pure_smelting.activation"));
         reg.addRecipes(LyyJeiTypes.IMAGINARY_CONDENSING, rm.getAllRecipesFor(LyyRecipes.IMAGINARY_CONDENSING.get()).stream().map(RecipeHolder::value).toList());
         reg.addRecipes(LyyJeiTypes.IMAGINARY_CRAFTING, rm.getAllRecipesFor(LyyRecipes.IMAGINARY_CRAFTING.get())
                 .stream().map(RecipeHolder::value).toList());
@@ -97,6 +104,7 @@ public class LyyJeiPlugin implements IModPlugin {
 
     @Override
     public void registerGuiHandlers(IGuiHandlerRegistration reg) {
+        reg.addRecipeClickArea(org.lyy.lyycore.client.screen.FissionFurnaceScreen.class, 62, 38, 36, 20, FissionCategory.TYPE);
         reg.addGuiContainerHandler(ImaginaryCraftingScreen.class, new IGuiContainerHandler<ImaginaryCraftingScreen>() {
             @Override public java.util.Collection<IGuiClickableArea> getGuiClickableAreas(ImaginaryCraftingScreen screen, double x, double y) {
                 var types = screen.getMenu().condensing() ? new mezz.jei.api.recipe.RecipeType<?>[]{LyyJeiTypes.IMAGINARY_CONDENSING, LyyJeiTypes.IMAGINARY_CRAFTING}
@@ -125,6 +133,8 @@ public class LyyJeiPlugin implements IModPlugin {
 
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration reg) {
+        reg.addRecipeCatalyst(new ItemStack(LyyBlocks.FISSION_FURNACE.get()), FissionCategory.TYPE);
+        reg.addRecipeCatalyst(new ItemStack(LyyBlocks.PURE_SMELTING_PLANT.get()), PureSmeltingCategory.TYPE);
         reg.addRecipeCatalyst(new ItemStack(LyyBlocks.ALLOY_CAULDRON.get()), AlloyCauldronCategory.TYPE);
         reg.addRecipeCatalyst(new ItemStack(LyyBlocks.IMAGINARY_CONDENSING_BEACON.get()), LyyJeiTypes.IMAGINARY_CONDENSING, LyyJeiTypes.IMAGINARY_CRAFTING);
         reg.addRecipeCatalyst(new ItemStack(LyyBlocks.IMAGINARY_CRAFTING_TABLE.get()), LyyJeiTypes.IMAGINARY_CRAFTING);
@@ -137,6 +147,7 @@ public class LyyJeiPlugin implements IModPlugin {
 
     @Override
     public void registerRecipeTransferHandlers(IRecipeTransferRegistration reg) {
+        reg.addRecipeTransferHandler(org.lyy.lyycore.content.menu.FissionFurnaceMenu.class, LyyMenus.FISSION_FURNACE.get(), FissionCategory.TYPE, 0, 1, 3, 36);
         reg.addRecipeTransferHandler(new ImaginaryCraftingTransferInfo<>(reg.getTransferHelper(), LyyJeiTypes.IMAGINARY_CRAFTING, false));
         reg.addRecipeTransferHandler(new ImaginaryCraftingTransferInfo<>(reg.getTransferHelper(), LyyJeiTypes.IMAGINARY_CONDENSING, true));
         reg.addRecipeTransferHandler(IAFMenu.class, LyyMenus.IAF_MENU.get(),

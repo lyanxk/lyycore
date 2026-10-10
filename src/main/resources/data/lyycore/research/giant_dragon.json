@@ -1,0 +1,35 @@
+{
+  "icon": {
+    "id": "lyycore:imaginary_dragon_nest"
+  },
+  "rarity": "special",
+  "materials": [
+    {
+      "id": "minecraft:dragon_breath",
+      "count": 64
+    },
+    {
+      "id": "lyycore:imaginary_steel_block",
+      "count": 64
+    },
+    {
+      "id": "lyycore:crystal_block",
+      "count": 64
+    }
+  ],
+  "experience_points": 0,
+  "prerequisites": [
+    "lyycore:research/what_now",
+    "lyycore:research/high_purity",
+    "lyycore:research/ender_sentry"
+  ],
+  "title": "research.lyycore.giant_dragon.title",
+  "summary": "research.lyycore.giant_dragon.summary",
+  "description": "research.lyycore.giant_dragon.description",
+  "production": {
+    "result": {
+      "id": "lyycore:imaginary_dragon_nest"
+    },
+    "duration": 1200
+  }
+}

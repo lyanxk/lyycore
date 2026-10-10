@@ -1,0 +1,64 @@
+{
+  "type": "lyycore:pure_smelting",
+  "result": {
+    "id": "lyycore:energy_core"
+  },
+  "duration": 4800,
+  "inputs": [
+    {
+      "ingredient": {
+        "item": "lyycore:crystal_block"
+      },
+      "count": 64
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:crystal_block"
+      },
+      "count": 64
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:crystal_block"
+      },
+      "count": 64
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:crystal_block"
+      },
+      "count": 64
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:crystal_block"
+      },
+      "count": 64
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:crystal_block"
+      },
+      "count": 64
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:crystal_block"
+      },
+      "count": 64
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:crystal_block"
+      },
+      "count": 64
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:crystal_block"
+      },
+      "count": 64
+    }
+  ],
+  "result_count": 1
+}

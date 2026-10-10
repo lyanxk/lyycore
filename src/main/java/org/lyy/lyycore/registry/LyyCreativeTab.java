@@ -17,6 +17,16 @@ public class LyyCreativeTab {
                     .icon(() -> new ItemStack(LyyItems.IMAGINARY_ALLOY_INGOT.get()))
                     .title(Component.literal("LyyCore"))
                     .displayItems((params, output) -> {
+                        output.accept(LyyItems.PURE_SMELTING_PLANT_SHELL.get()); output.accept(LyyItems.PURE_SMELTING_PLANT.get());
+                        output.accept(LyyItems.PURE_IMAGINARY_STEEL.get()); output.accept(LyyItems.IMAGINARY_STEEL_BLOCK.get());
+                        output.accept(LyyItems.ENERGY_CORE.get());
+                        output.accept(LyyItems.JUMP_POTION.get());
+                        output.accept(LyyItems.PROPULSION_POTION.get());
+                        output.accept(LyyItems.PHANTOM_MATRIX.get());
+                        output.accept(LyyItems.FISSION_FURNACE.get());
+                        output.accept(LyyItems.SUMMONING_ALTAR.get());
+                        output.accept(LyyItems.SUMMONING_PEDESTAL.get());
+                        output.accept(LyyItems.IMAGINARY_DRAGON_NEST.get());
                         output.accept(LyyBlocks.ALLOY_CAULDRON.get()); output.accept(LyyBlocks.MIND_CONTROL_BEACON.get());
                         output.accept(LyyItems.CONTROL_CRYSTAL.get()); output.accept(LyyItems.CONTROL_ENHANCEMENT_POTION.get());
                         output.accept(LyyItems.ADHESIVE_POTION.get()); output.accept(LyyItems.BLUE_POTION.get());
@@ -32,6 +42,10 @@ public class LyyCreativeTab {
                         output.accept(LyyItems.SMALL_IMAGINARY_CORE.get());
                         output.accept(LyyItems.GUIDING_REAGENT.get());
                         output.accept(LyyItems.PROOF.get());
+                        output.accept(LyyItems.FRIENDLY_PROOF.get());
+                        output.accept(LyyItems.DRAGON_MIGHT.get());
+                        output.accept(LyyItems.AMPLIFICATION_POTION.get());
+                        output.accept(LyyItems.ENDLESS_EROSION.get());
                         output.accept(LyyItems.UNEXTINGUISHED_DESIRE.get());
                         output.accept(LyyItems.HEART_OF_NOTHINGNESS.get());
                         output.accept(LyyItems.IMAGINARY_CONDENSING_BEACON.get());

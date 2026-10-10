@@ -2,13 +2,13 @@
   "type": "lyycore:imaginary_crafting",
   "ingredients": [
     {
-      "item": "lyycore:alloy_block"
+      "tag": "lyycore:imaginary_alloy_blocks"
     },
     {
       "item": "lyycore:crystal_block"
     },
     {
-      "item": "lyycore:imaginary_alloy_ingot"
+      "tag": "lyycore:imaginary_alloy"
     },
     {
       "item": "minecraft:glass_bottle"
@@ -26,7 +26,7 @@
       "item": "minecraft:glass_bottle"
     },
     {
-      "item": "lyycore:imaginary_alloy_ingot"
+      "tag": "lyycore:imaginary_alloy"
     }
   ],
   "result": {

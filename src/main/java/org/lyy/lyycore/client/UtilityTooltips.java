@@ -17,7 +17,13 @@ public final class UtilityTooltips {
     public static void onTooltip(ItemTooltipEvent event) {
         var id = BuiltInRegistries.ITEM.getKey(event.getItemStack().getItem());
         if (!id.getNamespace().equals(LyyCore.MODID)) return;
+        if (id.getPath().equals("summoning_altar")) {
+            event.getToolTip().add(Component.translatable("tooltip.lyycore.summoning_altar").withStyle(style -> style.withColor(0xA8767B)));
+            return;
+        }
         String hint = switch (id.getPath()) {
+            case "dragon_might", "amplification_potion", "endless_erosion", "friendly_proof" -> "";
+            case "pure_smelting_plant_shell", "pure_smelting_plant", "pure_imaginary_steel", "imaginary_dragon_nest" -> "";
             case "mind_control_beacon" -> "open";
             case "imaginary_energy_cell", "imaginary_alloy_forge", "crystal_condensing_frame" -> "open";
             case "tree_gathering_frame", "overworld_gathering_frame", "mineral_gathering_frame", "nether_gathering_frame" -> "open";

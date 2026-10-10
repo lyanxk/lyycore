@@ -1,0 +1,38 @@
+{
+  "type": "lyycore:imaginary_condensing",
+  "ingredients": [
+    {
+      "item": "lyycore:control_crystal"
+    },
+    {
+      "item": "lyycore:imaginary_steel_block"
+    },
+    {
+      "item": "lyycore:imaginary_steel_block"
+    },
+    {
+      "item": "lyycore:imaginary_steel_block"
+    },
+    {
+      "item": "lyycore:imaginary_steel_block"
+    },
+    {
+      "item": "lyycore:imaginary_steel_block"
+    },
+    {
+      "item": "lyycore:imaginary_steel_block"
+    },
+    {
+      "item": "lyycore:imaginary_steel_block"
+    },
+    {
+      "item": "lyycore:imaginary_steel_block"
+    }
+  ],
+  "result": {
+    "id": "lyycore:summoning_altar"
+  },
+  "duration": 1200,
+  "energy": 10000,
+  "energy_per_tick": true
+}

@@ -6,7 +6,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 ASSETS = ROOT / "src/main/resources/assets/lyycore"
-SOURCE = ROOT.parent / "blockbench"
+SOURCE = Path("F:/misc/BlockBench")
 helpers = runpy.run_path(str(ROOT / "tools/energy-machines/import_models.py"))
 write = helpers["write"]
 

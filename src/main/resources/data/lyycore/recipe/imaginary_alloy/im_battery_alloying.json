@@ -1,12 +1,21 @@
 {
   "type": "lyycore:imaginary_alloying",
   "inputs": [
-    { "item": "lyycore:imaginary_alloy_ingot" },
-    { "item": "minecraft:diamond_block" }
+    {
+      "tag": "lyycore:imaginary_alloy"
+    },
+    {
+      "item": "minecraft:diamond_block"
+    }
   ],
-  "catalyst": { "item": "minecraft:nether_brick" },
+  "catalyst": {
+    "item": "minecraft:nether_brick"
+  },
   "catalyst_consumed": false,
-  "result": { "id": "lyycore:im_battery", "count": 1 },
+  "result": {
+    "id": "lyycore:im_battery",
+    "count": 1
+  },
   "process_time": 100,
   "energy_cost": 50
 }

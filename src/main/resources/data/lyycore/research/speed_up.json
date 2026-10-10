@@ -1,0 +1,18 @@
+{
+  "icon": {
+    "id": "lyycore:propulsion_potion"
+  },
+  "rarity": "medium",
+  "materials": [
+    {
+      "id": "lyycore:propulsion_potion"
+    }
+  ],
+  "experience_points": 0,
+  "prerequisites": [
+    "lyycore:research/what_now"
+  ],
+  "title": "research.lyycore.speed_up.title",
+  "summary": "research.lyycore.speed_up.summary",
+  "description": "research.lyycore.speed_up.description"
+}

@@ -1,0 +1,40 @@
+{
+  "icon": {
+    "id": "lyycore:fission_furnace"
+  },
+  "rarity": "high",
+  "materials": [
+    {
+      "id": "minecraft:furnace",
+      "count": 64
+    },
+    {
+      "id": "minecraft:coal_block",
+      "count": 64
+    },
+    {
+      "id": "minecraft:blaze_rod",
+      "count": 64
+    },
+    {
+      "id": "minecraft:netherite_block",
+      "count": 64
+    },
+    {
+      "id": "lyycore:energy_core"
+    }
+  ],
+  "experience_points": 0,
+  "prerequisites": [
+    "lyycore:research/what_now"
+  ],
+  "title": "research.lyycore.fission.title",
+  "summary": "research.lyycore.fission.summary",
+  "description": "research.lyycore.fission.description",
+  "production": {
+    "result": {
+      "id": "lyycore:fission_furnace"
+    },
+    "duration": 6000
+  }
+}

@@ -20,6 +20,14 @@ import org.lyy.lyycore.content.menu.ImaginaryReaperMenu;
 public class LyyMenus {
     public static final DeferredRegister<MenuType<?>> MENUS =
             DeferredRegister.create(Registries.MENU, LyyCore.MODID);
+    public static final DeferredHolder<MenuType<?>, MenuType<org.lyy.lyycore.content.menu.DragonControlMenu>> DRAGON_CONTROL =
+            MENUS.register("dragon_control", () -> IMenuTypeExtension.create(org.lyy.lyycore.content.menu.DragonControlMenu::new));
+    public static final DeferredHolder<MenuType<?>, MenuType<org.lyy.lyycore.content.menu.FissionFurnaceMenu>> FISSION_FURNACE =
+            MENUS.register("fission_furnace", () -> IMenuTypeExtension.create(org.lyy.lyycore.content.menu.FissionFurnaceMenu::new));
+    public static final DeferredHolder<MenuType<?>, MenuType<org.lyy.lyycore.content.menu.PureSmeltingMenu>> PURE_SMELTING =
+            MENUS.register("pure_smelting", () -> IMenuTypeExtension.create(org.lyy.lyycore.content.menu.PureSmeltingMenu::new));
+    public static final DeferredHolder<MenuType<?>, MenuType<org.lyy.lyycore.content.menu.DragonNestMenu>> DRAGON_NEST =
+            MENUS.register("dragon_nest", () -> IMenuTypeExtension.create(org.lyy.lyycore.content.menu.DragonNestMenu::new));
     public static final DeferredHolder<MenuType<?>, MenuType<org.lyy.lyycore.content.menu.MindControlMenu>> MIND_CONTROL =
             MENUS.register("mind_control", () -> IMenuTypeExtension.create(org.lyy.lyycore.content.menu.MindControlMenu::new));
     public static final DeferredHolder<MenuType<?>, MenuType<ImaginaryReaperMenu>> IMAGINARY_REAPER =

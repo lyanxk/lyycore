@@ -7,7 +7,7 @@
   ],
   "key": {
     "A": {
-      "item": "lyycore:imaginary_alloy_ingot"
+      "tag": "lyycore:imaginary_alloy"
     },
     "C": {
       "item": "lyycore:crystal_block"

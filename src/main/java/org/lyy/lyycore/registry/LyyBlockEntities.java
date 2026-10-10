@@ -21,6 +21,18 @@ import org.lyy.lyycore.content.blockEntities.ProductionLabBlockEntity;
 public class LyyBlockEntities {
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES =
             DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, LyyCore.MODID);
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<TargetedEnergySourceBlockEntity>> PHANTOM_MATRIX =
+            BLOCK_ENTITIES.register("phantom_matrix", () -> BlockEntityType.Builder.of(org.lyy.lyycore.content.blocks.PhantomMatrixBlock::create, LyyBlocks.PHANTOM_MATRIX.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<FissionFurnaceBlockEntity>> FISSION_FURNACE =
+            BLOCK_ENTITIES.register("fission_furnace", () -> BlockEntityType.Builder.of(FissionFurnaceBlockEntity::new, LyyBlocks.FISSION_FURNACE.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SummoningAltarBlockEntity>> SUMMONING_ALTAR =
+            BLOCK_ENTITIES.register("summoning_altar", () -> BlockEntityType.Builder.of(SummoningAltarBlockEntity::new, LyyBlocks.SUMMONING_ALTAR.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SummoningPedestalBlockEntity>> SUMMONING_PEDESTAL =
+            BLOCK_ENTITIES.register("summoning_pedestal", () -> BlockEntityType.Builder.of(SummoningPedestalBlockEntity::new, LyyBlocks.SUMMONING_PEDESTAL.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PureSmeltingPlantBlockEntity>> PURE_SMELTING_PLANT =
+            BLOCK_ENTITIES.register("pure_smelting_plant", () -> BlockEntityType.Builder.of(PureSmeltingPlantBlockEntity::new, LyyBlocks.PURE_SMELTING_PLANT.get(), LyyBlocks.PURE_SMELTING_PLANT_SHELL.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ImaginaryDragonNestBlockEntity>> IMAGINARY_DRAGON_NEST =
+            BLOCK_ENTITIES.register("imaginary_dragon_nest", () -> BlockEntityType.Builder.of(ImaginaryDragonNestBlockEntity::new, LyyBlocks.IMAGINARY_DRAGON_NEST.get()).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<AlloyCauldronBlockEntity>> ALLOY_CAULDRON =
             BLOCK_ENTITIES.register("alloy_cauldron", () -> BlockEntityType.Builder.of(AlloyCauldronBlockEntity::new, LyyBlocks.ALLOY_CAULDRON.get()).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<MindControlBeaconBlockEntity>> MIND_CONTROL_BEACON =

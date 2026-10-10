@@ -19,6 +19,17 @@ import org.lyy.lyycore.content.wings.WingsFlight;
 /** Sync wing state changes, guard starts and attacks, never per-tick animation packets. */
 @EventBusSubscriber(modid = "lyycore")
 public final class WingsNetwork {
+    public record Pursuit(int playerId, int targetId, long started, Vec3 target) implements CustomPacketPayload {
+        public static final Type<Pursuit> TYPE = new Type<>(ResourceLocation.parse("lyycore:wings_pursuit"));
+        public static final StreamCodec<RegistryFriendlyByteBuf, Pursuit> CODEC = StreamCodec.of((buf, value) -> {
+            buf.writeVarInt(value.playerId); buf.writeVarInt(value.targetId); buf.writeLong(value.started); buf.writeVec3(value.target);
+        }, buf -> new Pursuit(buf.readVarInt(), buf.readVarInt(), buf.readLong(), buf.readVec3()));
+        @Override public Type<Pursuit> type() { return TYPE; }
+    }
+    public static void pursuit(ServerPlayer player, LivingEntity target) {
+        PacketDistributor.sendToPlayersTrackingEntityAndSelf(player,
+                new Pursuit(player.getId(), target.getId(), player.level().getGameTime(), target.getBoundingBox().getCenter()));
+    }
     public record Scoop(int playerId, long started, Vec3 origin, float yaw) implements CustomPacketPayload {
         public static final Type<Scoop> TYPE = new Type<>(ResourceLocation.parse("lyycore:wings_scoop"));
         public static final StreamCodec<RegistryFriendlyByteBuf, Scoop> CODEC = StreamCodec.of((buf, value) -> {
@@ -63,6 +74,7 @@ public final class WingsNetwork {
         PacketDistributor.sendToPlayersTrackingEntityAndSelf(player, state(player));
     }
     @SubscribeEvent public static void register(RegisterPayloadHandlersEvent event) {
+        event.registrar("4").playToClient(Pursuit.TYPE, Pursuit.CODEC, (payload, context) -> org.lyy.lyycore.client.WingsPursuitRenderer.add(payload));
         event.registrar("4").playToClient(Scoop.TYPE, Scoop.CODEC, (payload, context) -> org.lyy.lyycore.client.WingsScoopRenderer.add(payload));
         event.registrar("4").playToServer(Boost.TYPE, Boost.CODEC, (payload, context) -> {
             if (context.player() instanceof ServerPlayer player) WingsFlight.input(player, payload.held);

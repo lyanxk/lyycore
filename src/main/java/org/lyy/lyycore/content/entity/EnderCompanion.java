@@ -55,7 +55,7 @@ public final class EnderCompanion extends PathfinderMob {
         setGrowth(EnderCompanions.age(player));
     }
     public void setGrowth(int age) {
-        int stage = age >= EnderCompanions.MAX_AGE ? 2 : age >= 5 * EnderCompanions.DAY_TICKS ? 1 : 0;
+        int stage = age >= 20 * EnderCompanions.DAY_TICKS ? 3 : age >= EnderCompanions.MAX_AGE ? 2 : age >= 5 * EnderCompanions.DAY_TICKS ? 1 : 0;
         if (stage == stage()) return;
         entityData.set(STAGE, stage);
         if (stage == 0) setFlying(false);
@@ -113,6 +113,7 @@ public final class EnderCompanion extends PathfinderMob {
     }
     @Override protected void customServerAiStep() {
         super.customServerAiStep();
+        if (stage() == 3) { setTarget(null); setFlying(false); navigation.stop(); return; }
         if (attackCooldown > 0) attackCooldown--;
         boolean withinChaseRange = distanceToSqr(sentry.getCenter()) <= CHASE_RANGE * CHASE_RANGE;
         if (getTarget() != null && (!withinChaseRange || !validTarget(getTarget(), CHASE_RANGE))) {
@@ -186,7 +187,7 @@ public final class EnderCompanion extends PathfinderMob {
         super.readAdditionalSaveData(tag);
         owner = tag.hasUUID("Owner") ? tag.getUUID("Owner") : null;
         sentry = BlockPos.of(tag.getLong("Sentry"));
-        entityData.set(STAGE, Math.clamp(tag.getInt("Stage"), 0, 2));
+        entityData.set(STAGE, Math.clamp(tag.getInt("Stage"), 0, 3));
         setFlying(stage() > 0 && tag.getBoolean("Flying"));
     }
 }

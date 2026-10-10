@@ -1,0 +1,14 @@
+{
+  "icon": {
+    "id": "minecraft:blaze_powder"
+  },
+  "rarity": "high",
+  "experience_points": 6000,
+  "prerequisites": [
+    "lyycore:research/what_now"
+  ],
+  "materials": [],
+  "title": "research.lyycore.blazing_pursuit.title",
+  "summary": "research.lyycore.blazing_pursuit.summary",
+  "description": "research.lyycore.blazing_pursuit.description"
+}

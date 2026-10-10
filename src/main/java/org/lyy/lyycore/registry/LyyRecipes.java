@@ -7,6 +7,7 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.lyy.lyycore.LyyCore;
 import org.lyy.lyycore.content.ResourceFrameKind;
+import org.lyy.lyycore.content.recipes.PureSmeltingRecipe;
 import org.lyy.lyycore.content.recipes.CrystalCondensingRecipe;
 import org.lyy.lyycore.content.recipes.ImaginaryAlloyingRecipe;
 import org.lyy.lyycore.content.recipes.ImaginaryCraftingRecipe;
@@ -18,6 +19,8 @@ import java.util.Map;
 public class LyyRecipes {
     public static final DeferredRegister<RecipeType<?>> RECIPE_TYPES =
             DeferredRegister.create(Registries.RECIPE_TYPE, LyyCore.MODID);
+    public static final DeferredHolder<RecipeType<?>, RecipeType<PureSmeltingRecipe>> PURE_SMELTING =
+            RECIPE_TYPES.register("pure_smelting", () -> new RecipeType<>() { @Override public String toString() { return "lyycore:pure_smelting"; } });
     public static final DeferredHolder<RecipeType<?>, RecipeType<ImaginaryCondensingRecipe>> IMAGINARY_CONDENSING =
             RECIPE_TYPES.register("imaginary_condensing", () -> new RecipeType<>() {
                 @Override public String toString() { return "lyycore:imaginary_condensing"; }
@@ -42,6 +45,8 @@ public class LyyRecipes {
 
     public static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS =
             DeferredRegister.create(Registries.RECIPE_SERIALIZER, LyyCore.MODID);
+    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<PureSmeltingRecipe>> PURE_SMELTING_SERIALIZER =
+            RECIPE_SERIALIZERS.register("pure_smelting", PureSmeltingRecipe.Serializer::new);
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<ImaginaryCondensingRecipe>> IMAGINARY_CONDENSING_SERIALIZER =
             RECIPE_SERIALIZERS.register("imaginary_condensing", ImaginaryCondensingRecipe.Serializer::new);
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<ImaginaryCraftingRecipe>> IMAGINARY_CRAFTING_SERIALIZER =

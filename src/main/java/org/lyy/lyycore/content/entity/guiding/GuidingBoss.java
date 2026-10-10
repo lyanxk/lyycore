@@ -1,5 +1,6 @@
 package org.lyy.lyycore.content.entity.guiding;
 
+import org.lyy.lyycore.content.entity.AnimatedMonster;
 import java.util.List;
 import java.util.UUID;
 import net.minecraft.core.BlockPos;
@@ -20,7 +21,7 @@ import org.lyy.lyycore.content.blockEntities.ImaginaryGateBlockEntity;
 import org.lyy.lyycore.registry.LyyEntities;
 
 /** Two encounter phases share targeting and persistence, with explicit non-overlapping actions. */
-public final class GuidingBoss extends GuidingMob {
+public final class GuidingBoss extends AnimatedMonster {
     public enum Action { WAIT, ABSORB, WANDER, CHASE, GRAB, PULL, DEVOUR, LASER, CRYSTALS }
     // Final balance values are centralized alongside the other attack timings.
     public static final float TRACKING_DAMAGE = 40;
@@ -291,6 +292,7 @@ public final class GuidingBoss extends GuidingMob {
                     GuidingEncounter.get(server).transition(encounter, next.getUUID(), GuidingEncounter.Phase.ABSORB);
                     next.initialize();
                     if (gate != null && server.getBlockEntity(gate) instanceof ImaginaryGateBlockEntity block) block.replaceActiveBoss(getUUID(), next.getUUID());
+                    if (gate != null && server.getBlockEntity(gate) instanceof org.lyy.lyycore.content.blockEntities.SummoningAltarBlockEntity altar) altar.replaceActiveBoss(getUUID(), next.getUUID());
                 }
             }
         }

@@ -7,8 +7,15 @@
     "III"
   ],
   "key": {
-    "A": { "item": "lyycore:imaginary_alloy_ingot" },
-    "I": { "item": "minecraft:iron_ingot" }
+    "A": {
+      "tag": "lyycore:imaginary_alloy"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    }
   },
-  "result": { "id": "lyycore:item_collector", "count": 1 }
+  "result": {
+    "id": "lyycore:item_collector",
+    "count": 1
+  }
 }

@@ -34,6 +34,20 @@ public class ImaginaryGateBlockEntity extends BlockEntity implements MenuProvide
     private int status;
     private UUID activeBoss;
     private UUID offeringPlayer;
+    private UUID meteor;
+    public boolean interceptOpening(net.minecraft.server.level.ServerPlayer player) {
+        if (meteor != null) return true;
+        var advancement = player.server.getAdvancements().get(net.minecraft.resources.ResourceLocation.parse("lyycore:progression/too_great"));
+        if (advancement == null || !player.getAdvancements().getOrStartProgress(advancement).isDone()) return false;
+        var entity = LyyEntities.GATE_METEOR.get().create(level);
+        if (entity == null) return false;
+        entity.aim(worldPosition);
+        if (!level.addFreshEntity(entity)) return false;
+        meteor = entity.getUUID(); setChanged();
+        var closed = player.server.getAdvancements().get(net.minecraft.resources.ResourceLocation.parse("lyycore:progression/closed_gate"));
+        if (closed != null) player.getAdvancements().award(closed, "meteor");
+        return true;
+    }
     private final ItemStackHandler items = new ItemStackHandler(1) {
         @Override public int getSlotLimit(int slot) { return 1; }
         @Override protected void onContentsChanged(int slot) { offeringPlayer = null; setChanged(); }
@@ -59,7 +73,7 @@ public class ImaginaryGateBlockEntity extends BlockEntity implements MenuProvide
     }
 
     protected EntityType<? extends Mob> summonType(ItemStack offering) {
-        return offering.is(LyyItems.CRYSTAL_BLOCK.get()) ? LyyEntities.IMAGINARY_GUARDIAN.get() : null;
+        return org.lyy.lyycore.content.GateSummoning.type(offering, false);
     }
     public boolean acceptsOffering(ItemStack stack) { return summonType(stack) != null; }
     public void replaceActiveBoss(UUID previous, UUID replacement) {
@@ -67,6 +81,7 @@ public class ImaginaryGateBlockEntity extends BlockEntity implements MenuProvide
     }
 
     public static void serverTick(Level level, BlockPos pos, BlockState state, ImaginaryGateBlockEntity gate) {
+        if (gate.meteor != null) return;
         if (level.getGameTime() % 10 != 0) return;
         ServerLevel server = (ServerLevel) level;
         gate.status = READY;
@@ -87,9 +102,7 @@ public class ImaginaryGateBlockEntity extends BlockEntity implements MenuProvide
         var boss = type.create(level);
         if (boss == null) return;
         boss.moveTo(spawn.x, spawn.y, spawn.z, state.getValue(ImaginaryGateBlock.FACING).toYRot(), 0);
-        if (boss instanceof ImaginaryGuardian guardian) guardian.beginSummoning(summoner);
-        if (boss instanceof LifeRevel revel) revel.beginSummoning(summoner);
-        if (boss instanceof org.lyy.lyycore.content.entity.guiding.GuidingBoss guiding) guiding.beginSummoning(summoner, pos);
+        org.lyy.lyycore.content.GateSummoning.begin(boss, summoner, pos);
         if (server.addFreshEntity(boss)) {
             // Credit the player who supplied the offering, not a nearby spectator.
             var contributor = gate.offeringPlayer == null ? null : server.getServer().getPlayerList().getPlayer(gate.offeringPlayer);
@@ -107,11 +120,13 @@ public class ImaginaryGateBlockEntity extends BlockEntity implements MenuProvide
         tag.put("Items", items.serializeNBT(registries));
         if (activeBoss != null) tag.putUUID("Guardian", activeBoss);
         if (offeringPlayer != null) tag.putUUID("OfferingPlayer", offeringPlayer);
+        if (meteor != null) tag.putUUID("Meteor", meteor);
     }
     @Override protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
         items.deserializeNBT(registries, tag.getCompound("Items"));
         activeBoss = tag.hasUUID("Guardian") ? tag.getUUID("Guardian") : null;
         offeringPlayer = tag.hasUUID("OfferingPlayer") ? tag.getUUID("OfferingPlayer") : null;
+        meteor = tag.hasUUID("Meteor") ? tag.getUUID("Meteor") : null;
     }
 }

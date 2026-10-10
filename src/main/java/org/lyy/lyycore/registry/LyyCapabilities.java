@@ -12,7 +12,19 @@ public class LyyCapabilities {
     public static final BlockCapability<ImaginaryEnergy, Direction> IMAGINARY_ENERGY = BlockCapability.createSided(
             ResourceLocation.fromNamespaceAndPath(LyyCore.MODID, "imaginary_energy"), ImaginaryEnergy.class);
 
+    private static org.lyy.lyycore.content.blockEntities.PureSmeltingPlantBlockEntity plant(net.minecraft.world.level.Level level, net.minecraft.core.BlockPos pos, net.minecraft.world.level.block.state.BlockState state) {
+        if (state.getValue(org.lyy.lyycore.content.blocks.LargeStructureBlock.PART) != org.lyy.lyycore.content.blocks.LargeStructureBlock.FRONT) return null;
+        var center = org.lyy.lyycore.content.blocks.LargeStructureBlock.center(pos, state);
+        return level.getBlockEntity(center) instanceof org.lyy.lyycore.content.blockEntities.PureSmeltingPlantBlockEntity plant && plant.active() ? plant : null;
+    }
     public static void register(RegisterCapabilitiesEvent event) {
+        event.registerBlockEntity(IMAGINARY_ENERGY, LyyBlockEntities.FISSION_FURNACE.get(), (be, side) -> be.energy);
+        event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, LyyBlockEntities.FISSION_FURNACE.get(), (be, side) -> be.fe);
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, LyyBlockEntities.FISSION_FURNACE.get(), (be, side) -> be.automation);
+        event.registerBlock(IMAGINARY_ENERGY, (level, pos, state, be, side) -> { var plant = plant(level, pos, state); return plant == null ? null : plant.energy; }, LyyBlocks.PURE_SMELTING_PLANT.get());
+        event.registerBlock(Capabilities.EnergyStorage.BLOCK, (level, pos, state, be, side) -> { var plant = plant(level, pos, state); return plant == null ? null : plant.fe; }, LyyBlocks.PURE_SMELTING_PLANT.get());
+        event.registerBlock(Capabilities.ItemHandler.BLOCK, (level, pos, state, be, side) -> { var plant = plant(level, pos, state); return plant == null ? null : plant.automation; }, LyyBlocks.PURE_SMELTING_PLANT.get());
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, LyyBlockEntities.IMAGINARY_DRAGON_NEST.get(), (be, side) -> be.output);
         event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, LyyBlockEntities.ALLOY_CAULDRON.get(), (be, side) -> be.water);
         event.registerBlock(IMAGINARY_ENERGY, (level, pos, state, be, side) -> {
             var center = org.lyy.lyycore.content.blocks.SquareMachineBlock.center(pos, state);

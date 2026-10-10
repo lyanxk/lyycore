@@ -21,6 +21,9 @@ public final class CauldronMixes {
     // First accessed by gameplay/JEI after registration, not while deferred items are being declared.
     private static final class Specials {
         private static final List<Special> RECIPES = List.of(
+                new Special(List.of(new ItemStack(LyyItems.UNEXTINGUISHED_DESIRE.get())), LyyItems.AMPLIFICATION_POTION.get()),
+                new Special(List.of(new ItemStack(Items.SUGAR, 64), new ItemStack(Items.RABBIT_FOOT)), LyyItems.JUMP_POTION.get()),
+                new Special(List.of(new ItemStack(Items.GUNPOWDER, 64), new ItemStack(Items.FIREWORK_ROCKET, 64), new ItemStack(LyyItems.IMAGINARY_CRYSTAL.get(), 64)), LyyItems.PROPULSION_POTION.get()),
                 new Special(List.of(new ItemStack(LyyItems.HEART_OF_NOTHINGNESS.get()), new ItemStack(Items.PHANTOM_MEMBRANE, 2),
                         new ItemStack(Items.DRAGON_EGG)), LyyItems.CONTROL_ENHANCEMENT_POTION.get()),
                 new Special(List.of(new ItemStack(Items.SLIME_BLOCK, 64), new ItemStack(Items.LAVA_BUCKET)), LyyItems.ADHESIVE_POTION.get()),

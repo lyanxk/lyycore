@@ -1,0 +1,1 @@
+{"parent":"lyycore:item/blue_potion","overrides":[{"predicate":{"custom_model_data":1},"model":"lyycore:item/jump_boost_icon"}]}

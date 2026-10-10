@@ -9,10 +9,10 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import org.lyy.lyycore.content.entity.guiding.GuidingBoss;
-import org.lyy.lyycore.content.entity.guiding.GuidingMob;
+import org.lyy.lyycore.content.entity.AnimatedMonster;
 
 /** Source models face -Z and use feet-origin coordinates; no humanoid transforms are applied. */
-public final class GuidingMobRenderer<T extends GuidingMob> extends EntityRenderer<T> {
+public final class GuidingMobRenderer<T extends AnimatedMonster> extends EntityRenderer<T> {
     private static final ResourceLocation TEXTURE = ResourceLocation.parse("lyycore:textures/entity/guiding/white_shell.png");
     private final AnimatedMeshModel model;
     private final AnimatedMeshModel shell;

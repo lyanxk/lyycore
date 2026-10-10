@@ -1,0 +1,1084 @@
+{
+  "multipart": [
+    {
+      "when": {
+        "part": "0",
+        "facing": "north"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_0",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "part": "0",
+        "facing": "east"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_0",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "part": "0",
+        "facing": "south"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_0",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "part": "0",
+        "facing": "west"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_0",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "part": "1",
+        "facing": "north"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_1",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "part": "1",
+        "facing": "east"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_1",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "part": "1",
+        "facing": "south"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_1",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "part": "1",
+        "facing": "west"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_1",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "part": "2",
+        "facing": "north"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_2",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "part": "2",
+        "facing": "east"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_2",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "part": "2",
+        "facing": "south"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_2",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "part": "2",
+        "facing": "west"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_2",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "part": "3",
+        "facing": "north"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_3",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "part": "3",
+        "facing": "east"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_3",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "part": "3",
+        "facing": "south"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_3",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "part": "3",
+        "facing": "west"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_3",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "part": "4",
+        "facing": "north"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_4",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "part": "4",
+        "facing": "east"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_4",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "part": "4",
+        "facing": "south"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_4",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "part": "4",
+        "facing": "west"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_4",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "part": "5",
+        "facing": "north"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_5",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "part": "5",
+        "facing": "east"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_5",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "part": "5",
+        "facing": "south"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_5",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "part": "5",
+        "facing": "west"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_5",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "part": "6",
+        "facing": "north"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_6",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "part": "6",
+        "facing": "east"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_6",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "part": "6",
+        "facing": "south"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_6",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "part": "6",
+        "facing": "west"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_6",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "part": "7",
+        "facing": "north"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_7",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "part": "7",
+        "facing": "east"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_7",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "part": "7",
+        "facing": "south"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_7",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "part": "7",
+        "facing": "west"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_7",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "part": "8",
+        "facing": "north"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_8",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "part": "8",
+        "facing": "east"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_8",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "part": "8",
+        "facing": "south"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_8",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "part": "8",
+        "facing": "west"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_8",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "part": "9",
+        "facing": "north"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_9",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "part": "9",
+        "facing": "east"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_9",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "part": "9",
+        "facing": "south"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_9",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "part": "9",
+        "facing": "west"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_9",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "part": "10",
+        "facing": "north"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_10",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "part": "10",
+        "facing": "east"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_10",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "part": "10",
+        "facing": "south"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_10",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "part": "10",
+        "facing": "west"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_10",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "part": "11",
+        "facing": "north"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_11",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "part": "11",
+        "facing": "east"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_11",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "part": "11",
+        "facing": "south"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_11",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "part": "11",
+        "facing": "west"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_11",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "part": "12",
+        "facing": "north"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_12",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "part": "12",
+        "facing": "east"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_12",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "part": "12",
+        "facing": "south"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_12",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "part": "12",
+        "facing": "west"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_12",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "part": "13",
+        "facing": "north"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_13",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "part": "13",
+        "facing": "east"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_13",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "part": "13",
+        "facing": "south"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_13",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "part": "13",
+        "facing": "west"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_13",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "part": "14",
+        "facing": "north"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_14",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "part": "14",
+        "facing": "east"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_14",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "part": "14",
+        "facing": "south"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_14",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "part": "14",
+        "facing": "west"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_14",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "part": "15",
+        "facing": "north"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_15",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "part": "15",
+        "facing": "east"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_15",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "part": "15",
+        "facing": "south"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_15",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "part": "15",
+        "facing": "west"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_15",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "part": "16",
+        "facing": "north"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_16",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "part": "16",
+        "facing": "east"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_16",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "part": "16",
+        "facing": "south"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_16",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "part": "16",
+        "facing": "west"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_16",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "part": "17",
+        "facing": "north"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_17",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "part": "17",
+        "facing": "east"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_17",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "part": "17",
+        "facing": "south"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_17",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "part": "17",
+        "facing": "west"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_17",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "part": "18",
+        "facing": "north"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_18",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "part": "18",
+        "facing": "east"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_18",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "part": "18",
+        "facing": "south"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_18",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "part": "18",
+        "facing": "west"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_18",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "part": "19",
+        "facing": "north"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_19",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "part": "19",
+        "facing": "east"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_19",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "part": "19",
+        "facing": "south"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_19",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "part": "19",
+        "facing": "west"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_19",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "part": "20",
+        "facing": "north"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_20",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "part": "20",
+        "facing": "east"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_20",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "part": "20",
+        "facing": "south"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_20",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "part": "20",
+        "facing": "west"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_20",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "part": "21",
+        "facing": "north"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_21",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "part": "21",
+        "facing": "east"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_21",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "part": "21",
+        "facing": "south"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_21",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "part": "21",
+        "facing": "west"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_21",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "part": "22",
+        "facing": "north"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_22",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "part": "22",
+        "facing": "east"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_22",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "part": "22",
+        "facing": "south"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_22",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "part": "22",
+        "facing": "west"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_22",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "part": "23",
+        "facing": "north"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_23",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "part": "23",
+        "facing": "east"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_23",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "part": "23",
+        "facing": "south"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_23",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "part": "23",
+        "facing": "west"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_23",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "part": "24",
+        "facing": "north"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_24",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "part": "24",
+        "facing": "east"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_24",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "part": "24",
+        "facing": "south"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_24",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "part": "24",
+        "facing": "west"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_24",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "part": "25",
+        "facing": "north"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_25",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "part": "25",
+        "facing": "east"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_25",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "part": "25",
+        "facing": "south"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_25",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "part": "25",
+        "facing": "west"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_25",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "part": "26",
+        "facing": "north"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_26",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "part": "26",
+        "facing": "east"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_26",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "part": "26",
+        "facing": "south"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_26",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "part": "26",
+        "facing": "west"
+      },
+      "apply": {
+        "model": "lyycore:block/pure_smelting_plant/body_26",
+        "y": 270
+      }
+    }
+  ]
+}

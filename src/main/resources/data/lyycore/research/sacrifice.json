@@ -1,0 +1,21 @@
+{
+  "icon": {
+    "id": "lyycore:control_crystal"
+  },
+  "rarity": "unknown",
+  "materials": [],
+  "experience_points": 4000,
+  "prerequisites": [
+    "lyycore:research/what_now"
+  ],
+  "title": "research.lyycore.sacrifice.title",
+  "summary": "research.lyycore.sacrifice.summary",
+  "description": "research.lyycore.sacrifice.description",
+  "production": {
+    "result": {
+      "id": "lyycore:control_crystal"
+    },
+    "duration": 6000
+  },
+  "dangerous": true
+}

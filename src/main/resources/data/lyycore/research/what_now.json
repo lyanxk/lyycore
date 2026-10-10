@@ -1,0 +1,13 @@
+{
+  "icon": {
+    "id": "lyycore:advanced_imaginary_gate"
+  },
+  "rarity": "special",
+  "materials": [],
+  "experience_points": 0,
+  "prerequisites": [],
+  "title": "research.lyycore.what_now.title",
+  "summary": "research.lyycore.what_now.summary",
+  "description": "research.lyycore.what_now.description",
+  "required_advancement": "lyycore:progression/closed_gate"
+}

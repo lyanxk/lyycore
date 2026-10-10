@@ -56,20 +56,3 @@
 - 默认关闭，不增加配方、物品、维度或服务器游戏机制。
 
 构建：`./gradlew.bat build --console=plain`。
-
-## 可重复渲染检查
-
-```powershell
-.\gradlew.bat -I tools/origin-sea-check/init.gradle runOriginSeaCheck --console=plain
-```
-
-该检查会启动独立的开发客户端，在 `build/origin-sea-check/run` 创建虚空测试存档，
-自动拍摄六个朝向、仰视、动画两帧、视觉海面及关闭后的画面，验证命令、失明/黑暗
-遮挡、资源重载和极佳画质模式后退出。结果和截图位于 `build/origin-sea-check`。
-另外用实际顶点 shader 的 GPU 输出检查全部 3200 个碎片：边缘块位置固定，脱落
-碎片下坠、翻转且保持在高空；逐像素比较
-同视角带/不带摇晃的天空，检查转头、FOV 和相机平移，并输出 4 秒动画序列至
-`motion-frames`；结果记录在 `motion-result.txt`。
-两根石英柱作为前景遮挡检查物，仅出现在这个测试存档。
-检查类仅由这个 Gradle 初始化脚本加入，正常构建的模组不包含测试入口。
-运行检查后再执行普通 `build`，即可得到不含检查类的发行 JAR。

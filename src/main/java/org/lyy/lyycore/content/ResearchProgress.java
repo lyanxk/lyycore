@@ -49,7 +49,11 @@ public final class ResearchProgress {
     }
     /** Require the components explicitly declared by a research definition; allow a used or renamed tool. */
     public static boolean matchesMaterial(ItemStack held, ItemStack cost) {
-        if (!ItemStack.isSameItem(held, cost)) return false;
+        if (!ItemStack.isSameItem(held, cost) && !(cost.is(net.minecraft.tags.ItemTags.WOOL) && held.is(net.minecraft.tags.ItemTags.WOOL))) {
+            String substitute = cost.is(org.lyy.lyycore.registry.LyyItems.IMAGINARY_ALLOY_INGOT.get()) ? "imaginary_alloy"
+                    : cost.is(org.lyy.lyycore.registry.LyyItems.ALLOY_BLOCK.get()) ? "imaginary_alloy_blocks" : null;
+            if (substitute == null || !held.is(net.minecraft.tags.ItemTags.create(ResourceLocation.fromNamespaceAndPath("lyycore", substitute)))) return false;
+        }
         for (var entry : cost.getComponentsPatch().entrySet()) {
             if (!java.util.Objects.equals(held.get(entry.getKey()), entry.getValue().orElse(null))) return false;
         }
@@ -97,6 +101,10 @@ public final class ResearchProgress {
             SkillSystem.setUnlocked(player, unlocked);
         }
         if (!value && id.equals(EnderCompanions.RESEARCH)) EnderCompanions.recall(player);
+        if (id.equals(EnderCompanions.EVOLUTION)) {
+            if (value) EnderCompanions.evolve(player);
+            else EnderCompanions.recall(player);
+        }
         if (id.equals(AegisWings.RESEARCH) || id.equals(AegisWings.ENHANCEMENT)) WingsNetwork.sync(player);
         if (id.equals(BasicSkills.RESEARCH)) {
             org.lyy.lyycore.content.skills.GuardSkill.reset(player);

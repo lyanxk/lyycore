@@ -1,0 +1,40 @@
+{
+  "type": "lyycore:pure_smelting",
+  "inputs": [
+    {
+      "ingredient": {
+        "item": "lyycore:crystal_block"
+      },
+      "count": 64
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:crystal_block"
+      },
+      "count": 64
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:crystal_block"
+      },
+      "count": 64
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:crystal_block"
+      },
+      "count": 64
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:iron_block"
+      },
+      "count": 64
+    }
+  ],
+  "result": {
+    "id": "lyycore:pure_imaginary_steel"
+  },
+  "result_count": 256,
+  "duration": 1200
+}

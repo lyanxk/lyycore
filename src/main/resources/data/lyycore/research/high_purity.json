@@ -1,0 +1,44 @@
+{
+  "icon": {
+    "id": "lyycore:unextinguished_desire"
+  },
+  "rarity": "high",
+  "materials": [
+    {
+      "id": "lyycore:alloy_block",
+      "count": 16
+    },
+    {
+      "id": "lyycore:crystal_block",
+      "count": 64
+    },
+    {
+      "id": "lyycore:crystal_block",
+      "count": 64
+    },
+    {
+      "id": "lyycore:crystal_block",
+      "count": 64
+    },
+    {
+      "id": "lyycore:crystal_block",
+      "count": 64
+    },
+    {
+      "id": "lyycore:imaginary_alloy_forge"
+    }
+  ],
+  "experience_points": 0,
+  "prerequisites": [
+    "lyycore:research/what_now"
+  ],
+  "title": "research.lyycore.high_purity.title",
+  "summary": "research.lyycore.high_purity.summary",
+  "description": "research.lyycore.high_purity.description",
+  "production": {
+    "result": {
+      "id": "lyycore:pure_smelting_plant_shell"
+    },
+    "duration": 6000
+  }
+}

@@ -1,15 +1,24 @@
 {
   "type": "lyycore:imaginary_crafting",
   "ingredients": [
-    { "item": "lyycore:im_battery" },
-    { "item": "lyycore:crystal_block" },
+    {
+      "item": "lyycore:im_battery"
+    },
+    {
+      "item": "lyycore:crystal_block"
+    },
     [],
     [],
     [],
-    { "item": "lyycore:imaginary_alloy_ingot" },
+    {
+      "tag": "lyycore:imaginary_alloy"
+    },
     [],
     [],
     []
   ],
-  "result": { "id": "lyycore:imaginary_disassembler", "count": 1 }
+  "result": {
+    "id": "lyycore:imaginary_disassembler",
+    "count": 1
+  }
 }

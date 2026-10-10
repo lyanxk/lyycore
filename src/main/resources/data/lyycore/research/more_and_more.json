@@ -1,0 +1,40 @@
+{
+  "icon": {
+    "id": "lyycore:phantom_matrix"
+  },
+  "rarity": "high",
+  "materials": [
+    {
+      "id": "lyycore:energy_core"
+    },
+    {
+      "id": "lyycore:imaginary_steel_block",
+      "count": 64
+    },
+    {
+      "id": "lyycore:imaginary_steel_block",
+      "count": 64
+    },
+    {
+      "id": "lyycore:imaginary_steel_block",
+      "count": 64
+    },
+    {
+      "id": "lyycore:imaginary_steel_block",
+      "count": 64
+    }
+  ],
+  "experience_points": 0,
+  "prerequisites": [
+    "lyycore:research/what_now"
+  ],
+  "title": "research.lyycore.more_and_more.title",
+  "summary": "research.lyycore.more_and_more.summary",
+  "description": "research.lyycore.more_and_more.description",
+  "production": {
+    "result": {
+      "id": "lyycore:phantom_matrix"
+    },
+    "duration": 6000
+  }
+}

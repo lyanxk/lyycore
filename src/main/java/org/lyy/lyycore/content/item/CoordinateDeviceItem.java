@@ -8,8 +8,8 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.context.UseOnContext;
-import org.lyy.lyycore.content.blocks.SquareMachineBlock;
-import org.lyy.lyycore.content.blockEntities.SpatialTransmissionTowerBlockEntity;
+import org.lyy.lyycore.energy.EnergyReceiver;
+import org.lyy.lyycore.content.blockEntities.TargetedEnergySourceBlockEntity;
 import java.util.List;
 
 public final class CoordinateDeviceItem extends Item {
@@ -24,16 +24,20 @@ public final class CoordinateDeviceItem extends Item {
         var level = context.getLevel();
         if (level.isClientSide) return InteractionResult.SUCCESS;
         var pos = context.getClickedPos();
-        var state = level.getBlockState(pos);
-        var controller = state.getBlock() instanceof SquareMachineBlock ? SquareMachineBlock.center(pos, state) : pos;
-        if (level.getBlockEntity(controller) instanceof SpatialTransmissionTowerBlockEntity tower && !player.isShiftKeyDown()) {
+        var controller = EnergyReceiver.controller(level, pos);
+        if (level.hasChunkAt(controller) && level.getBlockEntity(controller) instanceof TargetedEnergySourceBlockEntity tower && !player.isShiftKeyDown()) {
             var target = target(context.getItemInHand());
             if (target == null) player.displayClientMessage(Component.translatable("message.lyycore.coordinates.empty"), true);
             else {
-                boolean added = tower.addTarget(target);
-                player.displayClientMessage(Component.translatable(added ? "message.lyycore.coordinates.bound"
-                        : "message.lyycore.coordinates.already_bound", describe(target), tower.getTargetCount()), true);
-                if (added) context.getItemInHand().consume(1, player);
+                var result = tower.toggleTarget(target);
+                var message = switch (result) {
+                    case ADDED -> Component.translatable("message.lyycore.coordinates.bound", describe(target), tower.getTargetCount());
+                    case REMOVED -> Component.translatable("message.lyycore.coordinates.removed", describe(target), tower.getTargetCount());
+                    case LIMIT_REACHED -> Component.translatable("message.lyycore.coordinates.limit", tower.maxTargets());
+                };
+                player.displayClientMessage(message, true);
+                if (result != TargetedEnergySourceBlockEntity.BindingResult.LIMIT_REACHED)
+                    context.getItemInHand().consume(1, player);
             }
         } else {
             var target = GlobalPos.of(level.dimension(), pos);
@@ -47,6 +51,7 @@ public final class CoordinateDeviceItem extends Item {
     @Override public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> lines, TooltipFlag flag) {
         var target = target(stack);
         lines.add(Component.translatable("tooltip.lyycore.coordinates.use"));
+        lines.add(Component.translatable("tooltip.lyycore.coordinates.limit"));
         if (target != null) lines.add(Component.literal(describe(target)));
     }
 }
