@@ -87,7 +87,10 @@ public final class MindControlBeaconBlockEntity extends BlockEntity implements M
                     worldPosition.getX() + 30, worldPosition.getY() + 70, worldPosition.getZ() + 30));
         } else if (saved.setMode(binding, mode)) {
             for (var id : List.copyOf(binding.mobs)) for (var dimension : server.getServer().getAllLevels()) {
-                if (dimension.getEntity(id) instanceof Mob mob) { mob.setTarget(null); mob.getNavigation().stop(); break; }
+                if (dimension.getEntity(id) instanceof Mob mob) {
+                    if (!MindControl.executionOnly(mob)) { mob.setTarget(null); mob.getNavigation().stop(); }
+                    break;
+                }
             }
         }
         return true;

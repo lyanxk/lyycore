@@ -29,7 +29,12 @@ public final class MindControl {
                 && !(mob instanceof net.minecraft.world.entity.boss.wither.WitherBoss)
                 && !(mob instanceof ImaginaryGuardian) && !(mob instanceof LifeRevel);
     }
+    /** Crystal troops can be registered for execution, but never become controlled allies. */
+    public static boolean executionOnly(Mob mob) { return mob instanceof CrystalTroop; }
     public static MindControlData.Binding binding(Mob mob) {
+        return executionOnly(mob) ? null : registeredBinding(mob);
+    }
+    private static MindControlData.Binding registeredBinding(Mob mob) {
         var tag = mob.getPersistentData();
         if (!(mob.level() instanceof ServerLevel level) || !tag.hasUUID(OWNER) || !tag.hasUUID(BINDING)) return null;
         var binding = MindControlData.get(level).active(tag.getUUID(OWNER));
@@ -46,21 +51,26 @@ public final class MindControl {
         resolveLegacyExecution(mob, data);
         // Do not overwrite the only attribution in an incomplete legacy execution record.
         if (data.hasLegacyExecution(mob.getUUID())) return;
-        if (binding(mob) != null || !data.addMob(binding, mob.getUUID())) return;
+        if (registeredBinding(mob) != null || !data.addMob(binding, mob.getUUID())) return;
         mob.getPersistentData().putUUID(OWNER, binding.owner); mob.getPersistentData().putUUID(BINDING, binding.id);
-        mob.setTarget(null); install(mob);
+        if (!executionOnly(mob)) mob.setTarget(null);
+        install(mob);
     }
     private static void install(Mob mob) {
+        if (executionOnly(mob)) { removeControlGoals(mob); return; }
         mob.targetSelector.disableControlFlag(Goal.Flag.TARGET);
         if (mob.goalSelector.getAvailableGoals().stream().noneMatch(goal -> goal.getGoal() instanceof GatherGoal))
             mob.goalSelector.addGoal(-1, new GatherGoal(mob));
     }
-    private static void release(Mob mob) {
-        mob.getPersistentData().remove(OWNER); mob.getPersistentData().remove(BINDING);
+    private static void removeControlGoals(Mob mob) {
         mob.targetSelector.enableControlFlag(Goal.Flag.TARGET);
         var goals = mob.goalSelector.getAvailableGoals().stream().map(goal -> goal.getGoal()).filter(GatherGoal.class::isInstance).toList();
         goals.forEach(mob.goalSelector::removeGoal);
-        mob.setTarget(null);
+    }
+    private static void release(Mob mob) {
+        mob.getPersistentData().remove(OWNER); mob.getPersistentData().remove(BINDING);
+        removeControlGoals(mob);
+        if (!executionOnly(mob)) mob.setTarget(null);
     }
     private static boolean validEnemy(Mob mob, LivingEntity target) {
         return target instanceof Enemy && !(target instanceof Creeper) && target != mob && target.isAlive()
@@ -121,12 +131,13 @@ public final class MindControl {
         processExecution(mob);
         if (!mob.isAlive()) return;
         var data = MindControlData.get(level);
-        var binding = binding(mob);
+        var binding = registeredBinding(mob);
         if (binding == null) { release(mob); return; }
         var beaconLevel = level.getServer().getLevel(binding.beacon.dimension());
         if (beaconLevel != null && beaconLevel.hasChunkAt(binding.beacon.pos()) && !beaconLevel.getBlockState(binding.beacon.pos()).is(LyyBlocks.MIND_CONTROL_BEACON)) {
             data.release(binding.owner, binding.beacon); release(mob); return;
         }
+        if (executionOnly(mob)) return;
         if (binding.mode() != MindControlData.Mode.ATTACK) { if (mob.getTarget() != null) mob.setTarget(null); }
         else if (mob.tickCount % 20 == 0 && (mob.getTarget() == null || !validEnemy(mob, mob.getTarget()) || mob.distanceToSqr(mob.getTarget()) > 1024)) {
             var target = level.getEntitiesOfClass(LivingEntity.class, mob.getBoundingBox().inflate(24), entity -> validEnemy(mob, entity)).stream()
@@ -139,7 +150,7 @@ public final class MindControl {
         if (!(event.getEntity() instanceof Mob mob) || !(event.getLevel() instanceof ServerLevel level)
                 || mob.getRemovalReason() == null || !mob.getRemovalReason().shouldDestroy()) return;
         var data = MindControlData.get(level);
-        var binding = binding(mob);
+        var binding = registeredBinding(mob);
         if (binding != null) data.removeMob(binding, mob.getUUID());
         data.forgetExecution(mob.getUUID());
     }

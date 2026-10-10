@@ -25,14 +25,18 @@ public final class PureSmeltingPlantBlockEntity extends BlockEntity implements M
     public static final int BASE_IE_PER_TICK = 500;
     private int speed = 1, progress, outputCount;
     private ItemStack output = ItemStack.EMPTY;
-    private boolean dirtyRecipe = true, working;
+    private boolean dirtyRecipe = true, working, updatingInventory;
     private RecipeManager recipeManager;
     private RecipeHolder<PureSmeltingRecipe> recipe;
     private String recipeId = "";
     public final ImaginaryEnergyStorage energy = new ImaginaryEnergyStorage(Integer.MAX_VALUE, Integer.MAX_VALUE, 0, this::setChanged);
     public final ImaginaryEnergyFeAdapter fe = new ImaginaryEnergyFeAdapter(energy, this::setChanged, Integer.MAX_VALUE, 0);
     public final ItemStackHandler inputs = new ItemStackHandler(9) {
-        @Override protected void onContentsChanged(int slot) { dirtyRecipe = true; progress = 0; sync(); }
+        @Override protected void onContentsChanged(int slot) {
+            dirtyRecipe = true;
+            // Topping up an otherwise valid recipe must not discard paid progress.
+            if (!updatingInventory) sync();
+        }
     };
     private final RecipeInput input = new RecipeInput() {
         public ItemStack getItem(int slot) { return inputs.getStackInSlot(slot); }
@@ -62,7 +66,10 @@ public final class PureSmeltingPlantBlockEntity extends BlockEntity implements M
     public int speed() { return speed; }
     public boolean working() { return working; }
     public boolean active() { return getBlockState().getBlock() instanceof PureSmeltingPlantBlock block && block.active(); }
-    public void speed(int value) { speed = Math.clamp(value, 1, 100); sync(); }
+    public void speed(int value) {
+        int selected = Math.clamp(value, 1, 100);
+        if (speed != selected) { speed = selected; sync(); }
+    }
     public void interact(ServerPlayer player, ItemStack held) {
         if (held.isEmpty()) {
             for (int slot = 8; slot >= 0; slot--) if (!inputs.getStackInSlot(slot).isEmpty()) {
@@ -74,20 +81,41 @@ public final class PureSmeltingPlantBlockEntity extends BlockEntity implements M
             held.setCount(remaining.getCount());
         }
     }
+    private void refreshRecipe(Level level) {
+        if (recipeManager != level.getRecipeManager()) {
+            if (recipeManager != null) progress = 0;
+            recipeManager = level.getRecipeManager();
+            recipe = null;
+            dirtyRecipe = true;
+        }
+        if (!dirtyRecipe) return;
+        // Continue the current recipe while its requirements remain satisfied, even if extra inputs match another one.
+        if (recipe == null || !recipe.value().matches(input, level)) {
+            if (recipe != null) progress = 0;
+            recipe = recipeManager.getRecipeFor(LyyRecipes.PURE_SMELTING.get(), input, level).orElse(null);
+            String id = recipe == null ? "" : recipe.id().toString();
+            if (!id.equals(recipeId)) progress = 0;
+            recipeId = id;
+        }
+        dirtyRecipe = false;
+    }
+    private void finishProduction(PureSmeltingRecipe recipe) {
+        int[] slots = recipe.assignment(input);
+        if (slots == null) { progress = 0; dirtyRecipe = true; return; }
+        updatingInventory = true;
+        try {
+            for (int i = 0; i < slots.length; i++) inputs.extractItem(slots[i], recipe.inputs().get(i).count(), false);
+            output = recipe.result().copyWithCount(1);
+            outputCount += recipe.resultCount();
+            progress = 0;
+            dirtyRecipe = true;
+        } finally { updatingInventory = false; }
+    }
     public static void serverTick(Level level, BlockPos pos, BlockState state, PureSmeltingPlantBlockEntity plant) {
         if (!plant.active()) return;
         if (level.getGameTime() % 8 == 0) plant.pushOutput();
-        if (plant.recipeManager != level.getRecipeManager()) {
-            if (plant.recipeManager != null) plant.progress = 0;
-            plant.recipeManager = level.getRecipeManager(); plant.dirtyRecipe = true;
-        }
-        if (plant.dirtyRecipe) {
-            plant.recipe = level.getRecipeManager().getRecipeFor(LyyRecipes.PURE_SMELTING.get(), plant.input, level).orElse(null);
-            String id = plant.recipe == null ? "" : plant.recipe.id().toString();
-            if (!id.equals(plant.recipeId)) plant.progress = 0;
-            plant.recipeId = id; plant.dirtyRecipe = false;
-        }
-        boolean running = false;
+        plant.refreshRecipe(level);
+        boolean running = false, finished = false;
         if (plant.recipe != null) {
             var r = plant.recipe.value();
             int cost = BASE_IE_PER_TICK * plant.speed * plant.speed;
@@ -97,18 +125,13 @@ public final class PureSmeltingPlantBlockEntity extends BlockEntity implements M
                 running = true;
                 plant.energy.setImaginaryEnergy(plant.energy.getImaginaryEnergyStored() - cost);
                 plant.progress += plant.speed;
-                if (plant.progress >= r.duration()) {
-                    int[] slots = r.assignment(plant.input);
-                    if (slots != null) {
-                        for (int i = 0; i < slots.length; i++) plant.inputs.extractItem(slots[i], r.inputs().get(i).count(), false);
-                        plant.output = r.result().copyWithCount(1); plant.outputCount += r.resultCount();
-                    }
-                    plant.progress = 0; plant.dirtyRecipe = true; plant.sync();
-                }
+                if (plant.progress >= r.duration()) { plant.finishProduction(r); finished = true; }
                 plant.setChanged();
             }
         }
-        if (plant.working != running) { plant.working = running; plant.sync(); }
+        boolean changed = plant.working != running;
+        plant.working = running;
+        if (finished || changed) plant.sync();
     }
     private void pushOutput() {
         if (outputCount == 0) return;
@@ -137,11 +160,15 @@ public final class PureSmeltingPlantBlockEntity extends BlockEntity implements M
         tag.putString("Recipe", recipeId); tag.putInt("IE", energy.getImaginaryEnergyStored()); tag.putByte("FE", fe.getRemainder()); tag.putBoolean("Working", working);
     }
     @Override protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries); inputs.deserializeNBT(registries, tag.getCompound("Inputs"));
+        super.loadAdditional(tag, registries);
+        updatingInventory = true;
+        try { inputs.deserializeNBT(registries, tag.getCompound("Inputs")); }
+        finally { updatingInventory = false; }
         output = ItemStack.parseOptional(registries, tag.getCompound("Output"));
         outputCount = output.isEmpty() ? 0 : Math.clamp(tag.getInt("OutputCount"), 0, 256);
         speed = Math.clamp(tag.getInt("Speed"), 1, 100); progress = Math.clamp(tag.getInt("Progress"), 0, 72000);
-        recipeId = tag.getString("Recipe"); energy.setImaginaryEnergy(tag.getInt("IE")); fe.setRemainder(tag.getByte("FE")); working = tag.getBoolean("Working"); dirtyRecipe = true;
+        recipeId = tag.getString("Recipe"); energy.setImaginaryEnergy(tag.getInt("IE")); fe.setRemainder(tag.getByte("FE")); working = tag.getBoolean("Working");
+        recipe = null; recipeManager = null; dirtyRecipe = true;
     }
     @Override public CompoundTag getUpdateTag(HolderLookup.Provider r) { return saveWithoutMetadata(r); }
     @Override public ClientboundBlockEntityDataPacket getUpdatePacket() { return ClientboundBlockEntityDataPacket.create(this); }

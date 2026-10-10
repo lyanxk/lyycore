@@ -73,9 +73,9 @@ public final class ImaginaryDragonNestBlockEntity extends BlockEntity implements
     }
     public static void serverTick(Level level, BlockPos pos, BlockState state, ImaginaryDragonNestBlockEntity nest) {
         if (!nest.tickets) nest.chunks(true);
-        var server = (ServerLevel) level;
+        var server = (ServerLevel)level;
         var player = nest.owner == null ? null : server.getServer().getPlayerList().getPlayer(nest.owner);
-        // Production remains active without the player; the unique owner binding is established on placement.
+        // Production remains active without the player; summon restrictions do not change egg production.
         if (nest.owner != null && nest.output.getStackInSlot(0).getCount() < 64) {
             if (++nest.eggTicks >= EGG_TICKS) {
                 nest.output.setStackInSlot(0, new ItemStack(Items.DRAGON_EGG, nest.output.getStackInSlot(0).getCount()+1)); nest.eggTicks = 0;
@@ -84,7 +84,7 @@ public final class ImaginaryDragonNestBlockEntity extends BlockEntity implements
         }
         if (++nest.decisionTicks < DECISION_TICKS) return;
         nest.decisionTicks = 0;
-        if (nest.mode == Mode.STOWED || player == null || !player.isAlive() || player.isSpectator() || player.level() != level
+        if (!SummoningRules.allowed(level) || nest.mode == Mode.STOWED || player == null || !player.isAlive() || player.isSpectator() || player.level() != level
                 || !EnderCompanions.evolved(player) || !EnderCompanions.isNest(player, level.dimension(), pos)) { nest.recall(); return; }
         var current = nest.active();
         if (current != null && current.busy()) return;

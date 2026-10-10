@@ -9,15 +9,17 @@ import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
+import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
+import org.lyy.lyycore.content.SummoningRules;
 import org.lyy.lyycore.content.entity.CrystalTroop;
 import org.lyy.lyycore.registry.LyyEntities;
 
-/** Level-owned wave state survives altar/chunk unload. Only confirmed deaths retire raiders. */
+/** Level-owned wave state survives altar/chunk unload. Only permanent removals retire raiders. */
 @EventBusSubscriber(modid = "lyycore")
 public final class OtherworldRaids extends SavedData {
     private static final int[] RECON = {10, 20, 30, 20};
+    private static final Factory<OtherworldRaids> FACTORY = new Factory<>(OtherworldRaids::new, OtherworldRaids::load);
     private final Map<UUID, Raid> raids = new LinkedHashMap<>();
     private static final class Raid {
         final UUID id; final BlockPos origin; final Set<UUID> members = new HashSet<>();
@@ -29,26 +31,29 @@ public final class OtherworldRaids extends SavedData {
         int count() { return RECON[wave] + (wave == 3 ? 20 : 0); }
     }
     public static OtherworldRaids get(ServerLevel level) {
-        return level.getDataStorage().computeIfAbsent(new Factory<>(OtherworldRaids::new, OtherworldRaids::load), "lyycore_otherworld_raids");
+        return level.getDataStorage().computeIfAbsent(FACTORY, "lyycore_otherworld_raids");
     }
     public boolean active(BlockPos pos) { return raids.values().stream().anyMatch(r -> r.origin.equals(pos)); }
     public boolean contains(UUID id) { return raids.containsKey(id); }
-    public boolean start(BlockPos pos) {
-        if (active(pos)) return false;
+    public boolean start(ServerLevel level, BlockPos pos) {
+        if (!SummoningRules.allowed(level) || active(pos)) return false;
         var raid = new Raid(UUID.randomUUID(), pos.immutable()); raids.put(raid.id, raid); setDirty(); return true;
     }
-    @SubscribeEvent public static void died(LivingDeathEvent e) {
-        if (e.getEntity() instanceof CrystalTroop troop && troop.level() instanceof ServerLevel server && troop.raidId() != null) {
-            var data = get(server); var raid = data.raids.get(troop.raidId());
-            if (raid != null && raid.members.remove(troop.getUUID())) data.setDirty();
-        }
+    /** A canceled death never reaches permanent removal; chunk unloads do not retire members. */
+    @SubscribeEvent public static void removed(EntityLeaveLevelEvent event) {
+        if (!(event.getEntity() instanceof CrystalTroop troop) || !(event.getLevel() instanceof ServerLevel server)
+                || troop.raidId() == null || troop.getRemovalReason() == null || !troop.getRemovalReason().shouldDestroy()) return;
+        var data = get(server); var raid = data.raids.get(troop.raidId());
+        if (raid != null && raid.members.remove(troop.getUUID())) data.setDirty();
     }
     @SubscribeEvent public static void tick(LevelTickEvent.Post e) {
         if (e.getLevel() instanceof ServerLevel level && level.getGameTime() % 20 == 0) get(level).tick(level);
     }
     private void tick(ServerLevel level) {
         if (raids.isEmpty()) return;
-        if (level.getDifficulty() == Difficulty.PEACEFUL) { raids.values().forEach(r -> r.bar.removeAllPlayers()); raids.clear(); setDirty(); return; }
+        if (!SummoningRules.allowed(level) || level.getDifficulty() == Difficulty.PEACEFUL) {
+            raids.values().forEach(r -> r.bar.removeAllPlayers()); raids.clear(); setDirty(); return;
+        }
         var iterator = raids.values().iterator();
         while (iterator.hasNext()) {
             var raid = iterator.next();
