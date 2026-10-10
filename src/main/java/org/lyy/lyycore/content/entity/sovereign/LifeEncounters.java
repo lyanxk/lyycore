@@ -13,20 +13,28 @@ import net.neoforged.neoforge.event.entity.EntityTravelToDimensionEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
+import org.lyy.lyycore.content.SummoningRules;
 import org.lyy.lyycore.registry.LyyEffects;
 
-/** One persistent battle survives all three bodies; membership, deaths and curse cadence never reset on transition. */
+/** One persistent battle survives all three bodies; only this store mutates battle records. */
 @EventBusSubscriber(modid = "lyycore")
 public final class LifeEncounters extends SavedData {
     public static final class Battle {
         public final BlockPos altar;
         public final int initialPlayers;
-        public UUID boss;
-        public int deaths, curseTicks;
+        private UUID boss;
+        private int deaths, curseTicks;
+        private final AABB bounds;
         private final Set<UUID> members = new HashSet<>();
-        Battle(BlockPos altar, UUID boss, int initialPlayers) { this.altar = altar.immutable(); this.boss = boss; this.initialPlayers = initialPlayers; }
-        public AABB bounds() { return new AABB(altar.getCenter().add(-12.5, -7.5, -12.5), altar.getCenter().add(12.5, 7.5, 12.5)); }
-        public List<ServerPlayer> players(ServerLevel level) { return level.players().stream().filter(p -> eligible(p) && bounds().contains(p.position())).toList(); }
+        Battle(BlockPos altar, UUID boss, int initialPlayers) {
+            this.altar = altar.immutable(); this.boss = boss; this.initialPlayers = initialPlayers;
+            this.bounds = new AABB(altar.getCenter().add(-12.5, -7.5, -12.5), altar.getCenter().add(12.5, 7.5, 12.5));
+        }
+        public UUID boss() { return boss; }
+        public AABB bounds() { return bounds; }
+        public List<ServerPlayer> players(ServerLevel level) {
+            return level.players().stream().filter(p -> eligible(p) && bounds.contains(p.position())).toList();
+        }
     }
     private static final Factory<LifeEncounters> FACTORY = new Factory<>(LifeEncounters::new, LifeEncounters::load);
     private final Map<UUID, Battle> battles = new HashMap<>();
@@ -35,13 +43,32 @@ public final class LifeEncounters extends SavedData {
     public Battle battle(UUID id) { return battles.get(id); }
     public boolean occupied(BlockPos altar) { return battles.values().stream().anyMatch(b -> b.altar.equals(altar)); }
     public UUID begin(ServerLevel level, BlockPos altar, UUID boss) {
-        var battle = new Battle(altar, boss, 0);
-        var players = battle.players(level);
-        battle = new Battle(altar, boss, players.size());
+        if (!SummoningRules.allowed(level)) return null;
+        var initial = new Battle(altar, boss, 0);
+        var players = initial.players(level);
+        var battle = new Battle(altar, boss, players.size());
         for (var player : players) battle.members.add(player.getUUID());
         battles.put(boss, battle); setDirty(); return boss;
     }
-    public void transition(UUID id, UUID next) { var battle = battles.get(id); if (battle != null) { battle.boss = next; setDirty(); } }
+    public void transition(UUID id, UUID next) {
+        var battle = battles.get(id);
+        if (battle != null && !battle.boss.equals(next)) { battle.boss = next; setDirty(); }
+    }
+    private void recordDeath(ServerPlayer player) {
+        for (var battle : battles.values()) if (battle.members.contains(player.getUUID()) && battle.bounds.intersects(player.getBoundingBox())) {
+            battle.deaths++; setDirty();
+        }
+    }
+    private void registerMember(Battle battle, ServerPlayer player) {
+        if (battle.bounds.contains(player.position()) && battle.members.add(player.getUUID())) setDirty();
+    }
+    private void advanceCurse(ServerLevel level, Battle battle) {
+        if (++battle.curseTicks >= 900) {
+            battle.curseTicks = 0;
+            for (var player : battle.players(level)) curse(player, 1);
+        }
+        setDirty();
+    }
     public void end(ServerLevel level, UUID id, boolean victory) {
         var battle = battles.remove(id);
         if (battle == null) return;
@@ -65,7 +92,6 @@ public final class LifeEncounters extends SavedData {
         var current = player.getEffect(LyyEffects.LIFE_CURSE);
         if (current == null || layers <= 0) return;
         int remaining = current.getAmplifier() + 1 - layers;
-        // Adding a weaker effect would leave the stronger amplifier active; replace it explicitly.
         player.removeEffect(LyyEffects.LIFE_CURSE);
         if (remaining > 0) player.addEffect(new MobEffectInstance(LyyEffects.LIFE_CURSE,
                 current.getDuration(), remaining - 1, current.isAmbient(), current.isVisible(), current.showIcon()));
@@ -74,7 +100,7 @@ public final class LifeEncounters extends SavedData {
         if (!(event.getLevel() instanceof ServerLevel level)) return;
         var data = get(level);
         for (var entry : List.copyOf(data.battles.entrySet())) {
-            var battle = entry.getValue(); var bounds = battle.bounds();
+            var battle = entry.getValue(); var bounds = battle.bounds;
             if (battle.deaths > battle.initialPlayers) {
                 if (level.getEntity(battle.boss) instanceof LifeSovereign boss) boss.discard();
                 data.end(level, entry.getKey(), false); continue;
@@ -82,7 +108,7 @@ public final class LifeEncounters extends SavedData {
             boolean populated = false;
             for (var player : level.players()) {
                 if (!eligible(player)) continue;
-                if (bounds.contains(player.position()) && battle.members.add(player.getUUID())) data.setDirty();
+                data.registerMember(battle, player);
                 if (!battle.members.contains(player.getUUID())) continue;
                 populated = true;
                 // Clamp the full player body. This also catches pearls, chorus fruit and commands.
@@ -94,20 +120,13 @@ public final class LifeEncounters extends SavedData {
                     player.teleportTo(clamped.x, clamped.y, clamped.z); player.setDeltaMovement(Vec3.ZERO); player.fallDistance = 0;
                 }
             }
-            if (populated && ++battle.curseTicks >= 900) {
-                battle.curseTicks = 0;
-                for (var player : battle.players(level)) curse(player, 1);
-            }
-            if (populated) data.setDirty();
+            if (populated) data.advanceCurse(level, battle);
         }
     }
     @SubscribeEvent(priority = EventPriority.LOWEST) public static void death(LivingDeathEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
         player.removeEffect(LyyEffects.LIFE_CURSE);
-        var data = get(player.serverLevel());
-        for (var battle : data.battles.values()) if (battle.members.contains(player.getUUID()) && battle.bounds().intersects(player.getBoundingBox())) {
-            battle.deaths++; data.setDirty();
-        }
+        get(player.serverLevel()).recordDeath(player);
     }
     @SubscribeEvent public static void travel(EntityTravelToDimensionEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer player) || event.getDimension().equals(player.level().dimension())) return;
@@ -124,7 +143,6 @@ public final class LifeEncounters extends SavedData {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
         for (var level : player.server.getAllLevels()) for (var battle : get(level).battles.values()) {
             if (battle.deaths > battle.initialPlayers || !battle.members.contains(player.getUUID())) continue;
-            // Dying counts toward the loss limit; a bed in another dimension is not an arena escape.
             var spawn = battle.altar.getCenter().add(5, 1, 5);
             player.teleportTo(level, spawn.x, spawn.y, spawn.z, player.getYRot(), player.getXRot()); return;
         }

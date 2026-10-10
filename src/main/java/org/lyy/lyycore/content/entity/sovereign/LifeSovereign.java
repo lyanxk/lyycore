@@ -11,17 +11,40 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.*;
+import org.lyy.lyycore.content.GateSummoning;
 import org.lyy.lyycore.content.entity.AnimatedMonster;
-import org.lyy.lyycore.content.blockEntities.SummoningAltarBlockEntity;
 import org.lyy.lyycore.registry.*;
 
-/** Three explicit bodies share one encounter, while their attack state stays local. */
+/** Three explicit bodies share one encounter; action identity is independent of animation resource names. */
 public final class LifeSovereign extends AnimatedMonster {
     private static final int SWORD_RELEASE_TICKS = 23, SWORD_ANIMATION_TICKS = 53, SWORD_COOLDOWN_TICKS = 200;
     public enum Phase { DEFENDER, COCOON, USURPER }
+    private enum Action {
+        IDLE("idle"), BIRTH("birth"), SLASH("wide_slash"), SWORD("charged_sword_throw"),
+        FORM("form"), DORMANT("dormant"), EMERGE("phase_emerge"), DEFEAT("phase_defeat"),
+        MISSILE(LifeSpell.Kind.MISSILE), SPIKE(LifeSpell.Kind.SPIKE), METEOR(LifeSpell.Kind.METEOR);
+        final String clip;
+        final LifeSpell.Kind spell;
+        Action(String clip) { this.clip = clip; this.spell = null; }
+        Action(LifeSpell.Kind spell) { this.clip = spell.animation; this.spell = spell; }
+        static Action forSpell(LifeSpell.Kind kind) {
+            return switch (kind) {
+                case MISSILE -> MISSILE;
+                case SPIKE -> SPIKE;
+                case METEOR -> METEOR;
+                default -> throw new IllegalArgumentException("Not a casting action: " + kind);
+            };
+        }
+        /** Compatibility is resolved once when loading old saves, never in the AI hot path. */
+        static Action fromClip(String clip) {
+            for (var value : values()) if (value.clip.equals(clip)) return value;
+            return IDLE;
+        }
+    }
     private final ServerBossEvent bar = new ServerBossEvent(getDisplayName(), BossEvent.BossBarColor.PURPLE, BossEvent.BossBarOverlay.PROGRESS);
     private final Map<UUID, Integer> hitCounts = new HashMap<>();
     private UUID encounter, crystal, castingTarget, swordTarget;
+    private Action action = Action.IDLE;
     private int swordCooldown;
     private boolean swordReleased;
     private int decisionTicks, dashes, dashTicks, spellTicks, missingCrystalTicks;
@@ -29,6 +52,13 @@ public final class LifeSovereign extends AnimatedMonster {
     public LifeSovereign(EntityType<? extends LifeSovereign> type, Level level) {
         super(type, level); setPersistenceRequired(); xpReward = phase() == Phase.USURPER ? 3000 : 0;
     }
+    private void action(Action next) {
+        action = next;
+        if (next == Action.IDLE || next == Action.DORMANT) animate(next.clip);
+        else restartAnimation(next.clip);
+    }
+    // Both gameplay and rendering keep using the same synchronized clock.
+    private int elapsedTicks() { return Math.round(animationTime(0) * 20); }
     public Phase phase() {
         return getType() == LyyEntities.LIFE_COCOON.get() ? Phase.COCOON : getType() == LyyEntities.LIFE_USURPER.get() ? Phase.USURPER : Phase.DEFENDER;
     }
@@ -39,10 +69,10 @@ public final class LifeSovereign extends AnimatedMonster {
     }
     public void begin(BlockPos altar) {
         encounter = LifeEncounters.get((ServerLevel)level()).begin((ServerLevel)level(), altar, getUUID());
-        if (phase() == Phase.DEFENDER) restartAnimation("birth");
+        if (phase() == Phase.DEFENDER) action(Action.BIRTH);
     }
     public LifeEncounters.Battle battle() { return encounter == null || !(level() instanceof ServerLevel server) ? null : LifeEncounters.get(server).battle(encounter); }
-    public boolean active() { var battle = battle(); return isAlive() && battle != null && battle.boss.equals(getUUID()); }
+    public boolean active() { var battle = battle(); return isAlive() && battle != null && battle.boss().equals(getUUID()); }
     @Override protected boolean isAlwaysExperienceDropper() { return phase() == Phase.USURPER; }
     @Override public boolean isPushable() { return false; }
     @Override protected AABB makeBoundingBox() {
@@ -50,70 +80,65 @@ public final class LifeSovereign extends AnimatedMonster {
         return new AABB(getX()-1, getY(), getZ()-1.5, getX()+1, getY()+3, getZ()+1.5);
     }
     @Override protected void customServerAiStep() {
-        if (battle() == null) { discard(); return; }
+        var battle = battle();
+        if (battle == null) { discard(); return; }
         if (swordCooldown > 0) swordCooldown--;
         var server = (ServerLevel)level();
-        var players = battle().players(server);
+        var players = battle.players(server);
         var target = players.stream().min(Comparator.comparingDouble(this::distanceToSqr)).orElse(null);
         setTarget(target);
         bar.setProgress(getHealth()/getMaxHealth());
         setNoGravity(phase() != Phase.DEFENDER);
         if (phase() != Phase.DEFENDER) { setDeltaMovement(Vec3.ZERO); getNavigation().stop(); }
         if (phase() == Phase.COCOON) { cocoon(server, target); return; }
-        if (phase() == Phase.DEFENDER && playing("birth", 2.8F)) {
+        if (phase() == Phase.DEFENDER && action == Action.BIRTH && elapsedTicks() < 56) {
             getNavigation().stop(); setDeltaMovement(Vec3.ZERO); return;
         }
-        if (animation().equals("birth")) animate("idle");
+        if (action == Action.BIRTH) action(Action.IDLE);
         if (phase() == Phase.USURPER) {
-            if (playing("phase_emerge", 2.4F)) return;
+            if (action == Action.EMERGE && elapsedTicks() < 48) return;
             if (!threshold && getHealth() < 4000) applyThreshold(players);
-            // Finish the entire cast, including recovery, before choosing another action.
             if (casting(server)) { decisionTicks++; return; }
-            animate("idle");
+            action(Action.IDLE);
         }
         if (phase() == Phase.DEFENDER && tickCount%20 == 0) heal(80);
-        if (phase() == Phase.DEFENDER && throwingSword(server)) return;
+        if (phase() == Phase.DEFENDER && throwingSword(server, players)) return;
         if (target == null) { getNavigation().stop(); return; }
         getLookControl().setLookAt(target, 360, 360);
         var offset = target.position().subtract(position());
         setYRot((float)Math.toDegrees(Math.atan2(-offset.x, offset.z))); yBodyRot = yHeadRot = getYRot();
-        if (phase() == Phase.DEFENDER) defender(target);
-        else {
-            if (++decisionTicks >= 60) {
-                decisionTicks = 0;
-                var kind = switch (random.nextInt(3)) { case 0 -> LifeSpell.Kind.MISSILE; case 1 -> LifeSpell.Kind.SPIKE; default -> LifeSpell.Kind.METEOR; };
-                startCasting(target, kind);
-            }
+        if (phase() == Phase.DEFENDER) defender(target, battle);
+        else if (++decisionTicks >= 60) {
+            decisionTicks = 0;
+            var kind = switch (random.nextInt(3)) { case 0 -> LifeSpell.Kind.MISSILE; case 1 -> LifeSpell.Kind.SPIKE; default -> LifeSpell.Kind.METEOR; };
+            startCasting(target, kind);
         }
     }
     private void startCasting(ServerPlayer target, LifeSpell.Kind kind) {
         castingTarget = target.getUUID(); spellReleased = kind != LifeSpell.Kind.MISSILE;
-        restartAnimation(kind.animation);
-        // Area spells show their warning at the locked target while the caster winds up.
+        action(Action.forSpell(kind));
         if (spellReleased) LifeSpell.launch(this, target, kind, null);
     }
     private boolean casting(ServerLevel server) {
-        for (var kind : LifeSpell.Kind.values()) {
-            if (kind == LifeSpell.Kind.CRYSTAL || !animation().equals(kind.animation)) continue;
-            int elapsed = Math.round(animationTime(0) * 20);
-            if (elapsed >= kind.animationTicks) return false;
-            if (!spellReleased && elapsed >= kind.impactTick) {
-                spellReleased = true;
-                if (castingTarget != null && server.getPlayerByUUID(castingTarget) instanceof ServerPlayer target && target.isAlive())
-                    LifeSpell.launch(this, target, kind, null);
-            }
-            return true;
+        var kind = action.spell;
+        if (kind == null) return false;
+        int elapsed = elapsedTicks();
+        if (elapsed >= kind.animationTicks) return false;
+        if (!spellReleased && elapsed >= kind.impactTick) {
+            spellReleased = true;
+            if (castingTarget != null && server.getPlayerByUUID(castingTarget) instanceof ServerPlayer target && target.isAlive())
+                LifeSpell.launch(this, target, kind, null);
         }
-        return false;
+        return true;
     }
-    private void defender(ServerPlayer target) {
+    private void defender(ServerPlayer target, LifeEncounters.Battle battle) {
         decisionTicks++;
-        if (animation().equals("wide_slash") && animationTime(0) < 1.65F) {
+        if (action == Action.SLASH && elapsedTicks() < 33) {
             getNavigation().stop();
-            if (Math.round(animationTime(0)*20) == 12 && distanceToSqr(target) <= 16) target.hurt(damageSources().mobAttack(this), 80);
+            if (elapsedTicks() == 12 && distanceToSqr(target) <= 16) target.hurt(damageSources().mobAttack(this), 80);
             return;
         }
-        animate("idle");
+        action(Action.IDLE);
         if (distanceToSqr(target) > 4) getNavigation().moveTo(target, 1); else getNavigation().stop();
         if (dashes > 0 && ++dashTicks >= 5) {
             dashTicks = 0; dashes--;
@@ -122,7 +147,7 @@ public final class LifeSovereign extends AnimatedMonster {
                     Math.signum(offset.y)*random.nextDouble()*Math.min(2, Math.abs(offset.y)),
                     Math.signum(offset.z)*random.nextDouble()*Math.min(2, Math.abs(offset.z)));
             var next = position().add(step);
-            if (battle().bounds().contains(next) && level().noCollision(this, getBoundingBox().move(step))) teleportTo(next.x, next.y, next.z);
+            if (battle.bounds().contains(next) && level().noCollision(this, getBoundingBox().move(step))) teleportTo(next.x, next.y, next.z);
         }
         if (decisionTicks >= 40) {
             decisionTicks = 0;
@@ -131,18 +156,16 @@ public final class LifeSovereign extends AnimatedMonster {
                 swordCooldown = SWORD_COOLDOWN_TICKS;
                 dashes = dashTicks = 0;
                 getNavigation().stop();
-                restartAnimation("charged_sword_throw");
-            } else if (distanceToSqr(target) <= 16 && random.nextBoolean()) restartAnimation("wide_slash");
+                action(Action.SWORD);
+            } else if (distanceToSqr(target) <= 16 && random.nextBoolean()) action(Action.SLASH);
             else { dashes = 4; dashTicks = 0; }
         }
     }
-    private boolean throwingSword(ServerLevel server) {
-        if (!animation().equals("charged_sword_throw")) return false;
-        int elapsed = Math.round(animationTime(0) * 20);
+    private boolean throwingSword(ServerLevel server, List<ServerPlayer> players) {
+        if (action != Action.SWORD) return false;
+        int elapsed = elapsedTicks();
         if (elapsed >= SWORD_ANIMATION_TICKS) {
-            swordTarget = null;
-            animate("idle");
-            return false;
+            swordTarget = null; action(Action.IDLE); return false;
         }
         getNavigation().stop();
         setDeltaMovement(getDeltaMovement().multiply(0, 1, 0));
@@ -154,13 +177,12 @@ public final class LifeSovereign extends AnimatedMonster {
         }
         if (!swordReleased && elapsed >= SWORD_RELEASE_TICKS) {
             swordReleased = true;
-            if (target instanceof ServerPlayer player && player.isAlive() && battle().players(server).contains(player))
-                DefenderSword.launch(this, player);
+            if (target instanceof ServerPlayer player && players.contains(player)) DefenderSword.launch(this, player);
         }
         return true;
     }
     private void cocoon(ServerLevel server, ServerPlayer target) {
-        if (!playing("form", 2.2F)) animate("dormant");
+        if (action != Action.FORM || elapsedTicks() >= 44) action(Action.DORMANT);
         if (crystal != null && server.getEntity(crystal) != null) missingCrystalTicks = 0;
         else if (target != null && (crystal == null || ++missingCrystalTicks >= 20)) {
             crystal = LifeSpell.launch(this, target, LifeSpell.Kind.CRYSTAL, null); missingCrystalTicks = 0;
@@ -205,10 +227,11 @@ public final class LifeSovereign extends AnimatedMonster {
         if (battle == null) return;
         var next = type.create(server); if (next == null) return;
         next.encounter = encounter; next.moveTo(Vec3.atBottomCenterOf(battle.altar.above()));
-        next.restartAnimation(type == LyyEntities.LIFE_COCOON.get() ? "form" : "phase_emerge");
+        next.action(type == LyyEntities.LIFE_COCOON.get() ? Action.FORM : Action.EMERGE);
         if (!server.addFreshEntity(next)) return;
-        transitioned = true; LifeEncounters.get(server).transition(encounter, next.getUUID());
-        if (server.getBlockEntity(battle.altar) instanceof SummoningAltarBlockEntity altar) altar.replaceActiveBoss(getUUID(), next.getUUID());
+        transitioned = true;
+        LifeEncounters.get(server).transition(encounter, next.getUUID());
+        GateSummoning.replaceActiveBoss(server, battle.altar, getUUID(), next.getUUID());
         discard();
     }
     @Override public boolean hurt(DamageSource source, float amount) {
@@ -218,7 +241,7 @@ public final class LifeSovereign extends AnimatedMonster {
     @Override public void die(DamageSource source) {
         super.die(source);
         if (!dead || !(level() instanceof ServerLevel server) || transitioned) return;
-        if (phase() == Phase.DEFENDER) { restartAnimation("phase_defeat"); bar.setProgress(0); return; }
+        if (phase() == Phase.DEFENDER) { action(Action.DEFEAT); bar.setProgress(0); return; }
         if (phase() != Phase.USURPER) return;
         var battle = battle();
         spawnAtLocation(LyyItems.ENDLESS_EROSION.get());
@@ -240,6 +263,7 @@ public final class LifeSovereign extends AnimatedMonster {
         if (encounter != null) tag.putUUID("Encounter", encounter); if (crystal != null) tag.putUUID("Crystal", crystal);
         if (castingTarget != null) tag.putUUID("CastingTarget", castingTarget);
         if (swordTarget != null) tag.putUUID("SwordTarget", swordTarget);
+        tag.putString("CombatAction", action.name());
         tag.putInt("SwordCooldown", swordCooldown); tag.putBoolean("SwordReleased", swordReleased);
         tag.putBoolean("SpellReleased", spellReleased);
         tag.putBoolean("Threshold", threshold); tag.putBoolean("Alternating", alternating);
@@ -251,6 +275,11 @@ public final class LifeSovereign extends AnimatedMonster {
         crystal = tag.hasUUID("Crystal") ? tag.getUUID("Crystal") : null;
         castingTarget = tag.hasUUID("CastingTarget") ? tag.getUUID("CastingTarget") : null;
         swordTarget = tag.hasUUID("SwordTarget") ? tag.getUUID("SwordTarget") : null;
+        action = Action.fromClip(animation());
+        if (tag.contains("CombatAction")) {
+            try { action = Action.valueOf(tag.getString("CombatAction")); }
+            catch (IllegalArgumentException ignored) { /* Keep the migrated animation state. */ }
+        }
         swordCooldown = Math.clamp(tag.getInt("SwordCooldown"), 0, SWORD_COOLDOWN_TICKS);
         swordReleased = tag.getBoolean("SwordReleased");
         spellReleased = tag.getBoolean("SpellReleased");

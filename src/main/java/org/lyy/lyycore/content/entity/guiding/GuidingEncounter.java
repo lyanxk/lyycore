@@ -10,12 +10,8 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.*;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.saveddata.SavedData;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.entity.EntityTravelToDimensionEvent;
 
 /** Encounter membership survives separately loaded boss and guard chunks. */
-@EventBusSubscriber(modid = "lyycore")
 public final class GuidingEncounter extends SavedData {
     public enum Phase { LIGHT, ABSORB, DEMAND, ENDED }
     public static final class Battle {
@@ -78,11 +74,6 @@ public final class GuidingEncounter extends SavedData {
         changed |= battle.standing.remove(guard);
         if (battle.phase == Phase.ENDED && battle.guards.isEmpty()) { battles.remove(id); changed = true; }
         if (changed) setDirty();
-    }
-    /** These entities belong to dimension-local encounter data; chunk unloads remain allowed. */
-    @SubscribeEvent public static void travel(EntityTravelToDimensionEvent event) {
-        if ((event.getEntity() instanceof GuidingBoss || event.getEntity() instanceof GuidingGuard)
-                && !event.getDimension().equals(event.getEntity().level().dimension())) event.setCanceled(true);
     }
     @Override public CompoundTag save(CompoundTag tag, HolderLookup.Provider registries) {
         var list = new ListTag();

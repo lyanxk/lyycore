@@ -17,7 +17,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.*;
 import org.joml.Vector3f;
-import org.lyy.lyycore.content.blockEntities.ImaginaryGateBlockEntity;
+import org.lyy.lyycore.content.GateSummoning;
 import org.lyy.lyycore.registry.LyyEntities;
 
 /** Two encounter phases share targeting and persistence, with explicit non-overlapping actions. */
@@ -291,8 +291,7 @@ public final class GuidingBoss extends AnimatedMonster {
                     transitioned = true;
                     GuidingEncounter.get(server).transition(encounter, next.getUUID(), GuidingEncounter.Phase.ABSORB);
                     next.initialize();
-                    if (gate != null && server.getBlockEntity(gate) instanceof ImaginaryGateBlockEntity block) block.replaceActiveBoss(getUUID(), next.getUUID());
-                    if (gate != null && server.getBlockEntity(gate) instanceof org.lyy.lyycore.content.blockEntities.SummoningAltarBlockEntity altar) altar.replaceActiveBoss(getUUID(), next.getUUID());
+                    if (gate != null) GateSummoning.replaceActiveBoss(server, gate, getUUID(), next.getUUID());
                 }
             }
         }
