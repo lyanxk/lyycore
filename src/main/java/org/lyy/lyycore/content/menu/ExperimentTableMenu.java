@@ -4,7 +4,6 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.*;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.items.SlotItemHandler;
 import org.lyy.lyycore.content.blockEntities.ExperimentTableBlockEntity;
 import org.lyy.lyycore.content.item.ResearchNotesItem;
 import org.lyy.lyycore.content.research.ExperimentDefinition;
@@ -22,8 +21,8 @@ public final class ExperimentTableMenu extends AbstractContainerMenu {
         this.table = table; this.data = data;
         access = ContainerLevelAccess.create(table.getLevel(), table.getBlockPos());
         addDataSlots(data);
-        addSlot(new SlotItemHandler(table.items(), 0, 203, 56));
-        addSlot(new SlotItemHandler(table.items(), 1, 203, 95));
+        addSlot(new BlockEntityItemSlot(table, table.items(), 0, 203, 56));
+        addSlot(new BlockEntityItemSlot(table, table.items(), 1, 203, 95));
         for (int row = 0; row < 3; row++) for (int col = 0; col < 9; col++)
             addSlot(new Slot(inventory, 9 + row * 9 + col, 45 + col * 18, 155 + row * 18));
         for (int col = 0; col < 9; col++) addSlot(new Slot(inventory, col, 45 + col * 18, 213));

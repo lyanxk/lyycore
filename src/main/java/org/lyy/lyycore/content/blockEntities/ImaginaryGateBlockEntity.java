@@ -21,6 +21,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.items.ItemStackHandler;
+import org.lyy.lyycore.content.GateMeteorFailures;
 import org.lyy.lyycore.content.GateSummoning;
 import org.lyy.lyycore.content.SummoningReservations;
 import org.lyy.lyycore.content.SummoningRules;
@@ -37,15 +38,24 @@ public class ImaginaryGateBlockEntity extends BlockEntity implements MenuProvide
     private boolean reservationMigrated;
     private UUID offeringPlayer;
     private UUID meteor;
+    public UUID meteorId() { return meteor; }
+    public boolean ownsMeteor(UUID id) { return id.equals(meteor); }
+    public void meteorFailed(UUID id) {
+        if (ownsMeteor(id)) { meteor = null; setChanged(); }
+    }
+    private void recoverMeteor(ServerLevel server) {
+        if (GateMeteorFailures.get(server).consume(worldPosition, meteor)) { meteor = null; setChanged(); }
+    }
     public boolean interceptOpening(net.minecraft.server.level.ServerPlayer player) {
         if (!SummoningRules.allowed(level)) return false;
+        recoverMeteor(player.serverLevel());
         if (meteor != null) return true;
         var advancement = player.server.getAdvancements().get(net.minecraft.resources.ResourceLocation.parse("lyycore:progression/too_great"));
         if (advancement == null || !player.getAdvancements().getOrStartProgress(advancement).isDone()) return false;
         var entity = LyyEntities.GATE_METEOR.get().create(level);
         if (entity == null) return false;
         entity.aim(worldPosition);
-        if (!level.addFreshEntity(entity)) return false;
+        if (!level.addFreshEntity(entity) || entity.isRemoved()) return false;
         meteor = entity.getUUID(); setChanged();
         var closed = player.server.getAdvancements().get(net.minecraft.resources.ResourceLocation.parse("lyycore:progression/closed_gate"));
         if (closed != null) player.getAdvancements().award(closed, "meteor");
@@ -88,11 +98,15 @@ public class ImaginaryGateBlockEntity extends BlockEntity implements MenuProvide
     }
     @Override public void onLoad() {
         super.onLoad();
-        if (level instanceof ServerLevel server) occupied(server);
+        if (level instanceof ServerLevel server) { occupied(server); recoverMeteor(server); }
     }
     public static void serverTick(Level level, BlockPos pos, BlockState state, ImaginaryGateBlockEntity gate) {
-        if (gate.meteor != null || level.getGameTime() % 10 != 0) return;
+        if (level.getGameTime() % 10 != 0) return;
         ServerLevel server = (ServerLevel)level;
+        if (gate.meteor != null) {
+            gate.recoverMeteor(server);
+            if (gate.meteor != null) return;
+        }
         gate.status = READY;
         if (!SummoningRules.allowed(level)) gate.status = WRONG_DIMENSION;
         else if (level.getDifficulty() == Difficulty.PEACEFUL) gate.status = PEACEFUL;

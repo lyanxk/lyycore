@@ -1,15 +1,21 @@
 package org.lyy.lyycore.content.item;
 
+import java.util.List;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.*;
 import net.minecraft.world.*;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.CommonHooks;
+import net.neoforged.neoforge.common.util.BlockSnapshot;
+import net.neoforged.neoforge.event.EventHooks;
 import org.lyy.lyycore.content.*;
 import org.lyy.lyycore.content.entity.SonnetDome;
 import org.lyy.lyycore.content.skills.StyleSystem;
@@ -46,12 +52,48 @@ public final class HailItem extends Item {
             if (x * x + z * z > 16) continue;
             BlockPos pos = center.offset(x, 0, z);
             if (!level.hasChunkAt(pos) || !level.mayInteract(player, pos) || !level.getWorldBorder().isWithinBounds(pos)) continue;
-            var state = level.getBlockState(pos);
-            if (state.is(Blocks.WATER) && CommonHooks.canEntityDestroy(level, pos, player)) {
-                var snapshot = net.neoforged.neoforge.common.util.BlockSnapshot.create(level.dimension(), level, pos);
-                if (!net.neoforged.neoforge.event.EventHooks.onBlockPlace(player, snapshot, net.minecraft.core.Direction.UP))
-                    level.setBlockAndUpdate(pos, Blocks.ICE.defaultBlockState());
+            if (level.getBlockState(pos).is(Blocks.WATER) && CommonHooks.canEntityDestroy(level, pos, player))
+                placeIce(level, player, pos);
+        }
+    }
+    /** Defer physics/client updates until placement listeners have seen the actual new state. */
+    private static void placeIce(ServerLevel level, ServerPlayer player, BlockPos pos) {
+        if (level.captureBlockSnapshots) {
+            // An outer placement transaction owns its snapshots, event and rollback.
+            level.setBlock(pos, Blocks.ICE.defaultBlockState(), Block.UPDATE_ALL);
+            return;
+        }
+        int firstSnapshot = level.capturedBlockSnapshots.size();
+        List<BlockSnapshot> snapshots;
+        level.captureBlockSnapshots = true;
+        try {
+            level.setBlock(pos, Blocks.ICE.defaultBlockState(), Block.UPDATE_ALL);
+        } finally {
+            level.captureBlockSnapshots = false;
+            snapshots = List.copyOf(level.capturedBlockSnapshots.subList(firstSnapshot, level.capturedBlockSnapshots.size()));
+            level.capturedBlockSnapshots.subList(firstSnapshot, level.capturedBlockSnapshots.size()).clear();
+        }
+        if (snapshots.isEmpty()) return;
+        boolean accepted = false;
+        try {
+            accepted = !(snapshots.size() == 1
+                    ? EventHooks.onBlockPlace(player, snapshots.getFirst(), Direction.UP)
+                    : EventHooks.onMultiBlockPlace(player, snapshots, Direction.UP));
+        } finally {
+            if (!accepted) {
+                boolean restoring = level.restoringBlockSnapshots;
+                level.restoringBlockSnapshots = true;
+                try {
+                    for (int i = snapshots.size() - 1; i >= 0; i--)
+                        snapshots.get(i).restore(snapshots.get(i).getFlags() | Block.UPDATE_CLIENTS);
+                } finally { level.restoringBlockSnapshots = restoring; }
             }
+        }
+        if (accepted) for (var snapshot : snapshots) {
+            var current = level.getBlockState(snapshot.getPos());
+            current.onPlace(level, snapshot.getPos(), snapshot.getState(), false);
+            level.markAndNotifyBlock(snapshot.getPos(), level.getChunkAt(snapshot.getPos()),
+                    snapshot.getState(), current, snapshot.getFlags(), 512);
         }
     }
 }

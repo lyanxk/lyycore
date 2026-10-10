@@ -23,7 +23,7 @@ public final class WingsAttack {
     private static final Map<ServerPlayer, State> STATES = new WeakHashMap<>();
     private static final class State {
         int lastAttackTick = Integer.MIN_VALUE;
-        int busyUntil;
+        int busyUntil, exclusiveUntil;
         Pursuit pursuit;
         final List<Volley> pending = new ArrayList<>();
     }
@@ -48,22 +48,23 @@ public final class WingsAttack {
         if (!canAttack(player) || WingsScoop.active(player) || target == player || !target.isAlive() || target.isRemoved() || target.level() != player.level()) return false;
         var state = STATES.computeIfAbsent(player, ignored -> new State());
         int tick = player.server.getTickCount();
-        if (state.lastAttackTick == tick) return false;
+        // The running cast owns its feathers until recall, regardless of subsequent setting changes.
+        if (state.lastAttackTick == tick || player.tickCount < state.exclusiveUntil) return false;
         int pursuit = WingsSettings.pursuit(player);
         if (pursuit == 0) return false;
         if (pursuit == 3) {
-            // All feathers belong to this clip until recall finishes.
             if (busy(player)) return false;
             state.lastAttackTick = tick;
             state.busyUntil = player.tickCount + PURSUIT_DURATION_TICKS;
+            state.exclusiveUntil = state.busyUntil;
             state.pursuit = new Pursuit(target, player.tickCount + PURSUIT_HIT_TICKS);
             WingsNetwork.pursuit(player, target);
             return true;
         }
         state.lastAttackTick = tick;
         var tier = pursuit == 1 ? WingsTier.FIRST : WingsTier.SECOND;
-        state.busyUntil = player.tickCount + (int)Math.ceil(FeatherAttack.duration(tier.featherCount()) * 20);
-        // Snapshot stats so an upgrade does not change an attack already in flight.
+        // Lower-tier volleys may overlap, but none may shorten the last outstanding recall.
+        state.busyUntil = Math.max(state.busyUntil, player.tickCount + (int)Math.ceil(FeatherAttack.duration(tier.featherCount()) * 20));
         state.pending.add(new Volley(target, tier, player.tickCount));
         WingsNetwork.attack(player, target, tier.featherCount());
         return true;

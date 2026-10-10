@@ -12,15 +12,18 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
+import org.lyy.lyycore.content.GateMeteorFailures;
+import org.lyy.lyycore.content.blockEntities.ImaginaryGateBlockEntity;
 import org.lyy.lyycore.content.blocks.ImaginaryGateBlock;
 
-/** A saved, fixed diagonal approach; only the gate footprint is changed on impact. */
+/** A saved, fixed diagonal approach. Only the controller that owns this mission can be hit. */
 public final class GateMeteor extends Entity {
     private static final EntityDataAccessor<Vector3f> FLIGHT_DIRECTION =
             SynchedEntityData.defineId(GateMeteor.class, EntityDataSerializers.VECTOR3);
     private BlockPos gate = BlockPos.ZERO;
     private Vec3 start = Vec3.ZERO;
     private int elapsed;
+    private boolean resolved;
     public GateMeteor(EntityType<? extends GateMeteor> type, Level level) { super(type, level); }
     public void aim(BlockPos gate) {
         this.gate = gate.immutable();
@@ -41,6 +44,9 @@ public final class GateMeteor extends Entity {
         super.tick();
         if (!(level() instanceof ServerLevel server)) return;
         if (!server.hasChunkAt(gate)) return;
+        if (!(server.getBlockEntity(gate) instanceof ImaginaryGateBlockEntity controller) || !controller.ownsMeteor(getUUID())) {
+            resolved = true; discard(); return;
+        }
         elapsed++;
         setPos(start.lerp(gate.getCenter(), Math.min(1, elapsed/40.0)));
         server.sendParticles(ParticleTypes.END_ROD, getX(), getY(), getZ(), 10, 0.6, 0.6, 0.6, 0.04);
@@ -48,21 +54,29 @@ public final class GateMeteor extends Entity {
         var state = server.getBlockState(gate);
         if (state.getBlock() instanceof ImaginaryGateBlock && ImaginaryGateBlock.isController(state)) {
             var facing = state.getValue(ImaginaryGateBlock.FACING);
-            server.removeBlock(gate, false);
-            for (int column = 0; column < 5; column++) {
-                var pos = ImaginaryGateBlock.partPos(gate, facing, column, 0);
-                if (server.getBlockState(pos).isAir()) server.setBlock(pos, Blocks.QUARTZ_BLOCK.defaultBlockState(), 3);
+            if (server.removeBlock(gate, false)) {
+                resolved = true;
+                for (int column = 0; column < 5; column++) {
+                    var pos = ImaginaryGateBlock.partPos(gate, facing, column, 0);
+                    if (server.getBlockState(pos).isAir()) server.setBlock(pos, Blocks.QUARTZ_BLOCK.defaultBlockState(), 3);
+                }
+                server.sendParticles(ParticleTypes.EXPLOSION_EMITTER, gate.getX()+0.5, gate.getY()+1, gate.getZ()+0.5, 1, 0, 0, 0, 0);
+                server.playSound(null, gate, net.minecraft.sounds.SoundEvents.GENERIC_EXPLODE.value(), net.minecraft.sounds.SoundSource.BLOCKS, 2, 0.7F);
             }
-            server.sendParticles(ParticleTypes.EXPLOSION_EMITTER, gate.getX()+0.5, gate.getY()+1, gate.getZ()+0.5, 1, 0, 0, 0, 0);
-            server.playSound(null, gate, net.minecraft.sounds.SoundEvents.GENERIC_EXPLODE.value(), net.minecraft.sounds.SoundSource.BLOCKS, 2, 0.7F);
         }
         discard();
+    }
+    @Override public void remove(RemovalReason reason) {
+        if (!isRemoved() && reason.shouldDestroy() && !resolved && level() instanceof ServerLevel server)
+            GateMeteorFailures.record(server, gate, getUUID());
+        super.remove(reason);
     }
     @Override protected void addAdditionalSaveData(CompoundTag tag) {
         tag.putLong("Gate", gate.asLong()); tag.putDouble("StartX", start.x); tag.putDouble("StartY", start.y); tag.putDouble("StartZ", start.z); tag.putInt("Elapsed", elapsed);
     }
     @Override protected void readAdditionalSaveData(CompoundTag tag) {
         gate = BlockPos.of(tag.getLong("Gate")); start = new Vec3(tag.getDouble("StartX"), tag.getDouble("StartY"), tag.getDouble("StartZ")); elapsed = tag.getInt("Elapsed");
+        resolved = false;
         syncFlightDirection();
     }
 }

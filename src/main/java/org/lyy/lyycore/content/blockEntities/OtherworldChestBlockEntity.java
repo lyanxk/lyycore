@@ -4,6 +4,7 @@ import java.util.List;
 import net.minecraft.core.*;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.MenuProvider;
@@ -25,7 +26,8 @@ public final class OtherworldChestBlockEntity extends BlockEntity implements Men
     public static final int CAPACITY = 1_000_000_000, COST = 10_000;
     public final ImaginaryEnergyStorage energy = new ImaginaryEnergyStorage(CAPACITY, CAPACITY, 0, this::setChanged);
     public final ImaginaryEnergyFeAdapter fe = new ImaginaryEnergyFeAdapter(energy, this::setChanged, Integer.MAX_VALUE, 0);
-    private ResourceLocation selected;
+    private ItemStack selection = ItemStack.EMPTY;
+    private ResourceLocation legacySelection;
     private List<ItemStack> cachedCatalog;
     private int selectedIndex = -1;
     private final ContainerData data = new ContainerData() {
@@ -39,17 +41,34 @@ public final class OtherworldChestBlockEntity extends BlockEntity implements Men
         var catalog = products();
         if (catalog != cachedCatalog) {
             cachedCatalog = catalog; selectedIndex = -1;
-            for (int i = 0; i < catalog.size(); i++) if (BuiltInRegistries.ITEM.getKey(catalog.get(i).getItem()).equals(selected)) { selectedIndex = i; break; }
+            for (int i = 0; i < catalog.size(); i++) {
+                var candidate = catalog.get(i);
+                boolean matches = legacySelection != null
+                        ? BuiltInRegistries.ITEM.getKey(candidate.getItem()).equals(legacySelection)
+                        : !selection.isEmpty() && ItemStack.isSameItemSameComponents(candidate, selection);
+                if (!matches) continue;
+                selectedIndex = i;
+                if (legacySelection != null) {
+                    // Old saves lack component identity. Resolve once in deterministic catalog order.
+                    selection = candidate; legacySelection = null; setChanged();
+                }
+                break;
+            }
         }
         return selectedIndex;
     }
     public boolean select(int index) {
         var catalog = products();
         if (index < 0 || index >= catalog.size()) return false;
-        selected = BuiltInRegistries.ITEM.getKey(catalog.get(index).getItem()); cachedCatalog = null; setChanged(); return true;
+        var next = catalog.get(index);
+        if (legacySelection != null || !ItemStack.isSameItemSameComponents(selection, next)) {
+            selection = next.copyWithCount(1); legacySelection = null; setChanged();
+        }
+        cachedCatalog = catalog; selectedIndex = index;
+        return true;
     }
     private ItemStack selected() {
-        int index = selectedIndex(); return index < 0 ? ItemStack.EMPTY : products().get(index).copy();
+        int index = selectedIndex(); return index < 0 ? ItemStack.EMPTY : products().get(index);
     }
     private int affordable() { return energy.getImaginaryEnergyStored() / COST; }
     private void charge(int count) { if (count > 0) energy.setImaginaryEnergy(energy.getImaginaryEnergyStored() - count * COST); }
@@ -89,10 +108,17 @@ public final class OtherworldChestBlockEntity extends BlockEntity implements Men
     @Override public AbstractContainerMenu createMenu(int id, Inventory inv, Player player) { return new OtherworldChestMenu(id, inv, this, data); }
     @Override protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries); tag.putInt("Energy", energy.getImaginaryEnergyStored());
-        tag.putInt("FeRemainder", fe.getRemainder()); if (selected != null) tag.putString("Selected", selected.toString());
+        tag.putInt("FeRemainder", fe.getRemainder());
+        if (!selection.isEmpty()) tag.put("SelectedProduct", selection.save(registries));
+        else if (legacySelection != null) tag.putString("Selected", legacySelection.toString());
     }
     @Override protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries); energy.setImaginaryEnergy(tag.getInt("Energy"));
-        fe.setRemainder(tag.getInt("FeRemainder")); selected = ResourceLocation.tryParse(tag.getString("Selected")); cachedCatalog = null;
+        fe.setRemainder(tag.getInt("FeRemainder"));
+        boolean hasProduct = tag.contains("SelectedProduct", Tag.TAG_COMPOUND);
+        selection = hasProduct ? ItemStack.parseOptional(registries, tag.getCompound("SelectedProduct")) : ItemStack.EMPTY;
+        if (!selection.isEmpty()) selection.setCount(1);
+        legacySelection = hasProduct ? null : ResourceLocation.tryParse(tag.getString("Selected"));
+        cachedCatalog = null; selectedIndex = -1;
     }
 }
