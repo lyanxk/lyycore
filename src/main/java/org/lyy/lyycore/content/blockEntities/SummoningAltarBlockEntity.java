@@ -96,7 +96,7 @@ public final class SummoningAltarBlockEntity extends SummoningPedestalBlockEntit
         var raids = OtherworldRaids.get(server);
         if (pedestals.size() != 8 || raids.active(worldPosition)) return;
         var empty = pedestals.stream().filter(p -> p.items.getStackInSlot(0).isEmpty()).toList();
-        if (!empty.isEmpty() && level.getMaxLocalRawBrightness(worldPosition) == 0 && level.random.nextInt(5) == 0)
+        if (!empty.isEmpty() && level.getMaxLocalRawBrightness(worldPosition) <= 4 && level.random.nextInt(5) == 0)
             empty.get(level.random.nextInt(empty.size())).items.setStackInSlot(0, new ItemStack(LyyItems.IMAGINARY_CRYSTAL.get()));
         if (pedestals.stream().allMatch(p -> p.items.getStackInSlot(0).is(LyyItems.IMAGINARY_CRYSTAL.get())) && raids.start(server, worldPosition))
             pedestals.forEach(p -> p.items.extractItem(0, 1, false));
