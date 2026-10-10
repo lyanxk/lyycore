@@ -71,7 +71,7 @@ public final class ResearchNotesItem extends Item {
             CompoundTag state = new CompoundTag();
             state.putString("Definition", experiment.signature());
             state.putIntArray("Positions", positions);
-            state.putBoolean("Complete", experiment.complete(positions));
+            // Completion is derived from this layout; never persist a second, potentially stale answer.
             data.put("Experiment", state);
         });
     }
@@ -83,12 +83,12 @@ public final class ResearchNotesItem extends Item {
     }
 
     @Override public void appendHoverText(ItemStack stack, TooltipContext context, java.util.List<Component> lines, net.minecraft.world.item.TooltipFlag flag) {
-        if (context.level() != null) {
-            ResearchDefinition research = research(stack, context.level());
-            if (research != null) lines.add(Component.translatable(research.title()).withColor(research.rarity().color));
-            var experiment = experiment(stack, context.level());
-            if (experiment != null) lines.add(Component.translatable("gui.lyycore.experiment." +
-                    (experimentComplete(stack, experiment) ? "complete" : "incomplete")).withColor(0x8CAFD1));
-        }
+        if (context.level() == null) return;
+        ResearchDefinition research = research(stack, context.level());
+        if (research == null) return;
+        lines.add(Component.translatable(research.title()).withColor(research.rarity().color));
+        var experiment = research.production().flatMap(ResearchDefinition.Production::experiment).orElse(null);
+        if (experiment != null) lines.add(Component.translatable("gui.lyycore.experiment." +
+                (experimentComplete(stack, experiment) ? "complete" : "incomplete")).withColor(0x8CAFD1));
     }
 }

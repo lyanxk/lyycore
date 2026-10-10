@@ -43,8 +43,10 @@ public final class PlayerAttributes {
         data.putInt("Remaining", remaining + (add ? -1 : 1)); save(player, data); update(player); return true;
     }
     public static void update(ServerPlayer player) {
+        boolean enabled = unlocked(player);
+        var allocations = data(player);
         for (var stat : Stat.values()) {
-            double amount = unlocked(player) ? (double)allocated(player, stat) * stat.perPoint : 0;
+            double amount = enabled ? (double)Math.max(0, allocations.getInt(stat.name())) * stat.perPoint : 0;
             setBonus(player, stat.attribute, ALLOCATION, amount, AttributeModifier.Operation.ADD_VALUE);
         }
         if (player.getHealth() > player.getMaxHealth()) player.setHealth(player.getMaxHealth());

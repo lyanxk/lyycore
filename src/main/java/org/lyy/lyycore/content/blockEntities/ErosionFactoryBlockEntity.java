@@ -5,6 +5,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.*;
 import net.minecraft.world.inventory.*;
@@ -23,6 +24,8 @@ import org.lyy.lyycore.registry.LyyBlockEntities;
 /** One template, one complete input stack per transaction, and a reserved output slot. */
 public final class ErosionFactoryBlockEntity extends BlockEntity implements MenuProvider {
     public static final int CAPACITY = 1_000_000_000, COST = 1_000_000;
+    private static final TagKey<Item> DEEPSLATE_ORES = ItemTags.create(ResourceLocation.parse("c:ores_in_ground/deepslate"));
+    private static final TagKey<Item> STONE_ORES = ItemTags.create(ResourceLocation.parse("c:ores_in_ground/stone"));
     public final ImaginaryEnergyStorage energy = new ImaginaryEnergyStorage(CAPACITY, CAPACITY, 0, this::setChanged);
     public final ImaginaryEnergyFeAdapter fe = new ImaginaryEnergyFeAdapter(energy, this::setChanged, Integer.MAX_VALUE, 0);
     public final ItemStackHandler items = new ItemStackHandler(3) {
@@ -47,10 +50,8 @@ public final class ErosionFactoryBlockEntity extends BlockEntity implements Menu
     public static boolean matches(ItemStack template, ItemStack material) {
         if (!template.is(Tags.Items.ORES) || template.isEmpty() || material.isEmpty()) return false;
         // Ore host tags also support other mods; Nether ores cannot be made from Overworld stone.
-        if (template.is(ItemTags.create(ResourceLocation.parse("c:ores_in_ground/deepslate"))))
-            return material.is(Items.DEEPSLATE) || material.is(Items.COBBLED_DEEPSLATE);
-        if (template.is(ItemTags.create(ResourceLocation.parse("c:ores_in_ground/stone"))))
-            return material.is(Items.STONE) || material.is(Items.COBBLESTONE);
+        if (template.is(DEEPSLATE_ORES)) return material.is(Items.DEEPSLATE) || material.is(Items.COBBLED_DEEPSLATE);
+        if (template.is(STONE_ORES)) return material.is(Items.STONE) || material.is(Items.COBBLESTONE);
         return false;
     }
     public static void serverTick(Level level, BlockPos pos, BlockState state, ErosionFactoryBlockEntity factory) {

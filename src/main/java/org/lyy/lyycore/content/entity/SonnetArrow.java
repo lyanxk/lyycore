@@ -60,7 +60,7 @@ public class SonnetArrow extends Arrow {
 
     @Override protected void onHitEntity(EntityHitResult result) {
         if (!isCharged()) {
-            if (getOwner() instanceof net.minecraft.world.entity.player.Player) physicalHit(this, result, this::doPostHurtEffects, this::doKnockback);
+            if (getOwner() instanceof net.minecraft.world.entity.player.Player) SonnetArrowImpact.hit(this, result, this::doPostHurtEffects, this::doKnockback);
             else super.onHitEntity(result);
             return;
         }
@@ -111,41 +111,6 @@ public class SonnetArrow extends Arrow {
         pickup = Pickup.DISALLOWED;
     }
 
-    /** Preserve normal arrow flight, impact knockback, enchantments and tipped/spectral effects. */
-    private static void physicalHit(AbstractArrow arrow, EntityHitResult result,
-                                    java.util.function.Consumer<LivingEntity> effects,
-                                    java.util.function.BiConsumer<LivingEntity, net.minecraft.world.damagesource.DamageSource> knockback) {
-        if (!(arrow.getOwner() instanceof net.minecraft.world.entity.player.Player owner) || arrow.level().isClientSide) return;
-        Entity target = result.getEntity();
-        var element = org.lyy.lyycore.content.SpecialDamage.Element.PHYSICAL;
-        var source = org.lyy.lyycore.content.SpecialDamage.source(owner, arrow, element);
-        float base = (float)arrow.getBaseDamage();
-        if (arrow.getWeaponItem() != null && arrow.level() instanceof ServerLevel server)
-            base = net.minecraft.world.item.enchantment.EnchantmentHelper.modifyDamage(server, arrow.getWeaponItem(), target, source, base);
-        int damage = net.minecraft.util.Mth.ceil(Math.clamp(arrow.getDeltaMovement().length() * base, 0, Integer.MAX_VALUE));
-        if (arrow.isCritArrow()) damage = (int)Math.min(Integer.MAX_VALUE, (long)damage + owner.getRandom().nextInt(damage / 2 + 2));
-        owner.setLastHurtMob(target);
-        int fire = target.getRemainingFireTicks();
-        if (arrow.isOnFire() && target.getType() != EntityType.ENDERMAN) target.igniteForSeconds(5);
-        if (target.hurt(source, org.lyy.lyycore.content.SpecialDamage.amount(owner, element, damage))) {
-            if (target instanceof LivingEntity living) {
-                living.setArrowCount(living.getArrowCount() + 1);
-                knockback.accept(living, source);
-                net.minecraft.world.item.enchantment.EnchantmentHelper.doPostAttackEffectsWithItemSource((ServerLevel)arrow.level(), living, source, arrow.getWeaponItem());
-                effects.accept(living);
-                if (living != owner && living instanceof net.minecraft.world.entity.player.Player && owner instanceof net.minecraft.server.level.ServerPlayer server && !arrow.isSilent())
-                    server.connection.send(new net.minecraft.network.protocol.game.ClientboundGameEventPacket(net.minecraft.network.protocol.game.ClientboundGameEventPacket.ARROW_HIT_PLAYER, 0));
-            }
-            arrow.playSound(net.minecraft.sounds.SoundEvents.ARROW_HIT, 1, 1.2F);
-            arrow.discard();
-        } else {
-            target.setRemainingFireTicks(fire);
-            arrow.deflect(ProjectileDeflection.REVERSE, target, owner, false);
-            arrow.setDeltaMovement(arrow.getDeltaMovement().scale(.2));
-            if (arrow.getDeltaMovement().lengthSqr() < 1.0E-7) arrow.discard();
-        }
-    }
-
     private static void sparkle(AbstractArrow arrow) {
         if (arrow.level().isClientSide && !arrow.isRemoved() && arrow.getDeltaMovement().lengthSqr() > 0.01)
             arrow.level().addParticle(DUST, arrow.getX(), arrow.getY(), arrow.getZ(), 0, 0, 0);
@@ -154,7 +119,7 @@ public class SonnetArrow extends Arrow {
     public static class Spectral extends SpectralArrow {
         private long expiresAt;
         @Override protected void onHitEntity(EntityHitResult result) {
-            if (getOwner() instanceof net.minecraft.world.entity.player.Player) physicalHit(this, result, this::doPostHurtEffects, this::doKnockback);
+            if (getOwner() instanceof net.minecraft.world.entity.player.Player) SonnetArrowImpact.hit(this, result, this::doPostHurtEffects, this::doKnockback);
             else super.onHitEntity(result);
         }
         public Spectral(EntityType<? extends Spectral> type, Level level) {

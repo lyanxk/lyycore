@@ -11,7 +11,7 @@ import org.lyy.lyycore.network.WingsNetwork;
 public final class SelfMenuData implements ContainerData {
     public static final int FLIGHT = -10000, PURSUIT = -10010, ALLOCATE = -10020, REFUND = -10030, ACCELERATION = -10200;
     private final Player player;
-    private final int[] client = new int[12];
+    private final int[] client = new int[11];
     public SelfMenuData(Player player) { this.player = player; }
     private int value(int index) {
         if (index == 0) return PlayerAttributes.unlocked(player) ? 1 : 0;
