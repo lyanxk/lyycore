@@ -30,7 +30,14 @@
     }
   ],
   "result": {
-    "id": "lyycore:thunder_scythe"
+    "id": "lyycore:thunder_scythe",
+    "components": {
+      "minecraft:enchantments": {
+        "levels": {
+          "minecraft:looting": 20
+        }
+      }
+    }
   },
   "duration": 2400,
   "energy": 1000000,

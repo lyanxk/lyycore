@@ -1,4 +1,4 @@
-"""Bake the artist's final model and clips; never regenerate or edit the source."""
+"""Bake the original mesh model and clips; never regenerate or edit the source."""
 import json
 import math
 import runpy
@@ -10,7 +10,8 @@ SOURCE = Path("F:/misc/BlockBench/thunder_greatscythe")
 ASSETS = ROOT / "src/main/resources/assets/lyycore"
 helpers = runpy.run_path(str(ROOT / "tools/research-content/import_models.py"))
 write, rotate = helpers["write"], helpers["rotate"]
-source = json.loads((SOURCE / "source/thunder_greatscythe.bbmodel").read_text(encoding="utf-8"))
+# The editable source now contains the Bedrock conversion; use the original backup.
+source = json.loads((SOURCE / "revisions/before_bedrock_conversion.bbmodel").read_text(encoding="utf-8"))
 groups = {g["uuid"]: g for g in source["groups"]}
 source["outliner"] = [node for node in source["outliner"] if groups[node["uuid"]].get("export", True)]
 
@@ -45,6 +46,7 @@ for animation in source["animations"]:
             keys=[k for k in keys if k["channel"] != channel]+sampled
         animator["keyframes"]=keys
 texture = "thunder_greatscythe.png"
+texture_id = f"lyycore:item/thunder_scythe/{Path(texture).stem}"
 target = ASSETS / "textures/item/thunder_scythe" / texture
 target.parent.mkdir(parents=True, exist_ok=True)
 shutil.copyfile(SOURCE / "textures" / texture, target)
@@ -65,7 +67,7 @@ def world(point, index):
         point = [v+(p-o+t)/16 for v,p,o,t in zip(point, bone["pivot"], parent, value("position", [0,0,0]))]
         index = bone["parent"]
     return point
-faces = [{"texture":"0", "vertices":[world(v[:3], index)+v[3:5] for v in face["vertices"]]}
+faces = [{"texture":"0", "emissive":False, "vertices":[world(v[:3], index)+v[3:5] for v in face["vertices"]]}
          for index,bone in enumerate(bones) for face in bone["faces"]]
 points = [v for face in faces for v in face["vertices"]]
 low = [min(p[a] for p in points) for a in range(3)]
@@ -75,5 +77,5 @@ for face in faces:
     face["vertices"] = [[round((v[a]-(low[a]+high[a])/2)/size+.5,6) for a in range(3)]+v[3:5] for v in face["vertices"]]
 write(ASSETS / "models/item/thunder_scythe.json", {
     "loader":"lyycore:machine_mesh", "parent":"minecraft:block/block", "render_type":"minecraft:cutout",
-    "ambientocclusion":False, "textures":{"0":"lyycore:item/thunder_scythe/thunder_greatscythe", "particle":"lyycore:item/thunder_scythe/thunder_greatscythe"},
+    "ambientocclusion":False, "textures":{"0":texture_id, "particle":texture_id},
     "faces":faces, "display":{"gui":{"rotation":[0,0,0]}, "ground":{"scale":[.5]*3}}})

@@ -18,35 +18,49 @@ final class AnimatedMeshModel {
     private record Face(int texture, float[][] vertices) { }
     private record Bone(String name, int parent, float[] pivot, float[] rotation, Face[] faces) { }
     private record Clip(float length, boolean loop, float[][][][] tracks) {
-        float sample(int bone, int channel, int axis, float time) {
-            float[][] keys = tracks[bone][channel];
-            if (keys.length == 0) return channel == 2 ? 1 : 0;
+        void sample(int bone, float time, float[] result, int offset) {
             time = loop && length > 0 ? time % length : Mth.clamp(time, 0, length);
-            if (time <= keys[0][0]) return keys[0][axis + 1];
+            for (int channel = 0; channel < 3; channel++)
+                sampleTrack(tracks[bone][channel], channel == 2 ? 1 : 0, time, result, offset + channel * 3);
+        }
+        /** XYZ share key times and interpolation; locate their interval only once. */
+        private static void sampleTrack(float[][] keys, float fallback, float time, float[] result, int offset) {
+            if (keys.length == 0) { Arrays.fill(result, offset, offset + 3, fallback); return; }
+            if (keys.length == 1 || time <= keys[0][0]) {
+                System.arraycopy(keys[0], 1, result, offset, 3);
+                return;
+            }
             int low = 0, high = keys.length - 1;
             while (low + 1 < high) {
                 int middle = (low + high) >>> 1;
                 if (keys[middle][0] <= time) low = middle; else high = middle;
             }
             float[] a = keys[low], b = keys[high];
-            if (a.length > 4 && a[4] == 1 && time < b[0]) return a[axis + 1];
+            if (a.length > 4 && a[4] == 1 && time < b[0]) {
+                System.arraycopy(a, 1, result, offset, 3);
+                return;
+            }
             float progress = a[0] == b[0] ? 0 : Mth.clamp((time - a[0]) / (b[0] - a[0]), 0, 1);
             if (a.length > 4 && a[4] == 2 || b.length > 4 && b[4] == 2) {
-                float p0 = keys[Math.max(0, low - 1)][axis + 1], p1 = a[axis + 1];
-                float p2 = b[axis + 1], p3 = keys[Math.min(keys.length - 1, high + 1)][axis + 1];
+                float[] previous = keys[Math.max(0, low - 1)], next = keys[Math.min(keys.length - 1, high + 1)];
                 float t = progress;
-                return .5F * (2*p1 + (-p0+p2)*t + (2*p0-5*p1+4*p2-p3)*t*t + (-p0+3*p1-3*p2+p3)*t*t*t);
+                for (int axis = 0; axis < 3; axis++) {
+                    float p0 = previous[axis + 1], p1 = a[axis + 1], p2 = b[axis + 1], p3 = next[axis + 1];
+                    result[offset + axis] = .5F * (2*p1 + (-p0+p2)*t + (2*p0-5*p1+4*p2-p3)*t*t + (-p0+3*p1-3*p2+p3)*t*t*t);
+                }
+            } else {
+                for (int axis = 0; axis < 3; axis++) result[offset + axis] = Mth.lerp(progress, a[axis + 1], b[axis + 1]);
             }
-            return Mth.lerp(progress, a[axis + 1], b[axis + 1]);
         }
     }
     private final ResourceLocation[] textures;
-    private final Set<Integer> emissiveTextures = new HashSet<>();
-    private final Set<Integer> additiveTextures = new HashSet<>();
+    private final RenderType[] renderTypes;
+    private final boolean[] fullBright;
+    private final Face[][][] facesByTexture;
     private final Bone[] bones;
     private final int[][] children;
     private final PoseStack.Pose[] poses;
-    private final float[][] values = new float[3][3];
+    private final float[] values = new float[9], airValues = new float[9], blendValues = new float[9];
     private final Map<String, Clip> clips = new HashMap<>();
     private record Locator(float[] position, int[] chain) { }
     private final Map<String, Locator> locators = new HashMap<>();
@@ -66,10 +80,18 @@ final class AnimatedMeshModel {
         ResourceLocation path = ResourceLocation.parse("lyycore:geometry/" + name + ".json");
         try (var reader = Minecraft.getInstance().getResourceManager().getResourceOrThrow(path).openAsReader()) {
             JsonObject root = JsonParser.parseReader(reader).getAsJsonObject();
+            Set<Integer> emissiveTextures = new HashSet<>(), additiveTextures = new HashSet<>();
             if (root.has("additive_textures")) for (var texture : root.getAsJsonArray("additive_textures")) additiveTextures.add(texture.getAsInt());
             if (root.has("emissive_textures")) for (var texture : root.getAsJsonArray("emissive_textures")) emissiveTextures.add(texture.getAsInt());
             textures = new ResourceLocation[root.getAsJsonArray("textures").size()];
             for (int i = 0; i < textures.length; i++) textures[i] = ResourceLocation.parse(root.getAsJsonArray("textures").get(i).getAsString());
+            renderTypes = new RenderType[textures.length];
+            fullBright = new boolean[textures.length];
+            for (int i = 0; i < textures.length; i++) {
+                boolean effect = additiveTextures.contains(i) || textures[i].getPath().endsWith("_fx.png");
+                renderTypes[i] = effect ? RenderType.eyes(textures[i]) : RenderType.entityCutoutNoCull(textures[i]);
+                fullBright[i] = emissiveTextures.contains(i) || textures[i].getPath().endsWith("eye_light.png") || effect;
+            }
             JsonArray entries = root.getAsJsonArray("bones");
             bones = new Bone[entries.size()];
             wingValues = new float[bones.length * 9];
@@ -87,6 +109,12 @@ final class AnimatedMeshModel {
                 }
                 bones[i] = new Bone(bone.get("name").getAsString(), bone.get("parent").getAsInt(), vector(bone.getAsJsonArray("pivot")), vector(bone.getAsJsonArray("rotation")), faces);
                 boneIndices.putIfAbsent(bones[i].name, i);
+            }
+            // Preserve texture/bone/face order while avoiding a full face scan per texture each frame.
+            facesByTexture = new Face[textures.length][bones.length][];
+            for (int texture = 0; texture < textures.length; texture++) for (int bone = 0; bone < bones.length; bone++) {
+                final int selected = texture;
+                facesByTexture[texture][bone] = Arrays.stream(bones[bone].faces).filter(face -> face.texture == selected).toArray(Face[]::new);
             }
             children = new int[bones.length][];
             for (int i = 0; i < bones.length; i++) {
@@ -154,8 +182,17 @@ final class AnimatedMeshModel {
         Arrays.fill(hidden, false);
         Clip clip = clips.getOrDefault(animation, clips.get("idle"));
         for (int i = 0; i < bones.length; i++) if (bones[i].parent < 0)
-            updatePoses(pose, i, clip, clip, clip, clip, seconds, seconds, 0, 0, 0);
+            updateSinglePose(pose, i, clip, seconds);
         drawFaces(buffers, light);
+    }
+    private void updateSinglePose(PoseStack pose, int index, Clip clip, float time) {
+        clip.sample(index, time, values, 0);
+        pose.pushPose();
+        transformPose(pose, index, values, 0, false);
+        // PoseStack copies on push; a popped pose stays intact until this draw completes.
+        poses[index] = pose.last();
+        for (int child : children[index]) updateSinglePose(pose, child, clip, time);
+        pose.popPose();
     }
     void renderWings(PoseStack pose, MultiBufferSource buffers, int light, String base, float baseTime, float attackTime, int featherCount) {
         Arrays.fill(hidden, false);
@@ -169,18 +206,18 @@ final class AnimatedMeshModel {
         Clip clip = phase == null ? base : clips.get(phase.clip);
         float time = phase == null ? baseTime : WingAttackAnimation.seconds(phase, feather, attackTime, featherCount);
         pose.pushPose();
-        transform(pose, index, clip, clip, clip, clip, time, time, 0, 0, 0);
-        poses[index] = pose.last().copy();
+        clip.sample(index, time, values, 0);
+        transformPose(pose, index, values, 0, false);
+        poses[index] = pose.last();
         for (int child : children[index]) updateWings(pose, child, base, baseTime, attackTime, featherCount);
         pose.popPose();
     }
     private void drawFaces(MultiBufferSource buffers, int light) {
         // Finish one texture before requesting another; these render types share a backing buffer.
         for (int texture = 0; texture < textures.length; texture++) {
-            boolean effect = additiveTextures.contains(texture) || textures[texture].getPath().endsWith("_fx.png");
-            VertexConsumer vertices = buffers.getBuffer(effect ? RenderType.eyes(textures[texture]) : RenderType.entityCutoutNoCull(textures[texture]));
-            int illumination = (emissiveTextures.contains(texture) || textures[texture].getPath().endsWith("eye_light.png") || effect) ? LightTexture.FULL_BRIGHT : light;
-            for (int bone = 0; bone < bones.length; bone++) if (!hidden[bone]) for (Face face : bones[bone].faces) if (face.texture == texture)
+            VertexConsumer vertices = buffers.getBuffer(renderTypes[texture]);
+            int illumination = fullBright[texture] ? LightTexture.FULL_BRIGHT : light;
+            for (int bone = 0; bone < bones.length; bone++) if (!hidden[bone]) for (Face face : facesByTexture[texture][bone])
                 for (float[] v : face.vertices) vertices.addVertex(poses[bone], v[0], v[1], v[2])
                         .setColor(255, 255, 255, 255).setUv(v[3], v[4]).setOverlay(OverlayTexture.NO_OVERLAY)
                         .setLight(illumination).setNormal(poses[bone], v[5], v[6], v[7]);
@@ -208,13 +245,11 @@ final class AnimatedMeshModel {
     }
     void sample(String animation, float time, float[] result) {
         var clip = clips.getOrDefault(animation, clips.get("idle"));
-        for (int bone = 0; bone < bones.length; bone++) for (int channel = 0; channel < 3; channel++) for (int axis = 0; axis < 3; axis++)
-            result[bone * 9 + channel * 3 + axis] = clip.sample(bone, channel, axis, time);
+        for (int bone = 0; bone < bones.length; bone++) clip.sample(bone, time, result, bone * 9);
     }
     private void sampleBone(String animation, int bone, float time, float[] result) {
         var clip = clips.get(animation);
-        for (int channel = 0; channel < 3; channel++) for (int axis = 0; axis < 3; axis++)
-            result[bone * 9 + channel * 3 + axis] = clip.sample(bone, channel, axis, time);
+        clip.sample(bone, time, result, bone * 9);
     }
     void renderWingPose(PoseStack pose, MultiBufferSource buffers, int light, float[] base, float attackTime, int count) {
         System.arraycopy(base, 0, wingValues, 0, base.length);
@@ -226,14 +261,16 @@ final class AnimatedMeshModel {
     private void updateWingPose(PoseStack pose, int bone) {
         pose.pushPose();
         transformPose(pose, bone, wingValues, false);
-        poses[bone] = pose.last().copy();
+        poses[bone] = pose.last();
         for (int child : children[bone]) { hidden[child] |= hidden[bone]; updateWingPose(pose, child); }
         pose.popPose();
     }
     private void transformPose(PoseStack pose, int index, float[] values, boolean ignoreScale) {
+        transformPose(pose, index, values, index * 9, ignoreScale);
+    }
+    private void transformPose(PoseStack pose, int index, float[] values, int offset, boolean ignoreScale) {
         var bone = bones[index];
         float[] parent = bone.parent < 0 ? null : bones[bone.parent].pivot;
-        int offset = index * 9;
         pose.translate((bone.pivot[0] - (parent == null ? 0 : parent[0]) + values[offset]) / 16,
                 (bone.pivot[1] - (parent == null ? 0 : parent[1]) + values[offset + 1]) / 16,
                 (bone.pivot[2] - (parent == null ? 0 : parent[2]) + values[offset + 2]) / 16);
@@ -266,12 +303,11 @@ final class AnimatedMeshModel {
     }
     /** Draw the actual detached feather, with its tip along projectile-local -Z. */
     void renderAttackFeather(PoseStack pose, MultiBufferSource buffers, int light, int feather) {
-        var bone = bones[attackBoneIndices[feather]];
         pose.pushPose();
         pose.mulPose(Axis.XP.rotationDegrees(90));
         for (int texture = 0; texture < textures.length; texture++) {
             var vertices = buffers.getBuffer(RenderType.entityCutoutNoCull(textures[texture]));
-            for (Face face : bone.faces) if (face.texture == texture)
+            for (Face face : facesByTexture[texture][attackBoneIndices[feather]])
                 for (float[] v : face.vertices) vertices.addVertex(pose.last(), v[0], v[1], v[2])
                         .setColor(255, 255, 255, 255).setUv(v[3], v[4]).setOverlay(OverlayTexture.NO_OVERLAY)
                         .setLight(light).setNormal(pose.last(), v[5], v[6], v[7]);
@@ -282,25 +318,32 @@ final class AnimatedMeshModel {
                             float time, float walkTime, float walking, float flying, float gliding) {
         pose.pushPose();
         transform(pose, index, idle, walk, fly, glide, time, walkTime, walking, flying, gliding);
-        poses[index] = pose.last().copy();
+        poses[index] = pose.last();
         for (int child : children[index]) updatePoses(pose, child, idle, walk, fly, glide, time, walkTime, walking, flying, gliding);
         pose.popPose();
     }
     private void transform(PoseStack pose, int index, Clip idle, Clip walk, Clip fly, Clip glide,
                            float time, float walkTime, float walking, float flying, float gliding) {
-        Bone bone = bones[index];
-        float[] parent = bone.parent < 0 ? null : bones[bone.parent].pivot;
-        for (int channel = 0; channel < 3; channel++) for (int axis = 0; axis < 3; axis++) {
-            float ground = Mth.lerp(walking, idle.sample(index, channel, axis, time), walk.sample(index, channel, axis, walkTime));
-            float air = Mth.lerp(gliding, fly.sample(index, channel, axis, time), glide.sample(index, channel, axis, time));
-            values[channel][axis] = Mth.lerp(flying, ground, air);
+        if (flying == 0) {
+            sampleBlend(index, idle, time, walk, walkTime, walking, values);
+        } else if (flying == 1) {
+            sampleBlend(index, fly, time, glide, time, gliding, values);
+        } else {
+            sampleBlend(index, idle, time, walk, walkTime, walking, values);
+            sampleBlend(index, fly, time, glide, time, gliding, airValues);
+            for (int i = 0; i < 9; i++) values[i] = Mth.lerp(flying, values[i], airValues[i]);
         }
-        pose.translate((bone.pivot[0] - (parent == null ? 0 : parent[0]) + values[0][0]) / 16,
-                (bone.pivot[1] - (parent == null ? 0 : parent[1]) + values[0][1]) / 16,
-                (bone.pivot[2] - (parent == null ? 0 : parent[2]) + values[0][2]) / 16);
-        pose.mulPose(Axis.ZP.rotationDegrees(bone.rotation[2] + values[1][2]));
-        pose.mulPose(Axis.YP.rotationDegrees(bone.rotation[1] + values[1][1]));
-        pose.mulPose(Axis.XP.rotationDegrees(bone.rotation[0] + values[1][0]));
-        pose.scale(values[2][0], values[2][1], values[2][2]);
+        transformPose(pose, index, values, 0, false);
+    }
+    private void sampleBlend(int bone, Clip first, float firstTime, Clip second, float secondTime, float weight, float[] result) {
+        if (weight == 0 || first == second && firstTime == secondTime) {
+            first.sample(bone, firstTime, result, 0);
+        } else if (weight == 1) {
+            second.sample(bone, secondTime, result, 0);
+        } else {
+            first.sample(bone, firstTime, result, 0);
+            second.sample(bone, secondTime, blendValues, 0);
+            for (int i = 0; i < 9; i++) result[i] = Mth.lerp(weight, result[i], blendValues[i]);
+        }
     }
 }
