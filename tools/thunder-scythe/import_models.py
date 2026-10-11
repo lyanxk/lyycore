@@ -78,4 +78,4 @@ for face in faces:
 write(ASSETS / "models/item/thunder_scythe.json", {
     "loader":"lyycore:machine_mesh", "parent":"minecraft:block/block", "render_type":"minecraft:cutout",
     "ambientocclusion":False, "textures":{"0":texture_id, "particle":texture_id},
-    "faces":faces, "display":{"gui":{"rotation":[0,0,0]}, "ground":{"scale":[.5]*3}}})
+    "faces":faces, "display":{"gui":{"rotation":[0,0,0], "scale":[-1,1,1]}, "ground":{"scale":[.5]*3}}})
