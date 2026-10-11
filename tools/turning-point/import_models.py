@@ -12,7 +12,7 @@ helpers["import_machine"].__globals__["SOURCE"] = SOURCE
 helpers["import_machine"]("pure_smelting_plant", "pure_smelting_plant", 3, oriented=True, gui_scale=0.6)
 helpers["import_machine"]("pure_smelting_plant", "pure_smelting_plant_shell", 3,
                           source_name="pure_smelting_plant_inactive", oriented=True, gui_scale=0.6)
-helpers["import_machine"]("imaginary_dragon_nest", "imaginary_dragon_nest", 3, oriented=True)
+helpers["import_machine"]("imaginary_dragon_nest", "imaginary_dragon_nest", 3, oriented=True, gui_scale=0.7, gui_rotation=(20, 150, 0))
 name = "imaginary_dragon_adult"
 model = json.loads((SOURCE / name / "source" / f"{name}.bbmodel").read_text(encoding="utf-8"))
 model["animations"] = [a for a in model["animations"] if not a["name"].endswith(".display")]

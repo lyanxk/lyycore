@@ -71,5 +71,5 @@ def wings():
 
 if __name__ == "__main__":
     cauldron()
-    helpers["import_machine"]("mind_control_beacon", "mind_control_beacon", 6)
+    helpers["import_machine"]("mind_control_beacon", "mind_control_beacon", 6, gui_rotation=(20, 150, 0))
     wings()

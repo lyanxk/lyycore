@@ -9,7 +9,7 @@ helpers = runpy.run_path(str(ROOT / "tools/energy-machines/import_models.py"))
 machine = helpers["import_machine"]
 machine.__globals__["SOURCE"] = Path("F:/misc/BlockBench")
 machine("otherworldly_chest", "otherworld_chest", 1, width=1, oriented=True,
-        emissive_overlay="otherworldly_chest_emissive.png")
+        emissive_overlay="otherworldly_chest_emissive.png", gui_scale=0.6, gui_rotation=(20, -150, 0))
 path = ASSETS / "blockstates/otherworld_chest.json"
 states = json.loads(path.read_text(encoding="utf-8"))
 for entry in states["multipart"]:

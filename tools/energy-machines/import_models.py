@@ -30,7 +30,7 @@ def clip_polygon(vertices, axis, boundary, sign):
 
 
 def import_machine(folder, name, height, source_name=None, oriented=False, width=3, source_offset=(0, 0, 0), gui_scale=0.9,
-                   emissive_overlay=None, top_overhang=0):
+                   emissive_overlay=None, top_overhang=0, gui_rotation=(20, 30, 0)):
     source = json.loads((SOURCE / folder / "source" / f"{source_name or folder}.bbmodel").read_text(encoding="utf-8"))
     source.setdefault("animations", [])
     paths, texture_map, emissive = [], {}, set()
@@ -139,7 +139,7 @@ def import_machine(folder, name, height, source_name=None, oriented=False, width
                      for entry in multipart for facing, angle in (("north", 0), ("east", 90), ("south", 180), ("west", 270))]
     write(ASSETS / "blockstates" / f"{name}.json", {"multipart": multipart})
     write(ASSETS / "models/item" / f"{name}.json", dict(common, parent="minecraft:block/block", faces=item,
-          render_type="minecraft:translucent", display={"gui": {"rotation": [20, 30, 0], "scale": [gui_scale]*3},
+          render_type="minecraft:translucent", display={"gui": {"rotation": list(gui_rotation), "scale": [gui_scale]*3},
           "ground": {"scale": [0.4]*3, "translation": [0, 3, 0]},
           "firstperson_righthand": {"rotation": [0, 45, 0], "scale": [0.65]*3}}))
     # Keep the hierarchy/tracks, but render only moving surfaces each frame.
@@ -179,5 +179,5 @@ def import_machine(folder, name, height, source_name=None, oriented=False, width
 
 
 if __name__ == "__main__":
-    import_machine("imaginary_condensation_beacon", "imaginary_condensing_beacon", 4)
+    import_machine("imaginary_condensation_beacon", "imaginary_condensing_beacon", 4, gui_scale=0.7, gui_rotation=(20, 150, 0))
     import_machine("spatial_transmission_tower", "spatial_transmission_tower", 8)

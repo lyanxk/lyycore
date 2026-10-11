@@ -1,9 +1,6 @@
 {
   "icon": {
-    "id": "lyycore:jump_potion",
-    "components": {
-      "minecraft:custom_model_data": 1
-    }
+    "id": "minecraft:rabbit_foot"
   },
   "rarity": "common",
   "materials": [

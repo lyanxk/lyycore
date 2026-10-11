@@ -9,7 +9,8 @@ helpers = runpy.run_path(str(ROOT / "tools/energy-machines/import_models.py"))
 machine = helpers["import_machine"]
 machine.__globals__["SOURCE"] = Path("F:/misc/BlockBench")
 machine("erosion_factory", "erosion_factory", 3, oriented=True,
-        emissive_overlay="erosion_factory_emissive.png", top_overhang=2.5/16)
+        emissive_overlay="erosion_factory_emissive.png", top_overhang=2.5/16,
+        gui_scale=0.7, gui_rotation=(20, -150, 0))
 
 # SquareMachineBlock part IDs describe world-space cells, not cells rotated with the machine.
 # Move each rotated source mesh to the correct physical cell; keep saved part IDs unchanged.
