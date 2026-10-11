@@ -1,8 +1,1 @@
-{
-  "parent": "minecraft:block/orientable",
-  "textures": {
-    "top": "lyycore:block/imaginary_steel_block",
-    "front": "lyycore:block/collector_front",
-    "side": "lyycore:block/imaginary_steel_block"
-  }
-}
+{"textures":{"0":"lyycore:block/otherworld_chest/otherworldly_chest","particle":"lyycore:block/otherworld_chest/otherworldly_chest","1":"lyycore:block/otherworld_chest/otherworldly_chest_emissive"},"elements":[]}

@@ -4,9 +4,11 @@ Run with Python 3 + Pillow. Original Blockbench files remain outside the project
 Emissive texture alpha is material strength in these sources, not surface transparency.
 """
 import itertools
+import copy
 import json
 import math
 import runpy
+import shutil
 from pathlib import Path
 from PIL import Image
 
@@ -27,7 +29,8 @@ def clip_polygon(vertices, axis, boundary, sign):
     return result
 
 
-def import_machine(folder, name, height, source_name=None, oriented=False, width=3, source_offset=(0, 0, 0), gui_scale=0.9):
+def import_machine(folder, name, height, source_name=None, oriented=False, width=3, source_offset=(0, 0, 0), gui_scale=0.9,
+                   emissive_overlay=None, top_overhang=0):
     source = json.loads((SOURCE / folder / "source" / f"{source_name or folder}.bbmodel").read_text(encoding="utf-8"))
     source.setdefault("animations", [])
     paths, texture_map, emissive = [], {}, set()
@@ -45,11 +48,24 @@ def import_machine(folder, name, height, source_name=None, oriented=False, width
     texture_map["particle"] = texture_map["0"]
     bake(source, name, paths)
     mesh = json.loads((ASSETS / "geometry" / f"{name}.json").read_text(encoding="utf-8"))
+    if emissive_overlay:
+        assert len(paths) == 1, "An emissive overlay must match the model's single atlas"
+        target = ASSETS / "textures/block" / name / emissive_overlay
+        shutil.copyfile(SOURCE / folder / "textures" / emissive_overlay, target)
+        paths.append(f"lyycore:textures/block/{name}/{emissive_overlay}")
+        texture_map["1"] = f"lyycore:block/{name}/{Path(emissive_overlay).stem}"
+        mesh["textures"] = paths
+        emissive.add(1)
+        for bone in mesh["bones"]:
+            overlay = copy.deepcopy(bone["faces"])
+            for face in overlay: face["texture"] = 1
+            bone["faces"].extend(overlay)
     bones, clip = mesh["bones"], next(iter(mesh["animations"].values()), {"tracks": {}})
     moving = set()
     for i, bone in enumerate(bones):
-        tracks = clip["tracks"].get(str(i), {})
-        if bone["parent"] in moving or any(any(k[1:] != keys[0][1:] for k in keys[1:]) for keys in tracks.values()):
+        # A bone can be stationary in the initial pose and move in another clip.
+        tracks = [animation["tracks"].get(str(i), {}) for animation in mesh["animations"].values()]
+        if bone["parent"] in moving or any(tracks):
             moving.add(i)
 
     def world(vertex, index, normal=False):
@@ -69,6 +85,8 @@ def import_machine(folder, name, height, source_name=None, oriented=False, width
     cell_count = height * width * width
     def cell_origin(part):
         return [part % width-width//2, part//(width*width), part//width%width-width//2]
+    def cell_high(origin):
+        return [origin[0] + 1, origin[1] + 1 + (top_overhang if origin[1] == height - 1 else 0), origin[2] + 1]
     parts = {(part, layer): [] for part in range(cell_count) for layer in ("body", "glass")}
     item = []
     def face_json(vertices, texture):
@@ -84,15 +102,16 @@ def import_machine(folder, name, height, source_name=None, oriented=False, width
             layer = "glass" if "glass" in paths[face["texture"]] else "body"
             for part in range(cell_count):
                 origin = cell_origin(part)
+                high = cell_high(origin)
                 # Assign a surface on an exact cell boundary to only one of its neighbors.
-                limits = [width//2+1, height, width//2+1]
+                limits = [width//2+1, height+top_overhang, width//2+1]
                 if any(max(v[a] for v in vertices) < origin[a]-1e-8
-                       or min(v[a] for v in vertices) > origin[a]+1+1e-8
-                       or (min(v[a] for v in vertices) >= origin[a]+1-1e-8 and origin[a]+1 < limits[a]) for a in range(3)): continue
+                       or min(v[a] for v in vertices) > high[a]+1e-8
+                       or (min(v[a] for v in vertices) >= high[a]-1e-8 and high[a] < limits[a]) for a in range(3)): continue
                 polygon = vertices
                 for axis in range(3):
                     polygon = clip_polygon(polygon, axis, origin[axis], 1)
-                    polygon = clip_polygon(polygon, axis, origin[axis]+1, -1)
+                    polygon = clip_polygon(polygon, axis, high[axis], -1)
                 if len(polygon) < 3: continue
                 for k in range(1, len(polygon)-1):
                     tri = [polygon[0], polygon[k], polygon[k+1]]
@@ -153,7 +172,7 @@ def import_machine(folder, name, height, source_name=None, oriented=False, width
         low = [math.floor(v*16+1e-6)/16 for v in low]; high = [math.ceil(v*16-1e-6)/16 for v in high]
         for part in range(cell_count):
             origin = cell_origin(part)
-            a, b = [max(0,v-o) for v,o in zip(low,origin)], [min(1,v-o) for v,o in zip(high,origin)]
+            a, b = [max(0,v-o) for v,o in zip(low,origin)], [min(limit,v)-o for v,o,limit in zip(high,origin,cell_high(origin))]
             if all(x<y for x,y in zip(a,b)): boxes[part].append(a+b)
     write(ASSETS / "geometry" / f"{name}_shapes.json", boxes)
     print(f"{name}: {len(item)} faces; {sum(len(b['faces']) for b in bones)} animated; {height} blocks high")

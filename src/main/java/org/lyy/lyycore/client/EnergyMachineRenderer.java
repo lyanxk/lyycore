@@ -6,6 +6,8 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.AABB;
 import org.lyy.lyycore.content.blocks.SquareMachineBlock;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import com.mojang.math.Axis;
 
 /** Only moving bones are drawn here; stationary surfaces use the chunk mesh. */
 public final class EnergyMachineRenderer<T extends BlockEntity> implements BlockEntityRenderer<T> {
@@ -21,9 +23,11 @@ public final class EnergyMachineRenderer<T extends BlockEntity> implements Block
     }
     @Override public void render(T machine, float partial, PoseStack pose, MultiBufferSource buffers, int light, int overlay) {
         if (machine.getLevel() == null) return;
-        float seconds = (machine.getLevel().getGameTime() % 480 + partial) / 20;
+        float seconds = (float)((machine.getLevel().getGameTime() / 20.0) % mesh.clipLength(clip)) + partial / 20;
         pose.pushPose();
         pose.translate(0.5, 0, 0.5);
+        if (machine.getBlockState().hasProperty(BlockStateProperties.HORIZONTAL_FACING))
+            pose.mulPose(Axis.YP.rotationDegrees(180 - machine.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot()));
         mesh.render(pose, buffers, light, clip, seconds);
         pose.popPose();
     }

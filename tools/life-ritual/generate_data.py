@@ -58,13 +58,13 @@ zh = {
 "entity.lyycore.life_defender": "歌颂生命的捍卫者", "entity.lyycore.life_cocoon": "褪茧", "entity.lyycore.life_usurper": "腐蚀生命的篡夺者", "entity.lyycore.life_spell": "生命法术", "entity.lyycore.magic_beam": "异龙激光",
 "effect.lyycore.dragon_fire": "龙火灼烧", "effect.lyycore.life_curse": "生命诅咒",
 "gui.lyycore.dragon_control": "龙的状态", "gui.lyycore.dragon.unavailable": "无法查询绑定的龙巢，暂不能切换模式。", "gui.lyycore.dragon.full_power": "真正的力量", "gui.lyycore.dragon.quarter_power": "尚有余力",
-"message.lyycore.altar.life_materials": "外围幻祭台需要各放 1 个材料：虚钢块 ×4、水晶块 ×4。",
+"message.lyycore.altar.life_materials": "外围供奉台需要各放 1 个材料：虚钢块 ×4、水晶块 ×4。",
 "research.lyycore.in_our_hands.title": "尽在手中", "research.lyycore.in_our_hands.summary": "不仅只在空中翱翔。",
 "research.lyycore.in_our_hands.description": "我们的伙伴似乎愿意直接成为我们的力量，如此一来，我们的远程火力也大大加强了。\n龙：拉弓最多蓄力 1 秒，每道激光造成（1+t）⁴×40 魔法伤害，满蓄力 640 点，射程 64 格。进攻风格发射四连激光；技巧风格拉弓期间额外减少 50% 伤害。龙处于收起模式时，命中附加 5 秒龙火灼烧，最多 3 级，每秒造成 50/100/400 点魔法伤害。查询到龙巢但未收起时，激光仅有 1/4 伤害且无灼烧；无法查询到龙巢时为基础伤害的 10 倍，满蓄力 6400，无灼烧。潜行右键打开龙模式界面。",
 "research.lyycore.blazing_pursuit.title": "炽热追击", "research.lyycore.blazing_pursuit.summary": "燃起来了。",
 "research.lyycore.blazing_pursuit.description": "我们的羽翼足以划破长空，亦能灼烧敌人。\n进攻风格的追击改为单次 640 点火焰伤害，替换原有羽毛多次物理攻击，保留 1 秒内置冷却。",
 "research.lyycore.ritual.title": "仪式", "research.lyycore.ritual.summary": "更多用法。",
-"research.lyycore.ritual.description": "我们制作祭坛可不只是为了恢复我们与那虚幻的世界的联系，让我们来探索一下仪式是否能召唤出更多的东西吧。\n将未熄的「欲望」放入合金锅，可制作增幅药剂。研究材料中的羊毛接受任意颜色。\n中心幻祭坛放置友好之证，外围八个幻祭台分别放置虚钢块 ×4、水晶块 ×4，每台 1 个。潜行右键启动仪式。三阶段首领会将参战者限制在 25×15×25 场地内，每 45 秒叠加一层生命诅咒。死亡次数大于初始参战人数时首领离场。\n击败最终阶段后获得无尽的「侵蚀」与 3000 经验；若清除诅咒前有场内玩家最大生命值不超过 8，额外掉落往世的飞花·爱之诗。",
+"research.lyycore.ritual.description": "我们制作仪式祭坛可不只是为了恢复我们与那虚幻的世界的联系，让我们来探索一下仪式是否能召唤出更多的东西吧。\n将未熄的「欲望」放入合金锅，可制作增幅药剂。研究材料中的羊毛接受任意颜色。\n中心仪式祭坛放置友好之证，外围八个供奉台分别放置虚钢块 ×4、水晶块 ×4，每台 1 个。潜行右键启动仪式。三阶段首领会将参战者限制在 25×15×25 场地内，每 45 秒叠加一层生命诅咒。死亡次数大于初始参战人数时首领离场。\n击败最终阶段后获得无尽的「侵蚀」与 3000 经验；若清除诅咒前有场内玩家最大生命值不超过 8，额外掉落往世的飞花·爱之诗。",
 "death.attack.dragon_laser": "%1$s 被龙火吞没了", "death.attack.dragon_laser.player": "%1$s 被 %2$s 的龙火吞没了", "death.attack.blazing_pursuit": "%1$s 在炽热追击中化为灰烬", "death.attack.blazing_pursuit.player": "%1$s 被 %2$s 的炽热追击吞没了"
 }
 en = {
@@ -73,13 +73,13 @@ en = {
 "entity.lyycore.life_defender": "Defender Who Praises Life", "entity.lyycore.life_cocoon": "Shedding Cocoon", "entity.lyycore.life_usurper": "Usurper Who Corrodes Life", "entity.lyycore.life_spell": "Life Spell", "entity.lyycore.magic_beam": "Dragon Laser",
 "effect.lyycore.dragon_fire": "Dragonfire Burn", "effect.lyycore.life_curse": "Curse of Life",
 "gui.lyycore.dragon_control": "Dragon's State", "gui.lyycore.dragon.unavailable": "The bound nest cannot be found. Mode controls are unavailable.", "gui.lyycore.dragon.full_power": "True power", "gui.lyycore.dragon.quarter_power": "Power to spare",
-"message.lyycore.altar.life_materials": "Offer 4 Imaginary Steel Blocks and 4 Crystal Blocks, one on each outer pedestal.",
+"message.lyycore.altar.life_materials": "Offer 4 Imaginary Steel Blocks and 4 Crystal Blocks, one on each outer offering stand.",
 "research.lyycore.in_our_hands.title": "In Our Hands", "research.lyycore.in_our_hands.summary": "More than soaring through the sky.",
 "research.lyycore.in_our_hands.description": "Our companion is willing to become our strength. Charge for up to 1 second: each laser deals (1+t)^4 x 40 magic damage, up to 640, with a 64-block range. Offense fires four lasers; Technique adds 50% damage reduction while drawing. With the dragon stowed, hits apply a 5-second burn, stacking up to three levels for 50/100/400 magic damage per second. With a queryable nest but an unstowed dragon, damage is quartered without the burn. With no queryable nest, damage is multiplied by ten (6400 at full charge), without the burn. Sneak-use opens the remote dragon controls.",
 "research.lyycore.blazing_pursuit.title": "Blazing Pursuit", "research.lyycore.blazing_pursuit.summary": "Burn bright.",
 "research.lyycore.blazing_pursuit.description": "Our wings can cut through the sky and burn our enemies. Replaces Offense's feather follow-up with one 640-point fire hit, retaining the one-second internal cooldown.",
 "research.lyycore.ritual.title": "Ritual", "research.lyycore.ritual.summary": "More possibilities.",
-"research.lyycore.ritual.description": "Explore what else the altar can summon. Brew Unextinguished Desire in the alloy cauldron for Amplification Potion. Any wool color is accepted for research. Place a Token of Friendship on the central altar, and four Imaginary Steel Blocks plus four Crystal Blocks on the eight outer pedestals. Sneak-use to begin a three-phase battle in a 25 x 15 x 25 arena. Curse of Life stacks every 45 seconds. More deaths than the initial participant count ends the encounter. Victory grants Endless Erosion and 3000 XP. If any present player's maximum health is at most 8 before curses are cleared, also receive the Sonnet bow.",
+"research.lyycore.ritual.description": "Explore what else the altar can summon. Brew Unextinguished Desire in the alloy cauldron for Amplification Potion. Any wool color is accepted for research. Place a Token of Friendship on the central ritual altar, and four Imaginary Steel Blocks plus four Crystal Blocks on the eight outer offering stands. Sneak-use to begin a three-phase battle in a 25 x 15 x 25 arena. Curse of Life stacks every 45 seconds. More deaths than the initial participant count ends the encounter. Victory grants Endless Erosion and 3000 XP. If any present player's maximum health is at most 8 before curses are cleared, also receive the Sonnet bow.",
 "death.attack.dragon_laser": "%1$s was consumed by dragonfire", "death.attack.dragon_laser.player": "%1$s was consumed by %2$s's dragonfire", "death.attack.blazing_pursuit": "%1$s burned in blazing pursuit", "death.attack.blazing_pursuit.player": "%1$s was consumed by %2$s's blazing pursuit"
 }
 for locale, values in (("zh_cn", zh), ("en_us", en)):

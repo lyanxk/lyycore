@@ -19,7 +19,10 @@ public final class OtherworldChestMenu extends AbstractContainerMenu {
         super(LyyMenus.OTHERWORLD_CHEST.get(), id); this.chest = chest; this.data = data; addDataSlots(data);
         for (int row = 0; row < 3; row++) for (int col = 0; col < 9; col++) addSlot(new Slot(inventory, 9 + row * 9 + col, 8 + col * 18, 106 + row * 18));
         for (int col = 0; col < 9; col++) addSlot(new Slot(inventory, col, 8 + col * 18, 164));
+        chest.startOpen(inventory.player);
     }
+    public boolean isFor(OtherworldChestBlockEntity target) { return chest == target; }
+    @Override public void removed(Player player) { super.removed(player); chest.stopOpen(player); }
     public List<ItemStack> products() { return chest.products(); }
     public int selectedIndex() { return data.get(2); }
     public ItemStack selected() { int index = selectedIndex(); return index >= 0 && index < products().size() ? products().get(index) : ItemStack.EMPTY; }

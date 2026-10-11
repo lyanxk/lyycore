@@ -30,6 +30,22 @@ public final class OtherworldChestBlockEntity extends BlockEntity implements Men
     private ResourceLocation legacySelection;
     private List<ItemStack> cachedCatalog;
     private int selectedIndex = -1;
+    private final java.util.Set<java.util.UUID> viewers = new java.util.HashSet<>();
+    public void startOpen(Player player) {
+        if (level == null || level.isClientSide) return;
+        viewers.add(player.getUUID());
+        updateOpenState();
+    }
+    public void stopOpen(Player player) {
+        if (level == null || level.isClientSide) return;
+        viewers.remove(player.getUUID());
+        updateOpenState();
+    }
+    private void updateOpenState() {
+        boolean open = !viewers.isEmpty();
+        if (!isRemoved() && getBlockState().getValue(OtherworldChestBlock.OPEN) != open)
+            level.setBlock(worldPosition, getBlockState().setValue(OtherworldChestBlock.OPEN, open), 3);
+    }
     private final ContainerData data = new ContainerData() {
         public int get(int index) { return index < 2 ? energy.getImaginaryEnergyStored() >>> (index * 16) & 65535 : selectedIndex(); }
         public void set(int index, int value) { }
@@ -85,6 +101,12 @@ public final class OtherworldChestBlockEntity extends BlockEntity implements Men
         return accepted > 0;
     }
     public static void serverTick(Level level, BlockPos pos, BlockState state, OtherworldChestBlockEntity chest) {
+        // Only inspect this chest's viewers; disconnected players must not leave the lid open.
+        if (!chest.viewers.isEmpty() && level.getGameTime() % 20 == 0) chest.viewers.removeIf(id -> {
+            var player = level.getPlayerByUUID(id);
+            return player == null || !player.isAlive() || !(player.containerMenu instanceof OtherworldChestMenu menu) || !menu.isFor(chest);
+        });
+        chest.updateOpenState();
         if (!level.hasNeighborSignal(pos) || chest.affordable() == 0) return;
         var product = chest.selected();
         if (product.isEmpty()) return;

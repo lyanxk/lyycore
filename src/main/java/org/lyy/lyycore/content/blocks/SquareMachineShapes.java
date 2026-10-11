@@ -9,6 +9,11 @@ import net.minecraft.world.phys.shapes.*;
 /** Import-time bounds, clipped to each occupied cell and cached on both logical sides. */
 final class SquareMachineShapes {
     private SquareMachineShapes() { }
+    static VoxelShape clockwise(VoxelShape source) {
+        var result = new java.util.ArrayList<VoxelShape>();
+        source.forAllBoxes((x1, y1, z1, x2, y2, z2) -> result.add(Shapes.box(1-z2, y1, x1, 1-z1, y2, x2)));
+        return Shapes.or(Shapes.empty(), result.toArray(VoxelShape[]::new));
+    }
     static VoxelShape[] load(String name) {
         String path = "/assets/lyycore/geometry/" + name + "_shapes.json";
         try (var input = SquareMachineShapes.class.getResourceAsStream(path)) {

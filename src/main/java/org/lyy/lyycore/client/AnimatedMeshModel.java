@@ -187,6 +187,7 @@ final class AnimatedMeshModel {
         }
     }
     float[] newPose() { return new float[bones.length * 9]; }
+    float clipLength(String name) { return clips.get(name).length; }
     int boneIndex(String name) {
         for (int i = 0; i < bones.length; i++) if (bones[i].name.equals(name)) return i;
         throw new IllegalArgumentException("Missing bone: " + name);
