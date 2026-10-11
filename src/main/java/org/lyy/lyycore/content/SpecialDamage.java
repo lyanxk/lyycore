@@ -21,8 +21,11 @@ public final class SpecialDamage {
         }
     }
     public static float amount(Player player, Element element, float base) {
-        double value = (base + player.getAttributeValue(net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_DAMAGE))
-                * player.getAttributeValue(LyyAttributes.DAMAGE) * player.getAttributeValue(element.attribute);
+        return scale(player, element, base + player.getAttributeValue(net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_DAMAGE));
+    }
+    /** Apply multipliers to a complete base formula without adding attack damage again. */
+    public static float scale(Player player, Element element, double base) {
+        double value = base * player.getAttributeValue(LyyAttributes.DAMAGE) * player.getAttributeValue(element.attribute);
         return (float)Math.clamp(value, 0, Float.MAX_VALUE);
     }
     public static DamageSource source(Player player, Entity direct, Element element) {
@@ -33,11 +36,18 @@ public final class SpecialDamage {
     }
     /** Resolve independent hits immediately, including normal damage events and player attribution. */
     public static void burst(Player player, Entity direct, net.minecraft.world.entity.LivingEntity target, Element element, float base, int hits) {
+        burstAmount(player, direct, target, element, amount(player, element, base), hits);
+    }
+    public static void burstFromBase(Player player, Entity direct, net.minecraft.world.entity.LivingEntity target, Element element, double base, int hits) {
+        burstAmount(player, direct, target, element, scale(player, element, base), hits);
+    }
+    private static void burstAmount(Player player, Entity direct, net.minecraft.world.entity.LivingEntity target, Element element, float amount, int hits) {
+        var source = source(player, direct, element);
         int previous = target.invulnerableTime;
         try {
             for (int i = 0; i < hits && target.isAlive(); i++) {
                 target.invulnerableTime = 0;
-                hit(player, direct, target, element, base);
+                target.hurt(source, amount);
             }
         } finally { target.invulnerableTime = previous; }
     }

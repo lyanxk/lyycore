@@ -34,6 +34,7 @@ import java.util.UUID;
 
 public final class LifeRevel extends RevelMob {
     public static final int LIFETIME = 180 * 20, DANCER_INTERVAL = 20 * 20, BLIND_INTERVAL = 45 * 20;
+    private static final int DANCERS_PER_WAVE = 6, DANCER_SUMMON_THRESHOLD = 12;
     public static final int CHARGE_TICKS = 40, LOCK_TICKS = 10;
     public static final double RANGE = 10, LASER_RADIUS = 0.21;
     private static final EntityDataAccessor<Vector3f> BEAM = SynchedEntityData.defineId(LifeRevel.class, EntityDataSerializers.VECTOR3);
@@ -110,7 +111,7 @@ public final class LifeRevel extends RevelMob {
         if (tickCount % 20 == 0) reconcileSummons();
         if (--dancerTicks <= 0) {
             dancerTicks = DANCER_INTERVAL;
-            if (dancers.size() < 8) summonDancers();
+            if (dancers.size() < DANCER_SUMMON_THRESHOLD) summonDancers();
         }
         if (blinds.isEmpty() && blindTicks >= 0 && --blindTicks <= 0) summonBlinds();
     }
@@ -134,10 +135,10 @@ public final class LifeRevel extends RevelMob {
         blindTicks = blinds.isEmpty() ? BLIND_INTERVAL : -1;
     }
     private void summonDancers() {
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < DANCERS_PER_WAVE; i++) {
             var dancer = LyyEntities.REVEL_DANCER.get().create(level());
-            // Alternate with the blinds' diagonal formation so the opening wave does not overlap them.
-            double angle = i * Math.PI / 2;
+            // Space each wave evenly around the boss.
+            double angle = i * Math.PI * 2 / DANCERS_PER_WAVE;
             Vec3 offset = new Vec3(Math.cos(angle) * 3, 0.6, Math.sin(angle) * 3);
             if (dancer != null && addMinion(dancer, offset)) dancers.add(dancer.getUUID());
         }

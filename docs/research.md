@@ -6,9 +6,9 @@
 
 ## 研究定义
 
-正式资源包含高级门、末影岗哨、收割者、天气、羽翼、挑战，以及新增的“适应性强化”和“探索”等研究。研究使用独立的数据包分类，在 `data/<命名空间>/lyycore/research/<路径>.json` 添加定义，不属于配方，无需 `type` 字段。研究 ID 为 `<命名空间>:research/<路径>`，例如 `data/lyycore/lyycore/research/change_weather.json` 对应 `lyycore:research/change_weather`。保留 `research/` 前缀是为了兼容已有存档和研究记录，发布后的 ID 应保持稳定。
+正式资源包含高级门、末影岗哨、收割者、天气、羽翼、挑战，以及新增的“适应性强化”和“探索”等研究。研究使用独立的数据包分类，在 `data/<命名空间>/lyy_research/<路径>.json` 添加定义，全部内置研究也使用此目录，不属于配方，无需 `type` 字段。研究 ID 为 `<命名空间>:research/<路径>`，例如 `data/lyycore/lyy_research/change_weather.json` 对应 `lyycore:research/change_weather`。保留 ID 中的 `research/` 前缀是为了兼容已有存档和研究记录，发布后的 ID 应保持稳定。
 
-仍兼容 `data/lyycore/research/*.json`，正式内置研究也沿用此路径；相同 ID 在专属目录中存在定义时，优先使用专属目录。其他命名空间下的通用 `research/*.json` 不再读取，以免误扫描星辉魔法等模组的研究。使用自定义命名空间的旧数据包需将 `research/*.json` 移到 `lyycore/research/*.json`，研究 ID 无需修改；更早的 `recipe/research/*.json` 也需移到专属目录并移除 `type` 字段。定义在登录和 `/reload` 时单独同步到客户端；客户端不需要安装服务端数据包。中文文案位于 `assets/lyycore/lang/zh_cn.json`，英文位于 `assets/lyycore/lang/en_us.json`，通过定义中的 `title`、`summary`、`description` 语言键引用。
+为旧数据包保留 `data/<命名空间>/lyycore/research/*.json` 和 `data/lyycore/research/*.json` 的兼容读取；相同 ID 的优先级为 `lyy_research/`、`lyycore/research/`、`lyycore` 命名空间内的通用 `research/`。其他命名空间下的通用 `research/*.json` 不读取，以免误扫描星辉魔法等模组的研究。内置资源不再打包到通用 `research/`，避免反过来被其他模组的研究扫描器读取。旧数据包建议迁到 `lyy_research/`，尤其是在同时安装星辉魔法等模组时，研究 ID 无需修改；更早的 `recipe/research/*.json` 也需移到专属目录并移除 `type` 字段。定义在登录和 `/reload` 时单独同步到客户端；客户端不需要安装服务端数据包。中文文案位于 `assets/lyycore/lang/zh_cn.json`，英文位于 `assets/lyycore/lang/en_us.json`，通过定义中的 `title`、`summary`、`description` 语言键引用。
 
 以下仅为格式示例，不是正式研究：
 
@@ -270,3 +270,15 @@
 - 冰雹：史诗，前置仪式、细分、深入研究；蓝冰 64、能量核心 1，无经验。报告先完成冰连线实验，再加工 5 秒得到物品。右键冷却 20 tick；对半径 10 格的敌人立即逐段结算 20 次特殊冰伤，单段 base=20；脚底半径 4 格的普通水冻结成冰，不替换含水方块。
 - 机动风格额外向前突进最多 5 格，遇障碍停止，原地留下冰花；20 tick 后对半径 3 格除使用者外的所有存活生物（包括友方）立即逐段结算 16 次特殊冰伤，单段 base=10。每段走特殊伤害公式一次，临时清除受伤无敌帧以避免合并；没有持续逐 tick 伤害。
 - 模型导入 tools/elemental-research/import_models.py：静态桌面缓存为区块网格，仅法阵动画逐帧渲染；冰雹物品播放 idle，冰晶播放 flight，大冰花播放 idle/explode，爆裂关键帧与伤害时刻对齐。沿用提供的 cutout 贴图和独立发光层。
+
+新增六种冶炼材料：每批均消耗铁块 64，额外材料依次为「虚无」之心 1 → 虚无合金、未熄的「欲望」1 → 不熄合金、无尽的「侵蚀」1 → 浸染合金、蓝冰 64 → 极寒钢、岩浆块 64 → 狱炎钢、闪电瓶 64 → 蓄能钢。每批产出 256 个，沿用虚钢的 1200 tick 基础加工时间与冶炼厂 500 IE/tick 基础耗能，受现有速度滑条影响。六种材料加入创造栏，配方由现有冶炼厂 JEI 分类展示。
+
+## 雷电核心与雷霆之镰
+
+六种合金／钢材各用 4 个普通无序合成 1 个对应材料块，支持镐采集并掉落自身。蓄能钢 64 在纯净冶炼厂加工 30 秒得到蓄能钢板 32。
+
+雷电核心为史诗研究，前置仪式、细分、深入研究，消耗极寒钢 64、蓄能钢 64、能量核心 4 和 6000 经验点。研究定义写入新的 `lyy_research` 目录，保留 `lyycore:research/` 研究 ID。实验复用既有冰／雷三角形连线系统，完成实验后在实验室加工 60 秒获得雷电核心。核心居中、外围蓄能钢板 8，在凝练信标以 1,000,000 IE/tick 加工 120 秒得到雷霆之镰。
+
+雷霆之镰左键有效攻击立即结算 8 段雷伤，每段为（韧性×20＋240）×增伤×雷增伤；玩家独立记录 20 tick 左键冷却，未就绪时仍走原版空手攻击。进攻风格右键半径 5 格横扫敌人，立即结算 16 段（韧性×4＋20）×增伤×雷增伤，使用另一个 20 tick 冷却。两种攻击复用 SpecialDamage 的完整基础值入口，不额外加入攻击力；伤害继续触发正常事件。建造风格右键方块在其顶部召唤真实闪电并保留玩家归属。
+
+模型来自 `thunder_greatscythe` 最终源文件，排除预览玩家，只导出当前使用的白色贴图。接入 held_idle、slash_attack、swing_combo、return_to_idle；攻击开始由物品组件同步，世界渲染以玩家为原点，第一与第三人称共用，物品栏与掉落物使用静态预览。待机／回归的贝塞尔曲线在导入时以 60 Hz 预采样。导入脚本 `tools/thunder-scythe/import_models.py` 不修改艺术源文件。

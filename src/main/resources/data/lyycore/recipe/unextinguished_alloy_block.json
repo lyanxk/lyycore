@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "lyycore:unextinguished_alloy"
+    },
+    {
+      "item": "lyycore:unextinguished_alloy"
+    },
+    {
+      "item": "lyycore:unextinguished_alloy"
+    },
+    {
+      "item": "lyycore:unextinguished_alloy"
+    }
+  ],
+  "result": {
+    "id": "lyycore:unextinguished_alloy_block",
+    "count": 1
+  }
+}

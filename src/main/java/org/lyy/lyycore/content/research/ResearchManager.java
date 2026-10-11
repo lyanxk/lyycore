@@ -8,6 +8,7 @@ import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.ReloadableServerResources;
 import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.util.profiling.ProfilerFiller;
@@ -29,7 +30,8 @@ import java.util.WeakHashMap;
 @EventBusSubscriber(modid = "lyycore")
 public final class ResearchManager extends SimpleJsonResourceReloadListener {
     private static final Gson GSON = new Gson();
-    private static final String DIRECTORY = "lyycore/research";
+    private static final String DIRECTORY = "lyy_research";
+    private static final FileToIdConverter PREVIOUS_FILES = FileToIdConverter.json("lyycore/research");
     private static final FileToIdConverter LEGACY_FILES = FileToIdConverter.json("research");
     private static final Map<ReloadableServerResources, ResearchManager> SERVERS = Collections.synchronizedMap(new WeakHashMap<>());
     private static Map<ResourceLocation, ResearchEntry> clientEntries = Map.of();
@@ -39,17 +41,23 @@ public final class ResearchManager extends SimpleJsonResourceReloadListener {
 
     @Override protected Map<ResourceLocation, JsonElement> prepare(ResourceManager resources, ProfilerFiller profiler) {
         var files = super.prepare(resources, profiler);
+        readCompatibleFiles(files, PREVIOUS_FILES, PREVIOUS_FILES.listMatchingResources(resources));
         // Only our namespace owns the legacy directory; other mods use unrelated research formats.
-        for (var entry : LEGACY_FILES.listMatchingResourcesFromNamespace(resources, "lyycore").entrySet()) {
-            var id = LEGACY_FILES.fileToId(entry.getKey());
-            if (files.containsKey(id)) continue; // Explicit definitions in the dedicated directory take precedence.
+        readCompatibleFiles(files, LEGACY_FILES, LEGACY_FILES.listMatchingResourcesFromNamespace(resources, "lyycore"));
+        return files;
+    }
+
+    private static void readCompatibleFiles(Map<ResourceLocation, JsonElement> files, FileToIdConverter converter,
+                                            Map<ResourceLocation, Resource> resources) {
+        for (var entry : resources.entrySet()) {
+            var id = converter.fileToId(entry.getKey());
+            if (files.containsKey(id)) continue; // New directories take precedence over compatibility paths.
             try (var reader = entry.getValue().openAsReader()) {
                 files.put(id, GsonHelper.fromJson(GSON, reader, JsonElement.class));
             } catch (IllegalArgumentException | IOException | JsonParseException exception) {
-                LogUtils.getLogger().error("Couldn't parse legacy research file {}", entry.getKey(), exception);
+                LogUtils.getLogger().error("Couldn't parse compatible research file {}", entry.getKey(), exception);
             }
         }
-        return files;
     }
 
     @SubscribeEvent public static void register(AddReloadListenerEvent event) {

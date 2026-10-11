@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "lyycore:frost_steel"
+    },
+    {
+      "item": "lyycore:frost_steel"
+    },
+    {
+      "item": "lyycore:frost_steel"
+    },
+    {
+      "item": "lyycore:frost_steel"
+    }
+  ],
+  "result": {
+    "id": "lyycore:frost_steel_block",
+    "count": 1
+  }
+}

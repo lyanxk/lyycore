@@ -1,0 +1,97 @@
+{
+  "icon": {
+    "id": "lyycore:lightning_core"
+  },
+  "rarity": "high",
+  "materials": [
+    {
+      "id": "lyycore:frost_steel",
+      "count": 64
+    },
+    {
+      "id": "lyycore:charged_steel",
+      "count": 64
+    },
+    {
+      "id": "lyycore:energy_core",
+      "count": 4
+    }
+  ],
+  "experience_points": 6000,
+  "prerequisites": [
+    "lyycore:research/ritual",
+    "lyycore:research/specialization",
+    "lyycore:research/in_depth_research"
+  ],
+  "title": "research.lyycore.lightning_core.title",
+  "summary": "research.lyycore.lightning_core.summary",
+  "description": "research.lyycore.lightning_core.description",
+  "production": {
+    "result": {
+      "id": "lyycore:lightning_core"
+    },
+    "duration": 1200,
+    "experiment": {
+      "nodes": [
+        {
+          "element": "ice",
+          "cell": 0
+        },
+        {
+          "element": "ice",
+          "cell": 4
+        },
+        {
+          "element": "ice",
+          "cell": 22
+        },
+        {
+          "element": "lightning",
+          "cell": 2
+        },
+        {
+          "element": "lightning",
+          "cell": 20
+        },
+        {
+          "element": "lightning",
+          "cell": 24
+        }
+      ],
+      "links": [
+        {
+          "from": 0,
+          "to": 1
+        },
+        {
+          "from": 1,
+          "to": 2
+        },
+        {
+          "from": 2,
+          "to": 0
+        },
+        {
+          "from": 3,
+          "to": 4
+        },
+        {
+          "from": 4,
+          "to": 5
+        },
+        {
+          "from": 5,
+          "to": 3
+        }
+      ],
+      "target": [
+        5,
+        9,
+        17,
+        1,
+        3,
+        22
+      ]
+    }
+  }
+}

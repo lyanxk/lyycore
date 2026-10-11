@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "lyycore:block/void_alloy_block"
+    }
+  }
+}

@@ -19,7 +19,7 @@ def research(name, icon, rarity, prerequisites, xp=0, materials=(), result=None,
              prerequisites=["lyycore:research/"+p for p in prerequisites], materials=list(materials),
              **{key: f"research.lyycore.{name}.{key}" for key in ("title", "summary", "description")})
     if result: r["production"] = {"result": {"id": "lyycore:"+result}, "duration": seconds*20}
-    write(RES / "data/lyycore/research" / f"{name}.json", r)
+    write(RES / "data/lyycore/lyy_research" / f"{name}.json", r)
 
 
 research("in_our_hands", "dragon_might", "special", ("ritual", "giant_dragon"), 6000,

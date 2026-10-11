@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "lyycore:charged_steel"
+    },
+    {
+      "item": "lyycore:charged_steel"
+    },
+    {
+      "item": "lyycore:charged_steel"
+    },
+    {
+      "item": "lyycore:charged_steel"
+    }
+  ],
+  "result": {
+    "id": "lyycore:charged_steel_block",
+    "count": 1
+  }
+}

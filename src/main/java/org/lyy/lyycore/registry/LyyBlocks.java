@@ -35,6 +35,15 @@ public class LyyBlocks {
     public static final DeferredBlock<PureSmeltingPlantBlock> PURE_SMELTING_PLANT = BLOCKS.register("pure_smelting_plant", () -> new PureSmeltingPlantBlock(true));
     public static final DeferredBlock<ImaginaryDragonNestBlock> IMAGINARY_DRAGON_NEST = BLOCKS.register("imaginary_dragon_nest", ImaginaryDragonNestBlock::new);
     public static final DeferredBlock<Block> IMAGINARY_STEEL_BLOCK = BLOCKS.register("imaginary_steel_block", () -> new Block(BlockBehaviour.Properties.of().strength(6).sound(SoundType.METAL)));
+    public static final DeferredBlock<Block> VOID_ALLOY_BLOCK = materialBlock("void_alloy_block");
+    public static final DeferredBlock<Block> UNEXTINGUISHED_ALLOY_BLOCK = materialBlock("unextinguished_alloy_block");
+    public static final DeferredBlock<Block> STAINED_ALLOY_BLOCK = materialBlock("stained_alloy_block");
+    public static final DeferredBlock<Block> FROST_STEEL_BLOCK = materialBlock("frost_steel_block");
+    public static final DeferredBlock<Block> INFERNAL_STEEL_BLOCK = materialBlock("infernal_steel_block");
+    public static final DeferredBlock<Block> CHARGED_STEEL_BLOCK = materialBlock("charged_steel_block");
+    private static DeferredBlock<Block> materialBlock(String name) {
+        return BLOCKS.register(name, () -> new Block(BlockBehaviour.Properties.of().strength(6).sound(SoundType.METAL).requiresCorrectToolForDrops()));
+    }
     public static final DeferredBlock<AlloyCauldronBlock> ALLOY_CAULDRON = BLOCKS.register("alloy_cauldron", AlloyCauldronBlock::new);
     public static final DeferredBlock<MindControlBeaconBlock> MIND_CONTROL_BEACON = BLOCKS.register("mind_control_beacon", MindControlBeaconBlock::new);
     public static final DeferredBlock<ImaginaryCondensingBeaconBlock> IMAGINARY_CONDENSING_BEACON = BLOCKS.register("imaginary_condensing_beacon", ImaginaryCondensingBeaconBlock::new);

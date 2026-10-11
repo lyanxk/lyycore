@@ -7,6 +7,12 @@
     "lyycore:mind_control_beacon",
     "lyycore:erosion_factory",
     "lyycore:otherworld_chest",
-    "lyycore:experiment_table"
+    "lyycore:experiment_table",
+    "lyycore:void_alloy_block",
+    "lyycore:unextinguished_alloy_block",
+    "lyycore:stained_alloy_block",
+    "lyycore:frost_steel_block",
+    "lyycore:infernal_steel_block",
+    "lyycore:charged_steel_block"
   ]
 }

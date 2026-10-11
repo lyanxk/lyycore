@@ -1,0 +1,38 @@
+{
+  "type": "lyycore:imaginary_condensing",
+  "ingredients": [
+    {
+      "item": "lyycore:lightning_core"
+    },
+    {
+      "item": "lyycore:charged_steel_plate"
+    },
+    {
+      "item": "lyycore:charged_steel_plate"
+    },
+    {
+      "item": "lyycore:charged_steel_plate"
+    },
+    {
+      "item": "lyycore:charged_steel_plate"
+    },
+    {
+      "item": "lyycore:charged_steel_plate"
+    },
+    {
+      "item": "lyycore:charged_steel_plate"
+    },
+    {
+      "item": "lyycore:charged_steel_plate"
+    },
+    {
+      "item": "lyycore:charged_steel_plate"
+    }
+  ],
+  "result": {
+    "id": "lyycore:thunder_scythe"
+  },
+  "duration": 2400,
+  "energy": 1000000,
+  "energy_per_tick": true
+}

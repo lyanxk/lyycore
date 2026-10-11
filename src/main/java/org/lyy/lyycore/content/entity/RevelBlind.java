@@ -8,6 +8,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
 public final class RevelBlind extends RevelMinion {
+    private static final int HEAL_INTERVAL = 20;
     private int corner, healingTicks;
 
     public RevelBlind(EntityType<? extends RevelBlind> type, Level level) { super(type, level); }
@@ -24,11 +25,12 @@ public final class RevelBlind extends RevelMinion {
         Vec3 desired = offset.normalize().scale(Math.min(0.5, offset.length() * 0.2));
         setDeltaMovement(getDeltaMovement().lerp(desired, 0.35));
         face(boss.position().add(0, 1.5, 0));
-        if (++healingTicks >= 100) {
+        if (++healingTicks >= HEAL_INTERVAL) {
             healingTicks = 0;
             boss.heal(5);
             boss.showRegeneration();
-            animate("heal", 32);
+            // Healing continues each second without restarting an unfinished summon/heal animation.
+            if (animation().equals("idle")) animate("heal", 32);
         }
     }
     @Override public void addAdditionalSaveData(CompoundTag tag) {
@@ -39,6 +41,6 @@ public final class RevelBlind extends RevelMinion {
     @Override public void readAdditionalSaveData(CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         corner = Math.clamp(tag.getInt("Corner"), 0, 3);
-        healingTicks = Math.clamp(tag.getInt("HealingTicks"), 0, 99);
+        healingTicks = Math.clamp(tag.getInt("HealingTicks"), 0, HEAL_INTERVAL - 1);
     }
 }

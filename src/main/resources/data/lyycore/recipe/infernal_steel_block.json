@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "lyycore:infernal_steel"
+    },
+    {
+      "item": "lyycore:infernal_steel"
+    },
+    {
+      "item": "lyycore:infernal_steel"
+    },
+    {
+      "item": "lyycore:infernal_steel"
+    }
+  ],
+  "result": {
+    "id": "lyycore:infernal_steel_block",
+    "count": 1
+  }
+}

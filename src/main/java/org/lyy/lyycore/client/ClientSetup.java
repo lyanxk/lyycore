@@ -41,6 +41,7 @@ public class ClientSetup {
         ProductionLabRenderer.reload();
         DragonMightRenderer.reload();
         HailItemRenderer.reload();
+        ThunderScytheRenderer.reload();
     }
 
     @SubscribeEvent
@@ -52,6 +53,10 @@ public class ClientSetup {
         var grapple = new net.minecraft.client.resources.model.ModelResourceLocation(
                 LyyItems.IMAGINARY_GRAPPLE.getId(), "inventory");
         var empty = event.getModels().get(GrappleRenderer.EMPTY_HELD_MODEL);
+        if (empty != null) {
+            var scythe = new net.minecraft.client.resources.model.ModelResourceLocation(LyyItems.THUNDER_SCYTHE.getId(), "inventory");
+            event.getModels().computeIfPresent(scythe, (id, model) -> ThunderScytheRenderer.wrap(model, empty));
+        }
         if (empty != null) event.getModels().computeIfPresent(grapple, (id, model) -> GrappleHeldModel.wrap(model, empty));
         var itemModel = new net.minecraft.client.resources.model.ModelResourceLocation(
                 ResourceLocation.fromNamespaceAndPath(LyyCore.MODID, "whisper_of_the_past"), "inventory");

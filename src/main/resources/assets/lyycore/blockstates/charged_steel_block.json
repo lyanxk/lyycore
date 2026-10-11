@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "lyycore:block/charged_steel_block"
+    }
+  }
+}

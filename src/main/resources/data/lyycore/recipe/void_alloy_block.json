@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "lyycore:void_alloy"
+    },
+    {
+      "item": "lyycore:void_alloy"
+    },
+    {
+      "item": "lyycore:void_alloy"
+    },
+    {
+      "item": "lyycore:void_alloy"
+    }
+  ],
+  "result": {
+    "id": "lyycore:void_alloy_block",
+    "count": 1
+  }
+}

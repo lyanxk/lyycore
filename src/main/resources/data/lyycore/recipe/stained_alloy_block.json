@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "lyycore:stained_alloy"
+    },
+    {
+      "item": "lyycore:stained_alloy"
+    },
+    {
+      "item": "lyycore:stained_alloy"
+    },
+    {
+      "item": "lyycore:stained_alloy"
+    }
+  ],
+  "result": {
+    "id": "lyycore:stained_alloy_block",
+    "count": 1
+  }
+}
