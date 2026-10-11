@@ -22,9 +22,8 @@ public final class DragonMightRenderer extends BlockEntityWithoutLevelRenderer {
     private static DragonMightRenderer renderer;
     private AnimatedMeshModel model;
     private static LivingEntity holder;
-    private static ItemDisplayContext display;
     private DragonMightRenderer() { super(Minecraft.getInstance().getBlockEntityRenderDispatcher(), Minecraft.getInstance().getEntityModels()); }
-    public static void reload() { if (renderer != null) renderer.model = null; }
+    public static void reload() { if (renderer != null) renderer.model = null; holder = null; }
     @SubscribeEvent public static void extensions(RegisterClientExtensionsEvent event) {
         event.registerItem(new IClientItemExtensions() {
             @Override public BlockEntityWithoutLevelRenderer getCustomRenderer() {
@@ -43,18 +42,21 @@ public final class DragonMightRenderer extends BlockEntityWithoutLevelRenderer {
                 };
             }
             @Override public BakedModel applyTransform(ItemDisplayContext context, PoseStack pose, boolean leftHand) {
-                original.applyTransform(context, pose, leftHand); display = context; return this;
+                original.applyTransform(context, pose, leftHand); return this;
             }
         };
     }
     @Override public void renderByItem(ItemStack stack, ItemDisplayContext context, PoseStack pose, MultiBufferSource buffers, int light, int overlay) {
+        var owner = holder;
+        holder = null;
         if (model == null) model = new AnimatedMeshModel("dragon_might");
         var level = Minecraft.getInstance().level;
         float partial = Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(true);
         String clip = "idle"; float time = 0;
-        boolean held = display != ItemDisplayContext.GUI && display != ItemDisplayContext.GROUND && display != ItemDisplayContext.FIXED;
-        if (held && holder != null && holder.isUsingItem() && holder.getUseItem() == stack) {
-            clip = "draw"; time = Math.min(1, (holder.getTicksUsingItem()+partial)/20);
+        boolean held = context.firstPerson() || context == ItemDisplayContext.THIRD_PERSON_LEFT_HAND
+                || context == ItemDisplayContext.THIRD_PERSON_RIGHT_HAND;
+        if (held && owner != null && owner.isUsingItem() && owner.getUseItem() == stack) {
+            clip = "draw"; time = Math.min(1, (owner.getTicksUsingItem()+partial)/20);
         } else if (held && level != null) {
             var data = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
             float age = data.contains("DragonReleased") ? (level.getGameTime()-data.getLong("DragonReleased")+partial)/20 : 100;
@@ -62,6 +64,5 @@ public final class DragonMightRenderer extends BlockEntityWithoutLevelRenderer {
         }
         pose.pushPose(); pose.translate(.5, .5, .5);
         model.render(pose, buffers, light, clip, time); pose.popPose();
-        holder = null;
     }
 }

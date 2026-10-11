@@ -31,7 +31,7 @@ public class SonnetDomeRenderer extends EntityRenderer<SonnetDome> {
         pose.scale(scale, scale, scale);
         // Preserve the opaque, depth-writing shell while avoiding per-frame OBJ
         // traversal, vertex transforms and uploads for nearly 29,000 faces.
-        SonnetDomeMesh.render(pose);
+        SonnetDomeMesh.render(pose, buffers);
         pose.popPose();
         super.render(dome, yaw, partial, pose, buffers, light);
     }

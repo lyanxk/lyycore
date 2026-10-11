@@ -59,6 +59,7 @@ final class AnimatedMeshModel {
     private final Face[][][] facesByTexture;
     private final Bone[] bones;
     private final int[][] children;
+    // Drawing happens after traversal. Keep snapshots: Sodium reuses popped stack entries.
     private final PoseStack.Pose[] poses;
     private final float[] values = new float[9], airValues = new float[9], blendValues = new float[9];
     private final Map<String, Clip> clips = new HashMap<>();
@@ -189,8 +190,7 @@ final class AnimatedMeshModel {
         clip.sample(index, time, values, 0);
         pose.pushPose();
         transformPose(pose, index, values, 0, false);
-        // PoseStack copies on push; a popped pose stays intact until this draw completes.
-        poses[index] = pose.last();
+        poses[index] = pose.last().copy();
         for (int child : children[index]) updateSinglePose(pose, child, clip, time);
         pose.popPose();
     }
@@ -208,7 +208,7 @@ final class AnimatedMeshModel {
         pose.pushPose();
         clip.sample(index, time, values, 0);
         transformPose(pose, index, values, 0, false);
-        poses[index] = pose.last();
+        poses[index] = pose.last().copy();
         for (int child : children[index]) updateWings(pose, child, base, baseTime, attackTime, featherCount);
         pose.popPose();
     }
@@ -261,7 +261,7 @@ final class AnimatedMeshModel {
     private void updateWingPose(PoseStack pose, int bone) {
         pose.pushPose();
         transformPose(pose, bone, wingValues, false);
-        poses[bone] = pose.last();
+        poses[bone] = pose.last().copy();
         for (int child : children[bone]) { hidden[child] |= hidden[bone]; updateWingPose(pose, child); }
         pose.popPose();
     }
@@ -277,7 +277,14 @@ final class AnimatedMeshModel {
         pose.mulPose(Axis.ZP.rotationDegrees(bone.rotation[2] + values[offset + 5]));
         pose.mulPose(Axis.YP.rotationDegrees(bone.rotation[1] + values[offset + 4]));
         pose.mulPose(Axis.XP.rotationDegrees(bone.rotation[0] + values[offset + 3]));
-        if (!ignoreScale) pose.scale(values[offset + 6], values[offset + 7], values[offset + 8]);
+        if (!ignoreScale) scalePose(pose, values[offset + 6], values[offset + 7], values[offset + 8]);
+    }
+    private static void scalePose(PoseStack pose, float x, float y, float z) {
+        // Collapsed axes have no inverse. Keep their normal scale finite, then collapse
+        // positions only; authored flat effects must not be hidden or enlarged.
+        pose.scale(x == 0 ? 1 : x, y == 0 ? 1 : y, z == 0 ? 1 : z);
+        if (x == 0 || y == 0 || z == 0)
+            pose.last().pose().scale(x == 0 ? 0 : 1, y == 0 ? 0 : 1, z == 0 ? 0 : 1);
     }
     Vec3 attackLocator(int feather, String kind, float[] base, float attackTime) {
         String name = "attack_" + kind + "_" + (feather + 1);
@@ -318,7 +325,7 @@ final class AnimatedMeshModel {
                             float time, float walkTime, float walking, float flying, float gliding) {
         pose.pushPose();
         transform(pose, index, idle, walk, fly, glide, time, walkTime, walking, flying, gliding);
-        poses[index] = pose.last();
+        poses[index] = pose.last().copy();
         for (int child : children[index]) updatePoses(pose, child, idle, walk, fly, glide, time, walkTime, walking, flying, gliding);
         pose.popPose();
     }

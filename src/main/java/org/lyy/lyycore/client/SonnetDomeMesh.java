@@ -9,6 +9,7 @@ import com.mojang.blaze3d.vertex.VertexBuffer;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
@@ -51,7 +52,17 @@ final class SonnetDomeMesh {
         }
     }
 
-    static void render(PoseStack pose) {
+    static void render(PoseStack pose, MultiBufferSource buffers) {
+        // Outlines and other wrapped passes need vertices through their own consumer.
+        if (!(buffers instanceof MultiBufferSource.BufferSource)) {
+            var mc = Minecraft.getInstance();
+            for (int layer = 0; layer < LAYERS.length; layer++) {
+                RenderType type = layer == 0 ? SHELL : DETAILS;
+                mc.getItemRenderer().renderModelLists(mc.getModelManager().getModel(SonnetDomeRenderer.MODELS[layer]),
+                        ItemStack.EMPTY, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, pose, buffers.getBuffer(type));
+            }
+            return;
+        }
         // Entity poses contain camera-relative translation. The camera rotation is
         // in RenderSystem's model-view matrix and must be applied exactly once.
         var modelView = new Matrix4f(RenderSystem.getModelViewMatrix()).mul(pose.last().pose());
