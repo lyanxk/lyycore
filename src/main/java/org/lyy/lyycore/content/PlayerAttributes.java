@@ -47,19 +47,32 @@ public final class PlayerAttributes {
         var allocations = data(player);
         for (var stat : Stat.values()) {
             double amount = enabled ? (double)Math.max(0, allocations.getInt(stat.name())) * stat.perPoint : 0;
-            setBonus(player, stat.attribute, ALLOCATION, amount, AttributeModifier.Operation.ADD_VALUE);
+            // Native saved modifiers are loaded before Health. The allocation record remains
+            // authoritative; login, refund and research changes reconcile this stable source ID.
+            replaceBonus(player.getAttribute(stat.attribute), ALLOCATION, amount, AttributeModifier.Operation.ADD_VALUE, true);
         }
-        if (player.getHealth() > player.getMaxHealth()) player.setHealth(player.getMaxHealth());
+        clampHealth(player);
     }
     /** Future equipment/research bonuses use stable source IDs so refreshes never stack twice. */
     public static void setBonus(ServerPlayer player, Holder<Attribute> attribute, ResourceLocation source,
                                 double amount, AttributeModifier.Operation operation) {
         if (!Double.isFinite(amount)) throw new IllegalArgumentException("Attribute bonus must be finite");
-        var instance = player.getAttribute(attribute);
+        replaceBonus(player.getAttribute(attribute), source, amount, operation, false);
+        if (attribute.equals(Attributes.MAX_HEALTH)) clampHealth(player);
+    }
+    private static void replaceBonus(AttributeInstance instance, ResourceLocation source, double amount,
+                                     AttributeModifier.Operation operation, boolean permanent) {
         if (instance == null) return;
+        // Remove first even when the amount matches, to migrate an old transient allocation.
         instance.removeModifier(source);
-        if (amount != 0) instance.addTransientModifier(new AttributeModifier(source, amount, operation));
-        if (attribute.equals(Attributes.MAX_HEALTH) && player.getHealth() > player.getMaxHealth()) player.setHealth(player.getMaxHealth());
+        if (amount == 0) return;
+        var modifier = new AttributeModifier(source, amount, operation);
+        if (permanent) instance.addPermanentModifier(modifier);
+        else instance.addTransientModifier(modifier);
+    }
+    private static void clampHealth(ServerPlayer player) {
+        float maximum = player.getMaxHealth();
+        if (player.getHealth() > maximum) player.setHealth(maximum);
     }
     @SubscribeEvent public static void login(PlayerEvent.PlayerLoggedInEvent event) { update((ServerPlayer)event.getEntity()); }
     @SubscribeEvent public static void respawn(PlayerEvent.PlayerRespawnEvent event) { update((ServerPlayer)event.getEntity()); }

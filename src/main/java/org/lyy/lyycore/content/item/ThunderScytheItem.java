@@ -49,14 +49,21 @@ public final class ThunderScytheItem extends Item {
     public static void attack(AttackEntityEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
         var stack = player.getMainHandItem();
-        if (!(stack.getItem() instanceof ThunderScytheItem) || player.isSpectator()
-                || !(event.getTarget() instanceof LivingEntity target) || !target.isAlive() || !target.isAttackable()
-                || target.skipAttackInteraction(player) || target.isInvulnerableTo(player.damageSources().playerAttack(player))
-                || target instanceof Player other && !player.canHarmPlayer(other) || !ready(player, LEFT_READY)) return;
-        // With no weapon attribute modifiers, cooldown attacks retain vanilla empty-hand behavior.
+        // A cooling-down scythe leaves the whole ordinary attack path to vanilla.
+        if (!(stack.getItem() instanceof ThunderScytheItem) || player.isSpectator() || !ready(player, LEFT_READY)) return;
+        var target = event.getTarget();
+        var healthOwner = SpecialDamage.healthOwner(target);
+        if (healthOwner == null || !healthOwner.isAlive() || healthOwner.isRemoved() || target.isRemoved()
+                || !target.isAttackable() || target.isInvulnerableTo(player.damageSources().playerAttack(player))
+                || healthOwner instanceof Player other && !player.canHarmPlayer(other)) return;
+        if (target.skipAttackInteraction(player)) {
+            // The target handled this interaction. Do not let vanilla invoke the hook a second time.
+            event.setCanceled(true);
+            return;
+        }
         event.setCanceled(true);
         begin(player, stack, LEFT_READY, false);
-        SpecialDamage.burstFromBase(player, player, target, SpecialDamage.Element.LIGHTNING,
+        SpecialDamage.burstFromBase(player, player, target, healthOwner, SpecialDamage.Element.LIGHTNING,
                 player.getAttributeValue(Attributes.ARMOR_TOUGHNESS) * 20 + 240, 8);
         player.resetAttackStrengthTicker();
     }
@@ -79,9 +86,10 @@ public final class ThunderScytheItem extends Item {
     @Override public InteractionResult useOn(UseOnContext context) {
         var player = context.getPlayer();
         if (player == null || player.isSpectator()) return InteractionResult.PASS;
-        if (StyleSystem.current(player) == StyleSystem.Style.OFFENSE)
+        var style = StyleSystem.current(player);
+        if (style == StyleSystem.Style.OFFENSE)
             return use(context.getLevel(), player, context.getHand()).getResult();
-        if (StyleSystem.current(player) != StyleSystem.Style.BUILDING) return InteractionResult.PASS;
+        if (style != StyleSystem.Style.BUILDING) return InteractionResult.PASS;
         var level = context.getLevel();
         var pos = context.getClickedPos();
         if (!level.mayInteract(player, pos) || !level.getWorldBorder().isWithinBounds(pos)) return InteractionResult.FAIL;
