@@ -161,7 +161,9 @@ def import_machine(folder, name, height, source_name=None, oriented=False, width
         if not element.get("export", True): continue
         if element.get("type", "cube") == "cube":
             points = itertools.product(*zip(element["from"], element["to"]))
-        elif element.get("type") == "mesh": points = element["vertices"].values()
+        elif element.get("type") == "mesh":
+            points = [[v+o for v,o in zip(point,element.get("origin",[0,0,0]))]
+                      for point in element["vertices"].values()]
         else: continue
         index = element_bones[element["uuid"]]
         origin = element.get("origin", [0,0,0])

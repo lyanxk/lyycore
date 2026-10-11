@@ -20,6 +20,7 @@ import java.util.List;
 public final class ResearchScreen extends AbstractContainerScreen<ResearchMenu> {
     private static final int INK = 0xFF302D35, MUTED_INK = 0xFF68616A, GOLD = 0xFFB69A55, PAPER = 0xFFF9F7F1;
     private static final int PAGE_SIZE = 18, COLUMNS = 6, DETAIL_HEIGHT = 111;
+    private static final int ATTRIBUTE_TOP = 55, ATTRIBUTE_ROW_HEIGHT = 31, ATTRIBUTE_BUTTON_SIZE = 20;
     private int page, selected = -1, scroll, materialRow;
     private List<Integer> visibleEntries = List.of();
     private boolean confirming;
@@ -133,8 +134,9 @@ public final class ResearchScreen extends AbstractContainerScreen<ResearchMenu> 
         } else {
             for (int i = 0; i < 4; i++) {
                 final int stat = i;
-                button(92, 55 + i * 31, 20, 20, Component.literal("−"), () -> sendSelf(SelfMenuData.REFUND - stat));
-                button(143, 55 + i * 31, 20, 20, Component.literal("+"), () -> sendSelf(SelfMenuData.ALLOCATE - stat));
+                int y = ATTRIBUTE_TOP + i * ATTRIBUTE_ROW_HEIGHT;
+                button(92, y, ATTRIBUTE_BUTTON_SIZE, ATTRIBUTE_BUTTON_SIZE, Component.literal("−"), () -> sendSelf(SelfMenuData.REFUND - stat));
+                button(143, y, ATTRIBUTE_BUTTON_SIZE, ATTRIBUTE_BUTTON_SIZE, Component.literal("+"), () -> sendSelf(SelfMenuData.ALLOCATE - stat));
             }
         }
     }
@@ -156,7 +158,7 @@ public final class ResearchScreen extends AbstractContainerScreen<ResearchMenu> 
             if (player == null) return;
             var stats = org.lyy.lyycore.content.PlayerAttributes.Stat.values();
             for (int i = 0; i < stats.length; i++) {
-                int y = topPos + 59 + i * 31;
+                int y = attributeTextY(i);
                 g.drawString(font, translated("gui.lyycore.self.stat." + i), leftPos + 17, y, INK, false);
                 g.drawString(font, String.format(java.util.Locale.ROOT, "%.0f", player.getAttributeValue(stats[i].attribute)), leftPos + 61, y, INK, false);
                 drawCenteredText(g, Component.literal(Integer.toString(menu.self.valueAt(i + 2))), leftPos + 127, y, MUTED_INK);
@@ -165,12 +167,16 @@ public final class ResearchScreen extends AbstractContainerScreen<ResearchMenu> 
                     org.lyy.lyycore.registry.LyyAttributes.PHYSICAL, org.lyy.lyycore.registry.LyyAttributes.ICE,
                     org.lyy.lyycore.registry.LyyAttributes.FIRE, org.lyy.lyycore.registry.LyyAttributes.LIGHTNING);
             for (int i = 0; i < multipliers.size(); i++) {
-                int y = topPos + 59 + i * 24;
+                int y = attributeTextY(i);
                 g.drawString(font, translated("gui.lyycore.self.multiplier." + i), leftPos + 179, y, INK, false);
                 String percent = String.format(java.util.Locale.ROOT, "%+.0f%%", (player.getAttributeValue(multipliers.get(i)) - 1) * 100);
-                g.drawString(font, percent, leftPos + 283 - font.width(percent), y + 10, MUTED_INK, false);
+                g.drawString(font, percent, leftPos + 283 - font.width(percent), y, MUTED_INK, false);
             }
         }
+    }
+
+    private int attributeTextY(int row) {
+        return topPos + ATTRIBUTE_TOP + row * ATTRIBUTE_ROW_HEIGHT + (ATTRIBUTE_BUTTON_SIZE - font.lineHeight) / 2;
     }
 
     private PaperButton button(int x, int y, int width, int height, Component label, Runnable action) {

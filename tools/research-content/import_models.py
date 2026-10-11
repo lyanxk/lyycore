@@ -131,7 +131,9 @@ def bake_mesh(source, name, texture_paths, strip_motion=()):
         origin, rotation = element.get("origin", [0, 0, 0]), element.get("rotation", [0, 0, 0])
         vertices = []
         for point in points:
-            turned = rotate([v - o for v, o in zip(point, origin)], rotation)
+            # Mesh vertices are relative to the element origin; cube corners are absolute.
+            local = point if element.get("type") == "mesh" else [v - o for v, o in zip(point, origin)]
+            turned = rotate(local, rotation)
             vertices.append([(v + o - p) / 16 for v, o, p in zip(turned, origin, bone["pivot"])])
         a, b, c = vertices[:3]
         ab, ac = [y-x for x,y in zip(a,b)], [y-x for x,y in zip(a,c)]
