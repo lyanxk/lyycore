@@ -1,10 +1,11 @@
 package org.lyy.lyycore.content.skills;
 
+import org.lyy.lyycore.content.combat.ActionRestrictions;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
-import org.lyy.lyycore.content.ResearchProgress;
-import org.lyy.lyycore.registry.LyyEffects;
+import org.lyy.lyycore.content.research.ResearchProgress;
+import org.lyy.lyycore.content.item.SpecialWeapon;
 
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -56,13 +57,25 @@ public final class SkillSystem {
     }
     public static boolean canUse(ServerPlayer player) {
         return unlocked(player) && player.isAlive() && !player.isSpectator()
-                && player.containerMenu == player.inventoryMenu && !player.hasEffect(LyyEffects.CRYSTALLIZATION);
+                && player.containerMenu == player.inventoryMenu && !ActionRestrictions.frozen(player);
     }
     public static boolean cast(ServerPlayer player, ResourceLocation key) {
         if (!canUse(player)) return false;
-        var skill = BINDINGS.getOrDefault(StyleSystem.current(player), Map.of()).get(key);
+        var style = StyleSystem.current(player);
+        var action = key.withSuffix("/" + style.key);
+        // Weapon actions own this press before research-bound active skills are considered.
+        if (style == StyleSystem.Style.OFFENSE && key.equals(SPECIAL)) {
+            var stack = player.getMainHandItem();
+            if (!stack.isEmpty() && stack.getItem() instanceof SpecialWeapon weapon) {
+                if (!consumeAction(player, action)) return false;
+                if (SkillInput.sneaking(player)) weapon.useUltimate(player, stack);
+                else weapon.useSkill(player, stack);
+                return true;
+            }
+        }
+        var skill = BINDINGS.getOrDefault(style, Map.of()).get(key);
         return skill != null && skill.available().test(player)
-                && consumeAction(player, key.withSuffix("/" + StyleSystem.current(player).key)) && skill.cast().test(player);
+                && consumeAction(player, action) && skill.cast().test(player);
     }
 
     /** Reserve before calling a handler, so reentrant calls and repeated input edges cannot double-cast. */

@@ -4,6 +4,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.AttributeMap;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -24,7 +25,12 @@ public final class LyyEffects {
         return EFFECTS.register(id, () -> new MobEffect(MobEffectCategory.HARMFUL, color) {});
     }
     public static final DeferredHolder<MobEffect, MobEffect> CRYSTALLIZATION = EFFECTS.register("crystallization", () ->
-            new MobEffect(MobEffectCategory.HARMFUL, 0xF89CD8) {}
+            new MobEffect(MobEffectCategory.HARMFUL, 0xF89CD8) {
+                @Override public void addAttributeModifiers(AttributeMap attributes, int amplifier) {
+                    if (amplifier >= 2) super.addAttributeModifiers(attributes, amplifier);
+                    else removeAttributeModifiers(attributes);
+                }
+            }
                     .addAttributeModifier(Attributes.MOVEMENT_SPEED, ResourceLocation.fromNamespaceAndPath(LyyCore.MODID, "crystallization"), -1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
                     .addAttributeModifier(Attributes.FLYING_SPEED, ResourceLocation.fromNamespaceAndPath(LyyCore.MODID, "crystallization_flight"), -1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
 }

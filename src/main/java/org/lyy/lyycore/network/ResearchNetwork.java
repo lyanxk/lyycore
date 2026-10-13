@@ -35,7 +35,7 @@ public final class ResearchNetwork {
         @Override public Type<OpenMemory> type() { return TYPE; }
     }
     @SubscribeEvent public static void register(RegisterPayloadHandlersEvent event) {
-        var registrar = event.registrar("6");
+        var registrar = event.registrar("7");
         registrar.playToClient(Catalog.TYPE, Catalog.CODEC, (payload, context) -> ResearchManager.updateClient(payload.entries));
         registrar.playToServer(OpenMemory.TYPE, OpenMemory.CODEC, (payload, context) -> {
             if (context.player() instanceof ServerPlayer player) ResearchMenu.openMemory(player);

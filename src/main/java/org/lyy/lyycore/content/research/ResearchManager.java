@@ -60,6 +60,14 @@ public final class ResearchManager extends SimpleJsonResourceReloadListener {
         }
     }
 
+    @SubscribeEvent public static void researchChanged(ResearchChangedEvent event) {
+        if (!event.completed) return;
+        event.definition.completionAdvancement().ifPresent(id -> {
+            var advancement = event.player.server.getAdvancements().get(id);
+            if (advancement != null) event.player.getAdvancements().award(advancement, "research");
+        });
+    }
+
     @SubscribeEvent public static void register(AddReloadListenerEvent event) {
         var manager = new ResearchManager();
         SERVERS.put(event.getServerResources(), manager);

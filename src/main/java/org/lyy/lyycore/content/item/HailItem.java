@@ -1,5 +1,6 @@
 package org.lyy.lyycore.content.item;
 
+import org.lyy.lyycore.content.combat.CombatTargets;
 import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -17,12 +18,15 @@ import net.neoforged.neoforge.common.CommonHooks;
 import net.neoforged.neoforge.common.util.BlockSnapshot;
 import net.neoforged.neoforge.event.EventHooks;
 import org.lyy.lyycore.content.*;
-import org.lyy.lyycore.content.entity.SonnetDome;
 import org.lyy.lyycore.content.skills.StyleSystem;
 import org.lyy.lyycore.registry.LyyEntities;
 
-public final class HailItem extends Item {
+public final class HailItem extends Item implements SpecialWeapon {
     public HailItem(Properties properties) { super(properties); }
+
+    @Override public void useSkill(ServerPlayer player, ItemStack stack) { }
+    @Override public void useUltimate(ServerPlayer player, ItemStack stack) { }
+
     @Override public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         if (player.isSpectator() || player.getCooldowns().isOnCooldown(this)) return InteractionResultHolder.fail(stack);
@@ -30,7 +34,7 @@ public final class HailItem extends Item {
             player.getCooldowns().addCooldown(this, 20);
             // Damage is immediate. A single cosmetic crystal per target avoids spawning twenty entities per hit burst.
             for (var target : level.getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(10),
-                    entity -> entity.distanceToSqr(player) <= 100 && SonnetDome.isEnemy(entity, player))) {
+                    entity -> entity.distanceToSqr(player) <= 100 && CombatTargets.isEnemy(entity, player))) {
                 var crystal = LyyEntities.HAIL_CRYSTAL.get().create(level);
                 if (crystal != null) { crystal.prepare(player.getEyePosition(), target.getBoundingBox().getCenter()); level.addFreshEntity(crystal); }
                 SpecialDamage.burst(player, player, target, SpecialDamage.Element.ICE, 20, 20);

@@ -9,11 +9,14 @@ import net.minecraft.network.syncher.*;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
+import org.lyy.lyycore.content.SpecialDamage;
 import org.lyy.lyycore.registry.LyyEffects;
 
 public class SonnetArrow extends Arrow {
@@ -67,11 +70,23 @@ public class SonnetArrow extends Arrow {
         Entity target = result.getEntity();
         hitEntities.add(target.getUUID());
         if (!level().isClientSide && target instanceof LivingEntity living) {
-            if (getOwner() instanceof net.minecraft.world.entity.player.Player player)
-                org.lyy.lyycore.content.SpecialDamage.hit(player, this, living, org.lyy.lyycore.content.SpecialDamage.Element.PHYSICAL, 20);
-            else living.hurt(damageSources().arrow(this, getOwner() == null ? this : getOwner()), 20);
-            living.addEffect(new MobEffectInstance(LyyEffects.CRYSTALLIZATION, 60), getOwner());
+            hitCrystallizing(living);
         }
+    }
+
+    private void hitCrystallizing(LivingEntity target) {
+        var current = target.getEffect(LyyEffects.CRYSTALLIZATION);
+        boolean shatter = current != null && current.getAmplifier() >= 2;
+        double attack = getOwner() instanceof LivingEntity owner ? owner.getAttributeValue(Attributes.ATTACK_DAMAGE) : 0;
+        double damage = (attack + 40) * 20;
+        // Settle the arrow and shatter together so hurt cooldown cannot swallow the extra damage.
+        if (shatter) damage += (attack + 20) * 160;
+        if (getOwner() instanceof Player player)
+            SpecialDamage.burstFromBase(player, this, target, SpecialDamage.Element.PHYSICAL, damage, 1);
+        else target.hurt(damageSources().arrow(this, getOwner() == null ? this : getOwner()), (float)damage);
+        if (shatter) target.removeEffect(LyyEffects.CRYSTALLIZATION);
+        else if (target.isAlive()) target.addEffect(new MobEffectInstance(LyyEffects.CRYSTALLIZATION, 400,
+                current == null ? 0 : current.getAmplifier() + 1), getOwner());
     }
 
     @Override public void tick() {

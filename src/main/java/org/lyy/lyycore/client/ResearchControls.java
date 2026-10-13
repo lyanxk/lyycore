@@ -87,7 +87,7 @@ public final class ResearchControls {
         while (SPECIAL.consumeClick()) { }
         if (mc.player == null) { lastInput = null; return; }
         boolean enabled = mc.screen == null && mc.isWindowActive() && SkillSystem.unlocked(mc.player);
-        var input = new SkillNetwork.Input(enabled && SPECIAL.isDown(),
+        var input = new SkillNetwork.Input(enabled && SPECIAL.isDown(), enabled && mc.options.keyShift.isDown(),
                 enabled ? (mc.options.keyUp.isDown() ? 1 : 0) - (mc.options.keyDown.isDown() ? 1 : 0) : 0,
                 enabled ? (mc.options.keyLeft.isDown() ? 1 : 0) - (mc.options.keyRight.isDown() ? 1 : 0) : 0);
         if (!input.equals(lastInput) || heartbeat && input.held() && mc.player.tickCount % 10 == 0) {

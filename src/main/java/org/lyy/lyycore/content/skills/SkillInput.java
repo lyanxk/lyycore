@@ -8,13 +8,14 @@ import java.util.WeakHashMap;
 /** Server-owned key edges and directional modifiers; holding a key does not recast it. */
 public final class SkillInput {
     private static final Map<ServerPlayer, State> STATES = new WeakHashMap<>();
-    private static final class State { boolean held; int forward, strafe, receivedAt; }
+    private static final class State { boolean held, sneaking; int forward, strafe, receivedAt; }
     private SkillInput() { }
 
-    public static void accept(ServerPlayer player, boolean held, int forward, int strafe) {
+    public static void accept(ServerPlayer player, boolean held, boolean sneaking, int forward, int strafe) {
         var state = STATES.computeIfAbsent(player, ignored -> new State());
         boolean pressed = held && !state.held;
         state.held = held;
+        state.sneaking = sneaking;
         state.forward = Integer.signum(forward);
         state.strafe = Integer.signum(strafe);
         state.receivedAt = player.tickCount;
@@ -29,6 +30,7 @@ public final class SkillInput {
     }
 
     public static boolean held(ServerPlayer player) { var state = STATES.get(player); return state != null && state.held; }
+    public static boolean sneaking(ServerPlayer player) { var state = STATES.get(player); return state != null && state.sneaking; }
     public static boolean fresh(ServerPlayer player) { var state = STATES.get(player); return state != null && player.tickCount - state.receivedAt <= 20; }
     public static int forward(ServerPlayer player) { var state = STATES.get(player); return state == null ? 0 : state.forward; }
     public static int strafe(ServerPlayer player) { var state = STATES.get(player); return state == null ? 0 : state.strafe; }

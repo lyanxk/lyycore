@@ -8,5 +8,10 @@
   "rarity": "high",
   "materials": [],
   "experience_points": 3000,
-  "required_advancement": "lyycore:progression/better"
+  "required_advancement": "lyycore:progression/better",
+  "display": {
+    "stage": 2,
+    "purpose": "research",
+    "order": 1
+  }
 }

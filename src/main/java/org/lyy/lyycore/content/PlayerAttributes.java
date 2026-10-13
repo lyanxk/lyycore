@@ -1,5 +1,7 @@
 package org.lyy.lyycore.content;
 
+import org.lyy.lyycore.content.research.ResearchChangedEvent;
+import org.lyy.lyycore.content.research.ResearchProgress;
 import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -77,4 +79,7 @@ public final class PlayerAttributes {
     @SubscribeEvent public static void login(PlayerEvent.PlayerLoggedInEvent event) { update((ServerPlayer)event.getEntity()); }
     @SubscribeEvent public static void respawn(PlayerEvent.PlayerRespawnEvent event) { update((ServerPlayer)event.getEntity()); }
     @SubscribeEvent public static void dimension(PlayerEvent.PlayerChangedDimensionEvent event) { update((ServerPlayer)event.getEntity()); }
+    @SubscribeEvent public static void researchChanged(ResearchChangedEvent event) {
+        if (event.id.equals(RESEARCH)) update(event.player);
+    }
 }

@@ -20,5 +20,10 @@
       "id": "lyycore:proof"
     },
     "duration": 600
+  },
+  "display": {
+    "stage": 3,
+    "purpose": "research",
+    "order": 0
   }
 }

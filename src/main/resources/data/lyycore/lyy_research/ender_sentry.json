@@ -33,5 +33,10 @@
       "id": "lyycore:ender_sentry"
     },
     "duration": 2000
+  },
+  "display": {
+    "stage": 1,
+    "purpose": "combat",
+    "order": 0
   }
 }

@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "pattern": [
+    "I I",
+    "   ",
+    "I I"
+  ],
+  "key": {
+    "I": {
+      "item": "lyycore:sixfold_alloy_ingot"
+    }
+  },
+  "result": {
+    "id": "lyycore:matrix_output",
+    "count": 1
+  }
+}

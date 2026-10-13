@@ -14,5 +14,10 @@
   ],
   "title": "research.lyycore.double_jump.title",
   "summary": "research.lyycore.double_jump.summary",
-  "description": "research.lyycore.double_jump.description"
+  "description": "research.lyycore.double_jump.description",
+  "display": {
+    "stage": 3,
+    "purpose": "exploration",
+    "order": 0
+  }
 }

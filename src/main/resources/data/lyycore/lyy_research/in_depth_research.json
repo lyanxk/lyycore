@@ -25,5 +25,10 @@
       "id": "lyycore:experiment_table"
     },
     "duration": 1200
+  },
+  "display": {
+    "stage": 4,
+    "purpose": "research",
+    "order": 1
   }
 }

@@ -1,5 +1,6 @@
 package org.lyy.lyycore.content.wings;
 
+import org.lyy.lyycore.content.combat.ActionRestrictions;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +15,6 @@ import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import org.lyy.lyycore.content.AegisWings;
 import org.lyy.lyycore.content.CombatDamage;
 import org.lyy.lyycore.network.WingsNetwork;
-import org.lyy.lyycore.registry.LyyEffects;
 
 /** Innate weapon execution, independent of style and skill unlocks. */
 @EventBusSubscriber(modid = "lyycore")
@@ -41,7 +41,7 @@ public final class WingsAttack {
 
     private static boolean canAttack(ServerPlayer player) {
         return AegisWings.unlocked(player) && player.isAlive() && !player.isSpectator()
-                && !player.hasEffect(LyyEffects.CRYSTALLIZATION);
+                && !ActionRestrictions.frozen(player);
     }
 
     public static boolean start(ServerPlayer player, LivingEntity target) {

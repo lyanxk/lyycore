@@ -14,6 +14,7 @@ import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.lyy.lyycore.energy.ImaginaryEnergy;
 import org.lyy.lyycore.energy.EnergyReceiver;
+import org.lyy.lyycore.energy.CoordinateEnergySource;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -23,10 +24,9 @@ import java.util.Set;
 import org.lyy.lyycore.registry.LyyCapabilities;
 
 /** Generates an independent energy budget at each configured, already-loaded destination. */
-public class TargetedEnergySourceBlockEntity extends BlockEntity {
+public class TargetedEnergySourceBlockEntity extends BlockEntity implements CoordinateEnergySource {
     private final int maxTargets, iePerTick, fePerTick;
-    public int maxTargets() { return maxTargets; }
-    public enum BindingResult { ADDED, REMOVED, LIMIT_REACHED }
+    @Override public int maxTargets() { return maxTargets; }
     private static final Direction[] SIDES = {Direction.DOWN, Direction.UP, Direction.NORTH, Direction.SOUTH, Direction.WEST, Direction.EAST, null};
     private final List<Target> targets = new ArrayList<>();
 
@@ -34,47 +34,18 @@ public class TargetedEnergySourceBlockEntity extends BlockEntity {
         super(type, pos, state); this.maxTargets = maxTargets; this.iePerTick = iePerTick; this.fePerTick = fePerTick;
     }
     public List<GlobalPos> targets() { return targets.stream().map(target -> target.connection).toList(); }
-    public int getTargetCount() { return targets.size(); }
+    @Override public int getTargetCount() { return targets.size(); }
 
-    /** Retained for callers that explicitly replace the configuration with one destination. */
-    public GlobalPos target() { return targets.isEmpty() ? null : targets.getFirst().connection; }
-    public void setTarget(GlobalPos target) {
-        clearTargets();
-        if (target != null) addTarget(target);
-        setChanged();
-    }
-
-    public boolean addTarget(GlobalPos connection) {
-        if (targets.size() >= maxTargets) return false;
+    @Override public BindingResult bindTarget(GlobalPos connection) {
         var receiver = resolveReceiver(connection);
         for (var target : targets) {
-            if (target.connection.equals(connection) || resolveReceiver(target.connection).equals(receiver)) return false;
+            if (target.connection.equals(connection) || resolveReceiver(target.connection).equals(receiver))
+                return BindingResult.ALREADY_BOUND;
         }
+        if (targets.size() >= maxTargets) return BindingResult.LIMIT_REACHED;
         targets.add(new Target(connection));
         setChanged();
-        return true;
-    }
-
-    public boolean removeTarget(GlobalPos connection) {
-        var receiver = resolveReceiver(connection);
-        boolean removed = false;
-        var iterator = targets.iterator();
-        while (iterator.hasNext()) {
-            var target = iterator.next();
-            if (target.connection.equals(connection) || resolveReceiver(target.connection).equals(receiver)) {
-                target.clearCaches();
-                iterator.remove();
-                removed = true;
-            }
-        }
-        if (removed) setChanged();
-        return removed;
-    }
-
-    public BindingResult toggleTarget(GlobalPos connection) {
-        // Removal remains available even when every target slot is occupied.
-        if (removeTarget(connection)) return BindingResult.REMOVED;
-        return addTarget(connection) ? BindingResult.ADDED : BindingResult.LIMIT_REACHED;
+        return BindingResult.ADDED;
     }
 
     private GlobalPos resolveReceiver(GlobalPos connection) {

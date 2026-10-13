@@ -40,12 +40,16 @@ public class ClientSetup {
         SonnetDomeMesh.reload(event.getModelManager());
         ProductionLabRenderer.reload();
         DragonMightRenderer.reload();
+        EmberfallItemRenderer.reload();
+        EmberfallEffectRenderer.reload();
         HailItemRenderer.reload();
         ThunderScytheRenderer.reload();
     }
 
     @SubscribeEvent
     public static void wrapCustomItemModels(ModelEvent.ModifyBakingResult event) {
+        var emberfall = new net.minecraft.client.resources.model.ModelResourceLocation(LyyItems.EMBERFALL.getId(), "inventory");
+        event.getModels().computeIfPresent(emberfall, (id, model) -> EmberfallItemRenderer.wrap(model));
         var hail = new net.minecraft.client.resources.model.ModelResourceLocation(LyyItems.HAIL.getId(), "inventory");
         event.getModels().computeIfPresent(hail, (id, model) -> HailItemRenderer.wrap(model));
         var dragonMight = new net.minecraft.client.resources.model.ModelResourceLocation(LyyItems.DRAGON_MIGHT.getId(), "inventory");
@@ -83,6 +87,9 @@ public class ClientSetup {
     @SubscribeEvent
     public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerBlockEntityRenderer(LyyBlockEntities.EXPERIMENT_TABLE.get(), ExperimentTableRenderer::new);
+        event.registerEntityRenderer(LyyEntities.EMBERFALL_SLASH.get(), EmberfallEffectRenderer::new);
+        event.registerEntityRenderer(LyyEntities.EMBERFALL_RING.get(), EmberfallEffectRenderer::new);
+        event.registerEntityRenderer(LyyEntities.EMBERFALL_THROWN.get(), EmberfallEffectRenderer::new);
         event.registerEntityRenderer(LyyEntities.HAIL_CRYSTAL.get(), HailCrystalRenderer::new);
         event.registerEntityRenderer(LyyEntities.HAIL_FLOWER.get(), HailFlowerRenderer::new);
         event.registerEntityRenderer(LyyEntities.MAGIC_BEAM.get(), MagicBeamRenderer::new);
@@ -95,6 +102,8 @@ public class ClientSetup {
         event.registerEntityRenderer(LyyEntities.ASSAULT_CRYSTAL.get(), context -> new CrystalTroopRenderer(context, true));
         event.registerEntityRenderer(LyyEntities.IMAGINARY_DRAGON.get(), ImaginaryDragonRenderer::new);
         event.registerEntityRenderer(LyyEntities.GATE_METEOR.get(), GateMeteorRenderer::new);
+        event.registerBlockEntityRenderer(LyyBlockEntities.LOGISTICS_MATRIX.get(), context -> new EnergyMachineRenderer<>("logistics_matrix", "working"));
+        event.registerBlockEntityRenderer(LyyBlockEntities.SUMMONING_BEACON.get(), context -> new SummoningBeaconRenderer());
         event.registerBlockEntityRenderer(LyyBlockEntities.PHANTOM_MATRIX.get(), context -> new EnergyMachineRenderer<>("phantom_matrix", "working"));
         event.registerBlockEntityRenderer(LyyBlockEntities.EROSION_FACTORY.get(), context -> new EnergyMachineRenderer<>("erosion_factory", "working"));
         event.registerBlockEntityRenderer(LyyBlockEntities.OTHERWORLD_CHEST.get(), context -> new OtherworldChestRenderer());
@@ -148,6 +157,8 @@ public class ClientSetup {
 
     @SubscribeEvent
     public static void registerScreens(RegisterMenuScreensEvent event) {
+        event.register(LyyMenus.CAPTURE_CAGE.get(), org.lyy.lyycore.client.screen.CaptureCageScreen::new);
+        event.register(LyyMenus.LOGISTICS.get(), org.lyy.lyycore.client.screen.LogisticsScreen::new);
         event.register(LyyMenus.EXPERIMENT_TABLE.get(), org.lyy.lyycore.client.screen.ExperimentTableScreen::new);
         event.register(LyyMenus.EROSION_FACTORY.get(), org.lyy.lyycore.client.screen.ErosionFactoryScreen::new);
         event.register(LyyMenus.OTHERWORLD_CHEST.get(), org.lyy.lyycore.client.screen.OtherworldChestScreen::new);

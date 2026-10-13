@@ -41,6 +41,13 @@
     "lyycore:stained_alloy_block",
     "lyycore:frost_steel_block",
     "lyycore:infernal_steel_block",
-    "lyycore:charged_steel_block"
+    "lyycore:charged_steel_block",
+    "lyycore:sixfold_alloy_block",
+    "lyycore:logistics_matrix",
+    "lyycore:matrix_input",
+    "lyycore:matrix_output",
+    "lyycore:matrix_collector",
+    "lyycore:capture_cage",
+    "lyycore:summoning_beacon"
   ]
 }

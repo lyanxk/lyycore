@@ -17,7 +17,7 @@ public record ResearchMaterial(ItemStack stack, int priority) {
 
     public static final Codec<ResearchMaterial> CODEC = RecordCodecBuilder.create(i -> i.group(
             ItemStack.ITEM_NON_AIR_CODEC.fieldOf("id").forGetter(m -> m.stack.getItemHolder()),
-            Codec.intRange(1, 99).optionalFieldOf("count", 1).forGetter(m -> m.stack.getCount()),
+            Codec.intRange(1, 4096).optionalFieldOf("count", 1).forGetter(m -> m.stack.getCount()),
             DataComponentPatch.CODEC.optionalFieldOf("components", DataComponentPatch.EMPTY).forGetter(m -> m.stack.getComponentsPatch()),
             Codec.INT.optionalFieldOf("priority", 0).forGetter(ResearchMaterial::priority)
     ).apply(i, (item, count, components, priority) -> new ResearchMaterial(new ItemStack(item, count, components), priority)));

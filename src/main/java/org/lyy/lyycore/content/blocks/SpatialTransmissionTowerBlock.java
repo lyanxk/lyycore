@@ -9,7 +9,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.lyy.lyycore.content.blockEntities.SpatialTransmissionTowerBlockEntity;
 import org.lyy.lyycore.registry.LyyBlockEntities;
 
-public final class SpatialTransmissionTowerBlock extends EnergyTransmitterBlock {
+public final class SpatialTransmissionTowerBlock extends SquareMachineBlock {
     public static final MapCodec<SpatialTransmissionTowerBlock> CODEC = simpleCodec(SpatialTransmissionTowerBlock::new);
     public SpatialTransmissionTowerBlock() { this(Properties.of().strength(5).sound(SoundType.METAL)); }
     private SpatialTransmissionTowerBlock(Properties properties) { super(properties, "spatial_transmission_tower", 8, 3); }

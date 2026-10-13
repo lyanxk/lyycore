@@ -67,8 +67,8 @@ public final class ResourceGatheringFrameBlockEntity extends CondensingFrameBloc
 
     public boolean selectRecipe(int index) {
         var recipes = recipes();
-        if (index < 0 || index >= recipes.size()) return false;
-        selectedRecipe = recipes.get(index).id();
+        if (index < -1 || index >= recipes.size()) return false;
+        selectedRecipe = index == -1 ? null : recipes.get(index).id();
         setChanged();
         return true;
     }
@@ -101,6 +101,7 @@ public final class ResourceGatheringFrameBlockEntity extends CondensingFrameBloc
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
         if (selectedRecipe != null) tag.putString("SelectedRecipe", selectedRecipe.toString());
+        else tag.remove("SelectedRecipe");
     }
 
     @Override

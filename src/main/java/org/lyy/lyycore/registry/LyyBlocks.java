@@ -28,6 +28,8 @@ import java.util.Map;
 
 public class LyyBlocks {
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(LyyCore.MODID);
+    public static final DeferredBlock<SummoningBeaconBlock> SUMMONING_BEACON = BLOCKS.register("summoning_beacon", SummoningBeaconBlock::new);
+    public static final DeferredBlock<CaptureCageBlock> CAPTURE_CAGE = BLOCKS.register("capture_cage", CaptureCageBlock::new);
     public static final DeferredBlock<ExperimentTableBlock> EXPERIMENT_TABLE = BLOCKS.register("experiment_table", ExperimentTableBlock::new);
     public static final DeferredBlock<ErosionFactoryBlock> EROSION_FACTORY = BLOCKS.register("erosion_factory", ErosionFactoryBlock::new);
     public static final DeferredBlock<OtherworldChestBlock> OTHERWORLD_CHEST = BLOCKS.register("otherworld_chest", OtherworldChestBlock::new);
@@ -41,6 +43,11 @@ public class LyyBlocks {
     public static final DeferredBlock<Block> FROST_STEEL_BLOCK = materialBlock("frost_steel_block");
     public static final DeferredBlock<Block> INFERNAL_STEEL_BLOCK = materialBlock("infernal_steel_block");
     public static final DeferredBlock<Block> CHARGED_STEEL_BLOCK = materialBlock("charged_steel_block");
+    public static final DeferredBlock<Block> SIXFOLD_ALLOY_BLOCK = materialBlock("sixfold_alloy_block");
+    public static final DeferredBlock<LogisticsMatrixBlock> LOGISTICS_MATRIX = BLOCKS.register("logistics_matrix", LogisticsMatrixBlock::new);
+    public static final DeferredBlock<MatrixPortBlock> MATRIX_INPUT = BLOCKS.register("matrix_input", () -> new MatrixPortBlock(MatrixPortBlock.Kind.INPUT));
+    public static final DeferredBlock<MatrixPortBlock> MATRIX_OUTPUT = BLOCKS.register("matrix_output", () -> new MatrixPortBlock(MatrixPortBlock.Kind.OUTPUT));
+    public static final DeferredBlock<MatrixPortBlock> MATRIX_COLLECTOR = BLOCKS.register("matrix_collector", () -> new MatrixPortBlock(MatrixPortBlock.Kind.COLLECTOR));
     private static DeferredBlock<Block> materialBlock(String name) {
         return BLOCKS.register(name, () -> new Block(BlockBehaviour.Properties.of().strength(6).sound(SoundType.METAL).requiresCorrectToolForDrops()));
     }

@@ -1,8 +1,5 @@
 package org.lyy.lyycore.client;
 
-import com.mojang.blaze3d.platform.InputConstants;
-import net.minecraft.client.KeyMapping;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
@@ -10,15 +7,9 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.client.event.ClientTickEvent;
-import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.client.extensions.common.*;
-import net.neoforged.neoforge.client.settings.KeyConflictContext;
-import net.neoforged.neoforge.network.PacketDistributor;
-import org.lwjgl.glfw.GLFW;
 import org.lyy.lyycore.LyyCore;
 import org.lyy.lyycore.content.item.SonnetBowItem;
-import org.lyy.lyycore.network.SonnetNetwork;
 import org.lyy.lyycore.registry.LyyItems;
 
 @EventBusSubscriber(modid = LyyCore.MODID, value = Dist.CLIENT)
@@ -27,17 +18,6 @@ public final class SonnetControls {
         return age < 2 ? (float) Math.sin(age * Math.PI / 2) : 0;
     }
 
-    public static final KeyMapping ULTIMATE = new KeyMapping("key.lyycore.ultimate", KeyConflictContext.IN_GAME,
-            InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_Z, "key.categories.lyycore");
-    @SubscribeEvent public static void registerKeys(RegisterKeyMappingsEvent event) { event.register(ULTIMATE); }
-    @SubscribeEvent public static void tick(ClientTickEvent.Post event) {
-        var minecraft = Minecraft.getInstance();
-        while (ULTIMATE.consumeClick()) {
-            // Recall also works after switching away from the bow; the server validates ownership.
-            if (minecraft.player != null && minecraft.screen == null)
-                PacketDistributor.sendToServer(SonnetNetwork.Ultimate.INSTANCE);
-        }
-    }
     @SubscribeEvent public static void extensions(RegisterClientExtensionsEvent event) {
         event.registerItem(new IClientItemExtensions() {
             @Override public net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer getCustomRenderer() {

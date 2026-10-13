@@ -39,7 +39,8 @@ public final class ResourceGatheringMenu extends CondensingFrameMenu {
     }
     @Override public boolean clickMenuButton(Player player, int index) {
         if (player.level().isClientSide || !stillValid(player)) return false;
-        boolean selected = be.selectRecipe(index);
+        // Button zero is the empty option; recipe indices and saved IDs stay unchanged.
+        boolean selected = be.selectRecipe(index - 1);
         if (selected) broadcastChanges();
         return selected;
     }

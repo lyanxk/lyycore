@@ -1,5 +1,8 @@
 package org.lyy.lyycore.content.skills;
 
+import org.lyy.lyycore.content.research.ResearchChangedEvent;
+import org.lyy.lyycore.content.research.ResearchManager;
+import org.lyy.lyycore.content.combat.ActionRestrictions;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -8,9 +11,8 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
-import org.lyy.lyycore.content.ResearchProgress;
+import org.lyy.lyycore.content.research.ResearchProgress;
 import org.lyy.lyycore.network.SkillNetwork;
-import org.lyy.lyycore.registry.LyyEffects;
 
 /** Exploration skill registration and lifecycle ordering; each mechanic owns its own state. */
 @EventBusSubscriber(modid = "lyycore")
@@ -29,7 +31,7 @@ public final class BasicSkills {
                 ? player.getPersistentData().getBoolean("lyycore:exploration") : ResearchProgress.completed(player, RESEARCH));
     }
     static boolean active(ServerPlayer player, StyleSystem.Style style) {
-        return available(player) && player.isAlive() && !player.isSpectator() && !player.hasEffect(LyyEffects.CRYSTALLIZATION)
+        return available(player) && player.isAlive() && !player.isSpectator() && !ActionRestrictions.frozen(player)
                 && StyleSystem.current(player) == style;
     }
     @SubscribeEvent public static void tick(PlayerTickEvent.Pre event) {
@@ -51,5 +53,18 @@ public final class BasicSkills {
     }
     @SubscribeEvent public static void stopped(ServerStoppedEvent event) {
         SkillInput.clear(); GuardSkill.clear(); MovementSkill.clear(); OffenseSkills.clear(); SkillSystem.clear(); SkillNetwork.clear();
+    }
+    @SubscribeEvent public static void researchChanged(ResearchChangedEvent event) {
+        var player = event.player;
+        if (event.definition.unlocksSkills()) {
+            boolean unlocked = event.completed || ResearchManager.all(player.level()).stream()
+                    .anyMatch(entry -> entry.value().unlocksSkills() && ResearchProgress.completed(player, entry.id()));
+            SkillSystem.setUnlocked(player, unlocked);
+        }
+        if (event.id.equals(RESEARCH)) {
+            GuardSkill.reset(player);
+            BuildingSkills.updateFlight(player);
+        }
+        if (event.definition.unlocksSkills() || event.id.equals(RESEARCH)) SkillNetwork.sync(player);
     }
 }

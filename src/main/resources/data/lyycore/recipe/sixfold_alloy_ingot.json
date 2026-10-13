@@ -1,0 +1,46 @@
+{
+  "type": "lyycore:pure_smelting",
+  "inputs": [
+    {
+      "ingredient": {
+        "item": "lyycore:void_alloy"
+      },
+      "count": 64
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:unextinguished_alloy"
+      },
+      "count": 64
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:stained_alloy"
+      },
+      "count": 64
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:frost_steel"
+      },
+      "count": 64
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:infernal_steel"
+      },
+      "count": 64
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:charged_steel"
+      },
+      "count": 64
+    }
+  ],
+  "result": {
+    "id": "lyycore:sixfold_alloy_ingot"
+  },
+  "result_count": 64,
+  "duration": 1200
+}

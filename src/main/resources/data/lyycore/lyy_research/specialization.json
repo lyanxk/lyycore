@@ -23,5 +23,10 @@
   ],
   "title": "research.lyycore.specialization.title",
   "summary": "research.lyycore.specialization.summary",
-  "description": "research.lyycore.specialization.description"
+  "description": "research.lyycore.specialization.description",
+  "display": {
+    "stage": 4,
+    "purpose": "combat",
+    "order": 0
+  }
 }

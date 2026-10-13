@@ -1,0 +1,64 @@
+{
+  "type": "lyycore:pure_smelting",
+  "inputs": [
+    {
+      "ingredient": {
+        "item": "lyycore:crystal_block"
+      },
+      "count": 64
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:glass"
+      },
+      "count": 64
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:glass"
+      },
+      "count": 64
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:glass"
+      },
+      "count": 64
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:glass"
+      },
+      "count": 64
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:glass"
+      },
+      "count": 64
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:glass"
+      },
+      "count": 64
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:glass"
+      },
+      "count": 64
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:glass"
+      },
+      "count": 64
+    }
+  ],
+  "result": {
+    "id": "lyycore:crystal_prism"
+  },
+  "result_count": 1,
+  "duration": 1200
+}

@@ -22,5 +22,10 @@
       "id": "lyycore:dragon_might"
     },
     "duration": 6000
+  },
+  "display": {
+    "stage": 4,
+    "purpose": "combat",
+    "order": 1
   }
 }

@@ -17,5 +17,10 @@
     },
     "duration": 6000
   },
-  "dangerous": true
+  "dangerous": true,
+  "display": {
+    "stage": 3,
+    "purpose": "combat",
+    "order": 1
+  }
 }

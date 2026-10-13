@@ -32,5 +32,10 @@
       "id": "lyycore:advanced_imaginary_gate"
     },
     "duration": 2000
+  },
+  "display": {
+    "stage": 1,
+    "purpose": "research",
+    "order": 0
   }
 }

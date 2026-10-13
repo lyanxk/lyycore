@@ -6,7 +6,6 @@ import net.minecraft.network.protocol.game.ClientboundGameEventPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -27,22 +26,12 @@ final class SonnetArrowImpact {
         if (!(arrow.getOwner() instanceof Player owner) || !(arrow.level() instanceof ServerLevel level)) return;
         Entity target = result.getEntity();
         DamageSource source = SpecialDamage.source(owner, arrow, SpecialDamage.Element.PHYSICAL);
-        float damage = damage(arrow, owner, target, source, level);
+        float damage = SpecialDamage.scale(owner, SpecialDamage.Element.PHYSICAL, 400);
         owner.setLastHurtMob(target);
         int previousFire = target.getRemainingFireTicks();
         if (arrow.isOnFire() && target.getType() != EntityType.ENDERMAN) target.igniteForSeconds(5);
         if (target.hurt(source, damage)) successful(arrow, owner, target, source, level, effects, knockback);
         else blocked(arrow, owner, target, previousFire);
-    }
-
-    /** Apply launch speed, enchantments and critical roll before the shared special-damage formula. */
-    private static float damage(AbstractArrow arrow, Player owner, Entity target, DamageSource source, ServerLevel level) {
-        float base = (float)arrow.getBaseDamage();
-        var weapon = arrow.getWeaponItem();
-        if (weapon != null) base = EnchantmentHelper.modifyDamage(level, weapon, target, source, base);
-        int impact = Mth.ceil(Math.clamp(arrow.getDeltaMovement().length() * base, 0, Integer.MAX_VALUE));
-        if (arrow.isCritArrow()) impact = (int)Math.min(Integer.MAX_VALUE, (long)impact + owner.getRandom().nextInt(impact / 2 + 2));
-        return SpecialDamage.amount(owner, SpecialDamage.Element.PHYSICAL, impact);
     }
 
     private static void successful(AbstractArrow arrow, Player owner, Entity target, DamageSource source, ServerLevel level,

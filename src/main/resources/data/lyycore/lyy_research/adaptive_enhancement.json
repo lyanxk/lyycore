@@ -19,5 +19,11 @@
     },
     "duration": 6000
   },
-  "required_advancement": "lyycore:progression/better"
+  "required_advancement": "lyycore:progression/better",
+  "display": {
+    "stage": 2,
+    "purpose": "research",
+    "order": 0
+  },
+  "completion_advancement": "lyycore:progression/well_fed"
 }

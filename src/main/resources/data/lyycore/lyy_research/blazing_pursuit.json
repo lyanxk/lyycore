@@ -10,5 +10,10 @@
   "materials": [],
   "title": "research.lyycore.blazing_pursuit.title",
   "summary": "research.lyycore.blazing_pursuit.summary",
-  "description": "research.lyycore.blazing_pursuit.description"
+  "description": "research.lyycore.blazing_pursuit.description",
+  "display": {
+    "stage": 4,
+    "purpose": "combat",
+    "order": 5
+  }
 }

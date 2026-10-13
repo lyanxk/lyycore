@@ -9,7 +9,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.lyy.lyycore.content.SpecialDamage;
 
-/** The single delayed event resolves all sixteen hits, then the explosion animation finishes. */
+/** The delayed explosion settles sixteen strikes as one hit, then its animation finishes. */
 public final class HailFlower extends Entity {
     private static final EntityDataAccessor<Long> CREATED = SynchedEntityData.defineId(HailFlower.class, EntityDataSerializers.LONG);
     private UUID owner;

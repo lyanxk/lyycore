@@ -28,7 +28,7 @@ public final class ResourceGatheringScreen extends AbstractContainerScreen<Resou
         super.init();
         addRenderableWidget(Button.builder(Component.translatable("screen.lyycore.gathering.select"), button -> {
             selectorOpen = !selectorOpen;
-            page = Math.max(0, menu.selectedIndex()) / PAGE_SIZE;
+            page = (menu.selectedIndex() + 1) / PAGE_SIZE;
         }).bounds(leftPos + 119, topPos + 37, 48, 18).build());
     }
     public boolean isSelectorOpen() { return selectorOpen; }
@@ -70,18 +70,20 @@ public final class ResourceGatheringScreen extends AbstractContainerScreen<Resou
             var lines = new ArrayList<Component>();
             if (menu.getSlot(0).hasItem()) lines.add(menu.getSlot(0).getItem().getHoverName());
             else if (!menu.selectedResult().isEmpty()) lines.add(menu.selectedResult().getHoverName());
-            else lines.add(Component.translatable("screen.lyycore.gathering.choose"));
+            if (menu.selectedResult().isEmpty()) lines.add(Component.translatable("screen.lyycore.gathering.empty_tooltip"));
             lines.add(Component.translatable("screen.lyycore.gathering.output", menu.getOutputCount(), 1024));
-            if (menu.isMiniatureFactory()) lines.add(Component.translatable("screen.lyycore.factory.production"));
-            else if (menu.kind().supportsWater()) lines.add(Component.translatable(menu.isWaterlogged() ? "screen.lyycore.gathering.wet" : "screen.lyycore.condensing.dry"));
-            if (!menu.getSlot(0).getItem().isEmpty() && !ItemStack.isSameItemSameComponents(menu.getSlot(0).getItem(), menu.selectedResult()))
+            if (!menu.selectedResult().isEmpty()) {
+                if (menu.isMiniatureFactory()) lines.add(Component.translatable("screen.lyycore.factory.production"));
+                else if (menu.kind().supportsWater()) lines.add(Component.translatable(menu.isWaterlogged() ? "screen.lyycore.gathering.wet" : "screen.lyycore.condensing.dry"));
+            }
+            if (!menu.selectedResult().isEmpty() && !menu.getSlot(0).getItem().isEmpty() && !ItemStack.isSameItemSameComponents(menu.getSlot(0).getItem(), menu.selectedResult()))
                 lines.add(Component.translatable("screen.lyycore.gathering.waiting"));
             g.renderComponentTooltip(font, lines, mouseX, mouseY);
         } else if (isHovering(8, 5, 160, 12, mouseX, mouseY)) {
             g.renderTooltip(font, title, mouseX, mouseY);
         } else renderTooltip(g, mouseX, mouseY);
     }
-    private int pages() { return Math.max(1, (menu.recipes().size() + PAGE_SIZE - 1) / PAGE_SIZE); }
+    private int pages() { return (menu.recipes().size() + 1 + PAGE_SIZE - 1) / PAGE_SIZE; }
     private void renderSelector(GuiGraphics g, int mouseX, int mouseY) {
         page = Math.min(page, pages() - 1);
         g.pose().pushPose();
@@ -92,23 +94,27 @@ public final class ResourceGatheringScreen extends AbstractContainerScreen<Resou
         g.drawString(font, "×", x + 145, y + 7, ForgeGui.TEXT, false);
         var recipes = menu.recipes();
         ItemStack hovered = ItemStack.EMPTY;
+        boolean hoveredEmpty = false;
         for (int cell = 0; cell < PAGE_SIZE; cell++) {
             int index = page * PAGE_SIZE + cell;
-            if (index >= recipes.size()) break;
+            if (index > recipes.size()) break;
             int sx = x + 8 + cell % COLUMNS * 18, sy = y + 23 + cell / COLUMNS * 18;
-            ForgeGui.slot(g, sx, sy, index == menu.selectedIndex());
-            ItemStack result = recipes.get(index).value().result();
-            g.renderFakeItem(result, sx, sy);
+            ForgeGui.slot(g, sx, sy, index == menu.selectedIndex() + 1);
+            ItemStack result = index == 0 ? ItemStack.EMPTY : recipes.get(index - 1).value().result();
+            if (index == 0) g.drawCenteredString(font, "×", sx + 8, sy + 4, ForgeGui.TEXT);
+            else g.renderFakeItem(result, sx, sy);
             if (mouseX >= sx && mouseX < sx + 16 && mouseY >= sy && mouseY < sy + 16) {
                 g.fill(sx, sy, sx + 16, sy + 16, 0x40FFFFFF);
                 hovered = result;
+                hoveredEmpty = index == 0;
             }
         }
         g.drawString(font, "<", x + 8, y + 87, ForgeGui.TEXT, false);
         String position = (page + 1) + " / " + pages();
         g.drawString(font, position, x + (160 - font.width(position)) / 2, y + 87, ForgeGui.TEXT, false);
         g.drawString(font, ">", x + 145, y + 87, ForgeGui.TEXT, false);
-        if (!hovered.isEmpty()) g.renderTooltip(font, hovered, mouseX, mouseY);
+        if (hoveredEmpty) g.renderTooltip(font, Component.translatable("screen.lyycore.gathering.empty_tooltip"), mouseX, mouseY);
+        else if (!hovered.isEmpty()) g.renderTooltip(font, hovered, mouseX, mouseY);
         g.pose().popPose();
     }
     @Override public boolean mouseClicked(double mouseX, double mouseY, int button) {
@@ -121,7 +127,7 @@ public final class ResourceGatheringScreen extends AbstractContainerScreen<Resou
             if (x >= 136) page = Math.min(pages() - 1, page + 1);
         } else if (x >= 8 && x < 152 && y >= 23 && y < 77) {
             int index = page * PAGE_SIZE + (int) ((y - 23) / 18) * COLUMNS + (int) ((x - 8) / 18);
-            if (index < menu.recipes().size() && minecraft.gameMode != null) {
+            if (index <= menu.recipes().size() && minecraft.gameMode != null) {
                 minecraft.gameMode.handleInventoryButtonClick(menu.containerId, index);
                 selectorOpen = false;
             }

@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "lyycore:sixfold_alloy_ingot"
+    },
+    {
+      "item": "lyycore:sixfold_alloy_ingot"
+    },
+    {
+      "item": "lyycore:sixfold_alloy_ingot"
+    },
+    {
+      "item": "lyycore:sixfold_alloy_ingot"
+    }
+  ],
+  "result": {
+    "id": "lyycore:sixfold_alloy_block",
+    "count": 1
+  }
+}

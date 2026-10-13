@@ -24,5 +24,10 @@
       "count": 32
     }
   ],
-  "experience_points": 0
+  "experience_points": 0,
+  "display": {
+    "stage": 1,
+    "purpose": "exploration",
+    "order": 0
+  }
 }

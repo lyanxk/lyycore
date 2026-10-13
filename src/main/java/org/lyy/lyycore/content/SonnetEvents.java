@@ -1,5 +1,6 @@
 package org.lyy.lyycore.content;
 
+import static org.lyy.lyycore.content.combat.ActionRestrictions.frozen;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -16,7 +17,6 @@ import net.neoforged.neoforge.event.tick.*;
 import net.neoforged.neoforge.event.entity.player.*;
 import net.neoforged.neoforge.event.entity.living.*;
 import org.lyy.lyycore.LyyCore;
-import org.lyy.lyycore.content.item.SonnetBowItem;
 import org.lyy.lyycore.registry.LyyEffects;
 import java.util.IdentityHashMap;
 import java.util.Map;
@@ -30,8 +30,6 @@ public final class SonnetEvents {
     // Retain the event until dispatch has finished, so later handlers can still
     // cancel it or change its destination. Cleared every server tick / shutdown.
     private static final Map<LivingEntity, List<EntityTeleportEvent>> PENDING_TELEPORTS = new IdentityHashMap<>();
-    public static boolean frozen(LivingEntity entity) { return entity.hasEffect(LyyEffects.CRYSTALLIZATION); }
-
     @SubscribeEvent public static void playerPre(PlayerTickEvent.Pre event) { hover(event.getEntity(), true); freeze(event.getEntity()); }
     @SubscribeEvent public static void playerPost(PlayerTickEvent.Post event) { hover(event.getEntity(), false); freeze(event.getEntity()); }
     @SubscribeEvent public static void entityPre(EntityTickEvent.Pre event) {
@@ -42,8 +40,8 @@ public final class SonnetEvents {
     }
 
     private static void hover(Player player, boolean beforeTick) {
-        boolean drawing = player.isUsingItem() && player.getUseItem().getItem() instanceof SonnetBowItem
-                && !SonnetBowItem.isCrystal(player.getUseItem());
+        boolean drawing = player.isAlive() && !player.isSpectator()
+                && player.level().getGameTime() < player.getPersistentData().getLong("SonnetHoverUntil");
         // Remove the previous implementation's modifier when updating an existing player.
         // Gravity remains intact: upward momentum still decelerates normally.
         var gravity = player.getAttribute(Attributes.GRAVITY);

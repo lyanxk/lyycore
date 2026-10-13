@@ -42,9 +42,10 @@ public final class SpecialDamage {
         if (target instanceof LivingEntity living) return living;
         return target instanceof PartEntity<?> part && part.getParent() instanceof LivingEntity living ? living : null;
     }
-    /** Resolve independent hits immediately, including normal damage events and player attribution. */
+    /** Combine all strikes into one hit; attack damage is included in every strike. */
     public static void burst(Player player, Entity direct, LivingEntity target, Element element, float base, int hits) {
-        burstAmount(player, direct, target, target, element, amount(player, element, base), hits);
+        burstFromBase(player, direct, target, element,
+                base + player.getAttributeValue(net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_DAMAGE), hits);
     }
     public static void burstFromBase(Player player, Entity direct, LivingEntity target, Element element, double base, int hits) {
         burstFromBase(player, direct, target, target, element, base, hits);
@@ -55,22 +56,9 @@ public final class SpecialDamage {
      */
     public static void burstFromBase(Player player, Entity direct, Entity target, LivingEntity healthOwner,
                                      Element element, double base, int hits) {
-        burstAmount(player, direct, target, healthOwner, element, scale(player, element, base), hits);
-    }
-    private static void burstAmount(Player player, Entity direct, Entity target, LivingEntity healthOwner,
-                                    Element element, float amount, int hits) {
-        var source = source(player, direct, element);
-        int previousOwner = healthOwner.invulnerableTime;
-        int previousTarget = target.invulnerableTime;
-        try {
-            for (int i = 0; i < hits && healthOwner.isAlive() && !healthOwner.isRemoved() && !target.isRemoved(); i++) {
-                healthOwner.invulnerableTime = 0;
-                if (target != healthOwner) target.invulnerableTime = 0;
-                target.hurt(source, amount);
-            }
-        } finally {
-            healthOwner.invulnerableTime = previousOwner;
-            if (target != healthOwner) target.invulnerableTime = previousTarget;
-        }
+        if (hits <= 0 || !healthOwner.isAlive() || healthOwner.isRemoved() || target.isRemoved()) return;
+        // Multiply the complete formula before clamping, and leave vanilla hurt cooldown intact.
+        float damage = scale(player, element, base * hits);
+        if (damage > 0) target.hurt(source(player, direct, element), damage);
     }
 }

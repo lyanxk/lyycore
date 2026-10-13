@@ -1,0 +1,6 @@
+{
+  "textures": {
+    "layer0": "lyycore:item/stained_alloy_plate"
+  },
+  "parent": "minecraft:item/generated"
+}

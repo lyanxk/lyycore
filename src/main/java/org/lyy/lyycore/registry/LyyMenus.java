@@ -21,6 +21,9 @@ public class LyyMenus {
     public static final DeferredRegister<MenuType<?>> MENUS =
             DeferredRegister.create(Registries.MENU, LyyCore.MODID);
     public static final DeferredHolder<MenuType<?>, MenuType<org.lyy.lyycore.content.menu.ExperimentTableMenu>> EXPERIMENT_TABLE = MENUS.register("experiment_table", () -> IMenuTypeExtension.create(org.lyy.lyycore.content.menu.ExperimentTableMenu::new));
+    public static final DeferredHolder<MenuType<?>, MenuType<org.lyy.lyycore.content.menu.CaptureCageMenu>> CAPTURE_CAGE = MENUS.register("capture_cage", () -> IMenuTypeExtension.create(org.lyy.lyycore.content.menu.CaptureCageMenu::new));
+    public static final DeferredHolder<MenuType<?>, MenuType<org.lyy.lyycore.content.menu.LogisticsMenu>> LOGISTICS =
+            MENUS.register("logistics", () -> IMenuTypeExtension.create(org.lyy.lyycore.content.menu.LogisticsMenu::new));
     public static final DeferredHolder<MenuType<?>, MenuType<org.lyy.lyycore.content.menu.ErosionFactoryMenu>> EROSION_FACTORY =
             MENUS.register("erosion_factory", () -> IMenuTypeExtension.create(org.lyy.lyycore.content.menu.ErosionFactoryMenu::new));
     public static final DeferredHolder<MenuType<?>, MenuType<org.lyy.lyycore.content.menu.OtherworldChestMenu>> OTHERWORLD_CHEST =

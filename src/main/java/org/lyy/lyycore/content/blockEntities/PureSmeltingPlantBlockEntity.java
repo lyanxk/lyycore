@@ -89,10 +89,12 @@ public final class PureSmeltingPlantBlockEntity extends BlockEntity implements M
             dirtyRecipe = true;
         }
         if (!dirtyRecipe) return;
-        // Continue the current recipe while its requirements remain satisfied, even if extra inputs match another one.
-        if (recipe == null || !recipe.value().matches(input, level)) {
-            if (recipe != null) progress = 0;
-            recipe = recipeManager.getRecipeFor(LyyRecipes.PURE_SMELTING.get(), input, level).orElse(null);
+        // Complete alloy mixtures take priority over the one-material plate recipes they also match.
+        var matches = recipeManager.getRecipesFor(LyyRecipes.PURE_SMELTING.get(), input, level);
+        int mostInputs = matches.stream().mapToInt(r -> r.value().inputs().size()).max().orElse(0);
+        if (recipe == null || recipe.value().inputs().size() != mostInputs || !recipe.value().matches(input, level)) {
+            recipe = matches.stream().filter(r -> r.value().inputs().size() == mostInputs)
+                    .min(java.util.Comparator.comparing(r -> r.id().toString())).orElse(null);
             String id = recipe == null ? "" : recipe.id().toString();
             if (!id.equals(recipeId)) progress = 0;
             recipeId = id;

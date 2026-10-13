@@ -21,5 +21,10 @@
   },
   "prerequisites": [
     "lyycore:research/why_cant_people_fly"
-  ]
+  ],
+  "display": {
+    "stage": 2,
+    "purpose": "ritual",
+    "order": 0
+  }
 }

@@ -1,5 +1,7 @@
 package org.lyy.lyycore.content;
 
+import org.lyy.lyycore.content.research.ResearchChangedEvent;
+import org.lyy.lyycore.content.research.ResearchProgress;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import net.minecraft.commands.Commands;
 import net.minecraft.core.BlockPos;
@@ -172,5 +174,12 @@ public final class EnderCompanions {
                             context.getSource().sendSuccess(() -> Component.translatable("message.lyycore.ender_sentry.day", days), false);
                             return days;
                         })))));
+    }
+    @SubscribeEvent public static void researchChanged(ResearchChangedEvent event) {
+        if (!event.completed && event.id.equals(RESEARCH)) recall(event.player);
+        if (event.id.equals(EVOLUTION)) {
+            if (event.completed) evolve(event.player);
+            else recall(event.player);
+        }
     }
 }

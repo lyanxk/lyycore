@@ -1,0 +1,38 @@
+{
+  "type": "lyycore:imaginary_condensing",
+  "ingredients": [
+    {
+      "item": "lyycore:flame_core"
+    },
+    {
+      "item": "lyycore:infernal_steel_plate"
+    },
+    {
+      "item": "lyycore:infernal_steel_plate"
+    },
+    {
+      "item": "lyycore:infernal_steel_plate"
+    },
+    {
+      "item": "lyycore:infernal_steel_plate"
+    },
+    {
+      "item": "lyycore:infernal_steel_plate"
+    },
+    {
+      "item": "lyycore:infernal_steel_plate"
+    },
+    {
+      "item": "lyycore:infernal_steel_plate"
+    },
+    {
+      "item": "lyycore:infernal_steel_plate"
+    }
+  ],
+  "result": {
+    "id": "lyycore:emberfall"
+  },
+  "duration": 2400,
+  "energy": 1000000,
+  "energy_per_tick": true
+}

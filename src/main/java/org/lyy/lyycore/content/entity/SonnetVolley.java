@@ -5,14 +5,13 @@ import java.util.List;
 import java.util.UUID;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.*;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 
-/** Fast cosmetic ricochets; the dome applies one independent area hit per bounce. */
+/** Cosmetic ricochets; the dome settles the full damage once when firing. */
 public class SonnetVolley extends Entity {
     public static final int BOUNCES = 32;
     public static final int BOUNCES_PER_TICK = 4;
@@ -21,8 +20,6 @@ public class SonnetVolley extends Entity {
     public static final int TRAIL_TICKS = 3;
     private static final EntityDataAccessor<Vector3f> CENTER = SynchedEntityData.defineId(SonnetVolley.class, EntityDataSerializers.VECTOR3);
     private static final EntityDataAccessor<Vector3f> START = SynchedEntityData.defineId(SonnetVolley.class, EntityDataSerializers.VECTOR3);
-    private UUID domeId;
-    private UUID ownerId;
     private int age;
     private List<Vec3> cachedPath;
     private UUID cachedPathId;
@@ -33,7 +30,6 @@ public class SonnetVolley extends Entity {
         builder.define(CENTER, new Vector3f()); builder.define(START, new Vector3f());
     }
     public void prepare(SonnetDome dome, Player player) {
-        domeId = dome.getUUID(); ownerId = player.getUUID();
         setPos(player.getEyePosition().add(player.getLookAngle().scale(0.6)));
         entityData.set(CENTER, dome.position().toVector3f());
         entityData.set(START, position().toVector3f());
@@ -63,14 +59,6 @@ public class SonnetVolley extends Entity {
     }
     @Override public void tick() {
         super.tick();
-        if (!level().isClientSide && age < FLIGHT_TICKS) {
-            var server = (ServerLevel) level();
-            if (!(server.getEntity(domeId) instanceof SonnetDome dome) || !dome.isActive()
-                    || !(server.getPlayerByUUID(ownerId) instanceof Player owner)) { discard(); return; }
-            int firstBounce = age * BOUNCES_PER_TICK;
-            for (int bounce = firstBounce; bounce < Math.min(BOUNCES, firstBounce + BOUNCES_PER_TICK); bounce++)
-                dome.damageEnemies(owner, this);
-        }
         age++;
         if (age >= FLIGHT_TICKS + TRAIL_TICKS + 1) discard();
     }

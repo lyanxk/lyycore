@@ -1,17 +1,10 @@
-package org.lyy.lyycore.content;
+package org.lyy.lyycore.content.research;
 
-import org.lyy.lyycore.content.skills.BasicSkills;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import org.lyy.lyycore.content.research.ResearchDefinition;
-import org.lyy.lyycore.content.skills.SkillSystem;
-import org.lyy.lyycore.network.SkillNetwork;
-import org.lyy.lyycore.network.WingsNetwork;
-import org.lyy.lyycore.content.research.ResearchManager;
-import org.lyy.lyycore.content.research.ResearchMaterial;
 import java.util.Comparator;
 
 public final class ResearchProgress {
@@ -95,27 +88,7 @@ public final class ResearchProgress {
         else entries.remove(id.toString());
         persisted.put(KEY, entries);
         player.getPersistentData().put(Player.PERSISTED_NBT_TAG, persisted);
-        if (id.equals(PlayerAttributes.RESEARCH)) PlayerAttributes.update(player);
-        if (research.unlocksSkills()) {
-            boolean unlocked = value || ResearchManager.all(player.level()).stream()
-                    .anyMatch(entry -> entry.value().unlocksSkills() && completed(player, entry.id()));
-            SkillSystem.setUnlocked(player, unlocked);
-        }
-        if (!value && id.equals(EnderCompanions.RESEARCH)) EnderCompanions.recall(player);
-        if (id.equals(EnderCompanions.EVOLUTION)) {
-            if (value) EnderCompanions.evolve(player);
-            else EnderCompanions.recall(player);
-        }
-        if (id.equals(AegisWings.RESEARCH) || id.equals(AegisWings.ENHANCEMENT)) WingsNetwork.sync(player);
-        if (id.equals(BasicSkills.RESEARCH)) {
-            org.lyy.lyycore.content.skills.GuardSkill.reset(player);
-            org.lyy.lyycore.content.skills.BuildingSkills.updateFlight(player);
-        }
-        if (research.unlocksSkills() || id.equals(BasicSkills.RESEARCH)) SkillNetwork.sync(player);
-        if (value && id.equals(ResourceLocation.parse("lyycore:research/adaptive_enhancement"))) {
-            var advancement = player.server.getAdvancements().get(ResourceLocation.parse("lyycore:progression/well_fed"));
-            if (advancement != null) player.getAdvancements().award(advancement, "research");
-        }
+        net.neoforged.neoforge.common.NeoForge.EVENT_BUS.post(new ResearchChangedEvent(player, id, research, value));
         return true;
     }
 }

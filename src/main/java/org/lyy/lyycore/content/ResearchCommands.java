@@ -1,5 +1,6 @@
 package org.lyy.lyycore.content;
 
+import org.lyy.lyycore.content.research.ResearchProgress;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;

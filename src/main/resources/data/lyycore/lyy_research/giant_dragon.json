@@ -31,5 +31,10 @@
       "id": "lyycore:imaginary_dragon_nest"
     },
     "duration": 1200
+  },
+  "display": {
+    "stage": 3,
+    "purpose": "combat",
+    "order": 0
   }
 }

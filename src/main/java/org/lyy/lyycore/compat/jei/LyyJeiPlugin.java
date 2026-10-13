@@ -51,7 +51,10 @@ public class LyyJeiPlugin implements IModPlugin {
 
     @Override
     public void registerRecipes(IRecipeRegistration reg) {
+        reg.addItemStackInfo(new ItemStack(org.lyy.lyycore.registry.LyyItems.SUMMONING_BEACON.get()), net.minecraft.network.chat.Component.translatable("jei.lyycore.summoning_beacon"));
         reg.addItemStackInfo(new ItemStack(org.lyy.lyycore.registry.LyyItems.EXPERIMENT_TABLE.get()), net.minecraft.network.chat.Component.translatable("jei.lyycore.experiment_table"));
+        reg.addItemStackInfo(new ItemStack(org.lyy.lyycore.registry.LyyItems.EMBERFALL.get()), net.minecraft.network.chat.Component.translatable("jei.lyycore.emberfall"));
+        reg.addItemStackInfo(new ItemStack(org.lyy.lyycore.registry.LyyItems.CAPTURE_CAGE.get()), net.minecraft.network.chat.Component.translatable("jei.lyycore.capture_cage"));
         reg.addItemStackInfo(new ItemStack(org.lyy.lyycore.registry.LyyItems.HAIL.get()), net.minecraft.network.chat.Component.translatable("jei.lyycore.hail"));
         reg.addItemStackInfo(new ItemStack(org.lyy.lyycore.registry.LyyItems.DRAGON_MIGHT.get()), net.minecraft.network.chat.Component.translatable("research.lyycore.in_our_hands.description"));
         reg.addItemStackInfo(new ItemStack(org.lyy.lyycore.registry.LyyItems.FRIENDLY_PROOF.get()), net.minecraft.network.chat.Component.translatable("research.lyycore.ritual.description"));

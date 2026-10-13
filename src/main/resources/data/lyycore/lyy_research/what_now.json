@@ -9,5 +9,10 @@
   "title": "research.lyycore.what_now.title",
   "summary": "research.lyycore.what_now.summary",
   "description": "research.lyycore.what_now.description",
-  "required_advancement": "lyycore:progression/closed_gate"
+  "required_advancement": "lyycore:progression/closed_gate",
+  "display": {
+    "stage": 3,
+    "purpose": "research",
+    "order": 1
+  }
 }

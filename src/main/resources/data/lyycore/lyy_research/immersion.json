@@ -20,5 +20,10 @@
       "id": "lyycore:erosion_core"
     },
     "duration": 6000
+  },
+  "display": {
+    "stage": 4,
+    "purpose": "production",
+    "order": 0
   }
 }

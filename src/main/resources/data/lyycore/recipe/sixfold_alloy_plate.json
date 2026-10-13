@@ -1,0 +1,16 @@
+{
+  "type": "lyycore:pure_smelting",
+  "inputs": [
+    {
+      "ingredient": {
+        "item": "lyycore:sixfold_alloy_ingot"
+      },
+      "count": 64
+    }
+  ],
+  "result": {
+    "id": "lyycore:sixfold_alloy_plate"
+  },
+  "result_count": 32,
+  "duration": 600
+}

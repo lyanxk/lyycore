@@ -1,7 +1,10 @@
 package org.lyy.lyycore.energy;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import org.lyy.lyycore.registry.LyyCapabilities;
 import org.lyy.lyycore.content.blocks.SquareMachineBlock;
 import org.lyy.lyycore.content.blocks.LargeStructureBlock;
 import org.lyy.lyycore.content.blocks.PureSmeltingPlantBlock;
@@ -33,4 +36,17 @@ public final class EnergyReceiver {
     }
 
     public static BlockPos controller(Level level, BlockPos connection) { return resolve(level, connection).controller(); }
+
+    public static boolean supportsEnergy(Level level, BlockPos connection) {
+        var endpoint = resolve(level, connection);
+        if (!endpoint.loaded(level)) return false;
+        if (hasEnergy(level, endpoint.input(), null)) return true;
+        for (Direction side : Direction.values()) if (hasEnergy(level, endpoint.input(), side)) return true;
+        return false;
+    }
+
+    private static boolean hasEnergy(Level level, BlockPos pos, Direction side) {
+        return level.getCapability(LyyCapabilities.IMAGINARY_ENERGY, pos, side) != null
+                || level.getCapability(Capabilities.EnergyStorage.BLOCK, pos, side) != null;
+    }
 }

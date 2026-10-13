@@ -1,35 +1,16 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "minecraft:crafting_shaped",
   "category": "misc",
-  "ingredients": [
-    {
-      "tag": "lyycore:gathering/monument_products"
-    },
-    {
-      "tag": "lyycore:gathering/monument_products"
-    },
-    {
-      "tag": "lyycore:gathering/monument_products"
-    },
-    {
-      "tag": "lyycore:gathering/monument_products"
-    },
-    {
-      "tag": "lyycore:gathering/monument_products"
-    },
-    {
-      "tag": "lyycore:gathering/monument_products"
-    },
-    {
-      "tag": "lyycore:gathering/monument_products"
-    },
-    {
-      "tag": "lyycore:gathering/monument_products"
-    },
-    {
+  "pattern": [
+    "XXX",
+    " X ",
+    "XXX"
+  ],
+  "key": {
+    "X": {
       "tag": "lyycore:gathering/monument_products"
     }
-  ],
+  },
   "result": {
     "id": "lyycore:monument_core",
     "count": 1

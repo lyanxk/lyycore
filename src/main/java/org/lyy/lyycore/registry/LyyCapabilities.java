@@ -18,6 +18,10 @@ public class LyyCapabilities {
         return level.getBlockEntity(center) instanceof org.lyy.lyycore.content.blockEntities.PureSmeltingPlantBlockEntity plant && plant.active() ? plant : null;
     }
     public static void register(RegisterCapabilitiesEvent event) {
+        event.registerBlockEntity(IMAGINARY_ENERGY, LyyBlockEntities.CAPTURE_CAGE.get(), (be, side) -> be.energy);
+        event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, LyyBlockEntities.CAPTURE_CAGE.get(), (be, side) -> be.fe);
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, LyyBlockEntities.CAPTURE_CAGE.get(), (be, side) -> be.automation);
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, LyyBlockEntities.MATRIX_PORT.get(), (be, side) -> be.automation);
         event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, LyyBlockEntities.EXPERIMENT_TABLE.get(), (be, side) -> be.items());
         event.registerBlockEntity(IMAGINARY_ENERGY, LyyBlockEntities.OTHERWORLD_CHEST.get(), (be, side) -> be.energy);
         event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, LyyBlockEntities.OTHERWORLD_CHEST.get(), (be, side) -> be.fe);

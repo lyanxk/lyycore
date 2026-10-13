@@ -20,5 +20,10 @@
       "id": "lyycore:storm_ball"
     },
     "duration": 400
+  },
+  "display": {
+    "stage": 1,
+    "purpose": "production",
+    "order": 0
   }
 }

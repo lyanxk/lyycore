@@ -15,9 +15,7 @@
   ],
   "experience_points": 0,
   "prerequisites": [
-    "lyycore:research/ritual",
-    "lyycore:research/specialization",
-    "lyycore:research/in_depth_research"
+    "lyycore:research/self"
   ],
   "title": "research.lyycore.hail.title",
   "summary": "research.lyycore.hail.summary",
@@ -89,5 +87,10 @@
         14
       ]
     }
+  },
+  "display": {
+    "stage": 4,
+    "purpose": "combat",
+    "order": 2
   }
 }

@@ -1,0 +1,6 @@
+{
+  "textures": {
+    "layer0": "lyycore:item/frost_steel_plate"
+  },
+  "parent": "minecraft:item/generated"
+}

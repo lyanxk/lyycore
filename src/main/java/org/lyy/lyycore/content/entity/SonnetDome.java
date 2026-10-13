@@ -5,12 +5,13 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.*;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.monster.Enemy;
+import org.lyy.lyycore.content.combat.CombatTargets;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.level.Level;
 import org.lyy.lyycore.content.item.SonnetBowItem;
+import org.lyy.lyycore.content.SpecialDamage;
 import org.lyy.lyycore.registry.LyyEntities;
 
 /** Lifetime and firing cadence are authoritative here, never on the item/client. */
@@ -75,6 +76,7 @@ public class SonnetDome extends Entity {
         volley.prepare(this, player);
         if (!level().addFreshEntity(volley)) return false;
         nextShotAt = level().getGameTime() + SonnetBowItem.CRYSTAL_SHOT_INTERVAL;
+        damageEnemies(player, volley);
         level().playSound(null, player.blockPosition(), net.minecraft.sounds.SoundEvents.CROSSBOW_SHOOT,
                 net.minecraft.sounds.SoundSource.PLAYERS, 1, 1.6F);
         return true;
@@ -86,22 +88,12 @@ public class SonnetDome extends Entity {
                 + local.y * local.y / (HEIGHT * HEIGHT) <= 1;
     }
 
-    public static boolean isEnemy(LivingEntity target, Player owner) {
-        if (!target.isAlive() || target == owner || target.isAlliedTo(owner) || owner.isAlliedTo(target)) return false;
-        if (target instanceof TamableAnimal pet && owner.getUUID().equals(pet.getOwnerUUID())) return false;
-        return target instanceof Enemy || target instanceof Mob mob && mob.getTarget() == owner
-                || owner.getLastHurtByMob() == target || target.getLastHurtByMob() == owner;
-    }
-
-    public void damageEnemies(Player owner, Entity projectile) {
+    private void damageEnemies(Player owner, Entity projectile) {
         for (LivingEntity target : level().getEntitiesOfClass(LivingEntity.class,
                 new AABB(position().add(-RADIUS, -1, -RADIUS), position().add(RADIUS, RADIUS, RADIUS)),
-                target -> contains(target.position()) && isEnemy(target, owner))) {
-            // Each bounce is a separate physical hit. Vanilla hurt cooldown must not merge the independent hits.
-            int previous = target.invulnerableTime;
-            target.invulnerableTime = 0;
-            try { org.lyy.lyycore.content.SpecialDamage.hit(owner, projectile, target, org.lyy.lyycore.content.SpecialDamage.Element.PHYSICAL, SonnetVolley.DAMAGE_PER_HIT); }
-            finally { target.invulnerableTime = previous; }
+                target -> contains(target.position()) && CombatTargets.isEnemy(target, owner))) {
+            SpecialDamage.burst(owner, projectile, target, SpecialDamage.Element.PHYSICAL,
+                    SonnetVolley.DAMAGE_PER_HIT, SonnetVolley.BOUNCES);
         }
     }
 

@@ -31,5 +31,10 @@
       "id": "lyycore:alloy_cauldron"
     },
     "duration": 2400
+  },
+  "display": {
+    "stage": 2,
+    "purpose": "production",
+    "order": 0
   }
 }

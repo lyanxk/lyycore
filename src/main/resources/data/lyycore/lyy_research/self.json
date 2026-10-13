@@ -14,5 +14,10 @@
   ],
   "title": "research.lyycore.self.title",
   "summary": "research.lyycore.self.summary",
-  "description": "research.lyycore.self.description"
+  "description": "research.lyycore.self.description",
+  "display": {
+    "stage": 4,
+    "purpose": "research",
+    "order": 0
+  }
 }

@@ -31,5 +31,10 @@
       "id": "lyycore:friendly_proof"
     },
     "duration": 600
+  },
+  "display": {
+    "stage": 3,
+    "purpose": "ritual",
+    "order": 0
   }
 }

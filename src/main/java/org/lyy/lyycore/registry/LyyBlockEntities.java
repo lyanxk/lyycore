@@ -21,7 +21,15 @@ import org.lyy.lyycore.content.blockEntities.ProductionLabBlockEntity;
 public class LyyBlockEntities {
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES =
             DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, LyyCore.MODID);
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<org.lyy.lyycore.content.blocks.SummoningBeaconBlock.Controller>> SUMMONING_BEACON =
+            BLOCK_ENTITIES.register("summoning_beacon", () -> BlockEntityType.Builder.of(org.lyy.lyycore.content.blocks.SummoningBeaconBlock.Controller::new, LyyBlocks.SUMMONING_BEACON.get()).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<org.lyy.lyycore.content.blockEntities.ExperimentTableBlockEntity>> EXPERIMENT_TABLE = BLOCK_ENTITIES.register("experiment_table", () -> BlockEntityType.Builder.of(org.lyy.lyycore.content.blockEntities.ExperimentTableBlockEntity::new, LyyBlocks.EXPERIMENT_TABLE.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CaptureCageBlockEntity>> CAPTURE_CAGE = BLOCK_ENTITIES.register("capture_cage", () -> BlockEntityType.Builder.of(CaptureCageBlockEntity::new, LyyBlocks.CAPTURE_CAGE.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<LogisticsMatrixBlockEntity>> LOGISTICS_MATRIX =
+            BLOCK_ENTITIES.register("logistics_matrix", () -> BlockEntityType.Builder.of(LogisticsMatrixBlockEntity::new, LyyBlocks.LOGISTICS_MATRIX.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<MatrixPortBlockEntity>> MATRIX_PORT =
+            BLOCK_ENTITIES.register("matrix_port", () -> BlockEntityType.Builder.of(MatrixPortBlockEntity::new,
+                    LyyBlocks.MATRIX_INPUT.get(), LyyBlocks.MATRIX_OUTPUT.get(), LyyBlocks.MATRIX_COLLECTOR.get()).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ErosionFactoryBlockEntity>> EROSION_FACTORY =
             BLOCK_ENTITIES.register("erosion_factory", () -> BlockEntityType.Builder.of(ErosionFactoryBlockEntity::new, LyyBlocks.EROSION_FACTORY.get()).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<OtherworldChestBlockEntity>> OTHERWORLD_CHEST =

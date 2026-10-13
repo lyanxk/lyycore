@@ -1,0 +1,38 @@
+{
+  "type": "lyycore:imaginary_condensing",
+  "ingredients": [
+    {
+      "item": "lyycore:transmission_core"
+    },
+    {
+      "item": "lyycore:matrix_casing"
+    },
+    {
+      "item": "lyycore:matrix_casing"
+    },
+    {
+      "item": "lyycore:matrix_casing"
+    },
+    {
+      "item": "lyycore:matrix_casing"
+    },
+    {
+      "item": "lyycore:matrix_casing"
+    },
+    {
+      "item": "lyycore:matrix_casing"
+    },
+    {
+      "item": "lyycore:matrix_casing"
+    },
+    {
+      "item": "lyycore:matrix_casing"
+    }
+  ],
+  "result": {
+    "id": "lyycore:logistics_matrix"
+  },
+  "duration": 600,
+  "energy": 1000000,
+  "energy_per_tick": true
+}

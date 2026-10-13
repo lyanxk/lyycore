@@ -36,5 +36,10 @@
       "id": "lyycore:fission_furnace"
     },
     "duration": 6000
+  },
+  "display": {
+    "stage": 3,
+    "purpose": "production",
+    "order": 1
   }
 }

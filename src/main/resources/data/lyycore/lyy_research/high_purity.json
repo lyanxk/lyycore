@@ -40,5 +40,10 @@
       "id": "lyycore:pure_smelting_plant_shell"
     },
     "duration": 6000
+  },
+  "display": {
+    "stage": 3,
+    "purpose": "production",
+    "order": 0
   }
 }

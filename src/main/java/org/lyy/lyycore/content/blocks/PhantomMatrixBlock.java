@@ -7,7 +7,7 @@ import net.minecraft.world.level.block.entity.*;
 import net.minecraft.world.level.block.state.BlockState;
 import org.lyy.lyycore.content.blockEntities.TargetedEnergySourceBlockEntity;
 import org.lyy.lyycore.registry.LyyBlockEntities;
-public final class PhantomMatrixBlock extends EnergyTransmitterBlock {
+public final class PhantomMatrixBlock extends SquareMachineBlock {
     public PhantomMatrixBlock() { super(Properties.of().strength(5).sound(SoundType.METAL), "phantom_matrix", 4, 5); }
     @Override protected MapCodec<PhantomMatrixBlock> codec() { return MapCodec.unit(this); }
     @Override public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {

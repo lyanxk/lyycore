@@ -1,5 +1,6 @@
 package org.lyy.lyycore.content.wings;
 
+import org.lyy.lyycore.content.combat.ActionRestrictions;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -17,7 +18,6 @@ import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import org.lyy.lyycore.content.AegisWings;
 import org.lyy.lyycore.network.WingsNetwork;
-import org.lyy.lyycore.registry.LyyEffects;
 import org.lyy.lyycore.registry.LyyEntities;
 
 /** Six transient collision entities share one cast and one set of already-hit targets. */
@@ -41,7 +41,7 @@ public final class WingsScoop {
 
     public static boolean start(ServerPlayer player) {
         if (AegisWings.level(player) < 2 || !player.isAlive() || player.isSpectator()
-                || player.hasEffect(LyyEffects.CRYSTALLIZATION) || active(player) || WingsAttack.busy(player)) return false;
+                || ActionRestrictions.frozen(player) || active(player) || WingsAttack.busy(player)) return false;
         stop(player);
         var attack = new Attack(player.tickCount, player.level().dimension(), new ArrayList<>(ScoopPaths.COUNT), new HashSet<>());
         ACTIVE.put(player, attack);

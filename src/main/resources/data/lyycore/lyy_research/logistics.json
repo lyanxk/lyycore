@@ -1,0 +1,34 @@
+{
+  "icon": {
+    "id": "lyycore:transmission_core"
+  },
+  "rarity": "high",
+  "materials": [
+    {
+      "id": "minecraft:glass",
+      "count": 256
+    },
+    {
+      "id": "lyycore:crystal_block",
+      "count": 256
+    }
+  ],
+  "experience_points": 24000,
+  "prerequisites": [
+    "lyycore:research/ritual"
+  ],
+  "title": "research.lyycore.logistics.title",
+  "summary": "research.lyycore.logistics.summary",
+  "description": "research.lyycore.logistics.description",
+  "production": {
+    "result": {
+      "id": "lyycore:transmission_core"
+    },
+    "duration": 3600
+  },
+  "display": {
+    "stage": 4,
+    "purpose": "logistics",
+    "order": 1
+  }
+}

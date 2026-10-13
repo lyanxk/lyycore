@@ -28,5 +28,10 @@
       "id": "lyycore:control_crystal"
     },
     "duration": 12000
+  },
+  "display": {
+    "stage": 2,
+    "purpose": "production",
+    "order": 1
   }
 }

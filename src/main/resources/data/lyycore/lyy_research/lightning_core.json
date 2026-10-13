@@ -19,9 +19,7 @@
   ],
   "experience_points": 6000,
   "prerequisites": [
-    "lyycore:research/ritual",
-    "lyycore:research/specialization",
-    "lyycore:research/in_depth_research"
+    "lyycore:research/self"
   ],
   "title": "research.lyycore.lightning_core.title",
   "summary": "research.lyycore.lightning_core.summary",
@@ -93,5 +91,10 @@
         22
       ]
     }
+  },
+  "display": {
+    "stage": 4,
+    "purpose": "combat",
+    "order": 3
   }
 }

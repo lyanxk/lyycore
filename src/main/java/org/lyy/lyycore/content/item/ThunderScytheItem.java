@@ -1,5 +1,6 @@
 package org.lyy.lyycore.content.item;
 
+import org.lyy.lyycore.content.combat.CombatTargets;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -19,17 +20,19 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
 import org.lyy.lyycore.content.SpecialDamage;
-import org.lyy.lyycore.content.entity.SonnetDome;
 import org.lyy.lyycore.content.skills.StyleSystem;
 
 /** Player-owned cooldowns prevent swapping stacks from bypassing either attack interval. */
 @EventBusSubscriber(modid = "lyycore")
-public final class ThunderScytheItem extends Item {
+public final class ThunderScytheItem extends Item implements SpecialWeapon {
     public static final String ANIMATION_START = "ScytheAnimationStart", SWEEP_ANIMATION = "ScytheSweep";
     private static final String LEFT_READY = "lyycore:scythe_left_ready", SWEEP_READY = "lyycore:scythe_sweep_ready";
     private static final int COOLDOWN = 20;
 
     public ThunderScytheItem(Properties properties) { super(properties); }
+
+    @Override public void useSkill(ServerPlayer player, ItemStack stack) { }
+    @Override public void useUltimate(ServerPlayer player, ItemStack stack) { }
 
     private static boolean ready(Player player, String key) {
         return player.level().getGameTime() >= player.getPersistentData().getLong(key);
@@ -77,7 +80,7 @@ public final class ThunderScytheItem extends Item {
             begin(player, stack, SWEEP_READY, true);
             double base = player.getAttributeValue(Attributes.ARMOR_TOUGHNESS) * 4 + 20;
             for (var target : level.getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(5),
-                    entity -> entity.distanceToSqr(player) <= 25 && SonnetDome.isEnemy(entity, player)))
+                    entity -> entity.distanceToSqr(player) <= 25 && CombatTargets.isEnemy(entity, player)))
                 SpecialDamage.burstFromBase(player, player, target, SpecialDamage.Element.LIGHTNING, base, 16);
         }
         return InteractionResultHolder.sidedSuccess(stack, level.isClientSide);

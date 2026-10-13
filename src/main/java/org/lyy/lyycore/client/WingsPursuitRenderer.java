@@ -1,5 +1,6 @@
 package org.lyy.lyycore.client;
 
+import org.lyy.lyycore.content.combat.ActionRestrictions;
 import java.util.HashMap;
 import java.util.Map;
 import com.mojang.math.Axis;
@@ -19,7 +20,6 @@ import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import org.lyy.lyycore.content.AegisWings;
 import org.lyy.lyycore.content.wings.WingsAttack;
 import org.lyy.lyycore.network.WingsNetwork;
-import org.lyy.lyycore.registry.LyyEffects;
 
 /** The authored 48-feather slash follows its target, then recalls to the moving player. */
 @EventBusSubscriber(modid = "lyycore", value = Dist.CLIENT)
@@ -58,7 +58,7 @@ public final class WingsPursuitRenderer {
         return level.getGameTime() - attack.packet.started() < WingsAttack.PURSUIT_DURATION_TICKS
                 && level.getEntity(attack.packet.playerId()) instanceof Player player
                 && player.isAlive() && !player.isSpectator() && AegisWings.unlocked(player)
-                && !player.hasEffect(LyyEffects.CRYSTALLIZATION);
+                && !ActionRestrictions.frozen(player);
     }
 
     @SubscribeEvent public static void tick(ClientTickEvent.Post event) {

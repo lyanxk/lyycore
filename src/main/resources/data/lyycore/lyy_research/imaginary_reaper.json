@@ -25,5 +25,10 @@
       "id": "lyycore:imaginary_reaper"
     },
     "duration": 2000
+  },
+  "display": {
+    "stage": 1,
+    "purpose": "combat",
+    "order": 1
   }
 }

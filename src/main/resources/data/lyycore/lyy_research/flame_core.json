@@ -1,0 +1,136 @@
+{
+  "icon": {
+    "id": "lyycore:flame_core"
+  },
+  "rarity": "high",
+  "materials": [
+    {
+      "id": "lyycore:frost_steel",
+      "count": 64
+    },
+    {
+      "id": "lyycore:infernal_steel",
+      "count": 64
+    },
+    {
+      "id": "lyycore:energy_core",
+      "count": 4
+    }
+  ],
+  "experience_points": 6000,
+  "prerequisites": [
+    "lyycore:research/self"
+  ],
+  "title": "research.lyycore.flame_core.title",
+  "summary": "research.lyycore.flame_core.summary",
+  "description": "research.lyycore.flame_core.description",
+  "production": {
+    "result": {
+      "id": "lyycore:flame_core"
+    },
+    "duration": 1200,
+    "experiment": {
+      "nodes": [
+        {
+          "element": "ice",
+          "cell": 0
+        },
+        {
+          "element": "ice",
+          "cell": 4
+        },
+        {
+          "element": "ice",
+          "cell": 24
+        },
+        {
+          "element": "ice",
+          "cell": 20
+        },
+        {
+          "element": "fire",
+          "cell": 2
+        },
+        {
+          "element": "fire",
+          "cell": 9
+        },
+        {
+          "element": "fire",
+          "cell": 19
+        },
+        {
+          "element": "fire",
+          "cell": 22
+        },
+        {
+          "element": "fire",
+          "cell": 15
+        },
+        {
+          "element": "fire",
+          "cell": 5
+        }
+      ],
+      "links": [
+        {
+          "from": 0,
+          "to": 1
+        },
+        {
+          "from": 1,
+          "to": 2
+        },
+        {
+          "from": 2,
+          "to": 3
+        },
+        {
+          "from": 3,
+          "to": 0
+        },
+        {
+          "from": 4,
+          "to": 5
+        },
+        {
+          "from": 5,
+          "to": 6
+        },
+        {
+          "from": 6,
+          "to": 7
+        },
+        {
+          "from": 7,
+          "to": 8
+        },
+        {
+          "from": 8,
+          "to": 9
+        },
+        {
+          "from": 9,
+          "to": 4
+        }
+      ],
+      "target": [
+        5,
+        3,
+        23,
+        15,
+        1,
+        19,
+        13,
+        9,
+        21,
+        10
+      ]
+    }
+  },
+  "display": {
+    "stage": 4,
+    "purpose": "combat",
+    "order": 4
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "type": "lyycore:pure_smelting",
+  "inputs": [
+    {
+      "ingredient": {
+        "item": "lyycore:infernal_steel"
+      },
+      "count": 64
+    }
+  ],
+  "result": {
+    "id": "lyycore:infernal_steel_plate"
+  },
+  "result_count": 32,
+  "duration": 600
+}

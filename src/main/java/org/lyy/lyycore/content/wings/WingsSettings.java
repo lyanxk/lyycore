@@ -4,7 +4,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import org.lyy.lyycore.content.AegisWings;
-import org.lyy.lyycore.content.ResearchProgress;
+import org.lyy.lyycore.content.research.ResearchProgress;
 
 /** Missing settings preserve the strongest unlocked pursuit and the original flight behavior. */
 public final class WingsSettings {

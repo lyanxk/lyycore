@@ -1,5 +1,6 @@
 package org.lyy.lyycore.content.skills;
 
+import org.lyy.lyycore.content.combat.ActionRestrictions;
 import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.Collections;
@@ -10,8 +11,7 @@ import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
-import org.lyy.lyycore.content.ResearchProgress;
-import org.lyy.lyycore.registry.LyyEffects;
+import org.lyy.lyycore.content.research.ResearchProgress;
 
 @EventBusSubscriber(modid = "lyycore")
 public final class DoubleJump {
@@ -26,7 +26,7 @@ public final class DoubleJump {
         return available(player) && player.isAlive() && !player.isSpectator()
                 && !player.onGround() && !player.isInWaterOrBubble() && !player.isInLava() && !player.onClimbable()
                 && !player.isPassenger() && !player.isFallFlying() && !player.getAbilities().flying
-                && !player.hasEffect(LyyEffects.CRYSTALLIZATION) && player.containerMenu == player.inventoryMenu;
+                && !ActionRestrictions.frozen(player) && player.containerMenu == player.inventoryMenu;
     }
     public static void jump(ServerPlayer player) {
         if (!canJump(player) || USED.contains(player)) return;

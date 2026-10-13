@@ -11,7 +11,7 @@ import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.neoforged.neoforge.network.PacketDistributor;
-import org.lyy.lyycore.content.ResearchProgress;
+import org.lyy.lyycore.content.research.ResearchProgress;
 import org.lyy.lyycore.network.SkillNetwork;
 import java.util.Comparator;
 import java.util.Map;

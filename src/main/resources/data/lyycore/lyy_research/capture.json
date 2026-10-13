@@ -1,0 +1,34 @@
+{
+  "icon": {
+    "id": "lyycore:capture_cage"
+  },
+  "rarity": "high",
+  "materials": [
+    {
+      "id": "minecraft:nether_star",
+      "count": 4
+    },
+    {
+      "id": "minecraft:dragon_egg",
+      "count": 4
+    }
+  ],
+  "experience_points": 0,
+  "prerequisites": [
+    "lyycore:research/ritual"
+  ],
+  "title": "research.lyycore.capture.title",
+  "summary": "research.lyycore.capture.summary",
+  "description": "research.lyycore.capture.description",
+  "production": {
+    "result": {
+      "id": "lyycore:capture_cage"
+    },
+    "duration": 2400
+  },
+  "display": {
+    "stage": 4,
+    "purpose": "production",
+    "order": 1
+  }
+}

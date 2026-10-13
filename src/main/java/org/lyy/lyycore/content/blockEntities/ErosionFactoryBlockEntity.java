@@ -55,6 +55,7 @@ public final class ErosionFactoryBlockEntity extends BlockEntity implements Menu
         return false;
     }
     public static void serverTick(Level level, BlockPos pos, BlockState state, ErosionFactoryBlockEntity factory) {
+        if (level.getGameTime() % 20 == 0) factory.pushOutput();
         var template = factory.items.getStackInSlot(0);
         var input = factory.items.getStackInSlot(1);
         if (factory.energy.getImaginaryEnergyStored() < COST || !matches(template, input)) return;
@@ -67,8 +68,9 @@ public final class ErosionFactoryBlockEntity extends BlockEntity implements Menu
         factory.energy.setImaginaryEnergy(factory.energy.getImaginaryEnergyStored() - COST);
         factory.pushOutput();
     }
-    /** Exactly one ordered pass after a successful conversion, across the external surface. */
+    /** Ordered output across the external surface, after conversion or during the periodic retry. */
     private void pushOutput() {
+        if (items.getStackInSlot(2).isEmpty()) return;
         var front = getBlockState().getValue(ErosionFactoryBlock.FACING);
         for (var side : new Direction[]{front.getOpposite(), Direction.UP, Direction.DOWN, front.getCounterClockWise(), front.getClockWise(), front}) {
             for (int part = 0; part < 27; part++) {
@@ -80,7 +82,7 @@ public final class ErosionFactoryBlockEntity extends BlockEntity implements Menu
                 var target = level.getCapability(Capabilities.ItemHandler.BLOCK, targetPos, side.getOpposite());
                 if (target == null || target == automation) continue;
                 var remaining = ItemHandlerHelper.insertItemStacked(target, items.getStackInSlot(2).copy(), false);
-                items.setStackInSlot(2, remaining);
+                if (remaining.getCount() != items.getStackInSlot(2).getCount()) items.setStackInSlot(2, remaining);
                 if (remaining.isEmpty()) return;
             }
         }

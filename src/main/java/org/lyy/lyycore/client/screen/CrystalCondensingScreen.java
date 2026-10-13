@@ -3,6 +3,8 @@ package org.lyy.lyycore.client.screen;
 import org.lyy.lyycore.content.menu.*;
 
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.CycleButton;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -13,12 +15,31 @@ import org.lyy.lyycore.content.blockEntities.CondensingFrameBlockEntity;
 public class CrystalCondensingScreen extends AbstractContainerScreen<CrystalCondensingMenu> {
     // Keep JEI's click target on the left rail, outside the interactive output slot.
     public static final int RECIPE_X = 61, RECIPE_Y = 26, RECIPE_W = 15, RECIPE_H = 32;
+    private CycleButton<Boolean> productionChoice;
 
     public CrystalCondensingScreen(CrystalCondensingMenu menu, Inventory inventory, Component title) {
         super(menu, inventory, title);
         imageWidth = CondensingFrameMenu.WIDTH;
         imageHeight = CondensingFrameMenu.HEIGHT;
         inventoryLabelY = 92;
+    }
+    @Override protected void init() {
+        super.init();
+        Component outputName = menu.recipeResult().getHoverName();
+        Component outputLabel = Component.literal(font.plainSubstrByWidth(outputName.getString(), 40));
+        productionChoice = addRenderableWidget(CycleButton.<Boolean>builder(enabled -> enabled ? outputLabel
+                        : Component.translatable("screen.lyycore.gathering.empty"))
+                .withValues(false, true).withInitialValue(menu.isProductionEnabled()).displayOnlyValue()
+                .withTooltip(enabled -> Tooltip.create(enabled ? outputName
+                        : Component.translatable("screen.lyycore.gathering.empty_tooltip")))
+                .create(leftPos + 119, topPos + 37, 48, 18, Component.translatable("screen.lyycore.gathering.select"),
+                        (button, enabled) -> {
+                            if (minecraft.gameMode != null) minecraft.gameMode.handleInventoryButtonClick(menu.containerId, enabled ? 1 : 0);
+                        }));
+    }
+    @Override protected void containerTick() {
+        super.containerTick();
+        productionChoice.setValue(menu.isProductionEnabled());
     }
     @Override protected void renderBg(GuiGraphics g, float partial, int mouseX, int mouseY) {
         ForgeGui.panel(g, leftPos, topPos, imageWidth, imageHeight);
@@ -49,7 +70,8 @@ public class CrystalCondensingScreen extends AbstractContainerScreen<CrystalCond
             var lines = new java.util.ArrayList<Component>();
             if (menu.getSlot(0).hasItem()) lines.add(menu.getSlot(0).getItem().getHoverName());
             lines.add(Component.translatable("screen.lyycore.condensing.output", menu.getOutputCount(), CondensingFrameBlockEntity.OUTPUT_CAPACITY));
-            lines.add(Component.translatable(menu.isMiniatureFactory() ? "screen.lyycore.factory.production" : menu.isWaterlogged() ? "screen.lyycore.condensing.wet" : "screen.lyycore.condensing.dry"));
+            lines.add(Component.translatable(!menu.isProductionEnabled() ? "screen.lyycore.gathering.empty_tooltip"
+                    : menu.isMiniatureFactory() ? "screen.lyycore.factory.production" : menu.isWaterlogged() ? "screen.lyycore.condensing.wet" : "screen.lyycore.condensing.dry"));
             g.renderComponentTooltip(font, lines, mouseX, mouseY);
         } else if (isHovering(8, 5, 160, 12, mouseX, mouseY)) {
             g.renderTooltip(font, title, mouseX, mouseY);

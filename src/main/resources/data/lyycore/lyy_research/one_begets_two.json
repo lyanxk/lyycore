@@ -1,0 +1,45 @@
+{
+  "icon": {
+    "id": "lyycore:summoning_beacon"
+  },
+  "rarity": "common",
+  "materials": [
+    {
+      "id": "minecraft:porkchop",
+      "count": 64
+    },
+    {
+      "id": "minecraft:beef",
+      "count": 64
+    },
+    {
+      "id": "minecraft:mutton",
+      "count": 64
+    },
+    {
+      "id": "minecraft:chicken",
+      "count": 64
+    },
+    {
+      "id": "lyycore:crystal_prism"
+    }
+  ],
+  "experience_points": 0,
+  "prerequisites": [
+    "lyycore:research/ritual"
+  ],
+  "title": "research.lyycore.one_begets_two.title",
+  "summary": "research.lyycore.one_begets_two.summary",
+  "description": "research.lyycore.one_begets_two.description",
+  "production": {
+    "result": {
+      "id": "lyycore:summoning_beacon"
+    },
+    "duration": 2400
+  },
+  "display": {
+    "stage": 4,
+    "purpose": "production",
+    "order": 2
+  }
+}

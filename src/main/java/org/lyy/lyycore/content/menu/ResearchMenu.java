@@ -9,7 +9,7 @@ import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import org.lyy.lyycore.content.research.ResearchEntry;
 import org.lyy.lyycore.content.research.ResearchManager;
-import org.lyy.lyycore.content.ResearchProgress;
+import org.lyy.lyycore.content.research.ResearchProgress;
 import org.lyy.lyycore.content.AegisWings;
 import org.lyy.lyycore.network.WingsNetwork;
 import org.lyy.lyycore.registry.*;
@@ -20,7 +20,7 @@ import net.minecraft.network.chat.Component;
 import org.lyy.lyycore.content.item.ResearchNotesItem;
 
 public final class ResearchMenu extends AbstractContainerMenu {
-    public static final int READY = 0, COMPLETED = 1, MISSING_COST = 2, UNCHECKED = 3;
+    public static final int READY = 0, COMPLETED = 1, MISSING_COST = 2, UNCHECKED = 3, LOCKED = 4;
     public static final int CLOSE_PREVIEW = -1;
     public static final int TOGGLE_WINGS = Integer.MIN_VALUE;
     private final Player owner;
@@ -50,15 +50,17 @@ public final class ResearchMenu extends AbstractContainerMenu {
         addDataSlot(wingsVisible);
         statuses = new int[entries.size()];
         for (int i = 0; i < entries.size(); i++) {
-            statuses[i] = memory || ResearchProgress.completed(owner, entries.get(i).id()) ? COMPLETED : UNCHECKED;
+            statuses[i] = memory ? COMPLETED : initialStatus(i);
             addDataSlot(DataSlot.shared(statuses, i));
         }
     }
     private static List<ResearchEntry> available(Player player, boolean completedOnly) {
         return ResearchManager.all(player.level()).stream()
                 .filter(entry -> ResearchProgress.completed(player, entry.id()) == completedOnly)
-                .filter(entry -> completedOnly || ResearchProgress.available(player, entry.value()))
-                .sorted(Comparator.comparing(entry -> entry.id().toString())).toList();
+                .sorted(Comparator.comparingInt((ResearchEntry entry) -> entry.value().display().stage())
+                        .thenComparing(entry -> entry.value().display().purpose())
+                        .thenComparingInt(entry -> entry.value().display().order())
+                        .thenComparing(entry -> entry.id().toString())).toList();
     }
     private static List<ResearchEntry> readEntries(Player player, RegistryFriendlyByteBuf buffer) {
         // Resolve only the server-selected IDs, preserving their order for button/status indices.
@@ -96,8 +98,14 @@ public final class ResearchMenu extends AbstractContainerMenu {
     /** Nonnegative buttons submit research; negative buttons only manage the cost preview. */
     public static int previewButton(int index) { return -index - 2; }
 
+    private int initialStatus(int index) {
+        var entry = entries.get(index);
+        if (ResearchProgress.completed(owner, entry.id())) return COMPLETED;
+        return ResearchProgress.available(owner, entry.value()) ? UNCHECKED : LOCKED;
+    }
+
     private void closePreview() {
-        if (preview >= 0 && statuses[preview] != COMPLETED) statuses[preview] = UNCHECKED;
+        if (preview >= 0 && statuses[preview] != COMPLETED) statuses[preview] = initialStatus(preview);
         preview = -1;
         previewInventory = null;
     }
@@ -120,7 +128,7 @@ public final class ResearchMenu extends AbstractContainerMenu {
         if (ResearchProgress.completed(owner, entry.id())) {
             statuses[preview] = COMPLETED;
         } else if (!ResearchProgress.available(owner, entry.value())) {
-            statuses[preview] = MISSING_COST;
+            statuses[preview] = LOCKED;
             previewInventory = null;
         } else if (previewInputsChanged()) {
             previewExperience = owner.experienceLevel;
@@ -131,6 +139,9 @@ public final class ResearchMenu extends AbstractContainerMenu {
     }
 
     @Override public void broadcastChanges() {
+        // Unlock changes need no inventory scan; refresh the overview once per second.
+        if (!memory && !owner.level().isClientSide && owner.tickCount % 20 == 0)
+            for (int i = 0; i < statuses.length; i++) if (i != preview) statuses[i] = initialStatus(i);
         refreshPreview();
         super.broadcastChanges();
     }
@@ -176,7 +187,7 @@ public final class ResearchMenu extends AbstractContainerMenu {
         }
         boolean completed = ResearchProgress.complete(server, entry.id(), entry.value());
         closePreview();
-        statuses[id] = ResearchProgress.completed(player, entry.id()) ? COMPLETED : UNCHECKED;
+        statuses[id] = initialStatus(id);
         broadcastChanges();
         if (completed) access.execute((level, pos) -> openTable(server, pos));
         return completed;

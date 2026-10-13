@@ -20,7 +20,12 @@ import java.util.Map;
 
 public class LyyItems {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(LyyCore.MODID);
+    public static final DeferredItem<BlockItem> SUMMONING_BEACON = ITEMS.registerSimpleBlockItem(LyyBlocks.SUMMONING_BEACON);
+    public static final DeferredItem<Item> CRYSTAL_PRISM = ITEMS.registerSimpleItem("crystal_prism");
     public static final DeferredItem<BlockItem> EXPERIMENT_TABLE = ITEMS.registerSimpleBlockItem(LyyBlocks.EXPERIMENT_TABLE);
+    public static final DeferredItem<EmberfallItem> EMBERFALL = ITEMS.registerItem("emberfall", EmberfallItem::new, new Item.Properties().stacksTo(1).rarity(Rarity.EPIC));
+    public static final DeferredItem<Item> FLAME_CORE = ITEMS.registerSimpleItem("flame_core", new Item.Properties().rarity(Rarity.EPIC));
+    public static final DeferredItem<CaptureCageItem> CAPTURE_CAGE = ITEMS.registerItem("capture_cage", p -> new CaptureCageItem(LyyBlocks.CAPTURE_CAGE.get(), p), new Item.Properties().stacksTo(1).rarity(Rarity.EPIC));
     public static final DeferredItem<HailItem> HAIL = ITEMS.registerItem("hail", HailItem::new, new Item.Properties().stacksTo(1).rarity(Rarity.EPIC));
     public static final DeferredItem<Item> EROSION_CORE = ITEMS.registerSimpleItem("erosion_core", new Item.Properties().rarity(Rarity.EPIC));
     public static final DeferredItem<BlockItem> EROSION_FACTORY = ITEMS.registerSimpleBlockItem(LyyBlocks.EROSION_FACTORY);
@@ -42,6 +47,21 @@ public class LyyItems {
     public static final DeferredItem<BlockItem> FROST_STEEL_BLOCK = ITEMS.registerSimpleBlockItem(LyyBlocks.FROST_STEEL_BLOCK);
     public static final DeferredItem<BlockItem> INFERNAL_STEEL_BLOCK = ITEMS.registerSimpleBlockItem(LyyBlocks.INFERNAL_STEEL_BLOCK);
     public static final DeferredItem<BlockItem> CHARGED_STEEL_BLOCK = ITEMS.registerSimpleBlockItem(LyyBlocks.CHARGED_STEEL_BLOCK);
+    public static final DeferredItem<Item> SIXFOLD_ALLOY_INGOT = ITEMS.registerSimpleItem("sixfold_alloy_ingot");
+    public static final DeferredItem<Item> PURE_IMAGINARY_STEEL_PLATE = ITEMS.registerSimpleItem("pure_imaginary_steel_plate");
+    public static final DeferredItem<Item> VOID_ALLOY_PLATE = ITEMS.registerSimpleItem("void_alloy_plate");
+    public static final DeferredItem<Item> UNEXTINGUISHED_ALLOY_PLATE = ITEMS.registerSimpleItem("unextinguished_alloy_plate");
+    public static final DeferredItem<Item> STAINED_ALLOY_PLATE = ITEMS.registerSimpleItem("stained_alloy_plate");
+    public static final DeferredItem<Item> FROST_STEEL_PLATE = ITEMS.registerSimpleItem("frost_steel_plate");
+    public static final DeferredItem<Item> INFERNAL_STEEL_PLATE = ITEMS.registerSimpleItem("infernal_steel_plate");
+    public static final DeferredItem<Item> SIXFOLD_ALLOY_PLATE = ITEMS.registerSimpleItem("sixfold_alloy_plate");
+    public static final DeferredItem<Item> MATRIX_CASING = ITEMS.registerSimpleItem("matrix_casing");
+    public static final DeferredItem<Item> TRANSMISSION_CORE = ITEMS.registerSimpleItem("transmission_core", new Item.Properties().rarity(Rarity.EPIC));
+    public static final DeferredItem<BlockItem> SIXFOLD_ALLOY_BLOCK = ITEMS.registerSimpleBlockItem(LyyBlocks.SIXFOLD_ALLOY_BLOCK);
+    public static final DeferredItem<BlockItem> LOGISTICS_MATRIX = ITEMS.registerSimpleBlockItem(LyyBlocks.LOGISTICS_MATRIX);
+    public static final DeferredItem<BlockItem> MATRIX_INPUT = ITEMS.registerSimpleBlockItem(LyyBlocks.MATRIX_INPUT);
+    public static final DeferredItem<BlockItem> MATRIX_OUTPUT = ITEMS.registerSimpleBlockItem(LyyBlocks.MATRIX_OUTPUT);
+    public static final DeferredItem<BlockItem> MATRIX_COLLECTOR = ITEMS.registerSimpleBlockItem(LyyBlocks.MATRIX_COLLECTOR);
     public static final DeferredItem<Item> LIGHTNING_CORE = ITEMS.registerSimpleItem("lightning_core", new Item.Properties().rarity(Rarity.EPIC));
     public static final DeferredItem<Item> CHARGED_STEEL_PLATE = ITEMS.registerSimpleItem("charged_steel_plate");
     public static final DeferredItem<ThunderScytheItem> THUNDER_SCYTHE = ITEMS.registerItem("thunder_scythe", ThunderScytheItem::new, new Item.Properties().stacksTo(1).rarity(Rarity.EPIC));

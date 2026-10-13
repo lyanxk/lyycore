@@ -18,5 +18,10 @@
   "experience_points": 3000,
   "prerequisites": [
     "lyycore:research/hot_pot"
-  ]
+  ],
+  "display": {
+    "stage": 2,
+    "purpose": "combat",
+    "order": 0
+  }
 }

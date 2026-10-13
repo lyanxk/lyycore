@@ -43,7 +43,7 @@ public final class DragonMightItem extends Item {
         float charge = Math.clamp((getUseDuration(stack, user)-remaining)/20F, 0, 1);
         var nest = EnderCompanions.boundNest(player);
         boolean stowed = nest != null && nest.mode() == org.lyy.lyycore.content.blockEntities.ImaginaryDragonNestBlockEntity.Mode.STOWED;
-        float damage = damage(charge)*(nest == null ? 10 : stowed ? 1 : .25F);
+        float damage = damage(charge)*(stowed ? 1 : .25F);
         boolean burst = StyleSystem.current(player) == StyleSystem.Style.OFFENSE;
         CustomData.update(DataComponents.CUSTOM_DATA, stack, tag -> {
             tag.putLong("DragonReleased", level.getGameTime()); tag.putBoolean("DragonBurst", burst);

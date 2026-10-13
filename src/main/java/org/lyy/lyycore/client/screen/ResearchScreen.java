@@ -24,7 +24,8 @@ public final class ResearchScreen extends AbstractContainerScreen<ResearchMenu> 
     private int page, selected = -1, scroll, materialRow;
     private List<Integer> visibleEntries = List.of();
     private boolean confirming;
-    private int tab;
+    private int tab, stageFilter;
+    private ResearchDefinition.Purpose purposeFilter;
     private boolean selfUnlocked;
     private PaperButton researchButton, confirmButton, wingsButton;
 
@@ -91,10 +92,19 @@ public final class ResearchScreen extends AbstractContainerScreen<ResearchMenu> 
                 });
             }
         } else {
+            button(24, 41, 119, 17, stageLabel(stageFilter), () -> {
+                stageFilter = (stageFilter + 1) % 5; page = 0; rebuildButtons();
+            });
+            button(157, 41, 119, 17, purposeLabel(purposeFilter), () -> {
+                var purposes = ResearchDefinition.Purpose.values();
+                purposeFilter = purposeFilter == null ? purposes[0]
+                        : purposeFilter.ordinal() + 1 < purposes.length ? purposes[purposeFilter.ordinal() + 1] : null;
+                page = 0; rebuildButtons();
+            });
             for (int i = 0; i < PAGE_SIZE && page * PAGE_SIZE + i < visibleEntries.size(); i++) {
                 final int index = visibleEntries.get(page * PAGE_SIZE + i);
                 var entry = menu.entries().get(index).value();
-                PaperButton icon = button(34 + i % COLUMNS * 39, 49 + i / COLUMNS * 43, 37, 37,
+                PaperButton icon = button(34 + i % COLUMNS * 39, 62 + i / COLUMNS * 37, 37, 33,
                         translated(entry.title()), () -> { selected = index; scroll = 0; rebuildButtons(); });
                 icon.icon = entry.icon();
                 icon.entry = index;
@@ -187,7 +197,10 @@ public final class ResearchScreen extends AbstractContainerScreen<ResearchMenu> 
         // Keep the menu's original indices for status sync and server button requests.
         List<Integer> visible = new ArrayList<>();
         for (int i = 0; i < menu.entries().size(); i++) {
-            if (menu.isMemory() || menu.status(i) != ResearchMenu.COMPLETED) visible.add(i);
+            var display = menu.entries().get(i).value().display();
+            if ((menu.isMemory() || menu.status(i) != ResearchMenu.COMPLETED)
+                    && (stageFilter == 0 || display.stage() == stageFilter)
+                    && (purposeFilter == null || display.purpose() == purposeFilter)) visible.add(i);
         }
         if (visibleEntries.equals(visible)) return false;
         visibleEntries = visible;
@@ -200,6 +213,34 @@ public final class ResearchScreen extends AbstractContainerScreen<ResearchMenu> 
         return true;
     }
 
+    private static MutableComponent stageLabel(int stage) { return text("stage." + stage); }
+    private static MutableComponent purposeLabel(ResearchDefinition.Purpose purpose) {
+        return text("purpose." + (purpose == null ? "all" : purpose.getSerializedName()));
+    }
+    private static MutableComponent classification(ResearchDefinition research) {
+        return stageLabel(research.display().stage()).append(" · ").append(purposeLabel(research.display().purpose()));
+    }
+    private MutableComponent prerequisites(ResearchDefinition research) {
+        var result = Component.empty();
+        if (!research.prerequisites().isEmpty()) {
+            result.append(text("prerequisites"));
+            for (int i = 0; i < research.prerequisites().size(); i++) {
+                if (i > 0) result.append(" / ");
+                var id = research.prerequisites().get(i);
+                var entry = org.lyy.lyycore.content.research.ResearchManager.get(minecraft.level, id);
+                result.append(entry == null ? text("unknown_prerequisite") : translated(entry.value().title()));
+            }
+        }
+        research.requiredAdvancement().ifPresent(id -> {
+            if (!result.getString().isEmpty()) result.append("\n");
+            result.append(text("advancement_required"));
+            var advancement = minecraft.getConnection().getAdvancements().getTree().get(id);
+            result.append(advancement == null || advancement.holder().value().display().isEmpty()
+                    ? text("unknown_prerequisite") : advancement.holder().value().display().get().getTitle());
+        });
+        return result;
+    }
+
     private int pages() { return Math.max(1, (visibleEntries.size() + PAGE_SIZE - 1) / PAGE_SIZE); }
     private ResearchDefinition research() { return menu.entries().get(selected).value(); }
 
@@ -208,7 +249,7 @@ public final class ResearchScreen extends AbstractContainerScreen<ResearchMenu> 
         int status = menu.status(selected);
         if (researchButton != null && !menu.isMemory()) {
             researchButton.active = status != ResearchMenu.COMPLETED;
-            researchButton.setMessage(text(status == ResearchMenu.COMPLETED ? "completed" : "research"));
+            researchButton.setMessage(text(status == ResearchMenu.COMPLETED ? "completed" : status == ResearchMenu.LOCKED ? "view_requirements" : "research"));
         }
         if (confirmButton != null) confirmButton.active = status == ResearchMenu.READY;
         if (wingsButton != null) wingsButton.setMessage(text(menu.wingsVisible() ? "hide_wings" : "show_wings"));
@@ -251,8 +292,10 @@ public final class ResearchScreen extends AbstractContainerScreen<ResearchMenu> 
         g.drawString(font, title, titleX, 0, research.rarity().color, true);
         g.pose().popPose();
 
-        List<net.minecraft.util.FormattedCharSequence> summary = font.split(
-                translated(research.summary()), 248);
+        var summary = new ArrayList<net.minecraft.util.FormattedCharSequence>();
+        summary.addAll(font.split(classification(research), 248));
+        summary.addAll(font.split(translated(research.summary()), 248));
+        summary.addAll(font.split(prerequisites(research), 248));
         List<net.minecraft.util.FormattedCharSequence> body = font.split(translated(research.description()), 248);
         int contentHeight = summary.size() * 12 + 12 + body.size() * 12;
         scroll = Mth.clamp(scroll, 0, Math.max(0, contentHeight - DETAIL_HEIGHT));
@@ -290,8 +333,9 @@ public final class ResearchScreen extends AbstractContainerScreen<ResearchMenu> 
         Component experience = research().experiencePoints() > 0
                 ? text("experience_points", research().experiencePoints()) : text("experience", research().experienceLevels());
         g.drawString(font, experience, leftPos + 28, topPos + 132, INK, false);
-        if (menu.status(selected) == ResearchMenu.MISSING_COST)
-            g.drawString(font, text("missing"), leftPos + 160, topPos + 132, 0xFFBD3030, false);
+        if (menu.status(selected) == ResearchMenu.MISSING_COST || menu.status(selected) == ResearchMenu.LOCKED)
+            g.drawString(font, text(menu.status(selected) == ResearchMenu.LOCKED ? "locked" : "missing"),
+                    leftPos + 160, topPos + 132, 0xFFBD3030, false);
         if (research().dangerous()) {
             int y = topPos + 150;
             for (var line : font.split(text("danger"), 246)) {
@@ -317,7 +361,11 @@ public final class ResearchScreen extends AbstractContainerScreen<ResearchMenu> 
                     var entry = menu.entries().get(button.entry).value();
                     var lines = new ArrayList<net.minecraft.util.FormattedCharSequence>();
                     lines.add(translated(entry.title()).withColor(entry.rarity().color).getVisualOrderText());
+                    lines.addAll(font.split(classification(entry).withStyle(ChatFormatting.GOLD), 220));
                     lines.addAll(font.split(translated(entry.summary()).withStyle(ChatFormatting.GRAY), 220));
+                    lines.addAll(font.split(prerequisites(entry).withStyle(ChatFormatting.GRAY), 220));
+                    if (menu.status(button.entry) == ResearchMenu.LOCKED)
+                        lines.add(text("locked").withStyle(ChatFormatting.RED).getVisualOrderText());
                     if (menu.status(button.entry) == ResearchMenu.COMPLETED)
                         lines.add(text("completed").withStyle(ChatFormatting.GOLD).getVisualOrderText());
                     g.renderTooltip(font, lines, mouseX, mouseY);
@@ -390,6 +438,8 @@ public final class ResearchScreen extends AbstractContainerScreen<ResearchMenu> 
                 g.drawString(font, getMessage(), x, getY() + (height - 8) / 2, active ? INK : 0xFFAAA397, false);
             } else {
                 g.renderItem(icon, getX() + (width - 16) / 2, getY() + (height - 16) / 2);
+                if (menu.status(entry) == ResearchMenu.LOCKED)
+                    g.drawString(font, "×", getX() + width - 9, getY() + 2, MUTED_INK, false);
                 if (menu.status(entry) == ResearchMenu.COMPLETED)
                     g.fill(getX() + width - 7, getY() + 3, getX() + width - 3, getY() + 7, GOLD);
             }

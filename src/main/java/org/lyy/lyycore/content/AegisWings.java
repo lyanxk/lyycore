@@ -1,5 +1,8 @@
 package org.lyy.lyycore.content;
 
+import org.lyy.lyycore.content.research.ResearchChangedEvent;
+import org.lyy.lyycore.content.research.ResearchProgress;
+import org.lyy.lyycore.content.combat.ActionRestrictions;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageTypes;
@@ -10,7 +13,6 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import org.lyy.lyycore.network.WingsNetwork;
 import org.lyy.lyycore.content.wings.WingsAttack;
 import org.lyy.lyycore.content.wings.WingsTier;
-import org.lyy.lyycore.registry.LyyEffects;
 
 /** Innate weapon and armor: tier, protection, attacks and flight share this entry point. */
 @EventBusSubscriber(modid = "lyycore")
@@ -61,7 +63,7 @@ public final class AegisWings {
     public static boolean boostFlight(Player player) {
         var tier = tier(player);
         if (tier == null || !org.lyy.lyycore.content.wings.WingsSettings.flight(player) || !player.isAlive() || player.isSpectator() || !player.isFallFlying()
-                || player.hasEffect(LyyEffects.CRYSTALLIZATION)) return false;
+                || ActionRestrictions.frozen(player)) return false;
         var velocity = player.getDeltaMovement();
         var original = tier.flightBoost();
         var profile = new WingsTier.FlightBoost(original.acceleration() * org.lyy.lyycore.content.wings.WingsSettings.acceleration(player) / 100.0, original.maxSpeed());
@@ -98,5 +100,9 @@ public final class AegisWings {
         if (!unlocked(player)) return;
         player.getPersistentData().putLong(SHIELD_STARTED, player.level().getGameTime());
         WingsNetwork.sync(player);
+    }
+    @SubscribeEvent public static void researchChanged(ResearchChangedEvent event) {
+        if (event.id.equals(RESEARCH) || event.id.equals(ENHANCEMENT))
+            org.lyy.lyycore.network.WingsNetwork.sync(event.player);
     }
 }
