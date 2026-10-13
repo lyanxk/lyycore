@@ -643,5 +643,9 @@
   "gui.lyycore.research.purpose.exploration": "探索机动",
   "gui.lyycore.research.purpose.combat": "战斗",
   "gui.lyycore.research.purpose.ritual": "仪式召唤",
-  "gui.lyycore.research.view_requirements": "查看条件"
+  "gui.lyycore.research.view_requirements": "查看条件",
+  "gui.lyycore.logistics.public_short": "公共",
+  "gui.lyycore.logistics.private_short": "私人",
+  "gui.lyycore.logistics.create": "+ 新建频道",
+  "gui.lyycore.logistics.empty_slot": "—"
 }

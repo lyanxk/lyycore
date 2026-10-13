@@ -14,7 +14,9 @@ import org.lyy.lyycore.network.LogisticsNetwork.Action;
 
 /** The matrix edits its five channels; all three ports share the paged binding view. */
 public final class LogisticsScreen extends AbstractContainerScreen<LogisticsMenu> {
-    private final List<Button> rows = new ArrayList<>(), deletes = new ArrayList<>();
+    private static final int PAPER = 0xFFFFFBFD, PINK = 0xFFE9A2C7, INK = 0xFF593F50;
+    private static final int MUTED = 0xFF97818E, LINE = 0xFFEED7E3, HOVER = 0xFFFBE9F2;
+    private final List<ChannelButton> rows = new ArrayList<>(), deletes = new ArrayList<>();
     private EditBox name;
     private Button previous, next, unbind, accept, cancel, visibility;
     private UUID editing;
@@ -24,8 +26,38 @@ public final class LogisticsScreen extends AbstractContainerScreen<LogisticsMenu
         inventoryLabelX = 44; inventoryLabelY = 182;
     }
     private static Component text(String key, Object... arguments) { return Component.translatable("gui.lyycore.logistics." + key, arguments); }
-    private Button button(Component title, int x, int y, int width, Button.OnPress action) {
-        return addRenderableWidget(Button.builder(title, action).bounds(leftPos + x, topPos + y, width, 18).build());
+    private ChannelButton button(Component title, int x, int y, int width, Button.OnPress action) {
+        return addRenderableWidget(new ChannelButton(title, x, y, width, action));
+    }
+    private final class ChannelButton extends Button {
+        private LogisticsNetwork.Entry channel;
+        private boolean bound;
+        private ChannelButton(Component title, int x, int y, int width, OnPress action) {
+            super(leftPos + x, topPos + y, width, 18, title, action, DEFAULT_NARRATION);
+        }
+        @Override protected void renderWidget(GuiGraphics g, int mouseX, int mouseY, float partial) {
+            int x = getX(), y = getY();
+            boolean highlighted = active && isHoveredOrFocused();
+            g.fill(x, y, x + width, y + height, bound || highlighted ? PINK : LINE);
+            g.fill(x + 1, y + 1, x + width - 1, y + height - 1, bound || highlighted ? HOVER : PAPER);
+            if (channel == null) {
+                ForgeGui.centeredText(g, font, getMessage(), x + width / 2, y + 5, active ? INK : MUTED);
+                return;
+            }
+            if (bound) g.fill(x + 1, y + 2, x + 3, y + height - 2, PINK);
+            var badge = text(channel.publicChannel() ? "public_short" : "private_short");
+            int badgeWidth = font.width(badge) + 10;
+            int badgeX = x + width - badgeWidth - 5;
+            g.fill(badgeX, y + 3, x + width - 5, y + height - 3, channel.publicChannel() ? 0xFFF1E2F2 : 0xFFF6E8EE);
+            ForgeGui.centeredText(g, font, badge, badgeX + badgeWidth / 2, y + 5, INK);
+            g.drawString(font, font.plainSubstrByWidth(channel.name(), width - badgeWidth - 20), x + 7, y + 5, INK, false);
+        }
+    }
+    private static void panel(GuiGraphics g, int x, int y, int width, int height) {
+        g.fill(x, y, x + width, y + height, PINK);
+        g.fill(x + 2, y + 2, x + width - 2, y + height - 2, PAPER);
+        for (int dx : new int[]{4, width - 7}) for (int dy : new int[]{4, height - 7})
+            g.fill(x + dx, y + dy, x + dx + 3, y + dy + 3, LINE);
     }
     @Override protected void init() {
         super.init(); rows.clear(); deletes.clear();
@@ -39,8 +71,12 @@ public final class LogisticsScreen extends AbstractContainerScreen<LogisticsMenu
             next = button(Component.literal(">"), 210, 140, 22, b -> send(Action.PAGE, LogisticsNetwork.NONE, "", menu.snapshot().page() + 1));
             unbind = button(text("unbind"), 168, 160, 64, b -> send(Action.BIND, LogisticsNetwork.NONE, "", 0));
         }
-        name = addRenderableWidget(new EditBox(font, leftPos + 29, topPos + 66, 190, 20, text("name")));
+        name = addRenderableWidget(new EditBox(font, leftPos + 35, topPos + 72, 178, 12, text("name")));
         name.setMaxLength(LogisticsChannels.NAME_LIMIT);
+        name.setBordered(false);
+        name.setTextColor(INK);
+        name.setTextColorUneditable(MUTED);
+        name.setTextShadow(false);
         accept = button(text("save"), 51, 117, 68, b -> submit());
         cancel = button(Component.translatable("gui.cancel"), 129, 117, 68, b -> closeDialog());
         visibility = button(text("private"), 29, 91, 190, b -> { publicChannel = !publicChannel; refresh(); });
@@ -73,9 +109,13 @@ public final class LogisticsScreen extends AbstractContainerScreen<LogisticsMenu
         var snapshot = menu.snapshot();
         for (int i = 0; i < rows.size(); i++) {
             var entry = i < snapshot.entries().size() ? snapshot.entries().get(i) : null;
-            var row = rows.get(i); row.visible = editing == null; row.active = menu.matrix() ? (entry == null ? snapshot.canCreate() : entry.editable()) : entry != null;
-            String label = entry == null ? (menu.matrix() ? "+" : "—") : (entry.id().equals(snapshot.bound()) ? "✓ " : "") + entry.name();
-            row.setMessage(Component.literal(font.plainSubstrByWidth(label, row.getWidth() - 10)));
+            boolean create = menu.matrix() && snapshot.canCreate() && i == snapshot.entries().size();
+            var row = rows.get(i);
+            row.visible = editing == null;
+            row.active = entry == null ? create : !menu.matrix() || entry.editable();
+            row.channel = entry;
+            row.bound = entry != null && entry.id().equals(snapshot.bound());
+            row.setMessage(entry == null ? (create ? text("create") : text("empty_slot")) : Component.literal(entry.name()));
             if (entry != null) row.setTooltip(Tooltip.create(Component.literal(entry.name() + "\n" + text(entry.publicChannel() ? "public" : "private").getString() + "\n" + entry.source().dimension().location()
                     + "\n" + entry.source().pos().toShortString())));
             else row.setTooltip(null);
@@ -93,22 +133,35 @@ public final class LogisticsScreen extends AbstractContainerScreen<LogisticsMenu
     }
     @Override protected void containerTick() { super.containerTick(); refresh(); }
     @Override protected void renderBg(GuiGraphics g, float partial, int x, int y) {
-        ForgeGui.panel(g, leftPos, topPos, imageWidth, imageHeight);
-        g.fill(leftPos + 12, topPos + 21, leftPos + 236, topPos + 22, ForgeGui.ACCENT);
-        for (var slot : menu.slots) ForgeGui.slot(g, leftPos + slot.x, topPos + slot.y, false);
+        panel(g, leftPos, topPos, imageWidth, imageHeight);
+        g.fill(leftPos + 12, topPos + 21, leftPos + 236, topPos + 22, PINK);
+        g.fill(leftPos + 12, topPos + 180, leftPos + 236, topPos + 181, LINE);
+        for (var slot : menu.slots) {
+            int sx = leftPos + slot.x, sy = topPos + slot.y;
+            g.fill(sx - 1, sy - 1, sx + 17, sy + 17, 0xFFE9B4CB);
+            g.fill(sx, sy, sx + 16, sy + 16, 0xFFF8EDF2);
+        }
         if (editing != null) {
-            ForgeGui.panel(g, leftPos + 20, topPos + 38, 208, 109);
+            panel(g, leftPos + 20, topPos + 38, 208, 109);
             var message = deleting ? text("confirm_delete") : text("name");
-            ForgeGui.centeredText(g, font, message, leftPos + 124, topPos + 49, ForgeGui.TEXT);
-            if (deleting) ForgeGui.centeredText(g, font, text("delete_warning"), leftPos + 124, topPos + 75, ForgeGui.TEXT);
+            ForgeGui.centeredText(g, font, message, leftPos + 124, topPos + 49, INK);
+            if (!deleting) {
+                g.fill(leftPos + 29, topPos + 66, leftPos + 219, topPos + 86, name.isFocused() ? PINK : LINE);
+                g.fill(leftPos + 30, topPos + 67, leftPos + 218, topPos + 85, PAPER);
+            }
+            if (deleting) ForgeGui.centeredText(g, font, text("delete_warning"), leftPos + 124, topPos + 75, INK);
         } else if (menu.matrix()) {
-            ForgeGui.centeredText(g, font, text("limit", LogisticsChannels.CHANNEL_LIMIT), leftPos + 124, topPos + 147, ForgeGui.TEXT);
+            ForgeGui.centeredText(g, font, text("limit", LogisticsChannels.CHANNEL_LIMIT), leftPos + 124, topPos + 147, INK);
         } else {
             var snapshot = menu.snapshot();
-            ForgeGui.centeredText(g, font, (snapshot.page() + 1) + " / " + snapshot.pages(), leftPos + 124, topPos + 144, ForgeGui.TEXT);
+            ForgeGui.centeredText(g, font, (snapshot.page() + 1) + " / " + snapshot.pages(), leftPos + 124, topPos + 144, INK);
             var bound = snapshot.boundName().isEmpty() ? text(snapshot.hasBinding() ? "private_bound" : "unbound") : Component.literal(snapshot.boundName());
-            g.drawString(font, font.plainSubstrByWidth(bound.getString(), 67), leftPos + 16, topPos + 164, ForgeGui.TEXT, false);
+            g.drawString(font, font.plainSubstrByWidth(bound.getString(), 67), leftPos + 16, topPos + 164, INK, false);
         }
+    }
+    @Override protected void renderLabels(GuiGraphics g, int x, int y) {
+        ForgeGui.centeredText(g, font, title, imageWidth / 2, 8, INK);
+        g.drawString(font, playerInventoryTitle, inventoryLabelX, inventoryLabelY, INK, false);
     }
     @Override public void render(GuiGraphics g, int x, int y, float partial) { super.render(g, x, y, partial); if (editing == null) renderTooltip(g, x, y); }
     @Override public boolean mouseClicked(double x, double y, int button) {

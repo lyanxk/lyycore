@@ -643,5 +643,9 @@
   "gui.lyycore.research.purpose.exploration": "Exploration",
   "gui.lyycore.research.purpose.combat": "Combat",
   "gui.lyycore.research.purpose.ritual": "Rituals",
-  "gui.lyycore.research.view_requirements": "View requirements"
+  "gui.lyycore.research.view_requirements": "View requirements",
+  "gui.lyycore.logistics.public_short": "Public",
+  "gui.lyycore.logistics.private_short": "Private",
+  "gui.lyycore.logistics.create": "+ New channel",
+  "gui.lyycore.logistics.empty_slot": "—"
 }
