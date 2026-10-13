@@ -41,7 +41,7 @@ public final class PureSmeltingScreen extends AbstractContainerScreen<PureSmelti
     }
     @Override protected void renderBg(GuiGraphics g, float partial, int x, int y) { panel(g, leftPos, topPos, imageWidth, imageHeight); }
     @Override protected void renderLabels(GuiGraphics g, int x, int y) {
-        g.drawCenteredString(font, title, imageWidth/2, 11, 0x593F50);
+        ForgeGui.centeredText(g, font, title, imageWidth/2, 11, 0x593F50);
         g.drawString(font, Component.translatable("gui.lyycore.smelting.power", String.format(java.util.Locale.ROOT, "%,d", 10_000L*menu.speed()*menu.speed())), 16, 73, 0x593F50, false);
         g.drawString(font, Component.translatable("gui.lyycore.smelting.energy", String.format(java.util.Locale.ROOT, "%,d", menu.energy())), 16, 93, 0x593F50, false);
     }

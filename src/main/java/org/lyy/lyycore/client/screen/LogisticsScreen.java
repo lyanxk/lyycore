@@ -99,13 +99,13 @@ public final class LogisticsScreen extends AbstractContainerScreen<LogisticsMenu
         if (editing != null) {
             ForgeGui.panel(g, leftPos + 20, topPos + 38, 208, 109);
             var message = deleting ? text("confirm_delete") : text("name");
-            g.drawCenteredString(font, message, leftPos + 124, topPos + 49, ForgeGui.TEXT);
-            if (deleting) g.drawCenteredString(font, text("delete_warning"), leftPos + 124, topPos + 75, ForgeGui.TEXT);
+            ForgeGui.centeredText(g, font, message, leftPos + 124, topPos + 49, ForgeGui.TEXT);
+            if (deleting) ForgeGui.centeredText(g, font, text("delete_warning"), leftPos + 124, topPos + 75, ForgeGui.TEXT);
         } else if (menu.matrix()) {
-            g.drawCenteredString(font, text("limit", LogisticsChannels.CHANNEL_LIMIT), leftPos + 124, topPos + 147, ForgeGui.TEXT);
+            ForgeGui.centeredText(g, font, text("limit", LogisticsChannels.CHANNEL_LIMIT), leftPos + 124, topPos + 147, ForgeGui.TEXT);
         } else {
             var snapshot = menu.snapshot();
-            g.drawCenteredString(font, (snapshot.page() + 1) + " / " + snapshot.pages(), leftPos + 124, topPos + 144, ForgeGui.TEXT);
+            ForgeGui.centeredText(g, font, (snapshot.page() + 1) + " / " + snapshot.pages(), leftPos + 124, topPos + 144, ForgeGui.TEXT);
             var bound = snapshot.boundName().isEmpty() ? text(snapshot.hasBinding() ? "private_bound" : "unbound") : Component.literal(snapshot.boundName());
             g.drawString(font, font.plainSubstrByWidth(bound.getString(), 67), leftPos + 16, topPos + 164, ForgeGui.TEXT, false);
         }

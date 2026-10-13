@@ -25,7 +25,7 @@ public final class DragonControlScreen extends AbstractContainerScreen<DragonCon
         for (int i = 0; i < modes.size(); i++) modes.get(i).active = menu.mode() >= 0 && menu.mode() != i;
     }
     @Override protected void renderLabels(GuiGraphics g, int x, int y) {
-        g.drawCenteredString(font, title, imageWidth/2, 14, 0x593F50);
+        ForgeGui.centeredText(g, font, title, imageWidth/2, 14, 0x593F50);
         g.drawWordWrap(font, Component.translatable(menu.mode() == 2 ? "gui.lyycore.dragon.full_power" : "gui.lyycore.dragon.quarter_power"), 12, 87, imageWidth-24, 0x76586B);
     }
 }

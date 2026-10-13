@@ -101,7 +101,7 @@ public final class ResourceGatheringScreen extends AbstractContainerScreen<Resou
             int sx = x + 8 + cell % COLUMNS * 18, sy = y + 23 + cell / COLUMNS * 18;
             ForgeGui.slot(g, sx, sy, index == menu.selectedIndex() + 1);
             ItemStack result = index == 0 ? ItemStack.EMPTY : recipes.get(index - 1).value().result();
-            if (index == 0) g.drawCenteredString(font, "×", sx + 8, sy + 4, ForgeGui.TEXT);
+            if (index == 0) ForgeGui.centeredText(g, font, "×", sx + 8, sy + 4, ForgeGui.TEXT);
             else g.renderFakeItem(result, sx, sy);
             if (mouseX >= sx && mouseX < sx + 16 && mouseY >= sy && mouseY < sy + 16) {
                 g.fill(sx, sy, sx + 16, sy + 16, 0x40FFFFFF);

@@ -1,8 +1,8 @@
 package org.lyy.lyycore.client.screen;
 
-import org.lyy.lyycore.content.menu.*;
-
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.network.chat.Component;
 
 /** Shared silver-and-rose drawing primitives for machine screens and JEI. */
 public final class ForgeGui {
@@ -11,6 +11,15 @@ public final class ForgeGui {
     public static final int TRACK = 0xFFD9DCE8;
 
     private ForgeGui() { }
+
+    /** Dark text on a light panel stays crisp without the vanilla centered-text shadow. */
+    public static void centeredText(GuiGraphics g, Font font, Component text, int x, int y, int color) {
+        g.drawString(font, text, x - font.width(text) / 2, y, color, false);
+    }
+
+    public static void centeredText(GuiGraphics g, Font font, String text, int x, int y, int color) {
+        g.drawString(font, text, x - font.width(text) / 2, y, color, false);
+    }
 
     public static void panel(GuiGraphics g, int x, int y, int width, int height) {
         g.fill(x, y, x + width, y + height, 0xFF8B91A9);

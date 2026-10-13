@@ -18,8 +18,8 @@ public final class DragonNestScreen extends AbstractContainerScreen<DragonNestMe
         g.fill(leftPos+54, topPos+71, leftPos+54+68*menu.progress()/6000, topPos+74, 0xFFE698BC);
     }
     @Override protected void renderLabels(GuiGraphics g, int x, int y) {
-        g.drawCenteredString(font, title, 88, 11, 0x593F50);
-        g.drawCenteredString(font, Component.translatable("gui.lyycore.dragon." + new String[]{"patrol", "breath", "stowed"}[menu.mode()]), 88, 81, 0x593F50);
+        ForgeGui.centeredText(g, font, title, 88, 11, 0x593F50);
+        ForgeGui.centeredText(g, font, Component.translatable("gui.lyycore.dragon." + new String[]{"patrol", "breath", "stowed"}[menu.mode()]), 88, 81, 0x593F50);
     }
     @Override public void render(GuiGraphics g, int x, int y, float partial) { super.render(g, x, y, partial); renderTooltip(g, x, y); }
 }

@@ -14,7 +14,7 @@ public class LyyCreativeTab {
 
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> MAIN_TAB =
             TABS.register("main", () -> CreativeModeTab.builder()
-                    .icon(() -> new ItemStack(LyyItems.IMAGINARY_ALLOY_INGOT.get()))
+                    .icon(() -> new ItemStack(LyyItems.IMAGINARY_STEEL_BLOCK.get()))
                     .title(Component.literal("LyyCore"))
                     .displayItems((params, output) -> {
                         // Starting materials.
