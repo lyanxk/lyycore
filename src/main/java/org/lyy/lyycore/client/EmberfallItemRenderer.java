@@ -37,9 +37,9 @@ public final class EmberfallItemRenderer extends BlockEntityWithoutLevelRenderer
             @Override public boolean isCustomRenderer() { return true; }
             @Override public BakedModel applyTransform(ItemDisplayContext context, PoseStack pose, boolean leftHand) {
                 boolean inHand=context.firstPerson() || context==ItemDisplayContext.THIRD_PERSON_LEFT_HAND || context==ItemDisplayContext.THIRD_PERSON_RIGHT_HAND;
-                source.applyTransform(context,pose,leftHand);
+                BakedModel transformed = source.applyTransform(context,pose,leftHand);
                 if (!inHand) holder=null;
-                return inHand ? this : source;
+                return inHand ? this : transformed;
             }
         };
         return new BakedModelWrapper<>(source) {

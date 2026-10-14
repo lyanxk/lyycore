@@ -49,7 +49,8 @@ public class ClientSetup {
     @SubscribeEvent
     public static void wrapCustomItemModels(ModelEvent.ModifyBakingResult event) {
         var emberfall = new net.minecraft.client.resources.model.ModelResourceLocation(LyyItems.EMBERFALL.getId(), "inventory");
-        event.getModels().computeIfPresent(emberfall, (id, model) -> EmberfallItemRenderer.wrap(model));
+        event.getModels().computeIfPresent(emberfall, (id, model) -> EmberfallItemRenderer.wrap(
+                InventoryIconModel.wrap(model, event.getModels().get(InventoryIconModel.EMBERFALL))));
         var hail = new net.minecraft.client.resources.model.ModelResourceLocation(LyyItems.HAIL.getId(), "inventory");
         event.getModels().computeIfPresent(hail, (id, model) -> HailItemRenderer.wrap(model));
         var dragonMight = new net.minecraft.client.resources.model.ModelResourceLocation(LyyItems.DRAGON_MIGHT.getId(), "inventory");
@@ -59,7 +60,8 @@ public class ClientSetup {
         var empty = event.getModels().get(GrappleRenderer.EMPTY_HELD_MODEL);
         if (empty != null) {
             var scythe = new net.minecraft.client.resources.model.ModelResourceLocation(LyyItems.THUNDER_SCYTHE.getId(), "inventory");
-            event.getModels().computeIfPresent(scythe, (id, model) -> ThunderScytheRenderer.wrap(model, empty));
+            event.getModels().computeIfPresent(scythe, (id, model) -> ThunderScytheRenderer.wrap(
+                    InventoryIconModel.wrap(model, event.getModels().get(InventoryIconModel.THUNDER_SCYTHE)), empty));
         }
         if (empty != null) {
             event.getModels().computeIfPresent(grapple, (id, model) -> GrappleHeldModel.wrap(model, empty, GrappleControls::hasActiveHook));
@@ -79,6 +81,8 @@ public class ClientSetup {
 
     @SubscribeEvent
     public static void registerArrowModel(ModelEvent.RegisterAdditional event) {
+        event.register(InventoryIconModel.EMBERFALL);
+        event.register(InventoryIconModel.THUNDER_SCYTHE);
         event.register(GrappleRenderer.EMPTY_HELD_MODEL);
         for (var model : GrappleRenderer.MODELS) event.register(model);
         event.register(FrostChainRenderer.MODEL);

@@ -5,25 +5,25 @@
       "context": "firstperson_righthand",
       "count": 132,
       "oldMaxErrorBBUnits": 5.07532360740524,
-      "fixedMaxErrorBBUnits": 7.105427357601002e-15
+      "fixedMaxErrorBBUnits": 5.329070518200751e-15
     },
     {
       "context": "firstperson_lefthand",
       "count": 132,
       "oldMaxErrorBBUnits": 5.07532360740524,
-      "fixedMaxErrorBBUnits": 7.993605777301127e-15
+      "fixedMaxErrorBBUnits": 7.105427357601002e-15
     },
     {
       "context": "thirdperson_righthand",
       "count": 132,
-      "oldMaxErrorBBUnits": 3.9597979746446663,
-      "fixedMaxErrorBBUnits": 5.329070518200751e-15
+      "oldMaxErrorBBUnits": 5.594674040858406,
+      "fixedMaxErrorBBUnits": 0.000004000000002335469
     },
     {
       "context": "thirdperson_lefthand",
       "count": 132,
-      "oldMaxErrorBBUnits": 3.959797974644669,
-      "fixedMaxErrorBBUnits": 3.552713678800501e-15
+      "oldMaxErrorBBUnits": 5.5946740408584095,
+      "fixedMaxErrorBBUnits": 0.0000040000000041118255
     }
   ]
 }
