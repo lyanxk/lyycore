@@ -15,7 +15,7 @@
   ],
   "experience_points": 3000,
   "prerequisites": [
-    "lyycore:research/ritual"
+    "lyycore:research/in_our_hands"
   ],
   "title": "research.lyycore.in_depth_research.title",
   "summary": "research.lyycore.in_depth_research.summary",
