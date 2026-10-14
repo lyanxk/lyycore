@@ -1,0 +1,76 @@
+{
+  "textures": {
+    "rope": "lyycore:entity/frost_chain_tether",
+    "particle": "lyycore:entity/frost_chain_tether"
+  },
+  "elements": [
+    {
+      "from": [
+        -0.25,
+        23.75,
+        -16
+      ],
+      "to": [
+        0.25,
+        24.25,
+        0
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            4.0,
+            4.0,
+            4.125,
+            4.125
+          ],
+          "texture": "#rope"
+        },
+        "east": {
+          "uv": [
+            0.0,
+            4.0,
+            4.0,
+            4.125
+          ],
+          "texture": "#rope"
+        },
+        "south": {
+          "uv": [
+            8.125,
+            4.0,
+            8.25,
+            4.125
+          ],
+          "texture": "#rope"
+        },
+        "west": {
+          "uv": [
+            4.125,
+            4.0,
+            8.125,
+            4.125
+          ],
+          "texture": "#rope"
+        },
+        "up": {
+          "uv": [
+            4.125,
+            4.0,
+            4.0,
+            0.0
+          ],
+          "texture": "#rope"
+        },
+        "down": {
+          "uv": [
+            4.25,
+            0.0,
+            4.125,
+            4.0
+          ],
+          "texture": "#rope"
+        }
+      }
+    }
+  ]
+}

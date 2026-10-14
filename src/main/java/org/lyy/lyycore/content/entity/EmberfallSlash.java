@@ -9,7 +9,6 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.*;
 import net.minecraft.world.phys.*;
-import org.lyy.lyycore.content.SpecialDamage;
 import org.lyy.lyycore.content.item.EmberfallItem;
 import org.lyy.lyycore.registry.LyyEntities;
 
@@ -48,7 +47,7 @@ public final class EmberfallSlash extends Entity {
         travelled += from.distanceTo(to); setPos(to);
         if (blocked || travelled >= RANGE - .001) { ring(player,to,damage,base); discard(); }
         // All contacts in this sweep are one settlement per victim; never clear hurt cooldowns.
-        damage.forEach((target, amount) -> SpecialDamage.burstFromBase(player,this,target,SpecialDamage.Element.FIRE,amount,1));
+        damage.forEach((target, amount) -> EmberfallItem.damage(player, this, target, amount, 1));
     }
     private void ring(Player player, Vec3 pos, Map<LivingEntity, Double> damage, double base) {
         var ring = LyyEntities.EMBERFALL_RING.get().create(level());

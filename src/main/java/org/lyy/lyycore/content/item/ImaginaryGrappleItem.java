@@ -12,6 +12,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import org.lyy.lyycore.content.entity.GrappleHook;
+import org.lyy.lyycore.content.entity.FrostChainHook;
 import org.lyy.lyycore.registry.LyyEntities;
 
 import java.util.List;
@@ -30,6 +31,8 @@ public final class ImaginaryGrappleItem extends Item {
             if (hook == null) return InteractionResultHolder.fail(stack);
             hook.launch(serverPlayer);
             if (!level.addFreshEntity(hook)) return InteractionResultHolder.fail(stack);
+            var frostHook = FrostChainHook.active(serverPlayer);
+            if (frostHook != null) frostHook.discard();
             player.getPersistentData().putUUID(GrappleHook.ACTIVE_TAG, hook.getUUID());
             level.playSound(null, player.blockPosition(), SoundEvents.FISHING_BOBBER_THROW, SoundSource.PLAYERS, 0.8F, 0.8F);
         }

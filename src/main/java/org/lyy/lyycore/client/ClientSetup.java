@@ -61,7 +61,11 @@ public class ClientSetup {
             var scythe = new net.minecraft.client.resources.model.ModelResourceLocation(LyyItems.THUNDER_SCYTHE.getId(), "inventory");
             event.getModels().computeIfPresent(scythe, (id, model) -> ThunderScytheRenderer.wrap(model, empty));
         }
-        if (empty != null) event.getModels().computeIfPresent(grapple, (id, model) -> GrappleHeldModel.wrap(model, empty));
+        if (empty != null) {
+            event.getModels().computeIfPresent(grapple, (id, model) -> GrappleHeldModel.wrap(model, empty, GrappleControls::hasActiveHook));
+            var frostChain = new net.minecraft.client.resources.model.ModelResourceLocation(LyyItems.FROST_CHAIN.getId(), "inventory");
+            event.getModels().computeIfPresent(frostChain, (id, model) -> GrappleHeldModel.wrap(model, empty, FrostChainControls::hasActiveHook));
+        }
         var itemModel = new net.minecraft.client.resources.model.ModelResourceLocation(
                 ResourceLocation.fromNamespaceAndPath(LyyCore.MODID, "whisper_of_the_past"), "inventory");
         event.getModels().computeIfPresent(itemModel, (id, model) -> SonnetBowModel.wrapItem(model));
@@ -77,6 +81,7 @@ public class ClientSetup {
     public static void registerArrowModel(ModelEvent.RegisterAdditional event) {
         event.register(GrappleRenderer.EMPTY_HELD_MODEL);
         for (var model : GrappleRenderer.MODELS) event.register(model);
+        event.register(FrostChainRenderer.MODEL);
         event.register(SonnetArrowRenderer.MODEL);
         event.register(SonnetVolleyRenderer.MODEL);
         for (var model : SonnetDomeRenderer.MODELS) event.register(model);
@@ -128,6 +133,7 @@ public class ClientSetup {
         event.registerBlockEntityRenderer(LyyBlockEntities.RESEARCH_TABLE.get(), ResearchTableRenderer::new);
         event.registerBlockEntityRenderer(LyyBlockEntities.PRODUCTION_LAB.get(), ProductionLabRenderer::new);
         event.registerEntityRenderer(LyyEntities.GRAPPLE_HOOK.get(), GrappleRenderer::new);
+        event.registerEntityRenderer(LyyEntities.FROST_CHAIN_HOOK.get(), FrostChainRenderer::new);
         event.registerEntityRenderer(LyyEntities.IMAGINARY_GUARDIAN.get(), context -> new GuardianRenderer<>(context, "boss"));
         event.registerEntityRenderer(LyyEntities.GUARDIAN_CRYSTAL.get(), context -> new GuardianRenderer<>(context, "projectile"));
         event.registerEntityRenderer(LyyEntities.GUARDIAN_SPIKES.get(), context -> new GuardianRenderer<>(context, "spikes"));

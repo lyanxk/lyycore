@@ -30,6 +30,7 @@ public final class EmberfallItem extends Item implements SpecialWeapon {
     public static final String CLIP = "EmberfallClip", START = "EmberfallStart", THROWN = "EmberfallThrown";
     private static final String LEFT_READY = "lyycore:emberfall_left", HEAVY_READY = "lyycore:emberfall_heavy", FLYING = "lyycore:emberfall_flying";
     private static final ResourceLocation COUNTER = ResourceLocation.parse("lyycore:emberfall_counter");
+    private static final int BURN_SECONDS = 5;
     public EmberfallItem(Properties properties) { super(properties); }
     @Override public void useSkill(ServerPlayer player, ItemStack stack) { }
     @Override public void useUltimate(ServerPlayer player, ItemStack stack) { }
@@ -49,16 +50,17 @@ public final class EmberfallItem extends Item implements SpecialWeapon {
         var stack = player.getMainHandItem();
         if (!(stack.getItem() instanceof EmberfallItem) || player.isSpectator()) return;
         if (thrown(player) != null) { event.setCanceled(true); return; }
-        if (!ready(player, LEFT_READY)) return;
         var target = event.getTarget(); var living = SpecialDamage.healthOwner(target);
         if (living == null || !living.isAlive() || !target.isAttackable() || target.isInvulnerableTo(SpecialDamage.source(player,player,SpecialDamage.Element.FIRE))
                 || living instanceof Player other && !player.canHarmPlayer(other)) return;
+        if (!ready(player, LEFT_READY)) {
+            living.igniteForSeconds(BURN_SECONDS);
+            return;
+        }
         event.setCanceled(true);
         if (target.skipAttackInteraction(player)) return;
         player.getPersistentData().putLong(LEFT_READY, player.level().getGameTime()+20);
-        living.igniteForSeconds(5);
-        SpecialDamage.burstFromBase(player, player, target, living, SpecialDamage.Element.FIRE,
-                player.getAttributeValue(Attributes.ATTACK_DAMAGE)+40, 40);
+        damage(player, player, target, player.getAttributeValue(Attributes.ATTACK_DAMAGE)+40, 40);
         player.resetAttackStrengthTicker();
     }
     @Override public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
@@ -140,8 +142,15 @@ public final class EmberfallItem extends Item implements SpecialWeapon {
         for (var target : player.level().getEntitiesOfClass(LivingEntity.class, AABB.ofSize(center,8,5,8), e -> canHit(player,e))) {
             var offset = target.getBoundingBox().getCenter().subtract(center);
             if (Math.abs(offset.dot(forward)) <= 2.5 && Math.abs(offset.x*forward.z-offset.z*forward.x) <= 2.5)
-                SpecialDamage.burstFromBase(player,player,target,SpecialDamage.Element.FIRE,base,40);
+                damage(player, player, target, base, 40);
         }
+    }
+    /** Ignite before damage so burning-dependent effects and drops see the correct state. */
+    public static void damage(Player player, Entity direct, Entity target, double base, int hits) {
+        var living = SpecialDamage.healthOwner(target);
+        if (living == null || !living.isAlive() || living.isRemoved() || target.isRemoved()) return;
+        living.igniteForSeconds(BURN_SECONDS);
+        SpecialDamage.burstFromBase(player, direct, target, living, SpecialDamage.Element.FIRE, base, hits);
     }
     public static boolean canHit(Player player, LivingEntity target) {
         return target != player && target.isAlive() && target.isAttackable() && !target.isSpectator()

@@ -86,6 +86,8 @@ public class LyyCreativeTab {
                         output.accept(LyyItems.AMPLIFICATION_POTION.get());
                         output.accept(LyyItems.ENDLESS_EROSION.get());
                         // Endgame materials.
+                        output.accept(LyyItems.HIGH_PURITY_CRYSTAL.get());
+                        output.accept(LyyItems.FLAWLESS_CRYSTAL.get());
                         output.accept(LyyItems.VOID_ALLOY.get());
                         output.accept(LyyItems.VOID_ALLOY_BLOCK.get());
                         output.accept(LyyItems.UNEXTINGUISHED_ALLOY.get());
@@ -94,6 +96,8 @@ public class LyyCreativeTab {
                         output.accept(LyyItems.STAINED_ALLOY_BLOCK.get());
                         output.accept(LyyItems.FROST_STEEL.get());
                         output.accept(LyyItems.FROST_STEEL_BLOCK.get());
+                        output.accept(LyyItems.FROST_ROPE.get());
+                        output.accept(LyyItems.FROST_CHAIN.get());
                         output.accept(LyyItems.INFERNAL_STEEL.get());
                         output.accept(LyyItems.INFERNAL_STEEL_BLOCK.get());
                         output.accept(LyyItems.CHARGED_STEEL.get());

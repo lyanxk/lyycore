@@ -15,6 +15,7 @@ import org.lyy.lyycore.content.entity.guiding.GuidingGuard;
 import org.lyy.lyycore.content.entity.guiding.GuidingBoss;
 import org.lyy.lyycore.content.entity.GuardianCrystal;
 import org.lyy.lyycore.content.entity.GrappleHook;
+import org.lyy.lyycore.content.entity.FrostChainHook;
 import org.lyy.lyycore.content.entity.GuardianSpikes;
 import org.lyy.lyycore.content.entity.ImaginaryGuardian;
 import org.lyy.lyycore.content.entity.EnderCompanion;
@@ -116,6 +117,10 @@ public class LyyEntities {
             ENTITIES.register("grapple_hook", () -> EntityType.Builder.<GrappleHook>of(
                     GrappleHook::new, MobCategory.MISC).sized(0.25F, 0.25F)
                     .clientTrackingRange(16).updateInterval(1).noSave().build("lyycore:grapple_hook"));
+
+    public static final DeferredHolder<EntityType<?>, EntityType<FrostChainHook>> FROST_CHAIN_HOOK =
+            ENTITIES.register("frost_chain_hook", () -> EntityType.Builder.of(FrostChainHook::new, MobCategory.MISC)
+                    .sized(0.25F, 0.25F).clientTrackingRange(16).updateInterval(1).noSave().build("lyycore:frost_chain_hook"));
 
     public static final DeferredHolder<EntityType<?>, EntityType<ImaginaryGuardian>> IMAGINARY_GUARDIAN =
             ENTITIES.register("imaginary_guardian", () -> EntityType.Builder.<ImaginaryGuardian>of(

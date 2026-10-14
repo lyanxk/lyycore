@@ -647,5 +647,12 @@
   "gui.lyycore.logistics.public_short": "公共",
   "gui.lyycore.logistics.private_short": "私人",
   "gui.lyycore.logistics.create": "+ 新建频道",
-  "gui.lyycore.logistics.empty_slot": "—"
+  "gui.lyycore.logistics.empty_slot": "—",
+  "item.lyycore.high_purity_crystal": "高纯水晶",
+  "item.lyycore.flawless_crystal": "无瑕水晶",
+  "item.lyycore.frost_rope": "极寒绳索",
+  "item.lyycore.frost_chain": "极寒之链",
+  "entity.lyycore.frost_chain_hook": "极寒之链",
+  "tooltip.lyycore.frost_chain.use": "右键发射，再次右键收绳；收回后可立即再次发射",
+  "tooltip.lyycore.frost_chain.pull": "命中方块或飞出 20 格后牵引自身，可在空中和水中使用"
 }

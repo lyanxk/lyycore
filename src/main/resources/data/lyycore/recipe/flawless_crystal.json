@@ -1,0 +1,64 @@
+{
+  "type": "lyycore:pure_smelting",
+  "inputs": [
+    {
+      "ingredient": {
+        "item": "lyycore:high_purity_crystal"
+      },
+      "count": 64
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:high_purity_crystal"
+      },
+      "count": 64
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:high_purity_crystal"
+      },
+      "count": 64
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:high_purity_crystal"
+      },
+      "count": 64
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:high_purity_crystal"
+      },
+      "count": 64
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:high_purity_crystal"
+      },
+      "count": 64
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:high_purity_crystal"
+      },
+      "count": 64
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:high_purity_crystal"
+      },
+      "count": 64
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:high_purity_crystal"
+      },
+      "count": 64
+    }
+  ],
+  "result": {
+    "id": "lyycore:flawless_crystal"
+  },
+  "result_count": 64,
+  "duration": 600
+}

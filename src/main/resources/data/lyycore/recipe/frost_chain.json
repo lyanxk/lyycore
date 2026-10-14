@@ -1,0 +1,38 @@
+{
+  "type": "lyycore:imaginary_condensing",
+  "ingredients": [
+    {
+      "item": "lyycore:imaginary_grapple"
+    },
+    {
+      "item": "lyycore:frost_rope"
+    },
+    {
+      "item": "lyycore:flawless_crystal"
+    },
+    {
+      "item": "lyycore:frost_rope"
+    },
+    {
+      "item": "lyycore:flawless_crystal"
+    },
+    {
+      "item": "lyycore:frost_rope"
+    },
+    {
+      "item": "lyycore:flawless_crystal"
+    },
+    {
+      "item": "lyycore:frost_rope"
+    },
+    {
+      "item": "lyycore:flawless_crystal"
+    }
+  ],
+  "result": {
+    "id": "lyycore:frost_chain"
+  },
+  "duration": 200,
+  "energy": 1000000,
+  "energy_per_tick": true
+}

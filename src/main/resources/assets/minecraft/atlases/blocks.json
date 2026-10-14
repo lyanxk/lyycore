@@ -4,6 +4,10 @@
       "type": "directory",
       "source": "crystal_sanctuary",
       "prefix": "crystal_sanctuary/"
+    },
+    {
+      "type": "single",
+      "resource": "lyycore:entity/frost_chain_tether"
     }
   ]
 }

@@ -22,6 +22,11 @@ public class LyyItems {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(LyyCore.MODID);
     public static final DeferredItem<BlockItem> SUMMONING_BEACON = ITEMS.registerSimpleBlockItem(LyyBlocks.SUMMONING_BEACON);
     public static final DeferredItem<Item> CRYSTAL_PRISM = ITEMS.registerSimpleItem("crystal_prism");
+    public static final DeferredItem<Item> HIGH_PURITY_CRYSTAL = ITEMS.registerSimpleItem("high_purity_crystal");
+    public static final DeferredItem<Item> FLAWLESS_CRYSTAL = ITEMS.registerSimpleItem("flawless_crystal");
+    public static final DeferredItem<Item> FROST_ROPE = ITEMS.registerSimpleItem("frost_rope");
+    public static final DeferredItem<FrostChainItem> FROST_CHAIN = ITEMS.registerItem("frost_chain",
+            FrostChainItem::new, new Item.Properties().stacksTo(1).rarity(Rarity.RARE));
     public static final DeferredItem<BlockItem> EXPERIMENT_TABLE = ITEMS.registerSimpleBlockItem(LyyBlocks.EXPERIMENT_TABLE);
     public static final DeferredItem<EmberfallItem> EMBERFALL = ITEMS.registerItem("emberfall", EmberfallItem::new, new Item.Properties().stacksTo(1).rarity(Rarity.EPIC));
     public static final DeferredItem<Item> FLAME_CORE = ITEMS.registerSimpleItem("flame_core", new Item.Properties().rarity(Rarity.EPIC));

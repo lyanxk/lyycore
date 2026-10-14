@@ -142,9 +142,18 @@ public final class PureSmeltingPlantBlockEntity extends BlockEntity implements M
         if (!level.hasChunkAt(target)) return;
         var handler = level.getCapability(Capabilities.ItemHandler.BLOCK, target, facing.getOpposite());
         if (handler == null) return;
-        var stack = automation.extractItem(9, 64, true);
-        int accepted = stack.getCount() - ItemHandlerHelper.insertItemStacked(handler, stack, false).getCount();
-        automation.extractItem(9, accepted, false);
+        int before = outputCount;
+        while (outputCount > 0) {
+            // Transfer the whole buffer using valid stacks for the receiving inventory.
+            var stack = output.copyWithCount(Math.min(outputCount, output.getMaxStackSize()));
+            var remaining = ItemHandlerHelper.insertItemStacked(handler, stack, false);
+            outputCount -= stack.getCount() - remaining.getCount();
+            if (!remaining.isEmpty()) break;
+        }
+        if (outputCount != before) {
+            if (outputCount == 0) output = ItemStack.EMPTY;
+            sync();
+        }
     }
     public void dropContents() {
         for (int slot = 0; slot < 9; slot++) Containers.dropItemStack(level, worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), inputs.getStackInSlot(slot));

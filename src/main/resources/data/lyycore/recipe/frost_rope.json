@@ -1,0 +1,38 @@
+{
+  "type": "lyycore:imaginary_condensing",
+  "ingredients": [
+    {
+      "item": "minecraft:lead"
+    },
+    {
+      "item": "lyycore:frost_steel"
+    },
+    {
+      "item": "lyycore:frost_steel"
+    },
+    {
+      "item": "lyycore:frost_steel"
+    },
+    {
+      "item": "lyycore:frost_steel"
+    },
+    {
+      "item": "lyycore:frost_steel"
+    },
+    {
+      "item": "lyycore:frost_steel"
+    },
+    {
+      "item": "lyycore:frost_steel"
+    },
+    {
+      "item": "lyycore:frost_steel"
+    }
+  ],
+  "result": {
+    "id": "lyycore:frost_rope"
+  },
+  "duration": 100,
+  "energy": 1000,
+  "energy_per_tick": true
+}

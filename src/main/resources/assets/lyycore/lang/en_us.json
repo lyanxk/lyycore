@@ -647,5 +647,12 @@
   "gui.lyycore.logistics.public_short": "Public",
   "gui.lyycore.logistics.private_short": "Private",
   "gui.lyycore.logistics.create": "+ New channel",
-  "gui.lyycore.logistics.empty_slot": "—"
+  "gui.lyycore.logistics.empty_slot": "—",
+  "item.lyycore.high_purity_crystal": "High-Purity Crystal",
+  "item.lyycore.flawless_crystal": "Flawless Crystal",
+  "item.lyycore.frost_rope": "Frost Rope",
+  "item.lyycore.frost_chain": "Frost Chain",
+  "entity.lyycore.frost_chain_hook": "Frost Chain",
+  "tooltip.lyycore.frost_chain.use": "Right-click to launch or retract; ready again immediately after retracting",
+  "tooltip.lyycore.frost_chain.pull": "Pulls you after hitting a block or traveling 20 blocks; works in air and water"
 }

@@ -8,10 +8,11 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.client.model.BakedModelWrapper;
+import java.util.function.Predicate;
 
 /** Hides only the held model; inventory icons and dropped items remain visible. */
 final class GrappleHeldModel {
-    static BakedModel wrap(BakedModel source, BakedModel empty) {
+    static BakedModel wrap(BakedModel source, BakedModel empty, Predicate<LivingEntity> deployedFor) {
         BakedModel deployed = new BakedModelWrapper<>(source) {
             @Override public BakedModel applyTransform(ItemDisplayContext context, PoseStack pose, boolean leftHand) {
                 boolean held = context.firstPerson() || context == ItemDisplayContext.THIRD_PERSON_LEFT_HAND
@@ -21,7 +22,7 @@ final class GrappleHeldModel {
         };
         ItemOverrides overrides = new ItemOverrides() {
             @Override public BakedModel resolve(BakedModel model, ItemStack stack, ClientLevel level, LivingEntity entity, int seed) {
-                return GrappleControls.hasActiveHook(entity) ? deployed : source;
+                return deployedFor.test(entity) ? deployed : source;
             }
         };
         return new BakedModelWrapper<>(source) {

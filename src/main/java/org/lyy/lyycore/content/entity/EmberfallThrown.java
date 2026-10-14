@@ -12,7 +12,6 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.*;
 import net.minecraft.world.phys.*;
-import org.lyy.lyycore.content.SpecialDamage;
 import org.lyy.lyycore.content.item.EmberfallItem;
 
 /** Flight is world-space; the authored spin/tilt clips only supply local sword orientation. */
@@ -53,7 +52,7 @@ public final class EmberfallThrown extends Entity {
         if (age(0)>=9 && (tickCount-9)%20==0) {
             var bounds=AABB.ofSize(position(),3,3,3);
             for (var target : level().getEntitiesOfClass(LivingEntity.class,bounds,e -> CombatTargets.isEnemy(e,player)))
-                SpecialDamage.burstFromBase(player,this,target,SpecialDamage.Element.FIRE,
+                EmberfallItem.damage(player, this, target,
                         player.getAttributeValue(Attributes.ARMOR_TOUGHNESS)*4+20,20);
         }
     }
