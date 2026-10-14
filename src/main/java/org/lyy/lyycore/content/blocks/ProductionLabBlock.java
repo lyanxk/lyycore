@@ -22,7 +22,7 @@ import org.lyy.lyycore.content.blockEntities.ProductionLabBlockEntity;
 import org.lyy.lyycore.registry.LyyBlockEntities;
 
 /** A 5 x 3 footprint with three occupied height layers; the base center owns the inventory. */
-public final class ProductionLabBlock extends BaseEntityBlock {
+public final class ProductionLabBlock extends MachineBlock {
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
     public static final IntegerProperty PART = IntegerProperty.create("part", 0, 44);
     public static final int CONTROLLER = 7;
@@ -32,7 +32,7 @@ public final class ProductionLabBlock extends BaseEntityBlock {
         super(properties);
         registerDefaultState(stateDefinition.any().setValue(FACING, Direction.SOUTH).setValue(PART, CONTROLLER));
     }
-    @Override protected MapCodec<? extends BaseEntityBlock> codec() { return CODEC; }
+    @Override protected MapCodec<? extends MachineBlock> codec() { return CODEC; }
     @Override protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) { builder.add(FACING, PART); }
     public static BlockPos partPos(BlockPos controller, Direction facing, int part) {
         return controller.relative(facing.getCounterClockWise(), part % 5 - 2).relative(facing, part / 5 % 3 - 1).above(part / 15);

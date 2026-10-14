@@ -16,7 +16,9 @@ import org.lyy.lyycore.content.EnderCompanions;
 /** Looks like a dragon egg, but does not inherit its falling or teleport interactions. */
 public final class EnderSentryBlock extends Block {
     private static final VoxelShape SHAPE = box(1, 0, 1, 15, 16, 15);
-    public EnderSentryBlock() { super(Properties.ofFullCopy(Blocks.DRAGON_EGG).noLootTable()); }
+    public EnderSentryBlock() {
+        super(Properties.ofFullCopy(Blocks.DRAGON_EGG).explosionResistance(MachineBlock.BLAST_RESISTANCE).noLootTable());
+    }
     @Override protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) { return SHAPE; }
     @Override protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
         if (player instanceof ServerPlayer server) EnderCompanions.toggle(server, pos);

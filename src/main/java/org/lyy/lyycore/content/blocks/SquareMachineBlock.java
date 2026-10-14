@@ -20,7 +20,7 @@ import net.minecraft.world.phys.shapes.*;
 import org.lyy.lyycore.content.blockEntities.AbstractImaginaryCraftingBlockEntity;
 
 /** Odd-sized square footprints; only the bottom center owns state, inventories and a ticker. */
-public abstract class SquareMachineBlock extends BaseEntityBlock {
+public abstract class SquareMachineBlock extends MachineBlock {
     public static final IntegerProperty PART = IntegerProperty.create("part", 0, 99);
     public static final int CENTER = 4;
     private final int height, width;

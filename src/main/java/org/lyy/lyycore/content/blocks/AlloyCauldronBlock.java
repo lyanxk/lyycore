@@ -18,7 +18,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.*;
 import org.lyy.lyycore.content.blockEntities.AlloyCauldronBlockEntity;
 
-public final class AlloyCauldronBlock extends BaseEntityBlock {
+public final class AlloyCauldronBlock extends MachineBlock {
     public enum Liquid implements StringRepresentable { WATER, PINK, BLUE, SILVER, STRANGE;
         @Override public String getSerializedName() { return name().toLowerCase(java.util.Locale.ROOT); }
     }

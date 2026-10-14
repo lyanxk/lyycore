@@ -28,7 +28,7 @@ public final class FrostChainItem extends Item {
                 active.discard();
                 return InteractionResultHolder.success(stack);
             }
-            if (player.isSpectator() || player.isPassenger() || player.isFallFlying()) return InteractionResultHolder.fail(stack);
+            if (player.isSpectator() || player.isPassenger()) return InteractionResultHolder.fail(stack);
             var hook = LyyEntities.FROST_CHAIN_HOOK.get().create(level);
             if (hook == null) return InteractionResultHolder.fail(stack);
             hook.launch(serverPlayer);

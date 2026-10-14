@@ -18,7 +18,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import org.lyy.lyycore.content.blockEntities.OtherworldChestBlockEntity;
 import org.lyy.lyycore.registry.LyyBlockEntities;
 
-public final class OtherworldChestBlock extends BaseEntityBlock {
+public final class OtherworldChestBlock extends MachineBlock {
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
     public static final BooleanProperty OPEN = BooleanProperty.create("open");
     private static final VoxelShape[] SHAPES = rotatedShapes();

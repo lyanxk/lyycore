@@ -17,7 +17,7 @@ import net.minecraft.world.phys.shapes.*;
 import org.lyy.lyycore.content.blockEntities.ExperimentTableBlockEntity;
 import org.lyy.lyycore.registry.LyyBlockEntities;
 
-public final class ExperimentTableBlock extends BaseEntityBlock {
+public final class ExperimentTableBlock extends MachineBlock {
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
     private static final MapCodec<ExperimentTableBlock> CODEC = simpleCodec(ExperimentTableBlock::new);
     private static final VoxelShape[] SHAPES = SquareMachineShapes.load("experiment_table");
@@ -25,7 +25,7 @@ public final class ExperimentTableBlock extends BaseEntityBlock {
     private ExperimentTableBlock(Properties properties) {
         super(properties); registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH));
     }
-    @Override protected MapCodec<? extends BaseEntityBlock> codec() { return CODEC; }
+    @Override protected MapCodec<? extends MachineBlock> codec() { return CODEC; }
     @Override protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) { builder.add(FACING); }
     @Override public BlockState getStateForPlacement(BlockPlaceContext context) { return defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite()); }
     @Override protected BlockState rotate(BlockState state, Rotation rotation) { return state.setValue(FACING, rotation.rotate(state.getValue(FACING))); }

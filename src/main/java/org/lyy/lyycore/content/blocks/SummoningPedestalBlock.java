@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import org.lyy.lyycore.content.blockEntities.SummoningPedestalBlockEntity;
-public class SummoningPedestalBlock extends BaseEntityBlock {
+public class SummoningPedestalBlock extends MachineBlock {
     private final net.minecraft.world.phys.shapes.VoxelShape shape;
     public SummoningPedestalBlock() { this(Properties.of(), "summoning_pedestal"); }
     protected SummoningPedestalBlock(Properties p, String model) {

@@ -17,7 +17,7 @@ import org.lyy.lyycore.content.blockEntities.MatrixPortBlockEntity;
 import org.lyy.lyycore.registry.LyyBlockEntities;
 
 @net.neoforged.fml.common.EventBusSubscriber(modid = "lyycore")
-public final class MatrixPortBlock extends BaseEntityBlock {
+public final class MatrixPortBlock extends MachineBlock {
     public enum Kind { INPUT, OUTPUT, COLLECTOR }
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
     private final Kind kind;

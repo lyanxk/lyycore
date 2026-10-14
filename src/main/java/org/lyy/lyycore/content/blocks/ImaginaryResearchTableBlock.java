@@ -13,7 +13,7 @@ import net.minecraft.world.phys.shapes.*;
 import org.lyy.lyycore.content.blockEntities.ResearchTableBlockEntity;
 import org.lyy.lyycore.content.menu.ResearchMenu;
 import org.lyy.lyycore.registry.LyyBlockEntities;
-public final class ImaginaryResearchTableBlock extends BaseEntityBlock {
+public final class ImaginaryResearchTableBlock extends MachineBlock {
     public static final MapCodec<ImaginaryResearchTableBlock> CODEC = simpleCodec(properties -> new ImaginaryResearchTableBlock(properties));
     // Bounds exported from the static model; floating book and glyphs are not solid.
     private static final VoxelShape SHAPE = Shapes.or(Shapes.empty(),
@@ -65,7 +65,7 @@ public final class ImaginaryResearchTableBlock extends BaseEntityBlock {
         this(Properties.of().strength(3).sound(SoundType.STONE).noOcclusion().lightLevel(state -> 15));
     }
     private ImaginaryResearchTableBlock(Properties properties) { super(properties); }
-    @Override protected MapCodec<? extends BaseEntityBlock> codec() { return CODEC; }
+    @Override protected MapCodec<? extends MachineBlock> codec() { return CODEC; }
     @Override public RenderShape getRenderShape(BlockState state) { return RenderShape.MODEL; }
     @Override protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) { return SHAPE; }
     @Override public BlockEntity newBlockEntity(BlockPos pos, BlockState state) { return new ResearchTableBlockEntity(pos, state); }

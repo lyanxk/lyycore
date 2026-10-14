@@ -17,7 +17,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import org.lyy.lyycore.content.blockEntities.CaptureCageBlockEntity;
 import org.lyy.lyycore.registry.LyyBlockEntities;
 
-public final class CaptureCageBlock extends BaseEntityBlock {
+public final class CaptureCageBlock extends MachineBlock {
     public CaptureCageBlock() { super(Properties.of().strength(5).sound(SoundType.METAL).noOcclusion()); }
     @Override protected MapCodec<CaptureCageBlock> codec() { return MapCodec.unit(this); }
     @Override public RenderShape getRenderShape(BlockState state) { return RenderShape.MODEL; }

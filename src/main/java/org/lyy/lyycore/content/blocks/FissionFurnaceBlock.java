@@ -15,7 +15,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import org.lyy.lyycore.content.blockEntities.FissionFurnaceBlockEntity;
 import org.lyy.lyycore.registry.LyyBlockEntities;
 
-public final class FissionFurnaceBlock extends BaseEntityBlock {
+public final class FissionFurnaceBlock extends MachineBlock {
     public static final BooleanProperty ACTIVE = BooleanProperty.create("active");
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
     public FissionFurnaceBlock() {

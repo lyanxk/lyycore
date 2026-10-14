@@ -10,7 +10,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.RenderShape;
@@ -34,12 +33,12 @@ import org.lyy.lyycore.registry.LyyBlockEntities;
 
 import javax.annotation.Nullable;
 
-public class ImaginaryAlloyForge extends BaseEntityBlock {
+public class ImaginaryAlloyForge extends MachineBlock {
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
     public static final BooleanProperty LIT = BlockStateProperties.LIT;
 
     public static final MapCodec<ImaginaryAlloyForge> CODEC = simpleCodec(p -> new ImaginaryAlloyForge());
-    @Override protected MapCodec<? extends BaseEntityBlock> codec() { return CODEC; }
+    @Override protected MapCodec<? extends MachineBlock> codec() { return CODEC; }
 
     public ImaginaryAlloyForge() {
         super(BlockBehaviour.Properties.of().strength(3).noOcclusion()

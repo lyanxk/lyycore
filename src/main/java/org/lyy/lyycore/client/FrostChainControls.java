@@ -37,7 +37,7 @@ public final class FrostChainControls {
             arrived = false;
         }
         if (hook == null || !hook.attached() || arrived || player.isPassenger()
-                || player.isFallFlying() || player.isSpectator()) return;
+                || player.isSpectator()) return;
         arrived = hook.reachedGoal(player, previousCenter);
         previousCenter = player.getBoundingBox().getCenter();
         if (arrived) return;

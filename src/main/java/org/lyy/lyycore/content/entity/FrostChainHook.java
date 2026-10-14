@@ -88,8 +88,7 @@ public final class FrostChainHook extends Projectile {
             return;
         }
         if (!(getOwner() instanceof ServerPlayer player) || !player.isAlive() || player.isRemoved()
-                || player.level() != level() || player.isSpectator() || player.isPassenger()
-                || player.isFallFlying()) {
+                || player.level() != level() || player.isSpectator() || player.isPassenger()) {
             discard();
             return;
         }

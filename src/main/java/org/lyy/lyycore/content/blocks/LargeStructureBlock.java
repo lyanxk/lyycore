@@ -14,7 +14,7 @@ import net.minecraft.world.phys.shapes.*;
 
 /** Oriented 3×3×3 structures. Only the bottom center owns a block entity. */
 @net.neoforged.fml.common.EventBusSubscriber(modid = "lyycore")
-public abstract class LargeStructureBlock extends BaseEntityBlock {
+public abstract class LargeStructureBlock extends MachineBlock {
     public static final IntegerProperty PART = IntegerProperty.create("part", 0, 26);
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
     public static final int CENTER = 4, FRONT = 1;

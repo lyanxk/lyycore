@@ -14,7 +14,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -29,10 +28,10 @@ import org.lyy.lyycore.registry.LyyBlockEntities;
 
 import javax.annotation.Nullable;
 
-public class BaseImaginaryGenerator extends BaseEntityBlock {
+public class BaseImaginaryGenerator extends MachineBlock {
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
     public static final MapCodec<BaseImaginaryGenerator> CODEC = simpleCodec(p -> new BaseImaginaryGenerator());
-    @Override protected MapCodec<? extends BaseEntityBlock> codec() { return CODEC; }
+    @Override protected MapCodec<? extends MachineBlock> codec() { return CODEC; }
 
     public BaseImaginaryGenerator() {
         super(BlockBehaviour.Properties.of().strength(3).noOcclusion());

@@ -17,7 +17,7 @@ import net.minecraft.world.phys.shapes.*;
 import org.lyy.lyycore.content.FrameProduction;
 import org.lyy.lyycore.content.blockEntities.CondensingFrameBlockEntity;
 
-public abstract class CondensingFrameBlock extends BaseEntityBlock {
+public abstract class CondensingFrameBlock extends MachineBlock {
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
     private static final VoxelShape SHAPE = Shapes.or(
             Block.box(0, 0, 0, 16, 1.5, 16), Block.box(0, 14.5, 0, 16, 16, 16),

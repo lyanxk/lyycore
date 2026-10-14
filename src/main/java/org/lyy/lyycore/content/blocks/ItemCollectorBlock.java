@@ -25,12 +25,12 @@ import org.lyy.lyycore.content.blockEntities.ItemCollectorBlockEntity;
 
 import javax.annotation.Nullable;
 
-public class ItemCollectorBlock extends BaseEntityBlock {
+public class ItemCollectorBlock extends MachineBlock {
     public static final IntegerProperty MODE = IntegerProperty.create("mode", 0, 1);
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
 
     public static final MapCodec<ItemCollectorBlock> CODEC = simpleCodec(p -> new ItemCollectorBlock());
-    @Override protected MapCodec<? extends BaseEntityBlock> codec() { return CODEC; }
+    @Override protected MapCodec<? extends MachineBlock> codec() { return CODEC; }
 
     public ItemCollectorBlock() {
         super(BlockBehaviour.Properties.of().strength(2.0f).noOcclusion());

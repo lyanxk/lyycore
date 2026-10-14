@@ -22,7 +22,7 @@ import org.lyy.lyycore.content.blockEntities.ImaginaryGateBlockEntity;
 import org.lyy.lyycore.registry.LyyBlockEntities;
 
 /** One placed item occupies a 5x5 plane. Only the bottom center owns inventory. */
-public class ImaginaryGateBlock extends BaseEntityBlock {
+public class ImaginaryGateBlock extends MachineBlock {
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
     public static final IntegerProperty COLUMN = IntegerProperty.create("column", 0, 4);
     public static final IntegerProperty ROW = IntegerProperty.create("row", 0, 4);
@@ -32,7 +32,7 @@ public class ImaginaryGateBlock extends BaseEntityBlock {
         super(Properties.of().strength(4).sound(SoundType.AMETHYST).noOcclusion().lightLevel(state -> 15).pushReaction(PushReaction.BLOCK));
         registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(COLUMN, 2).setValue(ROW, 0));
     }
-    @Override protected MapCodec<? extends BaseEntityBlock> codec() { return CODEC; }
+    @Override protected MapCodec<? extends MachineBlock> codec() { return CODEC; }
     @Override protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) { builder.add(FACING, COLUMN, ROW); }
     public static boolean isController(BlockState state) { return state.getValue(COLUMN) == 2 && state.getValue(ROW) == 0; }
     public static BlockPos controllerPos(BlockPos pos, BlockState state) {
