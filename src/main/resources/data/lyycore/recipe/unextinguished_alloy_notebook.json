@@ -1,0 +1,38 @@
+{
+  "type": "lyycore:imaginary_condensing",
+  "ingredients": [
+    {
+      "item": "minecraft:book"
+    },
+    {
+      "item": "lyycore:unextinguished_alloy_plate"
+    },
+    {
+      "item": "lyycore:unextinguished_alloy_plate"
+    },
+    {
+      "item": "lyycore:unextinguished_alloy_plate"
+    },
+    {
+      "item": "lyycore:unextinguished_alloy_plate"
+    },
+    {
+      "item": "lyycore:unextinguished_alloy_plate"
+    },
+    {
+      "item": "lyycore:unextinguished_alloy_plate"
+    },
+    {
+      "item": "lyycore:unextinguished_alloy_plate"
+    },
+    {
+      "item": "lyycore:unextinguished_alloy_plate"
+    }
+  ],
+  "result": {
+    "id": "lyycore:unextinguished_alloy_notebook"
+  },
+  "duration": 100,
+  "energy": 1000000,
+  "energy_per_tick": true
+}

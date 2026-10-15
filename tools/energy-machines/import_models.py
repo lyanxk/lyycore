@@ -139,7 +139,8 @@ def import_machine(folder, name, height, source_name=None, oriented=False, width
                      for entry in multipart for facing, angle in (("north", 0), ("east", 90), ("south", 180), ("west", 270))]
     write(ASSETS / "blockstates" / f"{name}.json", {"multipart": multipart})
     write(ASSETS / "models/item" / f"{name}.json", dict(common, parent="minecraft:block/block", faces=item,
-          render_type="minecraft:translucent", display={"gui": {"rotation": list(gui_rotation), "scale": [gui_scale]*3},
+          render_type="minecraft:translucent", gui_light="front" if source.get("front_gui_light", False) else "side",
+          display={"gui": {"rotation": list(gui_rotation), "scale": [gui_scale]*3},
           "ground": {"scale": [0.4]*3, "translation": [0, 3, 0]},
           "firstperson_righthand": {"rotation": [0, 45, 0], "scale": [0.65]*3}}))
     # Keep the hierarchy/tracks, but render only moving surfaces each frame.

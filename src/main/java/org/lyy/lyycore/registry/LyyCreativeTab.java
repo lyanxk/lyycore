@@ -85,6 +85,24 @@ public class LyyCreativeTab {
                         output.accept(LyyItems.DRAGON_MIGHT.get());
                         output.accept(LyyItems.AMPLIFICATION_POTION.get());
                         output.accept(LyyItems.ENDLESS_EROSION.get());
+                        output.accept(LyyItems.MIRROR.get());
+                        output.accept(LyyItems.REFORGING_TABLE.get());
+                        output.accept(LyyItems.PURE_IMAGINARY_CRYSTAL_NECKLACE.get());
+                        output.accept(LyyItems.PURE_IMAGINARY_STEEL_NOTEBOOK.get());
+                        output.accept(LyyItems.FROST_STEEL_CRYSTAL_NECKLACE.get());
+                        output.accept(LyyItems.FROST_STEEL_NOTEBOOK.get());
+                        output.accept(LyyItems.INFERNAL_STEEL_CRYSTAL_NECKLACE.get());
+                        output.accept(LyyItems.INFERNAL_STEEL_NOTEBOOK.get());
+                        output.accept(LyyItems.CHARGED_STEEL_CRYSTAL_NECKLACE.get());
+                        output.accept(LyyItems.CHARGED_STEEL_NOTEBOOK.get());
+                        output.accept(LyyItems.VOID_ALLOY_CRYSTAL_NECKLACE.get());
+                        output.accept(LyyItems.VOID_ALLOY_NOTEBOOK.get());
+                        output.accept(LyyItems.UNEXTINGUISHED_ALLOY_CRYSTAL_NECKLACE.get());
+                        output.accept(LyyItems.UNEXTINGUISHED_ALLOY_NOTEBOOK.get());
+                        output.accept(LyyItems.STAINED_ALLOY_CRYSTAL_NECKLACE.get());
+                        output.accept(LyyItems.STAINED_ALLOY_NOTEBOOK.get());
+                        output.accept(LyyItems.SIXFOLD_ALLOY_CRYSTAL_NECKLACE.get());
+                        output.accept(LyyItems.SIXFOLD_ALLOY_NOTEBOOK.get());
                         // Endgame materials.
                         output.accept(LyyItems.HIGH_PURITY_CRYSTAL.get());
                         output.accept(LyyItems.FLAWLESS_CRYSTAL.get());
@@ -98,6 +116,7 @@ public class LyyCreativeTab {
                         output.accept(LyyItems.FROST_STEEL_BLOCK.get());
                         output.accept(LyyItems.FROST_ROPE.get());
                         output.accept(LyyItems.FROST_CHAIN.get());
+                        output.accept(LyyItems.VOID_FISHING_ROD.get());
                         output.accept(LyyItems.INFERNAL_STEEL.get());
                         output.accept(LyyItems.INFERNAL_STEEL_BLOCK.get());
                         output.accept(LyyItems.CHARGED_STEEL.get());

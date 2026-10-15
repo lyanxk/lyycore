@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": ["  A", " AS", "A S"],
+  "key": {
+    "A": { "item": "lyycore:void_alloy_block" },
+    "S": { "item": "lyycore:frost_rope" }
+  },
+  "result": { "id": "lyycore:void_steel_fishing_rod", "count": 1 }
+}

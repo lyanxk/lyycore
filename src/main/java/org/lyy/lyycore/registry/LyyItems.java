@@ -7,6 +7,9 @@ import net.minecraft.world.item.Rarity;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.lyy.lyycore.LyyCore;
+import org.lyy.lyycore.content.equipment.AccessoryItem;
+import org.lyy.lyycore.content.equipment.AccessoryItem.Kind;
+import org.lyy.lyycore.content.equipment.AccessoryItem.Series;
 import org.lyy.lyycore.content.item.*;
 import org.lyy.lyycore.content.ResourceFrameKind;
 import org.lyy.lyycore.content.item.ImaginaryDisassemblerItem;
@@ -20,11 +23,34 @@ import java.util.Map;
 
 public class LyyItems {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(LyyCore.MODID);
+    public static final DeferredItem<BlockItem> MIRROR = ITEMS.registerSimpleBlockItem(LyyBlocks.MIRROR);
+    public static final DeferredItem<BlockItem> REFORGING_TABLE = ITEMS.registerSimpleBlockItem(LyyBlocks.REFORGING_TABLE);
+    public static final DeferredItem<AccessoryItem> PURE_IMAGINARY_CRYSTAL_NECKLACE = accessory("pure_imaginary_crystal_necklace", Kind.NECKLACE, Series.STEEL);
+    public static final DeferredItem<AccessoryItem> PURE_IMAGINARY_STEEL_NOTEBOOK = accessory("pure_imaginary_steel_notebook", Kind.NOTEBOOK, Series.STEEL);
+    public static final DeferredItem<AccessoryItem> FROST_STEEL_CRYSTAL_NECKLACE = accessory("frost_steel_crystal_necklace", Kind.NECKLACE, Series.FROST);
+    public static final DeferredItem<AccessoryItem> FROST_STEEL_NOTEBOOK = accessory("frost_steel_notebook", Kind.NOTEBOOK, Series.FROST);
+    public static final DeferredItem<AccessoryItem> INFERNAL_STEEL_CRYSTAL_NECKLACE = accessory("infernal_steel_crystal_necklace", Kind.NECKLACE, Series.INFERNAL);
+    public static final DeferredItem<AccessoryItem> INFERNAL_STEEL_NOTEBOOK = accessory("infernal_steel_notebook", Kind.NOTEBOOK, Series.INFERNAL);
+    public static final DeferredItem<AccessoryItem> CHARGED_STEEL_CRYSTAL_NECKLACE = accessory("charged_steel_crystal_necklace", Kind.NECKLACE, Series.CHARGED);
+    public static final DeferredItem<AccessoryItem> CHARGED_STEEL_NOTEBOOK = accessory("charged_steel_notebook", Kind.NOTEBOOK, Series.CHARGED);
+    public static final DeferredItem<AccessoryItem> VOID_ALLOY_CRYSTAL_NECKLACE = accessory("void_alloy_crystal_necklace", Kind.NECKLACE, Series.VOID);
+    public static final DeferredItem<AccessoryItem> VOID_ALLOY_NOTEBOOK = accessory("void_alloy_notebook", Kind.NOTEBOOK, Series.VOID);
+    public static final DeferredItem<AccessoryItem> UNEXTINGUISHED_ALLOY_CRYSTAL_NECKLACE = accessory("unextinguished_alloy_crystal_necklace", Kind.NECKLACE, Series.UNEXTINGUISHED);
+    public static final DeferredItem<AccessoryItem> UNEXTINGUISHED_ALLOY_NOTEBOOK = accessory("unextinguished_alloy_notebook", Kind.NOTEBOOK, Series.UNEXTINGUISHED);
+    public static final DeferredItem<AccessoryItem> STAINED_ALLOY_CRYSTAL_NECKLACE = accessory("stained_alloy_crystal_necklace", Kind.NECKLACE, Series.STAINED);
+    public static final DeferredItem<AccessoryItem> STAINED_ALLOY_NOTEBOOK = accessory("stained_alloy_notebook", Kind.NOTEBOOK, Series.STAINED);
+    public static final DeferredItem<AccessoryItem> SIXFOLD_ALLOY_CRYSTAL_NECKLACE = accessory("sixfold_alloy_crystal_necklace", Kind.NECKLACE, Series.SIXFOLD);
+    public static final DeferredItem<AccessoryItem> SIXFOLD_ALLOY_NOTEBOOK = accessory("sixfold_alloy_notebook", Kind.NOTEBOOK, Series.SIXFOLD);
+    private static DeferredItem<AccessoryItem> accessory(String name, Kind kind, Series series) {
+        return ITEMS.registerItem(name, properties -> new AccessoryItem(properties, kind, series));
+    }
     public static final DeferredItem<BlockItem> SUMMONING_BEACON = ITEMS.registerSimpleBlockItem(LyyBlocks.SUMMONING_BEACON);
     public static final DeferredItem<Item> CRYSTAL_PRISM = ITEMS.registerSimpleItem("crystal_prism");
     public static final DeferredItem<Item> HIGH_PURITY_CRYSTAL = ITEMS.registerSimpleItem("high_purity_crystal");
     public static final DeferredItem<Item> FLAWLESS_CRYSTAL = ITEMS.registerSimpleItem("flawless_crystal");
     public static final DeferredItem<Item> FROST_ROPE = ITEMS.registerSimpleItem("frost_rope");
+    public static final DeferredItem<VoidFishingRodItem> VOID_FISHING_ROD = ITEMS.registerItem("void_steel_fishing_rod",
+            VoidFishingRodItem::new, new Item.Properties().stacksTo(1).rarity(Rarity.RARE));
     public static final DeferredItem<FrostChainItem> FROST_CHAIN = ITEMS.registerItem("frost_chain",
             FrostChainItem::new, new Item.Properties().stacksTo(1).rarity(Rarity.RARE));
     public static final DeferredItem<BlockItem> EXPERIMENT_TABLE = ITEMS.registerSimpleBlockItem(LyyBlocks.EXPERIMENT_TABLE);

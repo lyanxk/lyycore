@@ -67,7 +67,7 @@ public final class EmberfallItem extends Item implements SpecialWeapon {
         var stack = player.getItemInHand(hand);
         if (player.isSpectator()) return InteractionResultHolder.fail(stack);
         var style = StyleSystem.current(player);
-        if (style == StyleSystem.Style.BUILDING) return InteractionResultHolder.pass(stack);
+        if (!SkillSystem.enabled(player) || style == StyleSystem.Style.BUILDING) return InteractionResultHolder.pass(stack);
         if (level.isClientSide) return InteractionResultHolder.consume(stack);
         var flying = thrown(player);
         if (flying != null) { flying.recall(); return InteractionResultHolder.consume(stack); }
@@ -98,7 +98,7 @@ public final class EmberfallItem extends Item implements SpecialWeapon {
             CustomData.update(DataComponents.CUSTOM_DATA, stack, tag -> tag.remove(THROWN));
         if (!data.getBoolean("EmberfallRelease")) return;
         boolean held = player.getMainHandItem() == stack || player.getOffhandItem() == stack;
-        if (!held || !player.isAlive() || StyleSystem.current(player) != StyleSystem.Style.OFFENSE) {
+        if (!held || !player.isAlive() || !StyleSystem.active(player, StyleSystem.Style.OFFENSE)) {
             CustomData.update(DataComponents.CUSTOM_DATA, stack, tag -> tag.remove("EmberfallRelease")); return;
         }
         // The authored heavy clip releases its slash at 0.64 seconds.
@@ -111,7 +111,7 @@ public final class EmberfallItem extends Item implements SpecialWeapon {
     }
     @Override public InteractionResult useOn(UseOnContext context) {
         var player = context.getPlayer(); var level = context.getLevel();
-        if (player == null || StyleSystem.current(player) != StyleSystem.Style.BUILDING) return InteractionResult.PASS;
+        if (player == null || !StyleSystem.active(player, StyleSystem.Style.BUILDING)) return InteractionResult.PASS;
         var pos = context.getClickedPos().relative(context.getClickedFace());
         if (!level.mayInteract(player,pos) || !player.mayUseItemAt(pos,context.getClickedFace(),context.getItemInHand())
                 || !BaseFireBlock.canBePlacedAt(level,pos,context.getHorizontalDirection())) return InteractionResult.FAIL;
@@ -128,12 +128,12 @@ public final class EmberfallItem extends Item implements SpecialWeapon {
         if (entity instanceof ServerPlayer player) animate(player, stack, "block_exit");
     }
     @Override public void onUseTick(Level level, LivingEntity entity, ItemStack stack, int remaining) {
-        if (entity instanceof ServerPlayer player && StyleSystem.current(player) != StyleSystem.Style.TECHNIQUE) player.releaseUsingItem();
+        if (entity instanceof ServerPlayer player && !StyleSystem.active(player, StyleSystem.Style.TECHNIQUE)) player.releaseUsingItem();
     }
     @SubscribeEvent(priority = EventPriority.LOWEST) public static void blocked(LivingShieldBlockEvent event) {
         if (!event.getBlocked() || event.getBlockedDamage() <= 0 || !(event.getEntity() instanceof ServerPlayer player)
                 || !(player.getUseItem().getItem() instanceof EmberfallItem)
-                || StyleSystem.current(player) != StyleSystem.Style.TECHNIQUE || !SkillSystem.consumeAction(player, COUNTER)) return;
+                || !StyleSystem.active(player, StyleSystem.Style.TECHNIQUE) || !SkillSystem.consumeAction(player, COUNTER)) return;
         event.setShieldDamage(0);
         animate(player, player.getUseItem(), "counter");
         var forward = Vec3.directionFromRotation(0,player.getYRot());

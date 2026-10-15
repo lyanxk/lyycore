@@ -40,7 +40,7 @@ public final class HailItem extends Item implements SpecialWeapon {
                 SpecialDamage.burst(player, player, target, SpecialDamage.Element.ICE, 20, 20);
             }
             freezeWater(server);
-            if (StyleSystem.current(player) == StyleSystem.Style.MOBILITY) {
+            if (StyleSystem.active(player, StyleSystem.Style.MOBILITY)) {
                 var flower = LyyEntities.HAIL_FLOWER.get().create(level);
                 if (flower != null) { flower.prepare(player); level.addFreshEntity(flower); }
                 PlayerMovement.dash(server, player.getLookAngle(), 5);

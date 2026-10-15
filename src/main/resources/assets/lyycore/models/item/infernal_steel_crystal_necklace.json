@@ -1,0 +1,6 @@
+{
+  "textures": {
+    "layer0": "lyycore:item/infernal_steel_crystal_necklace"
+  },
+  "parent": "minecraft:item/generated"
+}

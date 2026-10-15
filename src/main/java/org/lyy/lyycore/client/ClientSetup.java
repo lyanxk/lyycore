@@ -138,6 +138,7 @@ public class ClientSetup {
         event.registerBlockEntityRenderer(LyyBlockEntities.PRODUCTION_LAB.get(), ProductionLabRenderer::new);
         event.registerEntityRenderer(LyyEntities.GRAPPLE_HOOK.get(), GrappleRenderer::new);
         event.registerEntityRenderer(LyyEntities.FROST_CHAIN_HOOK.get(), FrostChainRenderer::new);
+        event.registerEntityRenderer(LyyEntities.VOID_FISHING_HOOK.get(), net.minecraft.client.renderer.entity.FishingHookRenderer::new);
         event.registerEntityRenderer(LyyEntities.IMAGINARY_GUARDIAN.get(), context -> new GuardianRenderer<>(context, "boss"));
         event.registerEntityRenderer(LyyEntities.GUARDIAN_CRYSTAL.get(), context -> new GuardianRenderer<>(context, "projectile"));
         event.registerEntityRenderer(LyyEntities.GUARDIAN_SPIKES.get(), context -> new GuardianRenderer<>(context, "spikes"));
@@ -150,6 +151,15 @@ public class ClientSetup {
     @SubscribeEvent
     public static void registerItemProperties(FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
+            ItemProperties.register(LyyItems.VOID_FISHING_ROD.get(), ResourceLocation.withDefaultNamespace("cast"),
+                    (stack, level, entity, seed) -> {
+                        if (level == null || entity == null) return 0;
+                        for (var candidate : level.entitiesForRendering())
+                            if (candidate instanceof org.lyy.lyycore.content.fishing.VoidFishingHook hook
+                                    && !hook.isRemoved() && hook.getOwner() == entity
+                                    && entity.getItemInHand(hook.castHand()) == stack) return 1;
+                        return 0;
+                    });
             var bow = LyyItems.WHISPER_OF_THE_PAST.get();
             ItemProperties.register(bow, ResourceLocation.fromNamespaceAndPath(LyyCore.MODID, "crystal"),
                     (stack, level, entity, seed) -> org.lyy.lyycore.content.item.SonnetBowItem.isCrystal(stack) ? 1 : 0);
@@ -167,6 +177,8 @@ public class ClientSetup {
 
     @SubscribeEvent
     public static void registerScreens(RegisterMenuScreensEvent event) {
+        event.register(LyyMenus.ACCESSORIES.get(), org.lyy.lyycore.client.screen.AccessoryScreen::new);
+        event.register(LyyMenus.REFORGING.get(), org.lyy.lyycore.client.screen.ReforgingScreen::new);
         event.register(LyyMenus.CAPTURE_CAGE.get(), org.lyy.lyycore.client.screen.CaptureCageScreen::new);
         event.register(LyyMenus.LOGISTICS.get(), org.lyy.lyycore.client.screen.LogisticsScreen::new);
         event.register(LyyMenus.EXPERIMENT_TABLE.get(), org.lyy.lyycore.client.screen.ExperimentTableScreen::new);

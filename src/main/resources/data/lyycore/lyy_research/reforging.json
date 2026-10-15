@@ -1,0 +1,58 @@
+{
+  "icon": {
+    "id": "lyycore:reforging_table"
+  },
+  "rarity": "special",
+  "experience_points": 0,
+  "prerequisites": [
+    "lyycore:research/ritual"
+  ],
+  "materials": [
+    {
+      "id": "lyycore:imaginary_steel_block",
+      "count": 64
+    },
+    {
+      "id": "lyycore:void_alloy_block",
+      "count": 64
+    },
+    {
+      "id": "lyycore:unextinguished_alloy_block",
+      "count": 64
+    },
+    {
+      "id": "lyycore:stained_alloy_block",
+      "count": 64
+    },
+    {
+      "id": "lyycore:frost_steel_block",
+      "count": 64
+    },
+    {
+      "id": "lyycore:infernal_steel_block",
+      "count": 64
+    },
+    {
+      "id": "lyycore:charged_steel_block",
+      "count": 64
+    },
+    {
+      "id": "lyycore:sixfold_alloy_block",
+      "count": 64
+    }
+  ],
+  "title": "research.lyycore.reforging.title",
+  "summary": "research.lyycore.reforging.summary",
+  "description": "research.lyycore.reforging.description",
+  "production": {
+    "result": {
+      "id": "lyycore:reforging_table"
+    },
+    "duration": 300
+  },
+  "display": {
+    "stage": 4,
+    "purpose": "research",
+    "order": 2
+  }
+}

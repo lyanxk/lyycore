@@ -27,7 +27,7 @@ public final class BasicSkills {
                 new SkillSystem.Skill(OffenseSkills.SCOOP_RESEARCH, OffenseSkills::scoop));
     }
     public static boolean available(Player player) {
-        return SkillSystem.unlocked(player) && (player.level().isClientSide
+        return SkillSystem.enabled(player) && (player.level().isClientSide
                 ? player.getPersistentData().getBoolean("lyycore:exploration") : ResearchProgress.completed(player, RESEARCH));
     }
     static boolean active(ServerPlayer player, StyleSystem.Style style) {

@@ -1,0 +1,15 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_material": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "lyycore:void_alloy_block" }] }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": { "recipe": "lyycore:void_steel_fishing_rod" }
+    }
+  },
+  "requirements": [["has_material", "has_the_recipe"]],
+  "rewards": { "recipes": ["lyycore:void_steel_fishing_rod"] }
+}

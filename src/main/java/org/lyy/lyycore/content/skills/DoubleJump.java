@@ -18,7 +18,7 @@ public final class DoubleJump {
     public static final ResourceLocation RESEARCH = ResourceLocation.parse("lyycore:research/double_jump");
     private static final Set<ServerPlayer> USED = Collections.newSetFromMap(new WeakHashMap<>());
     public static boolean available(Player player) {
-        return SkillSystem.unlocked(player) && StyleSystem.current(player) == StyleSystem.Style.MOBILITY
+        return SkillSystem.enabled(player) && StyleSystem.current(player) == StyleSystem.Style.MOBILITY
                 && (player.level().isClientSide ? player.getPersistentData().getBoolean("lyycore:double_jump") : ResearchProgress.completed(player, RESEARCH));
     }
     /** Shared eligibility for input consumption and authoritative server validation. */

@@ -72,7 +72,8 @@ public abstract class AbstractImaginaryCraftingBlockEntity extends BlockEntity i
         if (!(player instanceof ServerPlayer server) || completedRecipe == null) return;
         var recipe = level.getRecipeManager().byKey(completedRecipe).orElse(null);
         if (recipe != null && recipe.value() instanceof OctagonalRecipe crafting
-                && ItemStack.isSameItemSameComponents(taken, crafting.result()))
+                && (ItemStack.isSameItemSameComponents(taken, crafting.result())
+                    || taken.getItem() instanceof org.lyy.lyycore.content.equipment.AccessoryItem && ItemStack.isSameItem(taken, crafting.result())))
             CriteriaTriggers.RECIPE_CRAFTED.trigger(server, completedRecipe, java.util.List.of());
         completedRecipe = null;
         setChanged();
@@ -119,6 +120,7 @@ public abstract class AbstractImaginaryCraftingBlockEntity extends BlockEntity i
         if (++table.progress >= table.duration) {
             if (!recipe.value().energyPerTick()) table.consumeEnergy(table.recipeEnergy, false);
             ItemStack result = recipe.value().assemble(table.input, level.registryAccess());
+            org.lyy.lyycore.content.equipment.AccessoryData.initialize(result, level.random);
             for (int slot = 0; slot < 9; slot++) table.items.setStackInSlot(slot, ItemStack.EMPTY);
             table.items.setStackInSlot(0, result);
             table.completedRecipe = recipe.id();

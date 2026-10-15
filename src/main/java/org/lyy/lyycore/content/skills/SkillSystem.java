@@ -45,6 +45,19 @@ public final class SkillSystem {
         return player.getPersistentData().getCompound(Player.PERSISTED_NBT_TAG).getBoolean(UNLOCKED)
                 || player.getPersistentData().getCompound(Player.PERSISTED_NBT_TAG).getBoolean(FACTOR_UNLOCKED);
     }
+    public static boolean enabled(Player player) { return unlocked(player) && SkillSettings.enabled(player); }
+
+    public static void setEnabled(ServerPlayer player, boolean enabled) {
+        SkillSettings.set(player, enabled, SkillSettings.hudMode(player));
+        if (!enabled) {
+            SkillInput.forget(player);
+            GuardSkill.reset(player);
+            MovementSkill.forget(player);
+            net.neoforged.neoforge.network.PacketDistributor.sendToPlayer(player,
+                    new org.lyy.lyycore.network.SkillNetwork.Hover(0));
+        }
+        BuildingSkills.updateFlight(player);
+    }
     public static void unlockFromFactor(Player player) {
         var persisted = player.getPersistentData().getCompound(Player.PERSISTED_NBT_TAG);
         persisted.putBoolean(FACTOR_UNLOCKED, true);
@@ -56,7 +69,7 @@ public final class SkillSystem {
         player.getPersistentData().put(Player.PERSISTED_NBT_TAG, persisted);
     }
     public static boolean canUse(ServerPlayer player) {
-        return unlocked(player) && player.isAlive() && !player.isSpectator()
+        return enabled(player) && player.isAlive() && !player.isSpectator()
                 && player.containerMenu == player.inventoryMenu && !ActionRestrictions.frozen(player);
     }
     public static boolean cast(ServerPlayer player, ResourceLocation key) {

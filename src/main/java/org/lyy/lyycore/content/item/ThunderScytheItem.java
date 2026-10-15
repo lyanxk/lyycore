@@ -86,7 +86,7 @@ public final class ThunderScytheItem extends Item implements SpecialWeapon {
 
     @Override public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         var stack = player.getItemInHand(hand);
-        if (player.isSpectator() || StyleSystem.current(player) != StyleSystem.Style.OFFENSE)
+        if (player.isSpectator() || !StyleSystem.active(player, StyleSystem.Style.OFFENSE))
             return InteractionResultHolder.pass(stack);
         if (!ready(player, SWEEP_READY)) return InteractionResultHolder.fail(stack);
         if (player instanceof ServerPlayer) {
@@ -101,7 +101,7 @@ public final class ThunderScytheItem extends Item implements SpecialWeapon {
 
     @Override public InteractionResult useOn(UseOnContext context) {
         var player = context.getPlayer();
-        if (player == null || player.isSpectator()) return InteractionResult.PASS;
+        if (player == null || player.isSpectator() || !org.lyy.lyycore.content.skills.SkillSystem.enabled(player)) return InteractionResult.PASS;
         var style = StyleSystem.current(player);
         if (style == StyleSystem.Style.OFFENSE)
             return use(context.getLevel(), player, context.getHand()).getResult();

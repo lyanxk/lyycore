@@ -86,7 +86,7 @@ public final class ResearchControls {
         // Edges are sent immediately below; do not accumulate unused vanilla click counters.
         while (SPECIAL.consumeClick()) { }
         if (mc.player == null) { lastInput = null; return; }
-        boolean enabled = mc.screen == null && mc.isWindowActive() && SkillSystem.unlocked(mc.player);
+        boolean enabled = mc.screen == null && mc.isWindowActive() && SkillSystem.enabled(mc.player);
         var input = new SkillNetwork.Input(enabled && SPECIAL.isDown(), enabled && mc.options.keyShift.isDown(),
                 enabled ? (mc.options.keyUp.isDown() ? 1 : 0) - (mc.options.keyDown.isDown() ? 1 : 0) : 0,
                 enabled ? (mc.options.keyLeft.isDown() ? 1 : 0) - (mc.options.keyRight.isDown() ? 1 : 0) : 0);
@@ -97,7 +97,7 @@ public final class ResearchControls {
     private static void send(KeyMapping key, CustomPacketPayload payload, boolean requiresSkills) {
         var mc = Minecraft.getInstance();
         while (key.consumeClick()) {
-            if (mc.player != null && mc.screen == null && (!requiresSkills || SkillSystem.unlocked(mc.player))) {
+            if (mc.player != null && mc.screen == null && (!requiresSkills || SkillSystem.enabled(mc.player))) {
                 PacketDistributor.sendToServer(payload);
             }
         }

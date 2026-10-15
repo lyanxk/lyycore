@@ -13,6 +13,9 @@ public final class StyleSystem {
     }
     private static final String KEY = "lyycore:style";
     private StyleSystem() { }
+    public static boolean active(Player player, Style style) {
+        return SkillSystem.enabled(player) && current(player) == style;
+    }
     public static Style current(Player player) {
         String saved = player.getPersistentData().getCompound(Player.PERSISTED_NBT_TAG).getString(KEY);
         for (Style style : Style.values()) if (style.key.equals(saved)) return style;

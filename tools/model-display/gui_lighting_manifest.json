@@ -1,0 +1,38 @@
+{
+  "bb_root": "F:/misc/BlockBench",
+  "gui_light": "front",
+  "models": [
+    {
+      "id": "summoning_beacon",
+      "source": "creature_summoning_beacon/source/creature_summoning_beacon.bbmodel",
+      "game_item": "summoning_beacon"
+    },
+    {
+      "id": "mirror",
+      "source": "oval_mirror/source/oval_mirror.bbmodel",
+      "game_item": "mirror",
+      "java_exports": ["oval_mirror/export/oval_mirror.json"]
+    },
+    {
+      "id": "reforging_table",
+      "source": "arcane_handcraft_table/source/arcane_handcraft_table.bbmodel",
+      "game_item": "reforging_table",
+      "java_exports": [
+        "arcane_handcraft_table/export/arcane_handcraft_table.json",
+        "arcane_handcraft_table/export/assets/lyycore/models/block/arcane_handcraft_table.json",
+        "arcane_handcraft_table/export/assets/lyycore/models/item/arcane_handcraft_table.json"
+      ]
+    },
+    {
+      "id": "blue_revolver",
+      "source": "_temporary_addon/revolver_blue_20261015/source/blue_revolver.bbmodel",
+      "bb_exports": ["_temporary_addon/revolver_blue_20261015/export/blue_revolver.bbmodel"],
+      "display_contract": "_temporary_addon/revolver_blue_20261015/export/blue_revolver.display.json"
+    }
+  ],
+  "skip_game_items": {
+    "emberfall": "Blender-rendered inventory icon",
+    "thunder_scythe": "Blender-rendered inventory icon",
+    "frost_chain": "Already uses a rendered 2D inventory texture, not the old coil model"
+  }
+}

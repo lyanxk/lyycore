@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "SGS",
+    "GCG",
+    "SGS"
+  ],
+  "key": {
+    "S": {
+      "item": "lyycore:pure_imaginary_steel"
+    },
+    "G": {
+      "item": "minecraft:glass"
+    },
+    "C": {
+      "item": "lyycore:flawless_crystal"
+    }
+  },
+  "result": {
+    "id": "lyycore:mirror",
+    "count": 1
+  }
+}

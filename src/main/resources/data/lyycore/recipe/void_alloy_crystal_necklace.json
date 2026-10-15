@@ -1,0 +1,38 @@
+{
+  "type": "lyycore:imaginary_condensing",
+  "ingredients": [
+    {
+      "item": "lyycore:flawless_crystal"
+    },
+    {
+      "item": "lyycore:void_alloy_plate"
+    },
+    {
+      "item": "lyycore:void_alloy_plate"
+    },
+    {
+      "item": "lyycore:void_alloy_plate"
+    },
+    {
+      "item": "lyycore:void_alloy_plate"
+    },
+    {
+      "item": "lyycore:void_alloy_plate"
+    },
+    {
+      "item": "lyycore:void_alloy_plate"
+    },
+    {
+      "item": "lyycore:void_alloy_plate"
+    },
+    {
+      "item": "lyycore:void_alloy_plate"
+    }
+  ],
+  "result": {
+    "id": "lyycore:void_alloy_crystal_necklace"
+  },
+  "duration": 100,
+  "energy": 1000000,
+  "energy_per_tick": true
+}

@@ -44,7 +44,7 @@ public final class DragonMightItem extends Item {
         var nest = EnderCompanions.boundNest(player);
         boolean stowed = nest != null && nest.mode() == org.lyy.lyycore.content.blockEntities.ImaginaryDragonNestBlockEntity.Mode.STOWED;
         float damage = damage(charge)*(stowed ? 1 : .25F);
-        boolean burst = StyleSystem.current(player) == StyleSystem.Style.OFFENSE;
+        boolean burst = StyleSystem.active(player, StyleSystem.Style.OFFENSE);
         CustomData.update(DataComponents.CUSTOM_DATA, stack, tag -> {
             tag.putLong("DragonReleased", level.getGameTime()); tag.putBoolean("DragonBurst", burst);
         });
@@ -92,7 +92,7 @@ public final class DragonMightItem extends Item {
     @SubscribeEvent public static void protect(DamageReductionEvent event) {
         if (event.getEntity() instanceof ServerPlayer player && player.isUsingItem()
                 && player.getUseItem().getItem() instanceof DragonMightItem
-                && StyleSystem.current(player) == StyleSystem.Style.TECHNIQUE) event.reduceBy(.5);
+                && StyleSystem.active(player, StyleSystem.Style.TECHNIQUE)) event.reduceBy(.5);
     }
     @SubscribeEvent public static void logout(net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent event) { BURSTS.remove(event.getEntity()); }
     @SubscribeEvent public static void stopped(net.neoforged.neoforge.event.server.ServerStoppedEvent event) { BURSTS.clear(); }

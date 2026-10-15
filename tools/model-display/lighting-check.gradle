@@ -1,0 +1,16 @@
+allprojects {
+    afterEvaluate {
+        if (plugins.hasPlugin('java')) {
+            sourceSets.create('guiLightingCheck') {
+                java.srcDir('tools/model-display/java')
+                compileClasspath += sourceSets.main.output + sourceSets.main.compileClasspath
+                runtimeClasspath += sourceSets.main.output + sourceSets.main.runtimeClasspath
+            }
+            tasks.register('checkGuiLighting', JavaExec) {
+                dependsOn tasks.named('compileGuiLightingCheckJava')
+                classpath = sourceSets.guiLightingCheck.runtimeClasspath
+                mainClass = 'org.lyy.lyycore.client.MirroredItemModelCheck'
+            }
+        }
+    }
+}

@@ -16,6 +16,7 @@ import org.lyy.lyycore.content.entity.guiding.GuidingBoss;
 import org.lyy.lyycore.content.entity.GuardianCrystal;
 import org.lyy.lyycore.content.entity.GrappleHook;
 import org.lyy.lyycore.content.entity.FrostChainHook;
+import org.lyy.lyycore.content.fishing.VoidFishingHook;
 import org.lyy.lyycore.content.entity.GuardianSpikes;
 import org.lyy.lyycore.content.entity.ImaginaryGuardian;
 import org.lyy.lyycore.content.entity.EnderCompanion;
@@ -38,6 +39,9 @@ import org.lyy.lyycore.content.entity.sovereign.DefenderSword;
 public class LyyEntities {
     public static final DeferredRegister<EntityType<?>> ENTITIES =
             DeferredRegister.create(Registries.ENTITY_TYPE, LyyCore.MODID);
+    public static final DeferredHolder<EntityType<?>, EntityType<VoidFishingHook>> VOID_FISHING_HOOK =
+            ENTITIES.register("void_fishing_hook", () -> EntityType.Builder.<VoidFishingHook>of(VoidFishingHook::new, MobCategory.MISC)
+                    .sized(0.25F, 0.25F).clientTrackingRange(4).updateInterval(5).noSave().build("lyycore:void_fishing_hook"));
     public static final DeferredHolder<EntityType<?>, EntityType<org.lyy.lyycore.content.entity.EmberfallSlash>> EMBERFALL_SLASH = ENTITIES.register("emberfall_slash", () -> EntityType.Builder.of(org.lyy.lyycore.content.entity.EmberfallSlash::new, MobCategory.MISC).sized(.5F,.5F).clientTrackingRange(8).updateInterval(1).noSave().build("lyycore:emberfall_slash"));
     public static final DeferredHolder<EntityType<?>, EntityType<org.lyy.lyycore.content.entity.EmberfallRing>> EMBERFALL_RING = ENTITIES.register("emberfall_ring", () -> EntityType.Builder.of(org.lyy.lyycore.content.entity.EmberfallRing::new, MobCategory.MISC).sized(.5F,.5F).clientTrackingRange(8).updateInterval(1).noSave().build("lyycore:emberfall_ring"));
     public static final DeferredHolder<EntityType<?>, EntityType<org.lyy.lyycore.content.entity.EmberfallThrown>> EMBERFALL_THROWN = ENTITIES.register("emberfall_thrown", () -> EntityType.Builder.of(org.lyy.lyycore.content.entity.EmberfallThrown::new, MobCategory.MISC).sized(.5F,.5F).clientTrackingRange(8).updateInterval(1).noSave().build("lyycore:emberfall_thrown"));

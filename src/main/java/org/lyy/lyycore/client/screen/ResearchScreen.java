@@ -13,6 +13,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import org.lyy.lyycore.content.research.ResearchDefinition;
 import org.lyy.lyycore.content.AegisWings;
+import org.lyy.lyycore.content.skills.SkillSettings;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,14 +21,15 @@ import java.util.List;
 public final class ResearchScreen extends AbstractContainerScreen<ResearchMenu> {
     private static final int INK = 0xFF302D35, MUTED_INK = 0xFF68616A, GOLD = 0xFFB69A55, PAPER = 0xFFF9F7F1;
     private static final int PAGE_SIZE = 18, COLUMNS = 6, DETAIL_HEIGHT = 111;
-    private static final int ATTRIBUTE_TOP = 55, ATTRIBUTE_ROW_HEIGHT = 31, ATTRIBUTE_BUTTON_SIZE = 20;
+    private static final int ATTRIBUTE_TOP = 55, ATTRIBUTE_ROW_HEIGHT = 28, ATTRIBUTE_BUTTON_SIZE = 20;
+    private final List<PaperButton> attributeAdds = new ArrayList<>(), attributeRefunds = new ArrayList<>(), equipmentButtons = new ArrayList<>();
     private int page, selected = -1, scroll, materialRow;
     private List<Integer> visibleEntries = List.of();
     private boolean confirming;
     private int tab, stageFilter;
     private ResearchDefinition.Purpose purposeFilter;
     private boolean selfUnlocked;
-    private PaperButton researchButton, confirmButton, wingsButton;
+    private PaperButton researchButton, confirmButton, wingsButton, skillsButton, styleHudButton;
 
     public ResearchScreen(ResearchMenu menu, Inventory inventory, Component title) {
         super(menu, inventory, title);
@@ -54,8 +56,10 @@ public final class ResearchScreen extends AbstractContainerScreen<ResearchMenu> 
         refreshVisibleEntries();
         clearWidgets();
         researchButton = confirmButton = wingsButton = null;
+        skillsButton = styleHudButton = null;
+        attributeAdds.clear(); attributeRefunds.clear(); equipmentButtons.clear();
         if (selfUnlocked) {
-            for (int i = 0; i < 3; i++) {
+            for (int i = 0; i < 4; i++) {
                 final int next = i;
                 button(-51, 24 + i * 28, 48, 24, translated("gui.lyycore.self.tab." + i), () -> {
                     tab = next; selected = -1; confirming = false; rebuildButtons();
@@ -119,7 +123,11 @@ public final class ResearchScreen extends AbstractContainerScreen<ResearchMenu> 
         if (minecraft.gameMode != null) minecraft.gameMode.handleInventoryButtonClick(menu.containerId, id);
     }
     private void buildSelfButtons() {
-        if (tab == 1) {
+        if (tab == 3) {
+            skillsButton = button(235, 45, 50, 18, Component.empty(), () -> sendSelf(SelfMenuData.SKILLS));
+            styleHudButton = button(159, 88, 126, 18, Component.empty(), () -> sendSelf(SelfMenuData.STYLE_HUD));
+            refreshSkillButtons();
+        } else if (tab == 1) {
             button(17, 84, 78, 22, translated("gui.lyycore.self.visibility"), () -> sendSelf(ResearchMenu.TOGGLE_WINGS));
             for (int i = 0; i < 4; i++) {
                 final int choice = i;
@@ -145,15 +153,34 @@ public final class ResearchScreen extends AbstractContainerScreen<ResearchMenu> 
             for (int i = 0; i < 4; i++) {
                 final int stat = i;
                 int y = ATTRIBUTE_TOP + i * ATTRIBUTE_ROW_HEIGHT;
-                button(92, y, ATTRIBUTE_BUTTON_SIZE, ATTRIBUTE_BUTTON_SIZE, Component.literal("−"), () -> sendSelf(SelfMenuData.REFUND - stat));
-                button(143, y, ATTRIBUTE_BUTTON_SIZE, ATTRIBUTE_BUTTON_SIZE, Component.literal("+"), () -> sendSelf(SelfMenuData.ALLOCATE - stat));
+                attributeRefunds.add(button(92, y, ATTRIBUTE_BUTTON_SIZE, ATTRIBUTE_BUTTON_SIZE, Component.literal("−"), () -> sendSelf(SelfMenuData.REFUND - stat)));
+                attributeAdds.add(button(143, y, ATTRIBUTE_BUTTON_SIZE, ATTRIBUTE_BUTTON_SIZE, Component.literal("+"), () -> sendSelf(SelfMenuData.ALLOCATE - stat)));
+            }
+            for (int i = 4; i < org.lyy.lyycore.content.PlayerAttributes.Stat.values().length; i++) {
+                final int stat = i;
+                int y = ATTRIBUTE_TOP + (i - 4) * ATTRIBUTE_ROW_HEIGHT + 11;
+                attributeRefunds.add(button(207, y, 18, 18, Component.literal("−"), () -> sendSelf(SelfMenuData.REFUND - stat)));
+                attributeAdds.add(button(265, y, 18, 18, Component.literal("+"), () -> sendSelf(SelfMenuData.ALLOCATE - stat)));
+            }
+            for (int i = 0; i < 2; i++) {
+                final int slot = i;
+                equipmentButtons.add(button(17 + i * 76, 200, 70, 18, translated("gui.lyycore.accessory.kind." + i), () -> sendSelf(SelfMenuData.EQUIPMENT - slot)));
             }
         }
+    }
+    private void refreshSkillButtons() {
+        if (minecraft.player == null || skillsButton == null || styleHudButton == null) return;
+        skillsButton.setMessage(translated(SkillSettings.enabled(minecraft.player) ? "gui.lyycore.self.on" : "gui.lyycore.self.off"));
+        styleHudButton.setMessage(translated("gui.lyycore.self.style_hud." + SkillSettings.hudMode(minecraft.player).ordinal()));
     }
     private void renderSelf(GuiGraphics g) {
         drawCenteredText(g, translated("gui.lyycore.self.tab." + tab), leftPos + 150, topPos + 17, INK);
         g.fill(leftPos + 13, topPos + 36, leftPos + 287, topPos + 37, GOLD);
-        if (tab == 1) {
+        if (tab == 3) {
+            refreshSkillButtons();
+            g.drawString(font, translated("gui.lyycore.self.skills"), leftPos + 159, topPos + 50, INK, false);
+            g.drawString(font, translated("gui.lyycore.self.style_hud"), leftPos + 159, topPos + 75, INK, false);
+        } else if (tab == 1) {
             for (int x : new int[]{103, 198}) g.fill(leftPos + x, topPos + 49, leftPos + x + 1, topPos + 199, 0xFFE8DFC8);
             drawCenteredText(g, translated("gui.lyycore.self.visibility"), leftPos + 56, topPos + 55, INK);
             drawCenteredText(g, translated("gui.lyycore.self.pursuit"), leftPos + 150, topPos + 55, INK);
@@ -163,24 +190,30 @@ public final class ResearchScreen extends AbstractContainerScreen<ResearchMenu> 
             drawCenteredText(g, translated(menu.self.valueAt(8) != 0 ? "gui.lyycore.self.on" : "gui.lyycore.self.off"), leftPos + 246, topPos + 119, MUTED_INK);
             drawCenteredText(g, translated("gui.lyycore.self.acceleration"), leftPos + 246, topPos + 168, MUTED_INK);
         } else {
+            for (int i = 0; i < attributeAdds.size(); i++) {
+                attributeAdds.get(i).active = menu.self.hasTrait(i) && menu.self.valueAt(1) > 0;
+                attributeRefunds.get(i).active = menu.self.allocated(i) > 0;
+            }
+            for (int i = 0; i < equipmentButtons.size(); i++) equipmentButtons.get(i).active = menu.self.selectedSlot() != i;
             g.drawString(font, translated("gui.lyycore.self.points", menu.self.valueAt(1)), leftPos + 17, topPos + 42, INK, false);
+            g.drawString(font, translated("gui.lyycore.accessory.kind." + menu.self.selectedSlot()), leftPos + 220, topPos + 42, MUTED_INK, false);
+            if (menu.self.valueAt(18) == 0) g.drawString(font, translated("gui.lyycore.accessory.empty"), leftPos + 179, topPos + 205, MUTED_INK, false);
             var player = minecraft.player;
             if (player == null) return;
             var stats = org.lyy.lyycore.content.PlayerAttributes.Stat.values();
-            for (int i = 0; i < stats.length; i++) {
+            for (int i = 0; i < 4; i++) {
                 int y = attributeTextY(i);
                 g.drawString(font, translated("gui.lyycore.self.stat." + i), leftPos + 17, y, INK, false);
                 g.drawString(font, String.format(java.util.Locale.ROOT, "%.0f", player.getAttributeValue(stats[i].attribute)), leftPos + 61, y, INK, false);
-                drawCenteredText(g, Component.literal(Integer.toString(menu.self.valueAt(i + 2))), leftPos + 127, y, MUTED_INK);
+                drawCenteredText(g, Component.literal(Integer.toString(menu.self.allocated(i))), leftPos + 127, y, MUTED_INK);
             }
-            var multipliers = java.util.List.of(org.lyy.lyycore.registry.LyyAttributes.DAMAGE,
-                    org.lyy.lyycore.registry.LyyAttributes.PHYSICAL, org.lyy.lyycore.registry.LyyAttributes.ICE,
-                    org.lyy.lyycore.registry.LyyAttributes.FIRE, org.lyy.lyycore.registry.LyyAttributes.LIGHTNING);
-            for (int i = 0; i < multipliers.size(); i++) {
-                int y = attributeTextY(i);
+            for (int i = 0; i < stats.length - 4; i++) {
+                int y = topPos + ATTRIBUTE_TOP + i * ATTRIBUTE_ROW_HEIGHT;
                 g.drawString(font, translated("gui.lyycore.self.multiplier." + i), leftPos + 179, y, INK, false);
-                String percent = String.format(java.util.Locale.ROOT, "%+.0f%%", (player.getAttributeValue(multipliers.get(i)) - 1) * 100);
+                String percent = String.format(java.util.Locale.ROOT, "%+.0f%%", (player.getAttributeValue(stats[i + 4].attribute) - 1) * 100);
                 g.drawString(font, percent, leftPos + 283 - font.width(percent), y, MUTED_INK, false);
+                drawCenteredText(g, Component.literal(Integer.toString(menu.self.allocated(i + 4))), leftPos + 245,
+                        y + 11 + (18 - font.lineHeight) / 2, MUTED_INK);
             }
         }
     }

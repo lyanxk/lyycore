@@ -2,8 +2,8 @@ package org.lyy.lyycore.content;
 
 import org.lyy.lyycore.content.research.ResearchChangedEvent;
 import org.lyy.lyycore.content.research.ResearchProgress;
+import org.lyy.lyycore.registry.LyyAttributes;
 import net.minecraft.core.Holder;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.ai.attributes.*;
@@ -12,48 +12,32 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 
-/** Persistent allocations; only our own modifiers are replaced, leaving equipment and effects intact. */
+/** Shared attribute definitions and source-keyed modifiers for equipment, skills and research. */
 @EventBusSubscriber(modid = "lyycore")
 public final class PlayerAttributes {
     public static final ResourceLocation RESEARCH = ResourceLocation.parse("lyycore:research/self");
-    private static final String KEY = "lyycore:attributes";
     private static final ResourceLocation ALLOCATION = ResourceLocation.parse("lyycore:allocated_points");
     public enum Stat {
-        LIFE(Attributes.MAX_HEALTH, 2), ARMOR(Attributes.ARMOR, 2), TOUGHNESS(Attributes.ARMOR_TOUGHNESS, 1), ATTACK(Attributes.ATTACK_DAMAGE, 2);
+        LIFE(Attributes.MAX_HEALTH, 2), ARMOR(Attributes.ARMOR, 2), TOUGHNESS(Attributes.ARMOR_TOUGHNESS, 1), ATTACK(Attributes.ATTACK_DAMAGE, 2),
+        DAMAGE(LyyAttributes.DAMAGE, 0.02), PHYSICAL(LyyAttributes.PHYSICAL, 0.02), ICE(LyyAttributes.ICE, 0.02),
+        FIRE(LyyAttributes.FIRE, 0.02), LIGHTNING(LyyAttributes.LIGHTNING, 0.02);
         public final Holder<Attribute> attribute;
-        public final int perPoint;
-        Stat(Holder<Attribute> attribute, int perPoint) { this.attribute = attribute; this.perPoint = perPoint; }
+        public final double perPoint;
+        Stat(Holder<Attribute> attribute, double perPoint) { this.attribute = attribute; this.perPoint = perPoint; }
     }
     public static boolean unlocked(Player player) { return ResearchProgress.completed(player, RESEARCH); }
-    private static CompoundTag data(Player player) { return player.getPersistentData().getCompound(Player.PERSISTED_NBT_TAG).getCompound(KEY); }
-    private static void save(Player player, CompoundTag data) {
-        var persisted = player.getPersistentData().getCompound(Player.PERSISTED_NBT_TAG);
-        persisted.put(KEY, data); player.getPersistentData().put(Player.PERSISTED_NBT_TAG, persisted);
-    }
-    public static int allocated(Player player, Stat stat) { return Math.max(0, data(player).getInt(stat.name())); }
-    public static int remaining(Player player) { return Math.max(0, data(player).getInt("Remaining")); }
-    /** Point rewards will call this once their acquisition rules are defined. */
-    public static void grant(ServerPlayer player, int amount) {
-        if (amount <= 0) return;
-        var data = data(player); data.putInt("Remaining", (int)Math.min(Integer.MAX_VALUE, (long)remaining(player) + amount)); save(player, data);
-    }
-    public static boolean allocate(ServerPlayer player, int index, boolean add) {
-        if (!unlocked(player) || index < 0 || index >= Stat.values().length) return false;
-        var stat = Stat.values()[index]; int points = allocated(player, stat), remaining = remaining(player);
-        if (add ? remaining == 0 || points == Integer.MAX_VALUE : points == 0 || remaining == Integer.MAX_VALUE) return false;
-        var data = data(player); data.putInt(stat.name(), points + (add ? 1 : -1));
-        data.putInt("Remaining", remaining + (add ? -1 : 1)); save(player, data); update(player); return true;
-    }
     public static void update(ServerPlayer player) {
-        boolean enabled = unlocked(player);
-        var allocations = data(player);
+        // Older versions stored personal allocations. Points now belong to equipped accessories.
         for (var stat : Stat.values()) {
-            double amount = enabled ? (double)Math.max(0, allocations.getInt(stat.name())) * stat.perPoint : 0;
-            // Native saved modifiers are loaded before Health. The allocation record remains
-            // authoritative; login, refund and research changes reconcile this stable source ID.
-            replaceBonus(player.getAttribute(stat.attribute), ALLOCATION, amount, AttributeModifier.Operation.ADD_VALUE, true);
+            var instance = player.getAttribute(stat.attribute);
+            if (instance != null) instance.removeModifier(ALLOCATION);
         }
         clampHealth(player);
+    }
+    public static void setPersistentBonus(ServerPlayer player, Holder<Attribute> attribute, ResourceLocation source, double amount) {
+        if (!Double.isFinite(amount)) throw new IllegalArgumentException("Attribute bonus must be finite");
+        replaceBonus(player.getAttribute(attribute), source, amount, AttributeModifier.Operation.ADD_VALUE, true);
+        if (attribute.equals(Attributes.MAX_HEALTH)) clampHealth(player);
     }
     /** Future equipment/research bonuses use stable source IDs so refreshes never stack twice. */
     public static void setBonus(ServerPlayer player, Holder<Attribute> attribute, ResourceLocation source,

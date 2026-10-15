@@ -20,6 +20,7 @@ for face in item['faces']:
     for v in face['vertices']:
         v[:3] = [(v[0] - .5) * 4 + .5, v[1] * 4, (v[2] - .5) * 4 + .5]
 item['display'] = source['display']
+item['gui_light'] = 'front' if source.get('front_gui_light', False) else 'side'
 item['render_type'] = 'minecraft:cutout'
 write(path, item)
 

@@ -48,6 +48,8 @@
     "lyycore:matrix_output",
     "lyycore:matrix_collector",
     "lyycore:capture_cage",
-    "lyycore:summoning_beacon"
+    "lyycore:summoning_beacon",
+    "lyycore:mirror",
+    "lyycore:reforging_table"
   ]
 }
