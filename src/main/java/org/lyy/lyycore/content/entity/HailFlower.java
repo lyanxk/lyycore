@@ -26,7 +26,7 @@ public final class HailFlower extends Entity {
             var player = owner == null ? null : level().getPlayerByUUID(owner);
             if (player != null) for (var target : level().getEntitiesOfClass(LivingEntity.class, getBoundingBox().inflate(3),
                     entity -> entity != player && entity.isAlive() && entity.distanceToSqr(this) <= 9))
-                SpecialDamage.burst(player, this, target, SpecialDamage.Element.ICE, 10, 16);
+                SpecialDamage.combinedHit(player, this, target, SpecialDamage.Element.ICE, 10, 16);
             level().playSound(null, blockPosition(), SoundEvents.GLASS_BREAK, SoundSource.PLAYERS, 1.5F, 1.2F);
         }
         if (age(0) >= 48) discard();

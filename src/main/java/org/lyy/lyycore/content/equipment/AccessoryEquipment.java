@@ -22,6 +22,7 @@ public final class AccessoryEquipment extends ItemStackHandler {
     private static final Map<ServerPlayer, AccessoryEquipment> INVENTORIES = new HashMap<>();
     private final ServerPlayer owner;
     private boolean loading;
+    private ItemStack[] committedItems;
 
     private AccessoryEquipment(ServerPlayer owner) {
         super(2); this.owner = owner; loading = true;
@@ -36,12 +37,28 @@ public final class AccessoryEquipment extends ItemStackHandler {
         return stack.getItem() instanceof AccessoryItem item && item.kind.ordinal() == slot;
     }
     @Override protected void onContentsChanged(int slot) { if (!loading) changed(); }
-    public void changed() {
-        for (int i = 0; i < 2; i++) AccessoryData.initialize(getStackInSlot(i), owner.getRandom());
-        var persisted = owner.getPersistentData().getCompound(Player.PERSISTED_NBT_TAG);
-        persisted.put(KEY, serializeNBT(owner.registryAccess()));
-        owner.getPersistentData().put(Player.PERSISTED_NBT_TAG, persisted);
-        updateAttributes();
+    public void changed() { commit(false); }
+
+    private boolean inventoryChanged() {
+        if (committedItems == null) return true;
+        for (int slot = 0; slot < 2; slot++)
+            if (!ItemStack.matches(committedItems[slot], getStackInSlot(slot))) return true;
+        return false;
+    }
+    private void commit(boolean restoreAttributes) {
+        if (loading) return;
+        boolean changed = inventoryChanged();
+        if (changed) {
+            for (int i = 0; i < 2; i++) AccessoryData.initialize(getStackInSlot(i), owner.getRandom());
+            var persisted = owner.getPersistentData().getCompound(Player.PERSISTED_NBT_TAG);
+            persisted.put(KEY, serializeNBT(owner.registryAccess()));
+            owner.getPersistentData().put(Player.PERSISTED_NBT_TAG, persisted);
+            // Both handler callbacks and menu in-place mutations arrive here. Snapshot the
+            // committed contents so a second notification cannot repeat the same transaction.
+            committedItems = new ItemStack[]{getStackInSlot(0).copy(), getStackInSlot(1).copy()};
+        }
+        // Entity lifecycle restoration is independent of whether the inventory changed.
+        if (changed || restoreAttributes) updateAttributes();
     }
     private void updateAttributes() {
         double[] totals = new double[Stat.values().length];
@@ -60,8 +77,8 @@ public final class AccessoryEquipment extends ItemStackHandler {
         if (!AccessoryData.allocate(getStackInSlot(slot), Stat.values()[stat], add)) return false;
         changed(); return true;
     }
-    @SubscribeEvent public static void login(PlayerEvent.PlayerLoggedInEvent event) { if (event.getEntity() instanceof ServerPlayer player) get(player).changed(); }
-    @SubscribeEvent public static void respawn(PlayerEvent.PlayerRespawnEvent event) { if (event.getEntity() instanceof ServerPlayer player) get(player).changed(); }
+    @SubscribeEvent public static void login(PlayerEvent.PlayerLoggedInEvent event) { if (event.getEntity() instanceof ServerPlayer player) get(player).commit(true); }
+    @SubscribeEvent public static void respawn(PlayerEvent.PlayerRespawnEvent event) { if (event.getEntity() instanceof ServerPlayer player) get(player).commit(true); }
     @SubscribeEvent public static void clone(PlayerEvent.Clone event) { INVENTORIES.remove(event.getOriginal()); }
     @SubscribeEvent public static void logout(PlayerEvent.PlayerLoggedOutEvent event) { INVENTORIES.remove(event.getEntity()); }
     @SubscribeEvent public static void stopped(ServerStoppedEvent event) { INVENTORIES.clear(); }

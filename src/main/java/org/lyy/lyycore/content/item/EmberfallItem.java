@@ -5,6 +5,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.*;
 import net.minecraft.sounds.*;
 import net.minecraft.world.*;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
@@ -17,6 +18,7 @@ import net.minecraft.world.phys.*;
 import net.neoforged.bus.api.*;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.*;
+import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingShieldBlockEvent;
 import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
 import org.lyy.lyycore.content.SpecialDamage;
@@ -50,18 +52,25 @@ public final class EmberfallItem extends Item implements SpecialWeapon {
         var stack = player.getMainHandItem();
         if (!(stack.getItem() instanceof EmberfallItem) || player.isSpectator()) return;
         if (thrown(player) != null) { event.setCanceled(true); return; }
+        // Cooldown attacks remain entirely vanilla; ordinaryHit handles successful damage.
+        if (!ready(player, LEFT_READY)) return;
         var target = event.getTarget(); var living = SpecialDamage.healthOwner(target);
         if (living == null || !living.isAlive() || !target.isAttackable() || target.isInvulnerableTo(SpecialDamage.source(player,player,SpecialDamage.Element.FIRE))
                 || living instanceof Player other && !player.canHarmPlayer(other)) return;
-        if (!ready(player, LEFT_READY)) {
-            living.igniteForSeconds(BURN_SECONDS);
-            return;
-        }
         event.setCanceled(true);
         if (target.skipAttackInteraction(player)) return;
         player.getPersistentData().putLong(LEFT_READY, player.level().getGameTime()+20);
         damage(player, player, target, player.getAttributeValue(Attributes.ATTACK_DAMAGE)+40, 40);
         player.resetAttackStrengthTicker();
+    }
+    /** React after ordinary melee damage is final, not before a cancellable attack. */
+    @SubscribeEvent(priority = EventPriority.LOWEST) public static void ordinaryHit(LivingDamageEvent.Post event) {
+        var source = event.getSource();
+        if (event.getNewDamage() <= 0 || !source.is(DamageTypes.PLAYER_ATTACK)
+                || !(source.getEntity() instanceof ServerPlayer player) || source.getDirectEntity() != player
+                || !(player.getMainHandItem().getItem() instanceof EmberfallItem) || ready(player, LEFT_READY)) return;
+        // This is still inside the damage call, before vanilla's subsequent death/drop handling.
+        event.getEntity().igniteForSeconds(BURN_SECONDS);
     }
     @Override public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         var stack = player.getItemInHand(hand);
@@ -145,12 +154,18 @@ public final class EmberfallItem extends Item implements SpecialWeapon {
                 damage(player, player, target, base, 40);
         }
     }
-    /** Ignite before damage so burning-dependent effects and drops see the correct state. */
-    public static void damage(Player player, Entity direct, Entity target, double base, int hits) {
+    /** Ignite for burning-dependent effects and drops, rolling back if the hit is rejected. */
+    public static void damage(Player player, Entity direct, Entity target, double base, int strikeCount) {
         var living = SpecialDamage.healthOwner(target);
         if (living == null || !living.isAlive() || living.isRemoved() || target.isRemoved()) return;
-        living.igniteForSeconds(BURN_SECONDS);
-        SpecialDamage.burstFromBase(player, direct, target, living, SpecialDamage.Element.FIRE, base, hits);
+        int previousFire = living.getRemainingFireTicks();
+        boolean accepted = false;
+        try {
+            living.igniteForSeconds(BURN_SECONDS);
+            accepted = SpecialDamage.combinedHitFromBase(player, direct, target, living, SpecialDamage.Element.FIRE, base, strikeCount);
+        } finally {
+            if (!accepted) living.setRemainingFireTicks(previousFire);
+        }
     }
     public static boolean canHit(Player player, LivingEntity target) {
         return target != player && target.isAlive() && target.isAttackable() && !target.isSpectator()

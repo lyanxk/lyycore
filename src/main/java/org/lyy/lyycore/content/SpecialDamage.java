@@ -12,7 +12,7 @@ import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.entity.PartEntity;
 import org.lyy.lyycore.registry.LyyAttributes;
 
-/** One entry point for elemental strikes: (base + attack) × global × element. */
+/** Elemental scaling and single-hit settlement, including combined strike formulas. */
 public final class SpecialDamage {
     public enum Element {
         PHYSICAL(LyyAttributes.PHYSICAL), ICE(LyyAttributes.ICE), FIRE(LyyAttributes.FIRE), LIGHTNING(LyyAttributes.LIGHTNING);
@@ -42,23 +42,43 @@ public final class SpecialDamage {
         if (target instanceof LivingEntity living) return living;
         return target instanceof PartEntity<?> part && part.getParent() instanceof LivingEntity living ? living : null;
     }
-    /** Combine all strikes into one hit; attack damage is included in every strike. */
-    public static void burst(Player player, Entity direct, LivingEntity target, Element element, float base, int hits) {
-        burstFromBase(player, direct, target, element,
-                base + player.getAttributeValue(net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_DAMAGE), hits);
+    /** Combine the strike formulas into one hit, adding attack damage to each strike's base. */
+    public static boolean combinedHit(Player player, Entity direct, LivingEntity target, Element element,
+                                      float basePerStrike, int strikeCount) {
+        return combinedHitFromBase(player, direct, target, element,
+                basePerStrike + player.getAttributeValue(net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_DAMAGE), strikeCount);
     }
-    public static void burstFromBase(Player player, Entity direct, LivingEntity target, Element element, double base, int hits) {
-        burstFromBase(player, direct, target, target, element, base, hits);
+    /** The supplied per-strike base already includes every additive term. */
+    public static boolean combinedHitFromBase(Player player, Entity direct, LivingEntity target, Element element,
+                                              double basePerStrike, int strikeCount) {
+        return combinedHitFromBase(player, direct, target, target, element, basePerStrike, strikeCount);
     }
     /**
-     * The caller resolves healthOwner from target once. Damage still goes through target.hurt,
-     * so multipart entities retain their own forwarding, hit-location scaling and protection.
+     * Settle the combined formula through one target.hurt call, preserving hurt cooldown,
+     * multipart forwarding and hit-location scaling. Returns that call's acceptance result,
+     * not the amount of health lost. No hit is attempted for an invalid target or zero damage.
      */
+    public static boolean combinedHitFromBase(Player player, Entity direct, Entity target, LivingEntity healthOwner,
+                                              Element element, double basePerStrike, int strikeCount) {
+        if (strikeCount <= 0 || !healthOwner.isAlive() || healthOwner.isRemoved() || target.isRemoved()) return false;
+        float damage = scale(player, element, basePerStrike * strikeCount);
+        return damage > 0 && target.hurt(source(player, direct, element), damage);
+    }
+
+    /** @deprecated Compatibility alias for {@link #combinedHit}; this never performs separate hits. */
+    @Deprecated
+    public static void burst(Player player, Entity direct, LivingEntity target, Element element, float base, int hits) {
+        combinedHit(player, direct, target, element, base, hits);
+    }
+    /** @deprecated Use {@link #combinedHitFromBase} for explicit single-hit settlement and its result. */
+    @Deprecated
+    public static void burstFromBase(Player player, Entity direct, LivingEntity target, Element element, double base, int hits) {
+        combinedHitFromBase(player, direct, target, element, base, hits);
+    }
+    /** @deprecated Use {@link #combinedHitFromBase} while keeping the actual hit part separate from its owner. */
+    @Deprecated
     public static void burstFromBase(Player player, Entity direct, Entity target, LivingEntity healthOwner,
                                      Element element, double base, int hits) {
-        if (hits <= 0 || !healthOwner.isAlive() || healthOwner.isRemoved() || target.isRemoved()) return;
-        // Multiply the complete formula before clamping, and leave vanilla hurt cooldown intact.
-        float damage = scale(player, element, base * hits);
-        if (damage > 0) target.hurt(source(player, direct, element), damage);
+        combinedHitFromBase(player, direct, target, healthOwner, element, base, hits);
     }
 }

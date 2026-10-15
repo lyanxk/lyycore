@@ -82,7 +82,7 @@ public class SonnetArrow extends Arrow {
         // Settle the arrow and shatter together so hurt cooldown cannot swallow the extra damage.
         if (shatter) damage += (attack + 20) * 160;
         if (getOwner() instanceof Player player)
-            SpecialDamage.burstFromBase(player, this, target, SpecialDamage.Element.PHYSICAL, damage, 1);
+            SpecialDamage.combinedHitFromBase(player, this, target, SpecialDamage.Element.PHYSICAL, damage, 1);
         else target.hurt(damageSources().arrow(this, getOwner() == null ? this : getOwner()), (float)damage);
         if (shatter) target.removeEffect(LyyEffects.CRYSTALLIZATION);
         else if (target.isAlive()) target.addEffect(new MobEffectInstance(LyyEffects.CRYSTALLIZATION, 400,

@@ -32,12 +32,12 @@ public final class HailItem extends Item implements SpecialWeapon {
         if (player.isSpectator() || player.getCooldowns().isOnCooldown(this)) return InteractionResultHolder.fail(stack);
         if (player instanceof ServerPlayer server) {
             player.getCooldowns().addCooldown(this, 20);
-            // Damage is immediate. A single cosmetic crystal per target avoids spawning twenty entities per hit burst.
+            // Damage is immediate. A single cosmetic crystal per target accompanies the combined hit.
             for (var target : level.getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(10),
                     entity -> entity.distanceToSqr(player) <= 100 && CombatTargets.isEnemy(entity, player))) {
                 var crystal = LyyEntities.HAIL_CRYSTAL.get().create(level);
                 if (crystal != null) { crystal.prepare(player.getEyePosition(), target.getBoundingBox().getCenter()); level.addFreshEntity(crystal); }
-                SpecialDamage.burst(player, player, target, SpecialDamage.Element.ICE, 20, 20);
+                SpecialDamage.combinedHit(player, player, target, SpecialDamage.Element.ICE, 20, 20);
             }
             freezeWater(server);
             if (StyleSystem.active(player, StyleSystem.Style.MOBILITY)) {

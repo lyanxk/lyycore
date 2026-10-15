@@ -79,7 +79,7 @@ public final class ThunderScytheItem extends Item implements SpecialWeapon {
         }
         event.setCanceled(true);
         begin(player, stack, LEFT_READY, false);
-        SpecialDamage.burstFromBase(player, player, target, healthOwner, SpecialDamage.Element.LIGHTNING,
+        SpecialDamage.combinedHitFromBase(player, player, target, healthOwner, SpecialDamage.Element.LIGHTNING,
                 player.getAttributeValue(Attributes.ARMOR_TOUGHNESS) * 20 + 240, 8);
         player.resetAttackStrengthTicker();
     }
@@ -94,7 +94,7 @@ public final class ThunderScytheItem extends Item implements SpecialWeapon {
             double base = player.getAttributeValue(Attributes.ARMOR_TOUGHNESS) * 4 + 20;
             for (var target : level.getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(5),
                     entity -> entity.distanceToSqr(player) <= 25 && CombatTargets.isEnemy(entity, player)))
-                SpecialDamage.burstFromBase(player, player, target, SpecialDamage.Element.LIGHTNING, base, 16);
+                SpecialDamage.combinedHitFromBase(player, player, target, SpecialDamage.Element.LIGHTNING, base, 16);
         }
         return InteractionResultHolder.sidedSuccess(stack, level.isClientSide);
     }

@@ -92,7 +92,7 @@ public class SonnetDome extends Entity {
         for (LivingEntity target : level().getEntitiesOfClass(LivingEntity.class,
                 new AABB(position().add(-RADIUS, -1, -RADIUS), position().add(RADIUS, RADIUS, RADIUS)),
                 target -> contains(target.position()) && CombatTargets.isEnemy(target, owner))) {
-            SpecialDamage.burst(owner, projectile, target, SpecialDamage.Element.PHYSICAL,
+            SpecialDamage.combinedHit(owner, projectile, target, SpecialDamage.Element.PHYSICAL,
                     SonnetVolley.DAMAGE_PER_HIT, SonnetVolley.BOUNCES);
         }
     }
