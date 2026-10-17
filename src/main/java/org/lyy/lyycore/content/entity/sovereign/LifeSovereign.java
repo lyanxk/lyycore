@@ -280,14 +280,20 @@ public final class LifeSovereign extends AnimatedMonster {
         return super.hurt(source, amount);
     }
     @Override public void die(DamageSource source) {
+        if (dead) return;
         super.die(source);
         if (!dead || !(level() instanceof ServerLevel server) || transitioned) return;
         if (phase() == Phase.DEFENDER) { action(Action.DEFEAT); bar.setProgress(0); return; }
         if (phase() != Phase.USURPER) return;
-        var battle = battle();
-        spawnAtLocation(LyyItems.ENDLESS_EROSION.get());
-        if (battle != null && battle.players(server).stream().anyMatch(p -> p.getMaxHealth() <= 8)) spawnAtLocation(LyyItems.WHISPER_OF_THE_PAST.get());
         LifeEncounters.get(server).end(server, encounter, true);
+    }
+    @Override protected boolean shouldDropLoot() { return phase() == Phase.USURPER && super.shouldDropLoot(); }
+    @Override protected void dropCustomDeathLoot(ServerLevel server, DamageSource source, boolean recentlyHit) {
+        super.dropCustomDeathLoot(server, source, recentlyHit);
+        // This runs inside vanilla drop capture, before victory clears the players' life curse.
+        var battle = battle();
+        if (battle != null && battle.players(server).stream().anyMatch(p -> p.getMaxHealth() <= 8))
+            spawnAtLocation(LyyItems.WHISPER_OF_THE_PAST.get());
     }
     @Override protected void tickDeath() {
         if (phase() != Phase.DEFENDER) { super.tickDeath(); return; }

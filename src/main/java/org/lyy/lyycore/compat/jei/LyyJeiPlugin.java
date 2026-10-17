@@ -3,10 +3,16 @@ package org.lyy.lyycore.compat.jei;
 import com.mojang.logging.LogUtils;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
+import mezz.jei.api.constants.RecipeTypes;
+import mezz.jei.api.constants.VanillaTypes;
+import mezz.jei.api.ingredients.ITypedIngredient;
+import mezz.jei.api.recipe.vanilla.IJeiIngredientInfoRecipe;
 import mezz.jei.api.gui.handlers.IGuiClickableArea;
 import mezz.jei.api.gui.handlers.IGuiContainerHandler;
 import mezz.jei.api.registration.*;
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FormattedText;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -14,6 +20,7 @@ import net.minecraft.world.item.crafting.RecipeManager;
 import org.lyy.lyycore.LyyCore;
 import org.lyy.lyycore.content.ResourceFrameKind;
 import org.lyy.lyycore.content.FrameProduction;
+import org.lyy.lyycore.content.equipment.AccessoryItem;
 import org.lyy.lyycore.client.screen.CrystalCondensingScreen;
 import org.lyy.lyycore.content.menu.IAFMenu;
 import org.lyy.lyycore.client.screen.IAFScreen;
@@ -21,6 +28,7 @@ import org.lyy.lyycore.client.screen.ImaginaryCraftingScreen;
 import org.lyy.lyycore.client.screen.ResourceGatheringScreen;
 import org.lyy.lyycore.content.recipes.ImaginaryAlloyingRecipe;
 import org.lyy.lyycore.registry.LyyBlocks;
+import org.lyy.lyycore.registry.LyyItems;
 import org.lyy.lyycore.registry.LyyMenus;
 import org.lyy.lyycore.registry.LyyRecipes;
 import java.util.List;
@@ -51,6 +59,17 @@ public class LyyJeiPlugin implements IModPlugin {
 
     @Override
     public void registerRecipes(IRecipeRegistration reg) {
+        for (var entry : LyyItems.ITEMS.getEntries()) {
+            if (!(entry.get() instanceof AccessoryItem item)) continue;
+            var ingredient = reg.getIngredientManager().createTypedIngredient(VanillaTypes.ITEM_STACK, item.getDefaultInstance(), false).orElseThrow();
+            reg.addRecipes(RecipeTypes.INFORMATION, List.of(new IJeiIngredientInfoRecipe() {
+                @Override public List<ITypedIngredient<?>> getIngredients() { return List.of(ingredient); }
+                @Override public List<FormattedText> getDescription() {
+                    // Resolve the key when opening the page; ordinary JEI info freezes text during registration.
+                    return List.of(Component.translatable("jei.lyycore.accessory", Component.keybind("key.lyycore.memory")));
+                }
+            }));
+        }
         reg.addItemStackInfo(new ItemStack(org.lyy.lyycore.registry.LyyItems.SUMMONING_BEACON.get()), net.minecraft.network.chat.Component.translatable("jei.lyycore.summoning_beacon"));
         reg.addItemStackInfo(new ItemStack(org.lyy.lyycore.registry.LyyItems.EXPERIMENT_TABLE.get()), net.minecraft.network.chat.Component.translatable("jei.lyycore.experiment_table"));
         reg.addItemStackInfo(new ItemStack(org.lyy.lyycore.registry.LyyItems.EMBERFALL.get()), net.minecraft.network.chat.Component.translatable("jei.lyycore.emberfall"));

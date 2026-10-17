@@ -4,7 +4,6 @@ import java.util.*;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.*;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.*;
 import net.minecraft.world.entity.monster.Monster;
@@ -109,7 +108,6 @@ public final class CrystalTroop extends Monster {
             chargeRemaining = 0; entityData.set(CHARGING, false); destination = null;
         }
     }
-    @Override protected void dropCustomDeathLoot(ServerLevel level, DamageSource source, boolean recentlyHit) { }
     @Override public void addAdditionalSaveData(CompoundTag tag) {
         super.addAdditionalSaveData(tag); if (raidId != null) tag.putUUID("Raid", raidId); if (targetId != null) tag.putUUID("LockedPlayer", targetId);
         tag.putBoolean("InitializedTarget", initializedTarget); tag.putInt("Cooldown", attackCooldown);

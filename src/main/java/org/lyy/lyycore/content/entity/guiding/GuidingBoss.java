@@ -278,6 +278,7 @@ public final class GuidingBoss extends AnimatedMonster {
     @Override public boolean canBeCollidedWith() { return action() != Action.ABSORB && super.canBeCollidedWith(); }
     @Override public boolean isPickable() { return action() != Action.ABSORB && super.isPickable(); }
     @Override public void die(DamageSource source) {
+        if (dead) return;
         super.die(source);
         if (!dead || !(level() instanceof ServerLevel server)) return;
         restartAnimation(secondPhase() ? "death" : "shell_break");
@@ -297,6 +298,7 @@ public final class GuidingBoss extends AnimatedMonster {
         }
         if (!transitioned) GuidingEncounter.get(server).end(encounter);
     }
+    @Override protected boolean shouldDropLoot() { return secondPhase() && super.shouldDropLoot(); }
     @Override public void remove(RemovalReason reason) {
         if (reason.shouldDestroy() && !transitioned && encounter != null && level() instanceof ServerLevel server) {
             var battle = battle(); GuidingEncounter.get(server).end(encounter);

@@ -235,6 +235,7 @@ public final class LifeRevel extends RevelMob {
         blinds.clear();
     }
     @Override public void die(DamageSource source) {
+        if (dead) return;
         super.die(source);
         if (dead) clearMinions(true);
     }

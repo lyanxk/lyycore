@@ -1,0 +1,15 @@
+{
+  "icon": { "id": "lyycore:stained_alloy_block" },
+  "rarity": "medium",
+  "materials": [
+    { "id": "lyycore:stained_alloy_block", "count": 128 },
+    { "id": "lyycore:unextinguished_alloy_block", "count": 128 },
+    { "id": "lyycore:flawless_crystal", "count": 256 }
+  ],
+  "experience_points": 20000,
+  "prerequisites": ["lyycore:research/reforging", "lyycore:research/wings_enhancement"],
+  "title": "research.lyycore.hardening.title",
+  "summary": "research.lyycore.hardening.summary",
+  "description": "research.lyycore.hardening.description",
+  "display": { "stage": 4, "purpose": "combat", "order": 5 }
+}

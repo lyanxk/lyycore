@@ -92,12 +92,18 @@ public final class GuidingGuard extends AnimatedMonster {
     }
     @Override public boolean hurt(DamageSource source, float amount) { return !down() && super.hurt(source, amount); }
     @Override public void die(DamageSource source) {
+        if (dead) return;
         if (consumed) { super.die(source); return; }
+        if (down()) return;
         setHealth(1); downTicks = 1200; entityData.set(DOWN, true);
         restartAnimation("down");
         setNoAi(true); getNavigation().stop(); setTarget(null); standing(false);
     }
-    public void consume() { consumed = true; animate("absorbed"); setHealth(0); super.die(damageSources().genericKill()); standing(false); }
+    public void consume() {
+        if (consumed || dead) return;
+        consumed = true; animate("absorbed"); setHealth(0); die(damageSources().genericKill());
+        if (dead) standing(false);
+    }
     public Vec3 laserOrigin() { return position().add(new Vec3(0, 21 / 16.0, 20 / 16.0).yRot((float)Math.toRadians(-yBodyRot))); }
     void laserAnimation(String clip) {
         if (!down() && !animation().equals("absorbed") && !playing("revive", 1.05F)

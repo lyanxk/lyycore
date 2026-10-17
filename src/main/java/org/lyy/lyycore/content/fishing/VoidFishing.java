@@ -25,7 +25,14 @@ public final class VoidFishing {
     private static final Map<UUID, Cast> CASTS = new HashMap<>();
 
     public static boolean toggle(ServerPlayer player, InteractionHand hand) {
-        if (CASTS.containsKey(player.getUUID())) {
+        var active = CASTS.get(player.getUUID());
+        if (active != null) {
+            // A deliberate reel-in must run vanilla entity pulling before cleanup.
+            // Death, logout and switching away still only discard the hooks.
+            if (active.valid()) {
+                for (var hook : active.hooks)
+                    if (hook != null && !hook.isRemoved()) hook.retrieve(active.rod);
+            }
             stop(player.getUUID());
             return false;
         }

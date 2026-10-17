@@ -108,6 +108,7 @@ public class LyyItems {
     public static final DeferredItem<Item> GUIDING_REAGENT = ITEMS.registerSimpleItem("guiding_reagent", new Item.Properties().stacksTo(1));
     public static final DeferredItem<Item> PROOF = ITEMS.registerSimpleItem("proof", new Item.Properties().rarity(Rarity.EPIC));
     public static final DeferredItem<Item> FRIENDLY_PROOF = ITEMS.registerSimpleItem("friendly_proof");
+    public static final DeferredItem<Item> ZHUZHU = ITEMS.registerSimpleItem("zhuzhu", new Item.Properties().food(net.minecraft.world.food.Foods.PORKCHOP));
     public static final DeferredItem<ExperienceFoodItem> UNEXTINGUISHED_DESIRE = ITEMS.registerItem("unextinguished_desire",
             properties -> new ExperienceFoodItem(properties, 1000), new Item.Properties().rarity(Rarity.EPIC));
     private static DeferredItem<ExperimentPotionItem> potion(String name, ExperimentPotionItem.Kind kind) {

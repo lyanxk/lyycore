@@ -81,6 +81,7 @@ public class LyyCreativeTab {
                         output.accept(LyyItems.SUMMONING_ALTAR.get());
                         output.accept(LyyItems.SUMMONING_PEDESTAL.get());
                         output.accept(LyyItems.FRIENDLY_PROOF.get());
+                        output.accept(LyyItems.ZHUZHU.get());
                         output.accept(LyyItems.IMAGINARY_DRAGON_NEST.get());
                         output.accept(LyyItems.DRAGON_MIGHT.get());
                         output.accept(LyyItems.AMPLIFICATION_POTION.get());

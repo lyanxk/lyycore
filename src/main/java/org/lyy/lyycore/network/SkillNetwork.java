@@ -26,11 +26,11 @@ public final class SkillNetwork {
                 buf -> new Hover(buf.readLong(), buf.readBoolean()));
         @Override public Type<Hover> type() { return TYPE; }
     }
-    public record State(boolean unlocked, StyleSystem.Style style, boolean explored, int guard, boolean guarding, boolean doubleJump, boolean speedUp, boolean enabled, SkillSettings.HudMode hudMode) implements CustomPacketPayload {
+    public record State(boolean unlocked, StyleSystem.Style style, boolean explored, int guard, boolean guarding, boolean doubleJump, int flightUpgrade, boolean enabled, SkillSettings.HudMode hudMode) implements CustomPacketPayload {
         public static final Type<State> TYPE = new Type<>(ResourceLocation.parse("lyycore:skill_state"));
         public static final StreamCodec<RegistryFriendlyByteBuf, State> CODEC = StreamCodec.of(
-                (buffer, state) -> { buffer.writeBoolean(state.unlocked); buffer.writeEnum(state.style); buffer.writeBoolean(state.explored); buffer.writeVarInt(state.guard); buffer.writeBoolean(state.guarding); buffer.writeBoolean(state.doubleJump); buffer.writeBoolean(state.speedUp); buffer.writeBoolean(state.enabled); buffer.writeEnum(state.hudMode); },
-                buffer -> new State(buffer.readBoolean(), buffer.readEnum(StyleSystem.Style.class), buffer.readBoolean(), buffer.readVarInt(), buffer.readBoolean(), buffer.readBoolean(), buffer.readBoolean(), buffer.readBoolean(), buffer.readEnum(SkillSettings.HudMode.class)));
+                (buffer, state) -> { buffer.writeBoolean(state.unlocked); buffer.writeEnum(state.style); buffer.writeBoolean(state.explored); buffer.writeVarInt(state.guard); buffer.writeBoolean(state.guarding); buffer.writeBoolean(state.doubleJump); buffer.writeVarInt(state.flightUpgrade); buffer.writeBoolean(state.enabled); buffer.writeEnum(state.hudMode); },
+                buffer -> new State(buffer.readBoolean(), buffer.readEnum(StyleSystem.Style.class), buffer.readBoolean(), buffer.readVarInt(), buffer.readBoolean(), buffer.readBoolean(), buffer.readVarInt(), buffer.readBoolean(), buffer.readEnum(SkillSettings.HudMode.class)));
         @Override public Type<State> type() { return TYPE; }
     }
     public record DoubleJumpRequest() implements CustomPacketPayload {
@@ -58,7 +58,7 @@ public final class SkillNetwork {
         @Override public Type<SelectStyle> type() { return TYPE; }
     }
     @SubscribeEvent public static void register(RegisterPayloadHandlersEvent event) {
-        var registrar = event.registrar("11");
+        var registrar = event.registrar("12");
         registrar.playToServer(DoubleJumpRequest.TYPE, DoubleJumpRequest.CODEC, (payload, context) -> {
             if (context.player() instanceof ServerPlayer player) DoubleJump.jump(player);
         });
@@ -77,7 +77,7 @@ public final class SkillNetwork {
             SkillSystem.setUnlocked(context.player(), payload.unlocked);
             SkillSettings.set(context.player(), payload.enabled, payload.hudMode);
             context.player().getPersistentData().putBoolean("lyycore:double_jump", payload.doubleJump);
-            context.player().getPersistentData().putBoolean("lyycore:speed_up", payload.speedUp);
+            context.player().getPersistentData().putInt("lyycore:flight_upgrade", payload.flightUpgrade);
             StyleSystem.select(context.player(), payload.style);
             context.player().getPersistentData().putBoolean("lyycore:exploration", payload.explored);
             GuardSkill.setValue(context.player(), payload.guard);
@@ -94,7 +94,7 @@ public final class SkillNetwork {
     }
     public static void sync(ServerPlayer player) {
         var state = new State(SkillSystem.unlocked(player), StyleSystem.current(player), BasicSkills.available(player), GuardSkill.value(player), GuardSkill.guarding(player),
-                org.lyy.lyycore.content.research.ResearchProgress.completed(player, DoubleJump.RESEARCH), org.lyy.lyycore.content.research.ResearchProgress.completed(player, org.lyy.lyycore.content.AegisWings.SPEED_UP), SkillSettings.enabled(player), SkillSettings.hudMode(player));
+                org.lyy.lyycore.content.research.ResearchProgress.completed(player, DoubleJump.RESEARCH), org.lyy.lyycore.content.AegisWings.flightUpgrade(player), SkillSettings.enabled(player), SkillSettings.hudMode(player));
         var previous = SENT.put(player, state);
         if (!state.equals(previous)) PacketDistributor.sendToPlayer(player, state);
         if (previous == null || previous.guarding != state.guarding) WingsNetwork.sync(player);

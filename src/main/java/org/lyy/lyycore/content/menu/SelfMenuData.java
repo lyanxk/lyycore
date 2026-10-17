@@ -4,6 +4,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerData;
 import org.lyy.lyycore.content.*;
+import org.lyy.lyycore.content.PlayerAttributes.Stat;
 import org.lyy.lyycore.content.wings.WingsSettings;
 import org.lyy.lyycore.network.WingsNetwork;
 import org.lyy.lyycore.content.skills.SkillSettings;
@@ -13,12 +14,13 @@ import org.lyy.lyycore.content.equipment.*;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.component.CustomData;
 
-/** The memory menu owns this small synchronized state only; attribute values sync via vanilla attributes. */
+/** Menu state and attack damage sync here; the other displayed attributes sync through vanilla. */
 public final class SelfMenuData implements ContainerData {
     public static final int FLIGHT = -10000, PURSUIT = -10010, ALLOCATE = -10020, REFUND = -10030, ACCELERATION = -10200;
     public static final int SKILLS = -10040, STYLE_HUD = -10041, EQUIPMENT = -10050;
     private final Player player;
-    private final int[] client = new int[19];
+    private static final int ATTACK_VALUE = 19;
+    private final int[] client = new int[20];
     private int selectedSlot;
     private CustomData observedData;
     private AccessoryData accessoryData;
@@ -43,6 +45,7 @@ public final class SelfMenuData implements ContainerData {
             case 16 -> selectedSlot;
             case 17 -> accessory().traits().stream().mapToInt(stat -> 1 << stat.ordinal()).reduce(0, (a, b) -> a | b);
             case 18 -> accessory().total();
+            case ATTACK_VALUE -> Float.floatToIntBits((float)player.getAttributeValue(Stat.ATTACK.attribute));
             default -> 0;
         };
     }
@@ -51,6 +54,10 @@ public final class SelfMenuData implements ContainerData {
     public boolean hasTrait(int stat) { return (valueAt(17) & 1 << stat) != 0; }
     public int selectedSlot() { return valueAt(16); }
     public int allocated(int stat) { return valueAt(stat < 4 ? stat + 2 : 11 + stat - 4); }
+    public double attributeValue(Stat stat) {
+        // Vanilla attack damage is not syncable, so the screen needs the server's value.
+        return stat == Stat.ATTACK ? Float.intBitsToFloat(valueAt(ATTACK_VALUE)) : player.getAttributeValue(stat.attribute);
+    }
     @Override public int get(int index) { return valueAt(index / 2) >>> (index % 2 * 16) & 65535; }
     @Override public void set(int index, int value) {
         int shift = index % 2 * 16;

@@ -46,8 +46,9 @@ public final class ReforgingMenu extends AbstractContainerMenu {
             AccessoryData.reforge(result, locks(), server.getRandom());
             table.items.extractItem(1, cost(), false);
             table.items.setStackInSlot(0, result);
-            // Locks are session choices; a new roll starts with no locked rows.
-            locks.set(0); observed = result.copy();
+            // Reforging places retained traits first, so move their locks with them.
+            locks.set((1 << Integer.bitCount(locks())) - 1);
+            observed = result.copy();
             server.level().playSound(null, table.getBlockPos(), net.minecraft.sounds.SoundEvents.ANVIL_USE, net.minecraft.sounds.SoundSource.BLOCKS, .6F, 1.2F);
         } else return false;
         broadcastChanges(); return true;

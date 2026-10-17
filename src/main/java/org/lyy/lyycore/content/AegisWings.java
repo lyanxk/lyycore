@@ -20,6 +20,8 @@ public final class AegisWings {
     public static final ResourceLocation RESEARCH = ResourceLocation.parse("lyycore:research/why_cant_people_fly");
     public static final ResourceLocation ENHANCEMENT = ResourceLocation.parse("lyycore:research/wings_enhancement");
     public static final ResourceLocation SPEED_UP = ResourceLocation.parse("lyycore:research/speed_up");
+    public static final ResourceLocation SUPERSONIC = ResourceLocation.parse("lyycore:research/supersonic");
+    public static final ResourceLocation HARDENING = ResourceLocation.parse("lyycore:research/hardening");
     private static final String HIDDEN = "lyycore:wings_hidden", CLIENT_LEVEL = "lyycore:wings_client_level";
     private static final String LEVEL = "lyycore:wings_level";
     private static final String SHIELD_STARTED = "lyycore:wings_shield_started";
@@ -59,6 +61,12 @@ public final class AegisWings {
     public static boolean scoop(ServerPlayer player) {
         return org.lyy.lyycore.content.wings.WingsScoop.start(player);
     }
+    /** Highest unlocked flight upgrade: base, doubled thrust, or quadrupled thrust. */
+    public static int flightUpgrade(Player player) {
+        if (player.level().isClientSide) return player.getPersistentData().getInt("lyycore:flight_upgrade");
+        if (ResearchProgress.completed(player, SUPERSONIC)) return 2;
+        return ResearchProgress.completed(player, SPEED_UP) ? 1 : 0;
+    }
     /** Validated boost input calls this once per movement tick on server and local client. */
     public static boolean boostFlight(Player player) {
         var tier = tier(player);
@@ -66,11 +74,12 @@ public final class AegisWings {
                 || ActionRestrictions.frozen(player)) return false;
         var velocity = player.getDeltaMovement();
         var original = tier.flightBoost();
-        var profile = new WingsTier.FlightBoost(original.acceleration() * org.lyy.lyycore.content.wings.WingsSettings.acceleration(player) / 100.0, original.maxSpeed());
-        boolean enhanced = player.level().isClientSide ? player.getPersistentData().getBoolean("lyycore:speed_up") : ResearchProgress.completed(player, SPEED_UP);
-        var boosted = enhanced && profile.acceleration() > 0
-                ? velocity.add(player.getLookAngle().normalize().scale(profile.acceleration() * 2))
-                : profile.accelerate(velocity, player.getLookAngle());
+        double acceleration = original.acceleration() * org.lyy.lyycore.content.wings.WingsSettings.acceleration(player) / 100.0;
+        if (acceleration <= 0) return false;
+        int upgrade = flightUpgrade(player);
+        var boosted = upgrade > 0
+                ? velocity.add(player.getLookAngle().normalize().scale(acceleration * (upgrade == 2 ? 4 : 2)))
+                : new WingsTier.FlightBoost(acceleration, original.maxSpeed()).accelerate(velocity, player.getLookAngle());
         if (boosted.equals(velocity)) return false;
         player.setDeltaMovement(boosted);
         return true;
@@ -94,7 +103,7 @@ public final class AegisWings {
     @SubscribeEvent public static void protect(DamageReductionEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer player) || !unlocked(player)
                 || event.getSource().is(DamageTypes.FELL_OUT_OF_WORLD) || event.getDamage() <= 0) return;
-        event.reduceBy(tier(player).damageReduction());
+        event.reduceBy(ResearchProgress.completed(player, HARDENING) ? .99 : tier(player).damageReduction());
     }
     public static void showShield(ServerPlayer player) {
         if (!unlocked(player)) return;
@@ -104,5 +113,7 @@ public final class AegisWings {
     @SubscribeEvent public static void researchChanged(ResearchChangedEvent event) {
         if (event.id.equals(RESEARCH) || event.id.equals(ENHANCEMENT))
             org.lyy.lyycore.network.WingsNetwork.sync(event.player);
+        if (event.id.equals(SPEED_UP) || event.id.equals(SUPERSONIC))
+            org.lyy.lyycore.network.SkillNetwork.sync(event.player);
     }
 }

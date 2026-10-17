@@ -1,0 +1,13 @@
+{
+  "icon": { "id": "minecraft:echo_shard" },
+  "rarity": "medium",
+  "materials": [
+    { "id": "minecraft:echo_shard", "count": 64 },
+    { "id": "minecraft:chorus_fruit", "count": 64 }
+  ],
+  "prerequisites": ["lyycore:research/reforging", "lyycore:research/speed_up"],
+  "title": "research.lyycore.supersonic.title",
+  "summary": "research.lyycore.supersonic.summary",
+  "description": "research.lyycore.supersonic.description",
+  "display": { "stage": 4, "purpose": "exploration", "order": 2 }
+}
