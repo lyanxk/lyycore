@@ -95,6 +95,8 @@ public class ClientSetup {
 
     @SubscribeEvent
     public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
+        event.registerEntityRenderer(LyyEntities.TRIAL_GUIDE.get(), TrialGuideRenderer::new);
+        event.registerEntityRenderer(LyyEntities.TRIAL_ATTACK.get(), TrialAttackRenderer::new);
         event.registerBlockEntityRenderer(LyyBlockEntities.EXPERIMENT_TABLE.get(), ExperimentTableRenderer::new);
         event.registerEntityRenderer(LyyEntities.EMBERFALL_SLASH.get(), EmberfallEffectRenderer::new);
         event.registerEntityRenderer(LyyEntities.EMBERFALL_RING.get(), EmberfallEffectRenderer::new);

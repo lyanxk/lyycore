@@ -34,11 +34,19 @@ import org.lyy.lyycore.content.entity.MagicBeam;
 import org.lyy.lyycore.content.entity.sovereign.LifeSovereign;
 import org.lyy.lyycore.content.entity.sovereign.LifeSpell;
 import org.lyy.lyycore.content.entity.sovereign.DefenderSword;
+import org.lyy.lyycore.content.trial.TrialGuide;
+import org.lyy.lyycore.content.trial.TrialAttack;
 
 @EventBusSubscriber(modid = LyyCore.MODID)
 public class LyyEntities {
     public static final DeferredRegister<EntityType<?>> ENTITIES =
             DeferredRegister.create(Registries.ENTITY_TYPE, LyyCore.MODID);
+    public static final DeferredHolder<EntityType<?>, EntityType<TrialGuide>> TRIAL_GUIDE = ENTITIES.register("trial_guide", () ->
+            EntityType.Builder.of(TrialGuide::new, MobCategory.MONSTER).sized(1.8F, 1.8F)
+                    .clientTrackingRange(20).updateInterval(1).build("lyycore:trial_guide"));
+    public static final DeferredHolder<EntityType<?>, EntityType<TrialAttack>> TRIAL_ATTACK = ENTITIES.register("trial_attack", () ->
+            EntityType.Builder.of(TrialAttack::new, MobCategory.MISC).sized(.3F, .3F)
+                    .clientTrackingRange(20).updateInterval(1).noSave().fireImmune().build("lyycore:trial_attack"));
     public static final DeferredHolder<EntityType<?>, EntityType<VoidFishingHook>> VOID_FISHING_HOOK =
             ENTITIES.register("void_fishing_hook", () -> EntityType.Builder.<VoidFishingHook>of(VoidFishingHook::new, MobCategory.MISC)
                     .sized(0.25F, 0.25F).clientTrackingRange(4).updateInterval(5).noSave().build("lyycore:void_fishing_hook"));
@@ -91,6 +99,7 @@ public class LyyEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<CrystalTroop>> ASSAULT_CRYSTAL =
             ENTITIES.register("assault_crystal", () -> EntityType.Builder.<CrystalTroop>of((type, level) -> new CrystalTroop(type, level, true), MobCategory.MONSTER).sized(.65f, 1.3f).clientTrackingRange(16).updateInterval(2).build("lyycore:assault_crystal"));
     @SubscribeEvent public static void attributes(EntityAttributeCreationEvent event) {
+        event.put(TRIAL_GUIDE.get(), TrialGuide.attributes().build());
         event.put(LIFE_DEFENDER.get(), LifeSovereign.attributes(LifeSovereign.Phase.DEFENDER).build());
         event.put(LIFE_COCOON.get(), LifeSovereign.attributes(LifeSovereign.Phase.COCOON).build());
         event.put(LIFE_USURPER.get(), LifeSovereign.attributes(LifeSovereign.Phase.USURPER).build());

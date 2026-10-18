@@ -77,6 +77,8 @@ public class LyyJeiPlugin implements IModPlugin {
         reg.addItemStackInfo(new ItemStack(org.lyy.lyycore.registry.LyyItems.HAIL.get()), net.minecraft.network.chat.Component.translatable("jei.lyycore.hail"));
         reg.addItemStackInfo(new ItemStack(org.lyy.lyycore.registry.LyyItems.DRAGON_MIGHT.get()), net.minecraft.network.chat.Component.translatable("research.lyycore.in_our_hands.description"));
         reg.addItemStackInfo(new ItemStack(org.lyy.lyycore.registry.LyyItems.FRIENDLY_PROOF.get()), net.minecraft.network.chat.Component.translatable("research.lyycore.ritual.description"));
+        reg.addItemStackInfo(new ItemStack(org.lyy.lyycore.registry.LyyItems.TIME_KNOCKING_STONE.get()), net.minecraft.network.chat.Component.translatable("jei.lyycore.spacetime_trial"));
+        reg.addItemStackInfo(new ItemStack(org.lyy.lyycore.registry.LyyItems.SPACETIME_TRIAL_PROOF.get()), net.minecraft.network.chat.Component.translatable("jei.lyycore.spacetime_trial_proof"));
         reg.addRecipes(AlloyCauldronCategory.TYPE, org.lyy.lyycore.content.cauldron.CauldronMixes.specials());
         Minecraft mc = Minecraft.getInstance();
         RecipeManager rm = null;

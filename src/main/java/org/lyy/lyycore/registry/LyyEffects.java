@@ -18,6 +18,8 @@ public final class LyyEffects {
             .addAttributeModifier(Attributes.MAX_HEALTH, ResourceLocation.parse("lyycore:life_curse"), -2, AttributeModifier.Operation.ADD_VALUE));
     public static final DeferredHolder<MobEffect, MobEffect> FLIGHT_SPEED = EFFECTS.register("flight_speed", () -> new MobEffect(MobEffectCategory.BENEFICIAL, 0xFFD1EC) {});
     public static final DeferredHolder<MobEffect, MobEffect> NETHER_VISION = harmful("nether_vision", 0x9A47C4);
+    public static final DeferredHolder<MobEffect, MobEffect> SPACETIME_LOCK = harmful("spacetime_lock", 0xCEAFEF);
+    public static final DeferredHolder<MobEffect, MobEffect> TRIAL_BINDING = harmful("trial_binding", 0xC5DAFF);
     public static final DeferredHolder<MobEffect, MobEffect> STOMACH_THUNDER = harmful("stomach_thunder", 0xE9C46A);
     public static final DeferredHolder<MobEffect, MobEffect> SPATIAL_CONFUSION = harmful("spatial_confusion", 0x767FFF);
     public static final DeferredHolder<MobEffect, MobEffect> WORLD_DESTRUCTION = harmful("world_destruction", 0xE64860);

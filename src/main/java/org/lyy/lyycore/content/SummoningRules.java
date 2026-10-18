@@ -25,7 +25,9 @@ public final class SummoningRules {
                 || entity instanceof GuidingGrab || entity instanceof GuidingLaser
                 || entity instanceof LifeSovereign || entity instanceof LifeSpell || entity instanceof DefenderSword
                 || entity instanceof CrystalTroop || entity instanceof EnderCompanion
-                || entity instanceof ImaginaryDragon || entity instanceof GateMeteor;
+                || entity instanceof ImaginaryDragon || entity instanceof GateMeteor
+                || entity instanceof org.lyy.lyycore.content.trial.TrialGuide
+                || entity instanceof org.lyy.lyycore.content.trial.TrialAttack;
     }
 
     /** Also guards subordinate summons and alternative spawn entry points, without touching existing saved entities. */

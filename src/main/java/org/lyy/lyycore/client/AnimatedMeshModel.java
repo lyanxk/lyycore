@@ -81,16 +81,18 @@ final class AnimatedMeshModel {
         ResourceLocation path = ResourceLocation.parse("lyycore:geometry/" + name + ".json");
         try (var reader = Minecraft.getInstance().getResourceManager().getResourceOrThrow(path).openAsReader()) {
             JsonObject root = JsonParser.parseReader(reader).getAsJsonObject();
-            Set<Integer> emissiveTextures = new HashSet<>(), additiveTextures = new HashSet<>();
+            Set<Integer> emissiveTextures = new HashSet<>(), additiveTextures = new HashSet<>(), translucentTextures = new HashSet<>();
             if (root.has("additive_textures")) for (var texture : root.getAsJsonArray("additive_textures")) additiveTextures.add(texture.getAsInt());
             if (root.has("emissive_textures")) for (var texture : root.getAsJsonArray("emissive_textures")) emissiveTextures.add(texture.getAsInt());
+            if (root.has("translucent_textures")) for (var texture : root.getAsJsonArray("translucent_textures")) translucentTextures.add(texture.getAsInt());
             textures = new ResourceLocation[root.getAsJsonArray("textures").size()];
             for (int i = 0; i < textures.length; i++) textures[i] = ResourceLocation.parse(root.getAsJsonArray("textures").get(i).getAsString());
             renderTypes = new RenderType[textures.length];
             fullBright = new boolean[textures.length];
             for (int i = 0; i < textures.length; i++) {
                 boolean effect = additiveTextures.contains(i) || textures[i].getPath().endsWith("_fx.png");
-                renderTypes[i] = effect ? RenderType.eyes(textures[i]) : RenderType.entityCutoutNoCull(textures[i]);
+                renderTypes[i] = effect ? RenderType.eyes(textures[i]) : translucentTextures.contains(i)
+                        ? RenderType.entityTranslucent(textures[i]) : RenderType.entityCutoutNoCull(textures[i]);
                 fullBright[i] = emissiveTextures.contains(i) || textures[i].getPath().endsWith("eye_light.png") || effect;
             }
             JsonArray entries = root.getAsJsonArray("bones");

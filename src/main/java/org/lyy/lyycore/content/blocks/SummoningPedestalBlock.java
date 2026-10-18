@@ -25,7 +25,7 @@ public class SummoningPedestalBlock extends MachineBlock {
         if (stack.isEmpty()) return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         if (level.getBlockEntity(pos) instanceof SummoningPedestalBlockEntity pedestal) {
             if (!level.isClientSide && pedestal.items.getStackInSlot(0).isEmpty()) {
-                pedestal.items.insertItem(0, stack.copyWithCount(1), false); stack.consume(1, player);
+                if (pedestal.items.insertItem(0, stack.copyWithCount(1), false).isEmpty()) stack.consume(1, player);
             }
             return ItemInteractionResult.sidedSuccess(level.isClientSide);
         }
@@ -39,8 +39,11 @@ public class SummoningPedestalBlock extends MachineBlock {
         return InteractionResult.sidedSuccess(level.isClientSide);
     }
     @Override protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState replacement, boolean moving) {
-        if (!state.is(replacement.getBlock()) && !level.isClientSide && level.getBlockEntity(pos) instanceof SummoningPedestalBlockEntity pedestal)
+        if (!state.is(replacement.getBlock()) && level instanceof net.minecraft.server.level.ServerLevel server
+                && level.getBlockEntity(pos) instanceof SummoningPedestalBlockEntity pedestal) {
+            org.lyy.lyycore.content.trial.SpacetimeTrials.get(server).broken(server, pos);
             Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), pedestal.items.getStackInSlot(0));
+        }
         super.onRemove(state, level, pos, replacement, moving);
     }
 }

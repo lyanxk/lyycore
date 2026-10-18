@@ -14,6 +14,7 @@ import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import org.lyy.lyycore.content.AegisWings;
 import org.lyy.lyycore.content.CombatDamage;
+import org.lyy.lyycore.content.SpecialDamage;
 import org.lyy.lyycore.network.WingsNetwork;
 
 /** Innate weapon execution, independent of style and skill unlocks. */
@@ -84,7 +85,8 @@ public final class WingsAttack {
             state.pursuit = null;
             var target = pursuit.target;
             if (target.isAlive() && !target.isRemoved() && target.level() == player.level())
-                CombatDamage.hit(player, target, CombatDamage.source(player, "blazing_pursuit"), 640);
+                CombatDamage.hit(player, target, SpecialDamage.source(player, player, SpecialDamage.Element.FIRE),
+                        SpecialDamage.scale(player, SpecialDamage.Element.FIRE, 640));
         }
         for (var iterator = state.pending.iterator(); iterator.hasNext();) {
             var volley = iterator.next();

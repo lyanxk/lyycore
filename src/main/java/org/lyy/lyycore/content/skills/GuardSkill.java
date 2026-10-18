@@ -88,20 +88,25 @@ public final class GuardSkill {
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void perfectGuard(LivingIncomingDamageEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer player) || event.getAmount() <= 0) return;
-        var state = activeGuard(player, event.getSource());
-        if (state == null) return;
-        int elapsed = player.tickCount - state.started;
-        if (elapsed >= PERFECT_GUARD_TICKS) return;
+        if (tryPerfectGuard(player, event.getSource())) event.setCanceled(true);
+    }
 
-        event.setCanceled(true);
+    /** Also used by attacks with a separate, non-health settlement. */
+    public static boolean tryPerfectGuard(ServerPlayer player, DamageSource source) {
+        var state = activeGuard(player, source);
+        if (state == null) return false;
+        int elapsed = player.tickCount - state.started;
+        if (elapsed >= PERFECT_GUARD_TICKS) return false;
+
         setValue(player, value(player) + 10);
         if (state.counterPending && player.isShiftKeyDown() && elapsed < PERFECT_COUNTER_TICKS
-                && event.getSource().getEntity() instanceof LivingEntity attacker && attacker != player
+                && source.getEntity() instanceof LivingEntity attacker && attacker != player
                 && attacker.isAlive() && !attacker.isRemoved() && attacker.level() == player.level()) {
             state.counterPending = false;
             counterattack(player, attacker, 40);
         }
         SkillNetwork.sync(player);
+        return true;
     }
 
     @SubscribeEvent public static void damage(DamageReductionEvent event) {

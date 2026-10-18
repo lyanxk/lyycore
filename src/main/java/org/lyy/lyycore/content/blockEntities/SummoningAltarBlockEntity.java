@@ -53,6 +53,10 @@ public final class SummoningAltarBlockEntity extends SummoningPedestalBlockEntit
         else if (occupied(server)) error = "occupied";
         if (error != null) { player.displayClientMessage(Component.translatable("message.lyycore.altar."+error), true); return; }
         // Dimension and occupancy rules apply equally to ordinary offerings and the life ritual.
+        if (items.getStackInSlot(0).is(LyyItems.TIME_KNOCKING_STONE.get())) {
+            org.lyy.lyycore.content.trial.SpacetimeTrials.get(server).begin(server, player, worldPosition);
+            return;
+        }
         if (items.getStackInSlot(0).is(LyyItems.FRIENDLY_PROOF.get())) { summonLife(player, server); return; }
         var type = GateSummoning.type(items.getStackInSlot(0), true);
         if (type == null) { player.displayClientMessage(Component.translatable("message.lyycore.altar.offering"), true); return; }
@@ -91,7 +95,7 @@ public final class SummoningAltarBlockEntity extends SummoningPedestalBlockEntit
     }
     public void replaceActiveBoss(UUID old, UUID next) { if (old.equals(activeBoss)) { activeBoss = next; setChanged(); } }
     public void darknessTick() {
-        if (!(level instanceof ServerLevel server) || !SummoningRules.allowed(level) || level.getDifficulty() == Difficulty.PEACEFUL) return;
+        if (!(level instanceof ServerLevel server) || locked() || !SummoningRules.allowed(level) || level.getDifficulty() == Difficulty.PEACEFUL) return;
         var pedestals = pedestals();
         var raids = OtherworldRaids.get(server);
         if (pedestals.size() != 8 || raids.active(worldPosition)) return;

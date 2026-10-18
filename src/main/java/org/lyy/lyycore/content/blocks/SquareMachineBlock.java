@@ -29,7 +29,8 @@ public abstract class SquareMachineBlock extends MachineBlock {
         this(properties, model, height, 3);
     }
     protected SquareMachineBlock(Properties properties, String model, int height, int width) {
-        super(properties.noOcclusion().pushReaction(PushReaction.BLOCK));
+        // Thin or empty model parts still occupy a machine cell and must not be washed away.
+        super(properties.noOcclusion().forceSolidOn().pushReaction(PushReaction.BLOCK));
         this.height = height; this.width = width;
         this.shapes = SquareMachineShapes.load(model);
         registerDefaultState(stateDefinition.any().setValue(PART, centerPart()));

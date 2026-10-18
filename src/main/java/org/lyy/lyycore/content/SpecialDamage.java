@@ -14,6 +14,10 @@ import org.lyy.lyycore.registry.LyyAttributes;
 
 /** Elemental scaling and single-hit settlement, including combined strike formulas. */
 public final class SpecialDamage {
+    public static boolean isSpecial(DamageSource source) {
+        return source.is(Element.PHYSICAL.type) || source.is(Element.ICE.type)
+                || source.is(Element.FIRE.type) || source.is(Element.LIGHTNING.type);
+    }
     public enum Element {
         PHYSICAL(LyyAttributes.PHYSICAL), ICE(LyyAttributes.ICE), FIRE(LyyAttributes.FIRE), LIGHTNING(LyyAttributes.LIGHTNING);
         public final Holder<Attribute> attribute;

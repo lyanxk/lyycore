@@ -88,6 +88,8 @@ public class LyyCreativeTab {
                         output.accept(LyyItems.ENDLESS_EROSION.get());
                         output.accept(LyyItems.MIRROR.get());
                         output.accept(LyyItems.REFORGING_TABLE.get());
+                        output.accept(LyyItems.TIME_KNOCKING_STONE.get());
+                        output.accept(LyyItems.SPACETIME_TRIAL_PROOF.get());
                         output.accept(LyyItems.PURE_IMAGINARY_CRYSTAL_NECKLACE.get());
                         output.accept(LyyItems.PURE_IMAGINARY_STEEL_NOTEBOOK.get());
                         output.accept(LyyItems.FROST_STEEL_CRYSTAL_NECKLACE.get());

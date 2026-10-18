@@ -1,0 +1,16 @@
+{
+  "icon": { "id": "lyycore:time_knocking_stone" },
+  "rarity": "special",
+  "experience_points": 12000,
+  "prerequisites": ["lyycore:research/reforging"],
+  "materials": [
+    { "id": "minecraft:echo_shard", "count": 64 },
+    { "id": "lyycore:sixfold_alloy_ingot", "count": 64 },
+    { "id": "lyycore:flawless_crystal", "count": 64 }
+  ],
+  "title": "research.lyycore.knocking.title",
+  "summary": "research.lyycore.knocking.summary",
+  "description": "research.lyycore.knocking.description",
+  "production": { "result": { "id": "lyycore:time_knocking_stone" }, "duration": 100 },
+  "display": { "stage": 4, "purpose": "ritual", "order": 8 }
+}

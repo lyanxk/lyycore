@@ -22,7 +22,8 @@ public final class UtilityTooltips {
             return;
         }
         String hint = switch (id.getPath()) {
-            case "dragon_might", "thunder_scythe", "amplification_potion", "endless_erosion", "friendly_proof", "zhuzhu" -> "";
+            case "dragon_might", "thunder_scythe", "amplification_potion", "endless_erosion", "friendly_proof", "zhuzhu",
+                    "time_knocking_stone", "spacetime_trial_proof" -> "";
             case "pure_smelting_plant_shell", "pure_smelting_plant", "pure_imaginary_steel", "imaginary_dragon_nest" -> "";
             case "mind_control_beacon" -> "open";
             case "imaginary_energy_cell", "imaginary_alloy_forge", "crystal_condensing_frame" -> "open";
