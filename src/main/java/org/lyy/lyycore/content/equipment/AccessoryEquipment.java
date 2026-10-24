@@ -21,33 +21,23 @@ public final class AccessoryEquipment extends ItemStackHandler {
     private static final ResourceLocation BONUS = ResourceLocation.parse("lyycore:accessories");
     private static final Map<ServerPlayer, AccessoryEquipment> INVENTORIES = new HashMap<>();
     private final ServerPlayer owner;
-    private boolean loading;
     private ItemStack[] committedItems;
 
     private AccessoryEquipment(ServerPlayer owner) {
-        super(2); this.owner = owner; loading = true;
+        super(2); this.owner = owner;
         deserializeNBT(owner.registryAccess(), owner.getPersistentData().getCompound(Player.PERSISTED_NBT_TAG).getCompound(KEY));
-        if (getSlots() != 2) setSize(2);
-        for (int i = 0; i < 2; i++) AccessoryData.initialize(getStackInSlot(i), owner.getRandom());
-        loading = false;
     }
     public static AccessoryEquipment get(ServerPlayer player) { return INVENTORIES.computeIfAbsent(player, AccessoryEquipment::new); }
     @Override public int getSlotLimit(int slot) { return 1; }
     @Override public boolean isItemValid(int slot, ItemStack stack) {
         return stack.getItem() instanceof AccessoryItem item && item.kind.ordinal() == slot;
     }
-    @Override protected void onContentsChanged(int slot) { if (!loading) changed(); }
+    @Override protected void onContentsChanged(int slot) { changed(); }
     public void changed() { commit(false); }
 
-    private boolean inventoryChanged() {
-        if (committedItems == null) return true;
-        for (int slot = 0; slot < 2; slot++)
-            if (!ItemStack.matches(committedItems[slot], getStackInSlot(slot))) return true;
-        return false;
-    }
     private void commit(boolean restoreAttributes) {
-        if (loading) return;
-        boolean changed = inventoryChanged();
+        boolean changed = committedItems == null || !ItemStack.matches(committedItems[0], getStackInSlot(0))
+                || !ItemStack.matches(committedItems[1], getStackInSlot(1));
         if (changed) {
             for (int i = 0; i < 2; i++) AccessoryData.initialize(getStackInSlot(i), owner.getRandom());
             var persisted = owner.getPersistentData().getCompound(Player.PERSISTED_NBT_TAG);
@@ -65,16 +55,15 @@ public final class AccessoryEquipment extends ItemStackHandler {
         boolean set = getStackInSlot(0).getItem() instanceof AccessoryItem a && getStackInSlot(1).getItem() instanceof AccessoryItem b && a.series == b.series;
         for (int slot = 0; slot < 2; slot++) {
             var stack = getStackInSlot(slot);
-            if (!(stack.getItem() instanceof AccessoryItem item) || !isItemValid(slot, stack)) continue;
+            if (!(stack.getItem() instanceof AccessoryItem item)) continue;
             for (var bonus : item.series.bonuses) totals[bonus.stat().ordinal()] += bonus.amount() * (set ? 2 : 1);
             var data = AccessoryData.read(stack);
             for (var stat : data.traits()) totals[stat.ordinal()] += data.allocated(stat) * stat.perPoint;
         }
         for (var stat : Stat.values()) PlayerAttributes.setPersistentBonus(owner, stat.attribute, BONUS, totals[stat.ordinal()]);
     }
-    public boolean allocate(int slot, int stat, boolean add) {
-        if (slot < 0 || slot >= 2 || stat < 0 || stat >= Stat.values().length || !PlayerAttributes.unlocked(owner)) return false;
-        if (!AccessoryData.allocate(getStackInSlot(slot), Stat.values()[stat], add)) return false;
+    public boolean allocate(int slot, Stat stat, boolean add) {
+        if (!AccessoryData.allocate(getStackInSlot(slot), stat, add)) return false;
         changed(); return true;
     }
     @SubscribeEvent public static void login(PlayerEvent.PlayerLoggedInEvent event) { if (event.getEntity() instanceof ServerPlayer player) get(player).commit(true); }

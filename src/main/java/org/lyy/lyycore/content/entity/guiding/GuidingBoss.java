@@ -17,7 +17,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.*;
 import org.joml.Vector3f;
-import org.lyy.lyycore.content.GateSummoning;
+import org.lyy.lyycore.content.SummoningReservations;
 import org.lyy.lyycore.registry.LyyEntities;
 
 /** Two encounter phases share targeting and persistence, with explicit non-overlapping actions. */
@@ -285,15 +285,13 @@ public final class GuidingBoss extends AnimatedMonster {
         if (!secondPhase() && !transitioned) {
             if (encounter == null) initialize();
             var next = LyyEntities.ENDLESS_DEMAND.get().create(server);
-            if (next != null) {
-                next.moveTo(position()); next.encounter = encounter; next.targetId = targetId; next.gate = gate;
-                next.setYRot(getYRot()); next.yBodyRot = next.yHeadRot = getYRot();
-                if (server.addFreshEntity(next)) {
-                    transitioned = true;
-                    GuidingEncounter.get(server).transition(encounter, next.getUUID(), GuidingEncounter.Phase.ABSORB);
-                    next.initialize();
-                    if (gate != null) GateSummoning.replaceActiveBoss(server, gate, getUUID(), next.getUUID());
-                }
+            next.moveTo(position()); next.encounter = encounter; next.targetId = targetId; next.gate = gate;
+            next.setYRot(getYRot()); next.yBodyRot = next.yHeadRot = getYRot();
+            if (server.addFreshEntity(next)) {
+                transitioned = true;
+                GuidingEncounter.get(server).transition(encounter, next.getUUID(), GuidingEncounter.Phase.ABSORB);
+                next.initialize();
+                if (gate != null) SummoningReservations.get(server).reserve(gate, next.getUUID());
             }
         }
         if (!transitioned) GuidingEncounter.get(server).end(encounter);

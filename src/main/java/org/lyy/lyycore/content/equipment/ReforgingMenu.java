@@ -7,9 +7,10 @@ import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import org.lyy.lyycore.content.blockEntities.ReforgingTableBlockEntity;
 import org.lyy.lyycore.content.menu.BlockEntityItemSlot;
+import org.lyy.lyycore.content.menu.MachineMenu;
 import org.lyy.lyycore.registry.LyyMenus;
 
-public final class ReforgingMenu extends AbstractContainerMenu {
+public final class ReforgingMenu extends MachineMenu {
     private final ReforgingTableBlockEntity table;
     private final DataSlot locks = DataSlot.standalone();
     private ItemStack observed = ItemStack.EMPTY;
@@ -20,8 +21,7 @@ public final class ReforgingMenu extends AbstractContainerMenu {
         super(LyyMenus.REFORGING.get(), id); this.table = table; addDataSlot(locks);
         addSlot(new BlockEntityItemSlot(table, table.items, 0, 42, 42));
         addSlot(new BlockEntityItemSlot(table, table.items, 1, 42, 82));
-        for (int row = 0; row < 3; row++) for (int col = 0; col < 9; col++) addSlot(new Slot(inventory, 9 + row * 9 + col, 44 + col * 18, 160 + row * 18));
-        for (int col = 0; col < 9; col++) addSlot(new Slot(inventory, col, 44 + col * 18, 218));
+        addPlayerSlots(inventory, 44, 160);
     }
     public ItemStack accessory() { return getSlot(0).getItem(); }
     public int locks() { return locks.get(); }
@@ -57,13 +57,10 @@ public final class ReforgingMenu extends AbstractContainerMenu {
         return player.isAlive() && !table.isRemoved() && player.level() == table.getLevel() && player.distanceToSqr(table.getBlockPos().getCenter()) < 64;
     }
     @Override public ItemStack quickMoveStack(Player player, int index) {
-        if (index < 0 || index >= slots.size()) return ItemStack.EMPTY;
-        var slot = slots.get(index); var stack = slot.getItem(); var copy = stack.copy();
-        if (stack.isEmpty()) return ItemStack.EMPTY;
-        if (index < 2) { if (!moveItemStackTo(stack, 2, slots.size(), true)) return ItemStack.EMPTY; }
-        else if (table.items.isItemValid(0, stack)) { if (!moveItemStackTo(stack, 0, 1, false)) return ItemStack.EMPTY; }
-        else if (table.items.isItemValid(1, stack)) { if (!moveItemStackTo(stack, 1, 2, false)) return ItemStack.EMPTY; }
-        else if (!(index < 29 ? moveItemStackTo(stack, 29, 38, false) : moveItemStackTo(stack, 2, 29, false))) return ItemStack.EMPTY;
-        if (stack.isEmpty()) slot.set(ItemStack.EMPTY); else slot.setChanged(); slot.onTake(player, stack); return copy;
+        if (index < 2) return moveStack(player, index, 2, slots.size(), true);
+        var stack = slots.get(index).getItem();
+        for (int target = 0; target < 2; target++)
+            if (table.items.isItemValid(target, stack)) return moveStack(player, index, target, target + 1, false);
+        return movePlayerStack(player, index);
     }
 }

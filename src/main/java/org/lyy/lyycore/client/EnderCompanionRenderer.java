@@ -20,12 +20,12 @@ public final class EnderCompanionRenderer extends EntityRenderer<EnderCompanion>
     @Override public void render(EnderCompanion dragon, float yaw, float partial, PoseStack pose, MultiBufferSource buffers, int light) {
         pose.pushPose();
         pose.mulPose(Axis.YP.rotationDegrees(180 - Mth.rotLerp(partial, dragon.yBodyRotO, dragon.yBodyRot)));
-        float walkTime = Mth.lerp(partial, dragon.previousWalkTime, dragon.walkTime);
+        double walkTime = Mth.lerp(partial, dragon.previousWalkTime, dragon.walkTime);
         float flying = Mth.lerp(partial, dragon.previousFlightBlend, dragon.flightBlend);
         float walking = Mth.clamp(dragon.walkAnimation.speed(partial) * 4, 0, 1);
         float gliding = Mth.clamp((float) dragon.getDeltaMovement().horizontalDistance() * 8, 0, 1);
         if (dragon.stage() == 3) adult.render(pose, buffers, light, "fold_wings", 1.5F);
-        else (dragon.stage() == 0 ? hatchling : juvenile).renderBlended(pose, buffers, light, dragon.tickCount + partial, walkTime, walking, flying, gliding);
+        else (dragon.stage() == 0 ? hatchling : juvenile).renderBlended(pose, buffers, light, (double) dragon.tickCount + partial, walkTime, walking, flying, gliding);
         pose.popPose();
         super.render(dragon, yaw, partial, pose, buffers, light);
     }

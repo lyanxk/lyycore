@@ -53,7 +53,7 @@ public final class ResearchProgress {
         return true;
     }
     public static boolean canAfford(Player player, ResearchDefinition research) {
-        return available(player, research) && hasExperience(player, research) && payment(player, research) != null;
+        return hasExperience(player, research) && payment(player, research) != null;
     }
     /** Derive spendable XP from the level and bar; commands can leave totalExperience stale. */
     public static int experiencePoints(Player player) {

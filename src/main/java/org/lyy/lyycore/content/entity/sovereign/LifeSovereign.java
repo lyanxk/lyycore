@@ -14,7 +14,7 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.*;
-import org.lyy.lyycore.content.GateSummoning;
+import org.lyy.lyycore.content.SummoningReservations;
 import org.lyy.lyycore.content.entity.AnimatedMonster;
 import org.lyy.lyycore.registry.*;
 
@@ -38,11 +38,6 @@ public final class LifeSovereign extends AnimatedMonster {
                 default -> throw new IllegalArgumentException("Not a casting action: " + kind);
             };
         }
-        /** Compatibility is resolved once when loading old saves, never in the AI hot path. */
-        static Action fromClip(String clip) {
-            for (var value : values()) if (value.clip.equals(clip)) return value;
-            return IDLE;
-        }
     }
     private final ServerBossEvent bar = new ServerBossEvent(getDisplayName(), BossEvent.BossBarColor.PURPLE, BossEvent.BossBarOverlay.PROGRESS);
     private final Map<UUID, Integer> hitCounts = new HashMap<>();
@@ -62,7 +57,7 @@ public final class LifeSovereign extends AnimatedMonster {
         else restartAnimation(next.clip);
     }
     // Both gameplay and rendering keep using the same synchronized clock.
-    private int elapsedTicks() { return Math.round(animationTime(0) * 20); }
+    private int elapsedTicks() { return (int) Math.min(Integer.MAX_VALUE, Math.round(animationTime(0) * 20)); }
     public Phase phase() {
         return getType() == LyyEntities.LIFE_COCOON.get() ? Phase.COCOON : getType() == LyyEntities.LIFE_USURPER.get() ? Phase.USURPER : Phase.DEFENDER;
     }
@@ -266,13 +261,13 @@ public final class LifeSovereign extends AnimatedMonster {
     private void changePhase(EntityType<LifeSovereign> type) {
         var server = (ServerLevel)level(); var battle = battle();
         if (battle == null) return;
-        var next = type.create(server); if (next == null) return;
+        var next = type.create(server);
         next.encounter = encounter; next.moveTo(Vec3.atBottomCenterOf(battle.altar.above()));
         next.action(type == LyyEntities.LIFE_COCOON.get() ? Action.FORM : Action.EMERGE);
         if (!server.addFreshEntity(next)) return;
         transitioned = true;
         LifeEncounters.get(server).transition(encounter, next.getUUID());
-        GateSummoning.replaceActiveBoss(server, battle.altar, getUUID(), next.getUUID());
+        SummoningReservations.get(server).reserve(battle.altar, next.getUUID());
         discard();
     }
     @Override public boolean hurt(DamageSource source, float amount) {
@@ -323,11 +318,7 @@ public final class LifeSovereign extends AnimatedMonster {
         crystal = tag.hasUUID("Crystal") ? tag.getUUID("Crystal") : null;
         castingTarget = tag.hasUUID("CastingTarget") ? tag.getUUID("CastingTarget") : null;
         swordTarget = tag.hasUUID("SwordTarget") ? tag.getUUID("SwordTarget") : null;
-        action = Action.fromClip(animation());
-        if (tag.contains("CombatAction")) {
-            try { action = Action.valueOf(tag.getString("CombatAction")); }
-            catch (IllegalArgumentException ignored) { /* Keep the migrated animation state. */ }
-        }
+        action = tag.contains("CombatAction") ? Action.valueOf(tag.getString("CombatAction")) : Action.IDLE;
         swordCooldown = Math.clamp(tag.getInt("SwordCooldown"), 0, SWORD_COOLDOWN_TICKS);
         swordReleased = tag.getBoolean("SwordReleased");
         spellReleased = tag.getBoolean("SpellReleased");

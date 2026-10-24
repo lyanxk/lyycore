@@ -80,7 +80,7 @@ public abstract class CondensingFrameBlock extends MachineBlock {
 
     protected final void openMenu(Level level, BlockPos pos, Player player) {
         if (player instanceof ServerPlayer serverPlayer && level.getBlockEntity(pos) instanceof CondensingFrameBlockEntity be)
-            serverPlayer.openMenu(be, pos);
+            serverPlayer.openMenu(be);
     }
 
     protected abstract BlockEntityType<? extends CondensingFrameBlockEntity> frameBlockEntityType();

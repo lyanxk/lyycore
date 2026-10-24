@@ -77,8 +77,8 @@ public final class SelfMenuData implements ContainerData {
         }
         if (id == EQUIPMENT || id == EQUIPMENT - 1) { selectedSlot = EQUIPMENT - id; return true; }
         int statCount = PlayerAttributes.Stat.values().length;
-        if (id <= ALLOCATE && id > ALLOCATE - statCount) return AccessoryEquipment.get(player).allocate(selectedSlot, ALLOCATE - id, true);
-        if (id <= REFUND && id > REFUND - statCount) return AccessoryEquipment.get(player).allocate(selectedSlot, REFUND - id, false);
+        if (id <= ALLOCATE && id > ALLOCATE - statCount) return AccessoryEquipment.get(player).allocate(selectedSlot, Stat.values()[ALLOCATE - id], true);
+        if (id <= REFUND && id > REFUND - statCount) return AccessoryEquipment.get(player).allocate(selectedSlot, Stat.values()[REFUND - id], false);
         if (!AegisWings.unlocked(player)) return false;
         int pursuit = WingsSettings.pursuit(player), acceleration = WingsSettings.acceleration(player);
         boolean flight = WingsSettings.flight(player);

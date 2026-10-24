@@ -52,7 +52,7 @@ public final class TrialClient {
         pose.pushPose();
         pose.scale(.8F,1.4F,.9F);
         binding.render(pose, event.getMultiBufferSource(), LightTexture.FULL_BRIGHT, "idle",
-                (event.getEntity().tickCount+event.getPartialTick())/20);
+                ((double) event.getEntity().tickCount+event.getPartialTick())/20);
         pose.popPose();
     }
 }

@@ -8,10 +8,11 @@ import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import net.neoforged.neoforge.items.SlotItemHandler;
+import org.lyy.lyycore.content.menu.MachineMenu;
 import org.lyy.lyycore.registry.LyyBlocks;
 import org.lyy.lyycore.registry.LyyMenus;
 
-public final class AccessoryMenu extends AbstractContainerMenu {
+public final class AccessoryMenu extends MachineMenu {
     private final ContainerLevelAccess access;
     public AccessoryMenu(int id, Inventory inventory, RegistryFriendlyByteBuf buffer) { this(id, inventory, buffer.readBlockPos()); }
     public AccessoryMenu(int id, Inventory inventory, BlockPos pos) {
@@ -26,20 +27,12 @@ public final class AccessoryMenu extends AbstractContainerMenu {
                 @Override public void setChanged() { super.setChanged(); if (items instanceof AccessoryEquipment equipment) equipment.changed(); }
             });
         }
-        int x = 44, y = 128;
-        for (int row = 0; row < 3; row++) for (int col = 0; col < 9; col++) addSlot(new Slot(inventory, 9 + row * 9 + col, x + col * 18, y + row * 18));
-        for (int col = 0; col < 9; col++) addSlot(new Slot(inventory, col, x + col * 18, y + 58));
+        addPlayerSlots(inventory, 44, 128);
     }
     @Override public boolean stillValid(Player player) { return player.isAlive() && stillValid(access, player, LyyBlocks.MIRROR.get()); }
     @Override public ItemStack quickMoveStack(Player player, int index) {
-        if (index < 0 || index >= slots.size()) return ItemStack.EMPTY;
-        var slot = slots.get(index); var stack = slot.getItem(); var copy = stack.copy();
-        if (stack.isEmpty()) return ItemStack.EMPTY;
-        if (index < 2) { if (!moveItemStackTo(stack, 2, slots.size(), true)) return ItemStack.EMPTY; }
-        else if (stack.getItem() instanceof AccessoryItem item) {
-            if (!moveItemStackTo(stack, item.kind.ordinal(), item.kind.ordinal() + 1, false)) return ItemStack.EMPTY;
-        } else if (!(index < 29 ? moveItemStackTo(stack, 29, 38, false) : moveItemStackTo(stack, 2, 29, false))) return ItemStack.EMPTY;
-        if (stack.isEmpty()) slot.set(ItemStack.EMPTY); else slot.setChanged();
-        slot.onTake(player, stack); return copy;
+        if (index < 2) return moveStack(player, index, 2, slots.size(), true);
+        return slots.get(index).getItem().getItem() instanceof AccessoryItem item
+                ? moveStack(player, index, item.kind.ordinal(), item.kind.ordinal() + 1, false) : movePlayerStack(player, index);
     }
 }

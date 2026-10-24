@@ -32,22 +32,18 @@ public final class LogisticsNetwork {
             b.writeVarInt(p.menu); b.writeVarInt(p.page); b.writeVarInt(p.pages);
             b.writeUUID(p.bound); b.writeUtf(p.boundName, LogisticsChannels.NAME_LIMIT);
             b.writeBoolean(p.canCreate); b.writeBoolean(p.hasBinding);
-            b.writeVarInt(p.entries.size());
-            for (var entry : p.entries) {
-                b.writeUUID(entry.id); b.writeUtf(entry.name, LogisticsChannels.NAME_LIMIT);
-                b.writeResourceLocation(entry.source.dimension().location()); b.writeBlockPos(entry.source.pos());
-                b.writeBoolean(entry.publicChannel); b.writeBoolean(entry.editable);
-            }
+            b.writeCollection(p.entries, (buf, entry) -> {
+                buf.writeUUID(entry.id); buf.writeUtf(entry.name, LogisticsChannels.NAME_LIMIT);
+                buf.writeResourceLocation(entry.source.dimension().location()); buf.writeBlockPos(entry.source.pos());
+                buf.writeBoolean(entry.publicChannel); buf.writeBoolean(entry.editable);
+            });
         }, b -> {
             int menu = b.readVarInt(), page = b.readVarInt(), pages = b.readVarInt();
             var bound = b.readUUID(); var name = b.readUtf(LogisticsChannels.NAME_LIMIT);
             boolean canCreate = b.readBoolean(), hasBinding = b.readBoolean();
-            int count = b.readVarInt();
-            if (count < 0 || count > LogisticsMenu.PAGE_SIZE) throw new IllegalArgumentException("Invalid channel page size");
-            var entries = new ArrayList<Entry>(count);
-            for (int i = 0; i < count; i++) entries.add(new Entry(b.readUUID(), b.readUtf(LogisticsChannels.NAME_LIMIT),
-                    GlobalPos.of(ResourceKey.create(Registries.DIMENSION, b.readResourceLocation()), b.readBlockPos()), b.readBoolean(), b.readBoolean()));
-            return new Snapshot(menu, page, pages, bound, name, canCreate, hasBinding, List.copyOf(entries));
+            var entries = b.readList(buf -> new Entry(buf.readUUID(), buf.readUtf(LogisticsChannels.NAME_LIMIT),
+                    GlobalPos.of(ResourceKey.create(Registries.DIMENSION, buf.readResourceLocation()), buf.readBlockPos()), buf.readBoolean(), buf.readBoolean()));
+            return new Snapshot(menu, page, pages, bound, name, canCreate, hasBinding, entries);
         });
         @Override public Type<Snapshot> type() { return TYPE; }
     }

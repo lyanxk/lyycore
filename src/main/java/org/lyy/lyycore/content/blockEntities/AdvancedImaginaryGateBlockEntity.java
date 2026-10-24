@@ -114,8 +114,7 @@ public final class AdvancedImaginaryGateBlockEntity extends ImaginaryGateBlockEn
         completedColumns = Math.clamp(tag.getInt("Columns"), 0, COLUMNS.size());
         elapsedTicks = Math.clamp(tag.getInt("Elapsed"), 0, 19);
         running = tag.getBoolean("Running") && completedColumns < COLUMNS.size();
-        // Each completed legacy block column already wrote its whole quart column.
-        // Reconstructing from progress also preserves de-duplication after a restart.
+        // Rebuild quart-column de-duplication from saved progress after a restart.
         convertedQuartColumns.clear();
         for (int i = 0; i < completedColumns; i++) {
             var column = worldPosition.offset(COLUMNS.get(i));

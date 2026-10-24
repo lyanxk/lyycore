@@ -24,8 +24,6 @@ public final class MindControlData extends SavedData {
     private static final Factory<MindControlData> FACTORY = new Factory<>(MindControlData::new, MindControlData::load);
     private final Map<UUID, Binding> owners = new HashMap<>();
     private final Map<UUID, Execution> executions = new HashMap<>();
-    // Older saves stored target UUIDs only. Migrate before rebinding overwrites entity metadata.
-    private final Set<UUID> legacyExecutions = new HashSet<>();
     public static MindControlData get(ServerLevel level) { return level.getServer().overworld().getDataStorage().computeIfAbsent(FACTORY, "lyycore_mind_control"); }
     public Binding active(UUID owner) { return owners.get(owner); }
     public Binding activate(UUID owner, GlobalPos beacon) {
@@ -62,11 +60,6 @@ public final class MindControlData extends SavedData {
         if (changed) setDirty();
     }
     public Execution execution(UUID mob) { return executions.get(mob); }
-    public void resolveLegacyExecution(UUID mob, UUID owner, UUID binding) {
-        if (owner == null || binding == null || !legacyExecutions.remove(mob)) return;
-        executions.putIfAbsent(mob, new Execution(mob, owner, binding, false)); setDirty();
-    }
-    public boolean hasLegacyExecution(UUID mob) { return legacyExecutions.contains(mob); }
     /** Consume the attempt before damage hooks, preventing reentrant or automatic retries. */
     public Execution beginExecution(UUID mob) {
         var request = executions.get(mob);
@@ -83,9 +76,7 @@ public final class MindControlData extends SavedData {
         setDirty();
     }
     public void forgetExecution(UUID mob) {
-        boolean changed = executions.remove(mob) != null;
-        changed |= legacyExecutions.remove(mob);
-        if (changed) setDirty();
+        if (executions.remove(mob) != null) setDirty();
     }
     @Override public CompoundTag save(CompoundTag tag, HolderLookup.Provider registries) {
         var bindings = new ListTag();
@@ -105,27 +96,23 @@ public final class MindControlData extends SavedData {
             entry.putBoolean("Failed", request.failed); pending.add(entry);
         }
         tag.put("ExecutionsV2", pending);
-        var legacy = new ListTag(); legacyExecutions.forEach(id -> legacy.add(NbtUtils.createUUID(id))); tag.put("Executions", legacy);
         return tag;
     }
     private static MindControlData load(CompoundTag tag, HolderLookup.Provider registries) {
         var data = new MindControlData();
         for (var raw : tag.getList("Bindings", Tag.TAG_COMPOUND)) {
             var entry = (CompoundTag)raw;
-            var dimension = ResourceLocation.tryParse(entry.getString("Dimension"));
-            if (dimension == null || !entry.hasUUID("Owner") || !entry.hasUUID("Id")) continue;
+            var dimension = ResourceLocation.parse(entry.getString("Dimension"));
             var binding = new Binding(entry.getUUID("Id"), entry.getUUID("Owner"), GlobalPos.of(ResourceKey.create(net.minecraft.core.registries.Registries.DIMENSION, dimension), BlockPos.of(entry.getLong("Pos"))));
-            try { binding.mode = Mode.valueOf(entry.getString("Mode")); } catch (IllegalArgumentException ignored) { }
+            binding.mode = Mode.valueOf(entry.getString("Mode"));
             for (var mob : entry.getList("Mobs", Tag.TAG_INT_ARRAY)) binding.members.add(NbtUtils.loadUUID(mob));
             data.owners.put(binding.owner, binding);
         }
         for (var raw : tag.getList("ExecutionsV2", Tag.TAG_COMPOUND)) {
             var entry = (CompoundTag)raw;
-            if (!entry.hasUUID("Mob") || !entry.hasUUID("Owner") || !entry.hasUUID("Binding")) continue;
             var request = new Execution(entry.getUUID("Mob"), entry.getUUID("Owner"), entry.getUUID("Binding"), entry.getBoolean("Failed"));
             data.executions.put(request.mob, request);
         }
-        for (var mob : tag.getList("Executions", Tag.TAG_INT_ARRAY)) data.legacyExecutions.add(NbtUtils.loadUUID(mob));
         return data;
     }
 }

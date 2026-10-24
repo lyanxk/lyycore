@@ -41,7 +41,16 @@ def import_machine(folder, name, height, source_name=None, oriented=False, width
         image = Image.open(SOURCE / folder / "textures" / filename).convert("RGBA")
         if texture.get("render_mode") == "emissive":
             emissive.add(i)
-            image.putalpha(255)
+            # BB uses alpha as emission strength, so cutout emissive atlases
+            # supply their actual surface opacity separately.
+            opacity_path = SOURCE / folder / "textures" / f"{Path(filename).stem}.opacity.png"
+            if opacity_path.exists():
+                with Image.open(opacity_path) as opacity:
+                    if opacity.size != image.size:
+                        raise ValueError(f"Emissive opacity size mismatch: {opacity_path}")
+                    image.putalpha(opacity.convert("L"))
+            else:
+                image.putalpha(255)
         image.save(target)
         paths.append(f"lyycore:textures/block/{name}/{filename}")
         texture_map[str(i)] = f"lyycore:block/{name}/{Path(filename).stem}"

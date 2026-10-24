@@ -7,16 +7,10 @@ public final class ImaginaryEnergyStorage implements ImaginaryEnergy {
     private final Runnable changed;
 
     public ImaginaryEnergyStorage(int capacity, int maxReceive, int maxExtract, Runnable changed) {
-        if (capacity < 0 || maxReceive < 0 || maxExtract < 0)
-            throw new IllegalArgumentException("Energy capacity and transfer limits must be nonnegative");
         this.capacity = capacity;
         this.maxReceive = maxReceive;
         this.maxExtract = maxExtract;
-        this.changed = java.util.Objects.requireNonNull(changed);
-    }
-
-    public ImaginaryEnergyStorage(int capacity, int maxReceive, int maxExtract) {
-        this(capacity, maxReceive, maxExtract, () -> {});
+        this.changed = changed;
     }
 
     @Override public int getImaginaryEnergyStored() { return imaginaryEnergy; }

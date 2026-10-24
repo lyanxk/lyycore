@@ -146,22 +146,13 @@ public class TargetedEnergySourceBlockEntity extends BlockEntity implements Coor
         super.saveAdditional(tag, registries);
         var saved = new ListTag();
         for (var target : targets)
-            GlobalPos.CODEC.encodeStart(NbtOps.INSTANCE, target.connection).result().ifPresent(saved::add);
-        tag.remove("Target");
+            saved.add(GlobalPos.CODEC.encodeStart(NbtOps.INSTANCE, target.connection).getOrThrow());
         tag.put("Targets", saved);
     }
     @Override protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
         clearTargets();
-        var loaded = new HashSet<GlobalPos>();
-        if (tag.contains("Targets", Tag.TAG_LIST)) {
-            for (var value : tag.getList("Targets", Tag.TAG_COMPOUND))
-                GlobalPos.CODEC.parse(NbtOps.INSTANCE, value).result().ifPresent(connection -> {
-                    if (targets.size() < maxTargets && loaded.add(connection)) targets.add(new Target(connection));
-                });
-        } else if (tag.contains("Target")) {
-            GlobalPos.CODEC.parse(NbtOps.INSTANCE, tag.get("Target")).result()
-                    .ifPresent(connection -> targets.add(new Target(connection)));
-        }
+        for (var value : tag.getList("Targets", Tag.TAG_COMPOUND))
+            targets.add(new Target(GlobalPos.CODEC.parse(NbtOps.INSTANCE, value).getOrThrow()));
     }
 }

@@ -20,7 +20,7 @@ public final class CrystalTroopRenderer extends EntityRenderer<CrystalTroop> {
         boolean attack = age >= 0 && age < (e.assault() ? 14 : 12.8f);
         boolean moving = e.charging() || e.position().distanceToSqr(new Vec3(e.xOld, e.yOld, e.zOld)) > .0001;
         pose.pushPose(); pose.mulPose(Axis.YP.rotationDegrees(180 - yaw));
-        model.render(pose, buffers, light, attack ? "attack" : moving ? "move" : "idle", (attack ? age : e.tickCount + partial) / 20);
+        model.render(pose, buffers, light, attack ? "attack" : moving ? "move" : "idle", (attack ? age : (double) e.tickCount + partial) / 20);
         pose.popPose();
         if (!e.assault() && age >= 0 && age < 6) {
             Vec3 start = new Vec3(0, e.getBbHeight() / 2, 0), end = e.beamEnd().subtract(e.getPosition(partial));

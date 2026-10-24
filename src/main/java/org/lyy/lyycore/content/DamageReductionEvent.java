@@ -24,10 +24,5 @@ public final class DamageReductionEvent extends LivingEvent {
     public double getMultiplier() { return multiplier; }
 
     /** Adds a reduction fraction: 0.2 means 20% less damage; 0.5 and 0.2 together leave 40%. */
-    public void reduceBy(double fraction) {
-        if (!Double.isFinite(fraction) || fraction < 0 || fraction > 1) {
-            throw new IllegalArgumentException("Damage reduction must be between 0 and 1: " + fraction);
-        }
-        multiplier *= 1 - fraction;
-    }
+    public void reduceBy(double fraction) { multiplier *= 1 - fraction; }
 }

@@ -34,7 +34,7 @@ final class WingAttackAnimation {
     static float seconds(Phase phase, int feather, float age, int count) {
         return phase.seconds(age, FeatherAttack.returnedAt(feather, count));
     }
-    static int legacyFeather(String bone) {
+    static int firstTierFeather(String bone) {
         return switch (bone) {
             case "left_primary_04" -> 0;
             case "right_primary_04" -> 1;

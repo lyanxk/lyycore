@@ -30,18 +30,11 @@ public record ResearchDefinition(ItemStack icon, String title, String summary, S
     }
     /** A present production definition also enables free transcription in the memory screen. */
     public record Production(ItemStack result, int duration, Optional<ExperimentDefinition> experiment) {
-        public Production(ItemStack result, int duration) { this(result, duration, Optional.empty()); }
         public static final Codec<Production> CODEC = RecordCodecBuilder.create(i -> i.group(
-                ItemStack.CODEC.fieldOf("result").forGetter(Production::result),
+                ItemStack.STRICT_CODEC.fieldOf("result").forGetter(Production::result),
                 Codec.intRange(1, 72000).fieldOf("duration").forGetter(Production::duration),
                 ExperimentDefinition.CODEC.optionalFieldOf("experiment").forGetter(Production::experiment)
         ).apply(i, Production::new));
-        public Production {
-            if (result.isEmpty() || result.getCount() > result.getMaxStackSize() || duration < 1 || duration > 72000)
-                throw new IllegalArgumentException("Production requires one valid result stack and 1–72000 ticks");
-            result = result.copy();
-        }
-        @Override public ItemStack result() { return result.copy(); }
     }
     public enum Rarity implements StringRepresentable {
         COMMON(0xFFFFFF), MEDIUM(0x55CCFF), HIGH(0xCC88FF), SPECIAL(0xFFB3D9), UNKNOWN(0xBD3030);
@@ -50,12 +43,8 @@ public record ResearchDefinition(ItemStack icon, String title, String summary, S
         @Override public String getSerializedName() { return name().toLowerCase(java.util.Locale.ROOT); }
     }
     public ResearchDefinition {
-        if (icon.isEmpty() || experienceLevels < 0 || experiencePoints < 0
-                || experienceLevels > 0 && experiencePoints > 0)
-            throw new IllegalArgumentException("Research requires an icon, nonempty materials and either a level or point cost");
-        icon = icon.copy();
-        materials = List.copyOf(materials);
-        prerequisites = List.copyOf(prerequisites);
+        if (experienceLevels > 0 && experiencePoints > 0)
+            throw new IllegalArgumentException("Research cannot charge both levels and experience points");
     }
     public static final Codec<ResearchDefinition> CODEC = RecordCodecBuilder.create(i -> i.group(
             ItemStack.STRICT_SINGLE_ITEM_CODEC.fieldOf("icon").forGetter(ResearchDefinition::icon),

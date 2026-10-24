@@ -11,10 +11,10 @@ import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import org.lyy.lyycore.network.WingsNetwork;
-import org.lyy.lyycore.content.wings.WingsAttack;
 import org.lyy.lyycore.content.wings.WingsTier;
+import org.lyy.lyycore.content.wings.WingsSettings;
 
-/** Innate weapon and armor: tier, protection, attacks and flight share this entry point. */
+/** Wing tier, protection, flight and synchronized appearance. */
 @EventBusSubscriber(modid = "lyycore")
 public final class AegisWings {
     public static final ResourceLocation RESEARCH = ResourceLocation.parse("lyycore:research/why_cant_people_fly");
@@ -23,7 +23,6 @@ public final class AegisWings {
     public static final ResourceLocation SUPERSONIC = ResourceLocation.parse("lyycore:research/supersonic");
     public static final ResourceLocation HARDENING = ResourceLocation.parse("lyycore:research/hardening");
     private static final String HIDDEN = "lyycore:wings_hidden", CLIENT_LEVEL = "lyycore:wings_client_level";
-    private static final String LEVEL = "lyycore:wings_level";
     private static final String SHIELD_STARTED = "lyycore:wings_shield_started";
 
     private AegisWings() { }
@@ -31,35 +30,21 @@ public final class AegisWings {
     public static boolean unlocked(LivingEntity entity) {
         return entity instanceof Player player && tier(player) != null;
     }
-    /** Null means no wings; old saves with the original research resolve to level one. */
+    /** Null means no wings; completing the base research grants level one. */
     public static WingsTier tier(Player player) {
         if (player.level().isClientSide) {
-            int level = player.getPersistentData().getInt(CLIENT_LEVEL);
-            return level > 0 ? WingsTier.forLevel(level) : null;
+            return switch (player.getPersistentData().getInt(CLIENT_LEVEL)) {
+                case 1 -> WingsTier.FIRST;
+                case 2 -> WingsTier.SECOND;
+                default -> null;
+            };
         }
         if (ResearchProgress.completed(player, ENHANCEMENT)) return WingsTier.SECOND;
-        if (!ResearchProgress.completed(player, RESEARCH)) return null;
-        return WingsTier.forLevel(player.getPersistentData().getCompound(Player.PERSISTED_NBT_TAG).getInt(LEVEL));
+        return ResearchProgress.completed(player, RESEARCH) ? WingsTier.FIRST : null;
     }
     public static int level(Player player) {
         var tier = tier(player);
         return tier == null ? 0 : tier.level();
-    }
-    /** Persist an explicit tier override after the base wings have been unlocked. */
-    public static boolean setTier(ServerPlayer player, WingsTier tier) {
-        if (!tier.equals(WingsTier.forLevel(tier.level()))) throw new IllegalArgumentException("Unregistered wings tier");
-        if (!unlocked(player) || tier.equals(tier(player))) return false;
-        var persisted = player.getPersistentData().getCompound(Player.PERSISTED_NBT_TAG);
-        persisted.putInt(LEVEL, tier.level());
-        player.getPersistentData().put(Player.PERSISTED_NBT_TAG, persisted);
-        WingsNetwork.sync(player);
-        return true;
-    }
-    public static boolean attack(ServerPlayer player, LivingEntity target) {
-        return WingsAttack.start(player, target);
-    }
-    public static boolean scoop(ServerPlayer player) {
-        return org.lyy.lyycore.content.wings.WingsScoop.start(player);
     }
     /** Highest unlocked flight upgrade: base, doubled thrust, or quadrupled thrust. */
     public static int flightUpgrade(Player player) {
@@ -70,16 +55,10 @@ public final class AegisWings {
     /** Validated boost input calls this once per movement tick on server and local client. */
     public static boolean boostFlight(Player player) {
         var tier = tier(player);
-        if (tier == null || !org.lyy.lyycore.content.wings.WingsSettings.flight(player) || !player.isAlive() || player.isSpectator() || !player.isFallFlying()
+        if (tier == null || !WingsSettings.flight(player) || !player.isAlive() || player.isSpectator() || !player.isFallFlying()
                 || ActionRestrictions.frozen(player)) return false;
         var velocity = player.getDeltaMovement();
-        var original = tier.flightBoost();
-        double acceleration = original.acceleration() * org.lyy.lyycore.content.wings.WingsSettings.acceleration(player) / 100.0;
-        if (acceleration <= 0) return false;
-        int upgrade = flightUpgrade(player);
-        var boosted = upgrade > 0
-                ? velocity.add(player.getLookAngle().normalize().scale(acceleration * (upgrade == 2 ? 4 : 2)))
-                : new WingsTier.FlightBoost(acceleration, original.maxSpeed()).accelerate(velocity, player.getLookAngle());
+        var boosted = tier.accelerate(velocity, player.getLookAngle(), WingsSettings.acceleration(player), flightUpgrade(player));
         if (boosted.equals(velocity)) return false;
         player.setDeltaMovement(boosted);
         return true;

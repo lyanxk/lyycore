@@ -37,17 +37,17 @@ public class ImaginaryAlloyingCategory implements IRecipeCategory<ImaginaryAlloy
         // Keep all three input views in menu order, even for recipes with an empty slot.
         IRecipeSlotBuilder inputA = builder.addSlot(RecipeIngredientRole.INPUT, INPUT_X, INPUT_A_Y);
         IRecipeSlotBuilder inputB = builder.addSlot(RecipeIngredientRole.INPUT, INPUT_X, INPUT_B_Y);
-        if (!recipe.getInputs().isEmpty()) inputA.addIngredients(recipe.getInputs().get(0));
-        if (recipe.getInputs().size() >= 2) inputB.addIngredients(recipe.getInputs().get(1));
+        inputA.addIngredients(recipe.inputs().getFirst());
+        if (recipe.inputs().size() >= 2) inputB.addIngredients(recipe.inputs().get(1));
 
         // JEI's standard transfer handler only transfers INPUT roles, including reusable ingredients.
         IRecipeSlotBuilder catalyst = builder.addSlot(RecipeIngredientRole.INPUT, CATALYST_X, SLOT_Y);
-        if (recipe.getCatalyst() != null && !recipe.getCatalyst().isEmpty()) {
-            catalyst.addIngredients(recipe.getCatalyst());
+        if (!recipe.catalyst().isEmpty()) {
+            catalyst.addIngredients(recipe.catalyst());
             catalyst.addRichTooltipCallback((slot, tooltip) -> tooltip.add(Component.translatable(
-                    recipe.isCatalystConsumed() ? "jei.lyycore.catalyst.consumed" : "jei.lyycore.catalyst.reusable")));
+                    recipe.catalystConsumed() ? "jei.lyycore.catalyst.consumed" : "jei.lyycore.catalyst.reusable")));
         }
-        builder.addSlot(RecipeIngredientRole.OUTPUT, OUTPUT_X, SLOT_Y).addItemStack(recipe.getResult());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, OUTPUT_X, SLOT_Y).addItemStack(recipe.result());
     }
 
     @Override
@@ -63,10 +63,8 @@ public class ImaginaryAlloyingCategory implements IRecipeCategory<ImaginaryAlloy
         g.drawString(font, Component.translatable("tooltip.lyycore.forge.catalyst"), 52, 10, ForgeGui.TEXT, false);
         g.drawString(font, Component.translatable("tooltip.lyycore.forge.output"), 126, 10, ForgeGui.TEXT, false);
         g.fill(8, 72, getWidth() - 8, 73, ForgeGui.TRACK);
-        // process_time is in seconds; mirror the machine's bounds, not vanilla furnace ticks.
-        int seconds = Math.clamp(recipe.getProcessTime(), 1, Integer.MAX_VALUE / 20);
-        g.drawString(font, Component.translatable("jei.lyycore.time", seconds), 8, 78, ForgeGui.TEXT, false);
-        g.drawString(font, Component.translatable("jei.lyycore.energy", Math.max(0, recipe.getEnergyCost())),
+        g.drawString(font, Component.translatable("jei.lyycore.time", recipe.processTime()), 8, 78, ForgeGui.TEXT, false);
+        g.drawString(font, Component.translatable("jei.lyycore.energy", recipe.energyCost()),
                 8, 90, ForgeGui.TEXT, false);
     }
 }

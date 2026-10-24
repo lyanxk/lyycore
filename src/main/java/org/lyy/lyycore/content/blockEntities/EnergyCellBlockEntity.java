@@ -34,20 +34,13 @@ public class EnergyCellBlockEntity extends BlockEntity implements MenuProvider {
     private final ImaginaryEnergyStorage storage = new ImaginaryEnergyStorage(Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE, this::setChanged);
     private final ImaginaryEnergyFeAdapter feAdapter = new ImaginaryEnergyFeAdapter(
             storage, this::setChanged, 1_000_000_000, 1_000_000_000);
-    // Only old saves can contain an extra whole-FE buffer. Preserve any amount
-    // that cannot yet fit into IE; all new transfers use the single IE store.
-    private int legacyEnergyFE;
 
     // Container data packets carry signed 16-bit values in 1.21.1, so each
     // 32-bit energy value is split into two words for lossless GUI syncing.
     private final ContainerData data = new ContainerData() {
         @Override
         public int get(int index) {
-            int value = switch (index / 2) {
-                case 0 -> storage.getImaginaryEnergyStored();
-                case 1 -> getMaxIEnergyStored();
-                default -> 0;
-            };
+            int value = index < 2 ? storage.getImaginaryEnergyStored() : getMaxIEnergyStored();
             return index % 2 == 0 ? value & 0xFFFF : value >>> 16 & 0xFFFF;
         }
 
@@ -90,11 +83,8 @@ public class EnergyCellBlockEntity extends BlockEntity implements MenuProvider {
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
-        normalizeLegacyFeToIe();
         tag.putInt("IE", storage.getImaginaryEnergyStored());
-        int fe = legacyEnergyFE + feAdapter.getRemainder();
-        if (fe < IEnergyConversion.FE_PER_IMAGINARY) tag.putByte("energy", (byte) fe);
-        else tag.putInt("energy", fe); // Keep unconverted FE from legacy saves intact.
+        tag.putByte("energy", feAdapter.getRemainder());
         tag.put("items", items.serializeNBT(registries));
     }
 
@@ -102,10 +92,7 @@ public class EnergyCellBlockEntity extends BlockEntity implements MenuProvider {
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
         storage.setImaginaryEnergy(tag.getInt("IE"));
-        int savedFE = Math.clamp(tag.getInt("energy"), 0, 1_000_000_000);
-        feAdapter.setRemainder(savedFE % IEnergyConversion.FE_PER_IMAGINARY);
-        legacyEnergyFE = savedFE - feAdapter.getRemainder();
-        normalizeLegacyFeToIe();
+        feAdapter.setRemainder(tag.getByte("energy"));
         items.deserializeNBT(registries, tag.getCompound("items"));
     }
 
@@ -119,43 +106,23 @@ public class EnergyCellBlockEntity extends BlockEntity implements MenuProvider {
 
     // --- Tick ---
     public static void serverTick(Level level, BlockPos pos, BlockState state, EnergyCellBlockEntity be) {
-        if (level == null || level.isClientSide) return;
-
-        boolean changed = be.normalizeLegacyFeToIe();
-
         int interval = Config.ENERGY_CELL_TRANSFER_INTERVAL.get();
         if (level.getGameTime() % interval == 0) {
             int ieBurst = (int) Math.min((long) Config.ENERGY_CELL_IE_RATE.get() * interval, Integer.MAX_VALUE);
-            changed |= be.pushIEToNeighbors(ieBurst);
+            be.pushIEToNeighbors(ieBurst);
         }
 
-        changed |= be.chargeBattery();
-        if (changed) be.setChanged();
+        be.chargeBattery();
         // Update the visible gauge only when crossing a segment threshold.
         int stored = be.getIEnergyStored();
-        int charge = stored <= 0 ? 0 : (int) Math.min(5,
-                ((long) stored * 5 + be.getMaxIEnergyStored() - 1) / be.getMaxIEnergyStored());
+        int charge = (int) (((long) stored * 5 + be.getMaxIEnergyStored() - 1) / be.getMaxIEnergyStored());
         if (state.getValue(EnergyCellBlock.CHARGE) != charge) {
             level.setBlock(pos, state.setValue(EnergyCellBlock.CHARGE, charge), Block.UPDATE_CLIENTS);
         }
     }
 
-    private boolean normalizeLegacyFeToIe() {
-        int feBuffered = legacyEnergyFE;
-        int ieToAdd = IEnergyConversion.fromFE(feBuffered);
-        if (ieToAdd <= 0) return false;
-
-        int accepted = storage.receiveImaginaryEnergy(ieToAdd);
-        if (accepted <= 0) return false;
-        legacyEnergyFE -= IEnergyConversion.toFE(accepted);
-        return true;
-    }
-
-    private boolean pushIEToNeighbors(int ieBurst) {
-        if (level == null || ieBurst <= 0) return false;
+    private void pushIEToNeighbors(int ieBurst) {
         int remainingIE = Math.min(ieBurst, storage.getImaginaryEnergyStored());
-        if (remainingIE <= 0) return false;
-        boolean changed = false;
 
         for (Direction dir : Direction.values()) {
             if (remainingIE <= 0) break;
@@ -163,75 +130,31 @@ public class EnergyCellBlockEntity extends BlockEntity implements MenuProvider {
             ImaginaryEnergy nativeTarget = level.getCapability(LyyCapabilities.IMAGINARY_ENERGY,
                     worldPosition.relative(dir), dir.getOpposite());
             if (nativeTarget != null) {
-                if (nativeTarget.canReceiveImaginaryEnergy()) {
-                    int accepted = nativeTarget.receiveImaginaryEnergy(remainingIE, false);
-                    storage.extractImaginaryEnergy(accepted);
-                    remainingIE -= accepted;
-                    changed |= accepted > 0;
-                }
+                int accepted = nativeTarget.receiveImaginaryEnergy(remainingIE, false);
+                storage.extractImaginaryEnergy(accepted);
+                remainingIE -= accepted;
                 continue;
             }
 
             IEnergyStorage target = level.getCapability(Capabilities.EnergyStorage.BLOCK,
                     worldPosition.relative(dir), dir.getOpposite());
-            if (target == null) continue;
-
-            int feSendCap = IEnergyConversion.toFE(remainingIE);
-
-            int feAcceptedSim = target.receiveEnergy(feSendCap, true);
-            if (feAcceptedSim <= 0) continue;
-
-            // Deliberately plan whole IE only: offers below 100 FE are skipped;
-            // the fractional FE part is not carried into a later output transfer.
-            int ieNeeded = IEnergyConversion.fromFE(feAcceptedSim);
-            if (ieNeeded <= 0) continue;
-
-            int ieExtracted = storage.extractImaginaryEnergy(ieNeeded);
-            if (ieExtracted <= 0) continue;
-
-            int feExact = IEnergyConversion.toFE(ieExtracted);
-            int feAcceptedReal = target.receiveEnergy(feExact, false);
-
-            if (feAcceptedReal < feExact) {
-                // Policy: discard the sub-100 FE refund remainder instead of buffering it.
-                int ieRefund = IEnergyConversion.fromFE(feExact - feAcceptedReal);
-                if (ieRefund > 0) storage.receiveImaginaryEnergy(ieRefund);
-            }
-            int refundedIE = IEnergyConversion.fromFE(feExact - feAcceptedReal);
-            remainingIE -= Math.max(ieExtracted - refundedIE, 0);
-            changed |= feAcceptedReal > 0;
+            if (target != null) remainingIE -= transferFe(target, remainingIE);
         }
-        return changed;
     }
 
-    private boolean chargeBattery() {
-        if (items.getSlots() <= 0) return false;
-        ItemStack stack = items.getStackInSlot(0);
-        if (stack.isEmpty()) return false;
+    private void chargeBattery() {
+        var battery = items.getStackInSlot(0).getCapability(Capabilities.EnergyStorage.ITEM);
+        if (battery != null) transferFe(battery, Config.ENERGY_CELL_IE_RATE.get());
+    }
 
-        IEnergyStorage batt = stack.getCapability(Capabilities.EnergyStorage.ITEM);
-        if (batt == null) return false;
-
-        int ieBudget = Math.min(Config.ENERGY_CELL_IE_RATE.get(), storage.getImaginaryEnergyStored());
-        if (ieBudget <= 0) return false;
-
-        int fePlan = IEnergyConversion.toFE(ieBudget);
-
-        int feAcceptedSim = batt.receiveEnergy(fePlan, true);
-        if (feAcceptedSim <= 0) return false;
-
-        // Charging follows the same whole-IE output policy; below 100 FE is skipped.
-        int ieNeed = IEnergyConversion.fromFE(feAcceptedSim);
-        int ieExtracted = storage.extractImaginaryEnergy(ieNeed);
-        if (ieExtracted <= 0) return false;
-
-        int feExact = IEnergyConversion.toFE(ieExtracted);
-        int feAcceptedReal = batt.receiveEnergy(feExact, false);
-        if (feAcceptedReal < feExact) {
-            // Policy: discard the sub-100 FE refund remainder instead of buffering it.
-            int ieRefund = IEnergyConversion.fromFE(feExact - feAcceptedReal);
-            if (ieRefund > 0) storage.receiveImaginaryEnergy(ieRefund);
-        }
-        return feAcceptedReal > 0;
+    /** Offer whole IE, then charge for accepted FE rounded up to IE; no output remainder is retained. */
+    private int transferFe(IEnergyStorage target, int ieBudget) {
+        int offered = IEnergyConversion.toFE(Math.min(ieBudget, storage.getImaginaryEnergyStored()));
+        int plannedIE = IEnergyConversion.fromFE(target.receiveEnergy(offered, true));
+        if (plannedIE == 0) return 0;
+        int accepted = target.receiveEnergy(IEnergyConversion.toFE(plannedIE), false);
+        int spentIE = (int) (((long) accepted + IEnergyConversion.FE_PER_IMAGINARY - 1) / IEnergyConversion.FE_PER_IMAGINARY);
+        storage.extractImaginaryEnergy(spentIE);
+        return spentIE;
     }
 }

@@ -17,7 +17,7 @@ public final class CrystalCondensingMenu extends CondensingFrameMenu {
     private final ContainerData data;
     public CrystalCondensingMenu(int id, Inventory inventory, CrystalCondensingFrameBlockEntity be,
                                 IItemHandlerModifiable output, ContainerData data) {
-        super(LyyMenus.CRYSTAL_CONDENSING.get(), id, inventory, be, output, data, 5);
+        super(LyyMenus.CRYSTAL_CONDENSING.get(), id, inventory, be, output, data);
         this.be = be;
         this.data = data;
     }

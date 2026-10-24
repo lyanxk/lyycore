@@ -43,7 +43,7 @@ final class AegisWingsLayer extends RenderLayer<AbstractClientPlayer, PlayerMode
         if (player.onGround() && !player.getAbilities().flying && !player.isFallFlying()
                 && !attacking && !shielding && !guarding) return;
         String clip = "idle";
-        float time = age / 20;
+        double time = ((double) player.tickCount + partial) / 20;
         if (shielding) {
             if (hitTime < 0.45F) { clip = "shield_deploy"; time = hitTime; }
             else if (hitTime < 0.69F) { clip = "shield_hit"; time = hitTime - 0.45F; }

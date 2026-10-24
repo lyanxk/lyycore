@@ -30,7 +30,7 @@ public final class GuidingMobRenderer<T extends AnimatedMonster> extends EntityR
         // The replacement entity renders both the opening shell and emerging beast.
         if (entity instanceof GuidingBoss boss && !boss.secondPhase() && !boss.isAlive()) return;
         String clip = entity.animation();
-        float time = entity.animationTime(partial);
+        double time = entity.animationTime(partial);
         pose.pushPose();
         pose.mulPose(Axis.YP.rotationDegrees(180 - Mth.rotLerp(partial, entity.yBodyRotO, entity.yBodyRot)));
         if (entity instanceof GuidingBoss boss) {

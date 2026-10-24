@@ -30,9 +30,9 @@ public final class AlloyCauldronBlockEntity extends BlockEntity {
     public ItemStack finishedPotion() { return finishedPotion.copy(); }
     public final IFluidHandler water = new IFluidHandler() {
         @Override public int getTanks() { return 1; }
-        @Override public FluidStack getFluidInTank(int tank) { return tank == 0 ? new FluidStack(Fluids.WATER, Integer.MAX_VALUE) : FluidStack.EMPTY; }
-        @Override public int getTankCapacity(int tank) { return tank == 0 ? Integer.MAX_VALUE : 0; }
-        @Override public boolean isFluidValid(int tank, FluidStack stack) { return tank == 0 && stack.is(Fluids.WATER); }
+        @Override public FluidStack getFluidInTank(int tank) { return new FluidStack(Fluids.WATER, Integer.MAX_VALUE); }
+        @Override public int getTankCapacity(int tank) { return Integer.MAX_VALUE; }
+        @Override public boolean isFluidValid(int tank, FluidStack stack) { return stack.is(Fluids.WATER); }
         @Override public int fill(FluidStack stack, FluidAction action) { return 0; }
         @Override public FluidStack drain(FluidStack stack, FluidAction action) { return stack.is(Fluids.WATER) ? drain(stack.getAmount(), action) : FluidStack.EMPTY; }
         @Override public FluidStack drain(int amount, FluidAction action) { return amount > 0 ? new FluidStack(Fluids.WATER, amount) : FluidStack.EMPTY; }
@@ -107,7 +107,7 @@ public final class AlloyCauldronBlockEntity extends BlockEntity {
                 result = new ItemStack(LyyItems.SILVER_POTION.get());
                 var candidates = new ArrayList<>(BuiltInRegistries.MOB_EFFECT.holders().filter(holder -> holder.key().location().getNamespace().equals("minecraft")).toList());
                 int count = 1 + level.random.nextInt(3);
-                for (int i = 0; i < count && !candidates.isEmpty(); i++) effects.add(new MobEffectInstance(candidates.remove(level.random.nextInt(candidates.size())), 1200));
+                for (int i = 0; i < count; i++) effects.add(new MobEffectInstance(candidates.remove(level.random.nextInt(candidates.size())), 1200));
             }
             default -> {
                 result = new ItemStack(LyyItems.STRANGE_POTION.get());
@@ -148,17 +148,12 @@ public final class AlloyCauldronBlockEntity extends BlockEntity {
         super.loadAdditional(tag, registries); ingredients.clear();
         var contents = tag.getCompound("Ingredients");
         // Preserve insertion order explicitly across save/load for the ten-kind limit and display.
-        var order = tag.getList("Order", Tag.TAG_STRING);
-        var keys = order.isEmpty() ? contents.getAllKeys().stream().toList() : order.stream().map(Tag::getAsString).toList();
-        for (var key : keys) {
-            var id = ResourceLocation.tryParse(key);
-            if (id == null || !BuiltInRegistries.ITEM.containsKey(id) || contents.getInt(key) <= 0 || ingredients.size() == 10) continue;
-            ingredients.put(BuiltInRegistries.ITEM.get(id), contents.getInt(key));
+        for (var entry : tag.getList("Order", Tag.TAG_STRING)) {
+            String key = entry.getAsString();
+            ingredients.put(BuiltInRegistries.ITEM.get(ResourceLocation.parse(key)), contents.getInt(key));
         }
         black = tag.getBoolean("Black");
         finishedPotion = ItemStack.parseOptional(registries, tag.getCompound("FinishedPotion"));
-        // Existing saves may already contain a complete recipe that was waiting for bottling.
-        if (finishedPotion.isEmpty()) completeRecipe();
     }
     @Override public CompoundTag getUpdateTag(HolderLookup.Provider registries) { return saveWithoutMetadata(registries); }
     @Override public ClientboundBlockEntityDataPacket getUpdatePacket() { return ClientboundBlockEntityDataPacket.create(this); }

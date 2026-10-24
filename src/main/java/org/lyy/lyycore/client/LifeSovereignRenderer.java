@@ -32,7 +32,7 @@ public final class LifeSovereignRenderer extends EntityRenderer<LifeSovereign> {
             // A full 1.2-second walk cycle corresponds to roughly 2.4 blocks of travel.
             float walking = entity.onGround() ? Mth.clamp(entity.walkAnimation.speed(partial) * 4, 0, 1) : 0;
             float walkTime = entity.walkAnimation.position(partial) / 8;
-            model.renderBlended(pose, buffers, light, entity.tickCount + partial, walkTime, walking, 0, 0);
+            model.renderBlended(pose, buffers, light, (double) entity.tickCount + partial, walkTime, walking, 0, 0);
         } else {
             model.render(pose, buffers, light, entity.animation(), entity.animationTime(partial));
         }

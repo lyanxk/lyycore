@@ -30,7 +30,8 @@ public final class EnderCompanion extends PathfinderMob {
     private UUID owner;
     private BlockPos sentry = BlockPos.ZERO;
     private int attackCooldown, wanderCooldown;
-    public float walkTime, previousWalkTime, flightBlend, previousFlightBlend;
+    public double walkTime, previousWalkTime;
+    public float flightBlend, previousFlightBlend;
 
     public EnderCompanion(EntityType<? extends EnderCompanion> type, Level level) {
         super(type, level);
@@ -102,7 +103,7 @@ public final class EnderCompanion extends PathfinderMob {
             previousWalkTime = walkTime;
             double distance = Math.sqrt((getX() - xo) * (getX() - xo) + (getZ() - zo) * (getZ() - zo));
             // Asset walk cycles were authored at these ground speeds (blocks/second).
-            walkTime += (float) (distance / (stage() == 0 ? 0.143 : 0.161));
+            walkTime += distance / (stage() == 0 ? 0.143 : 0.161);
             previousFlightBlend = flightBlend;
             flightBlend = Mth.clamp(flightBlend + (flying() ? 0.1F : -0.1F), 0, 1);
         }

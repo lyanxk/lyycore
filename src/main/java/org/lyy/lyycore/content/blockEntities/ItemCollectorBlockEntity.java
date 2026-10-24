@@ -64,7 +64,6 @@ public class ItemCollectorBlockEntity extends BlockEntity {
 
     // --- Tick ---
     public static void serverTick(Level level, BlockPos pos, BlockState state, ItemCollectorBlockEntity be) {
-        if (level == null || level.isClientSide) return;
         if (level.getGameTime() % Config.COLLECTOR_TICK_INTERVAL.get() != 0) return;
 
         int r = be.mode.radius();
@@ -73,7 +72,7 @@ public class ItemCollectorBlockEntity extends BlockEntity {
                 pos.getX() + r + 1, pos.getY() + r + 1, pos.getZ() + r + 1);
 
         List<ItemEntity> items = level.getEntitiesOfClass(ItemEntity.class, range,
-                e -> e != null && !e.getItem().isEmpty() && e.isAlive());
+                e -> !e.getItem().isEmpty() && e.isAlive());
         if (items.isEmpty()) return;
 
         if (!be.isCachedTargetValid(level)) be.cachedTarget = null;

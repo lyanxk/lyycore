@@ -70,18 +70,6 @@ public final class ProductionLabBlockEntity extends BlockEntity implements MenuP
                 player.connection.send(packet);
         }
     }
-    private void finishProduction(ItemStack result) {
-        updatingInventory = true;
-        try {
-            items.setStackInSlot(0, result);
-            progress = duration = 0;
-            output = true;
-        } finally {
-            updatingInventory = false;
-        }
-        changed();
-    }
-
     public static void serverTick(Level level, BlockPos pos, BlockState state, ProductionLabBlockEntity lab) {
         if (lab.output) return;
         var notes = lab.items.getStackInSlot(0);
@@ -95,9 +83,14 @@ public final class ProductionLabBlockEntity extends BlockEntity implements MenuP
         lab.duration = production.duration();
         lab.progress++;
         if (lab.progress >= lab.duration) {
-            var result = production.result();
+            var result = production.result().copy();
             ProductionOwnership.bind(result, owner);
-            lab.finishProduction(result);
+            lab.updatingInventory = true;
+            lab.items.setStackInSlot(0, result);
+            lab.updatingInventory = false;
+            lab.progress = lab.duration = 0;
+            lab.output = true;
+            lab.changed();
         } else if (lab.progress == 1 || lab.progress % 10 == 0) lab.changed();
         else lab.setChanged();
     }
@@ -110,11 +103,9 @@ public final class ProductionLabBlockEntity extends BlockEntity implements MenuP
     }
     @Override protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
-        updatingInventory = true;
-        try { items.deserializeNBT(registries, tag.getCompound("Items")); }
-        finally { updatingInventory = false; }
-        duration = Math.clamp(tag.getInt("Duration"), 0, 72000);
-        progress = Math.clamp(tag.getInt("Progress"), 0, duration);
+        items.deserializeNBT(registries, tag.getCompound("Items"));
+        duration = tag.getInt("Duration");
+        progress = tag.getInt("Progress");
         output = tag.getBoolean("Output");
         lastUpdate = level == null ? 0 : level.getGameTime();
     }

@@ -19,7 +19,7 @@ public class SonnetDomeRenderer extends EntityRenderer<SonnetDome> {
     }
 
     public static final net.minecraft.client.resources.model.ModelResourceLocation[] MODELS =
-            java.util.stream.Stream.of("dome_shell", "dome_fractures", "dome_crown", "dome_trails")
+            java.util.stream.Stream.of("dome_shell")
                     .map(name -> net.minecraft.client.resources.model.ModelResourceLocation.standalone(
                             ResourceLocation.fromNamespaceAndPath("lyycore", "crystal_sanctuary/" + name)))
                     .toArray(net.minecraft.client.resources.model.ModelResourceLocation[]::new);
@@ -29,8 +29,8 @@ public class SonnetDomeRenderer extends EntityRenderer<SonnetDome> {
         pose.pushPose();
         float scale = (float) (SonnetDome.RADIUS / 12.0);
         pose.scale(scale, scale, scale);
-        // Preserve the opaque, depth-writing shell while avoiding per-frame OBJ
-        // traversal, vertex transforms and uploads for nearly 29,000 faces.
+        // Share the 1,663-triangle shell and its baked details between all domes.
+        // Keep depth writes while drawing the same textured surface inside and outside.
         SonnetDomeMesh.render(pose, buffers);
         pose.popPose();
         super.render(dome, yaw, partial, pose, buffers, light);

@@ -42,7 +42,8 @@ public final class OtherworldChestBlock extends MachineBlock {
     @Override public RenderShape getRenderShape(BlockState state) { return RenderShape.MODEL; }
     @Override public BlockEntity newBlockEntity(BlockPos pos, BlockState state) { return new OtherworldChestBlockEntity(pos, state); }
     @Override public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        return level.isClientSide ? null : createTickerHelper(type, LyyBlockEntities.OTHERWORLD_CHEST.get(), OtherworldChestBlockEntity::serverTick);
+        return createTickerHelper(type, LyyBlockEntities.OTHERWORLD_CHEST.get(),
+                level.isClientSide ? OtherworldChestBlockEntity::clientTick : OtherworldChestBlockEntity::serverTick);
     }
     @Override protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
         if (player instanceof ServerPlayer server && level.getBlockEntity(pos) instanceof OtherworldChestBlockEntity chest) server.openMenu(chest, pos);

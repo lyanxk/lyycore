@@ -18,10 +18,11 @@ final class AnimatedMeshModel {
     private record Face(int texture, float[][] vertices) { }
     private record Bone(String name, int parent, float[] pivot, float[] rotation, Face[] faces) { }
     private record Clip(float length, boolean loop, float[][][][] tracks) {
-        void sample(int bone, float time, float[] result, int offset) {
-            time = loop && length > 0 ? time % length : Mth.clamp(time, 0, length);
+        void sample(int bone, double time, float[] result, int offset) {
+            // Keep long-running clocks precise; only the bounded clip time needs float precision.
+            float clipTime = (float) (loop && length > 0 ? time % length : Mth.clamp(time, 0, length));
             for (int channel = 0; channel < 3; channel++)
-                sampleTrack(tracks[bone][channel], channel == 2 ? 1 : 0, time, result, offset + channel * 3);
+                sampleTrack(tracks[bone][channel], channel == 2 ? 1 : 0, clipTime, result, offset + channel * 3);
         }
         /** XYZ share key times and interpolation; locate their interval only once. */
         private static void sampleTrack(float[][] keys, float fallback, float time, float[] result, int offset) {
@@ -174,21 +175,21 @@ final class AnimatedMeshModel {
         for (int i = 0; i < result.length; i++) result[i] = vector(array.get(i).getAsJsonArray());
         return result;
     }
-    void renderBlended(PoseStack pose, MultiBufferSource buffers, int light, float age, float walkTime, float walking, float flying, float gliding) {
+    void renderBlended(PoseStack pose, MultiBufferSource buffers, int light, double age, double walkTime, float walking, float flying, float gliding) {
         Arrays.fill(hidden, false);
         Clip idle = clips.get("idle"), walk = clips.get("walk"), fly = clips.getOrDefault("fly", idle), glide = clips.getOrDefault("glide", fly);
         for (int i = 0; i < bones.length; i++) if (bones[i].parent < 0)
             updatePoses(pose, i, idle, walk, fly, glide, age / 20, walkTime, walking, flying, gliding);
         drawFaces(buffers, light);
     }
-    void render(PoseStack pose, MultiBufferSource buffers, int light, String animation, float seconds) {
+    void render(PoseStack pose, MultiBufferSource buffers, int light, String animation, double seconds) {
         Arrays.fill(hidden, false);
         Clip clip = clips.getOrDefault(animation, clips.get("idle"));
         for (int i = 0; i < bones.length; i++) if (bones[i].parent < 0)
             updateSinglePose(pose, i, clip, seconds);
         drawFaces(buffers, light);
     }
-    private void updateSinglePose(PoseStack pose, int index, Clip clip, float time) {
+    private void updateSinglePose(PoseStack pose, int index, Clip clip, double time) {
         clip.sample(index, time, values, 0);
         pose.pushPose();
         transformPose(pose, index, values, 0, false);
@@ -196,17 +197,17 @@ final class AnimatedMeshModel {
         for (int child : children[index]) updateSinglePose(pose, child, clip, time);
         pose.popPose();
     }
-    void renderWings(PoseStack pose, MultiBufferSource buffers, int light, String base, float baseTime, float attackTime, int featherCount) {
+    void renderWings(PoseStack pose, MultiBufferSource buffers, int light, String base, double baseTime, float attackTime, int featherCount) {
         Arrays.fill(hidden, false);
         for (int i = 0; i < bones.length; i++) if (bones[i].parent < 0)
             updateWings(pose, i, clips.get(base), baseTime, attackTime, featherCount);
         drawFaces(buffers, light);
     }
-    private void updateWings(PoseStack pose, int index, Clip base, float baseTime, float attackTime, int featherCount) {
-        int feather = WingAttackAnimation.legacyFeather(bones[index].name);
+    private void updateWings(PoseStack pose, int index, Clip base, double baseTime, float attackTime, int featherCount) {
+        int feather = WingAttackAnimation.firstTierFeather(bones[index].name);
         var phase = WingAttackAnimation.phase(feather, attackTime, featherCount);
         Clip clip = phase == null ? base : clips.get(phase.clip);
-        float time = phase == null ? baseTime : WingAttackAnimation.seconds(phase, feather, attackTime, featherCount);
+        double time = phase == null ? baseTime : WingAttackAnimation.seconds(phase, feather, attackTime, featherCount);
         pose.pushPose();
         clip.sample(index, time, values, 0);
         transformPose(pose, index, values, 0, false);
@@ -245,7 +246,7 @@ final class AnimatedMeshModel {
         for (int i = 0; i < bones.length; i++) if (bones[i].parent < 0) updateWingPose(pose, i);
         drawFaces(buffers, light);
     }
-    void sample(String animation, float time, float[] result) {
+    void sample(String animation, double time, float[] result) {
         var clip = clips.getOrDefault(animation, clips.get("idle"));
         for (int bone = 0; bone < bones.length; bone++) clip.sample(bone, time, result, bone * 9);
     }
@@ -324,7 +325,7 @@ final class AnimatedMeshModel {
         pose.popPose();
     }
     private void updatePoses(PoseStack pose, int index, Clip idle, Clip walk, Clip fly, Clip glide,
-                            float time, float walkTime, float walking, float flying, float gliding) {
+                            double time, double walkTime, float walking, float flying, float gliding) {
         pose.pushPose();
         transform(pose, index, idle, walk, fly, glide, time, walkTime, walking, flying, gliding);
         poses[index] = pose.last().copy();
@@ -332,7 +333,7 @@ final class AnimatedMeshModel {
         pose.popPose();
     }
     private void transform(PoseStack pose, int index, Clip idle, Clip walk, Clip fly, Clip glide,
-                           float time, float walkTime, float walking, float flying, float gliding) {
+                           double time, double walkTime, float walking, float flying, float gliding) {
         if (flying == 0) {
             sampleBlend(index, idle, time, walk, walkTime, walking, values);
         } else if (flying == 1) {
@@ -344,7 +345,7 @@ final class AnimatedMeshModel {
         }
         transformPose(pose, index, values, 0, false);
     }
-    private void sampleBlend(int bone, Clip first, float firstTime, Clip second, float secondTime, float weight, float[] result) {
+    private void sampleBlend(int bone, Clip first, double firstTime, Clip second, double secondTime, float weight, float[] result) {
         if (weight == 0 || first == second && firstTime == secondTime) {
             first.sample(bone, firstTime, result, 0);
         } else if (weight == 1) {

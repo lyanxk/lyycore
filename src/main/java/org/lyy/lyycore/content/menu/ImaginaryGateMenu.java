@@ -9,7 +9,7 @@ import net.neoforged.neoforge.items.SlotItemHandler;
 import org.lyy.lyycore.content.blockEntities.ImaginaryGateBlockEntity;
 import org.lyy.lyycore.registry.LyyMenus;
 
-public class ImaginaryGateMenu extends AbstractContainerMenu {
+public class ImaginaryGateMenu extends MachineMenu {
     private final ImaginaryGateBlockEntity gate;
     private final ContainerData data;
     public ImaginaryGateMenu(int id, Inventory inventory, RegistryFriendlyByteBuf buffer) {
@@ -29,9 +29,7 @@ public class ImaginaryGateMenu extends AbstractContainerMenu {
                 setChanged();
             }
         });
-        for (int row = 0; row < 3; row++)
-            for (int col = 0; col < 9; col++) addSlot(new Slot(inventory, 9 + row * 9 + col, 8 + col * 18, 104 + row * 18));
-        for (int col = 0; col < 9; col++) addSlot(new Slot(inventory, col, 8 + col * 18, 162));
+        addPlayerSlots(inventory, 8, 104);
     }
     public int status() { return data.get(0); }
     @Override public boolean stillValid(Player player) {
@@ -39,20 +37,8 @@ public class ImaginaryGateMenu extends AbstractContainerMenu {
                 && player.distanceToSqr(gate.getBlockPos().getCenter().add(0, 2, 0)) <= 100;
     }
     @Override public ItemStack quickMoveStack(Player player, int index) {
-        if (index < 0 || index >= slots.size()) return ItemStack.EMPTY;
-        Slot slot = slots.get(index);
-        if (!slot.hasItem()) return ItemStack.EMPTY;
-        ItemStack stack = slot.getItem();
-        ItemStack original = stack.copy();
-        if (index == 0) {
-            if (!moveItemStackTo(stack, 1, 37, true)) return ItemStack.EMPTY;
-        } else if (gate.acceptsOffering(stack)) {
-            if (!moveItemStackTo(stack, 0, 1, false)) return ItemStack.EMPTY;
-        } else if (index < 28) {
-            if (!moveItemStackTo(stack, 28, 37, false)) return ItemStack.EMPTY;
-        } else if (!moveItemStackTo(stack, 1, 28, false)) return ItemStack.EMPTY;
-        if (stack.isEmpty()) slot.set(ItemStack.EMPTY); else slot.setChanged();
-        slot.onTake(player, original.copyWithCount(original.getCount() - stack.getCount()));
-        return original;
+        if (index == 0) return moveStack(player, index, 1, slots.size(), true);
+        return gate.acceptsOffering(slots.get(index).getItem())
+                ? moveStack(player, index, 0, 1, false) : movePlayerStack(player, index);
     }
 }

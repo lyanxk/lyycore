@@ -19,14 +19,14 @@ public final class GuardianRenderer<T extends Entity> extends EntityRenderer<T> 
     @Override public void render(T entity, float yaw, float partial, PoseStack pose, MultiBufferSource buffers, int light) {
         pose.pushPose();
         pose.mulPose(Axis.YP.rotationDegrees(-yaw));
-        float age = entity.tickCount + partial;
+        double age = (double) entity.tickCount + partial;
         boolean fastOrbit = false;
         if (entity instanceof ImaginaryGuardian guardian) {
             fastOrbit = guardian.spinTicks() > 0;
             float scale = guardian.summonTicks() == 0 ? 1 : Math.max(0.1F, 1 - (float) guardian.summonTicks() / ImaginaryGuardian.SUMMON_TICKS);
             pose.scale(scale, scale, scale);
         } else if (entity instanceof GuardianSpikes spikes) {
-            float rise = age - spikes.delay();
+            float rise = (float) (age - spikes.delay());
             float height = rise < 0 ? 0.05F : Math.min(1, Math.min((rise + 1) / 4, (20 - rise) / 6));
             pose.scale(1, Math.max(0.01F, height), 1);
         }

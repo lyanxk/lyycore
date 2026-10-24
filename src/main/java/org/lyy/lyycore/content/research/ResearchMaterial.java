@@ -9,12 +9,6 @@ import net.minecraft.world.item.ItemStack;
 
 /** An ItemStack-shaped material requirement with an optional allocation priority. */
 public record ResearchMaterial(ItemStack stack, int priority) {
-    public ResearchMaterial {
-        if (stack.isEmpty()) throw new IllegalArgumentException("Research material cannot be empty");
-        stack = stack.copy();
-    }
-    @Override public ItemStack stack() { return stack.copy(); }
-
     public static final Codec<ResearchMaterial> CODEC = RecordCodecBuilder.create(i -> i.group(
             ItemStack.ITEM_NON_AIR_CODEC.fieldOf("id").forGetter(m -> m.stack.getItemHolder()),
             Codec.intRange(1, 4096).optionalFieldOf("count", 1).forGetter(m -> m.stack.getCount()),

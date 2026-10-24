@@ -8,7 +8,7 @@ import net.minecraft.world.item.ItemStack;
 import org.lyy.lyycore.content.blockEntities.OtherworldChestBlockEntity;
 import org.lyy.lyycore.registry.LyyMenus;
 
-public final class OtherworldChestMenu extends AbstractContainerMenu {
+public final class OtherworldChestMenu extends MachineMenu {
     public static final int TAKE_ONE = -1, TAKE_STACK = -2;
     private final OtherworldChestBlockEntity chest;
     private final ContainerData data;
@@ -17,8 +17,7 @@ public final class OtherworldChestMenu extends AbstractContainerMenu {
     }
     public OtherworldChestMenu(int id, Inventory inventory, OtherworldChestBlockEntity chest, ContainerData data) {
         super(LyyMenus.OTHERWORLD_CHEST.get(), id); this.chest = chest; this.data = data; addDataSlots(data);
-        for (int row = 0; row < 3; row++) for (int col = 0; col < 9; col++) addSlot(new Slot(inventory, 9 + row * 9 + col, 8 + col * 18, 106 + row * 18));
-        for (int col = 0; col < 9; col++) addSlot(new Slot(inventory, col, 8 + col * 18, 164));
+        addPlayerSlots(inventory, 8, 106);
         chest.startOpen(inventory.player);
     }
     public boolean isFor(OtherworldChestBlockEntity target) { return chest == target; }
@@ -36,10 +35,6 @@ public final class OtherworldChestMenu extends AbstractContainerMenu {
         return player.isAlive() && !chest.isRemoved() && player.level() == chest.getLevel() && player.distanceToSqr(chest.getBlockPos().getCenter()) < 64;
     }
     @Override public ItemStack quickMoveStack(Player player, int index) {
-        if (index < 0 || index >= slots.size()) return ItemStack.EMPTY;
-        var slot = slots.get(index); if (!slot.hasItem()) return ItemStack.EMPTY;
-        var stack = slot.getItem(); var copy = stack.copy();
-        if (!(index < 27 ? moveItemStackTo(stack, 27, 36, false) : moveItemStackTo(stack, 0, 27, false))) return ItemStack.EMPTY;
-        if (stack.isEmpty()) slot.set(ItemStack.EMPTY); else slot.setChanged(); return copy;
+        return movePlayerStack(player, index);
     }
 }

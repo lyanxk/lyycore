@@ -119,7 +119,6 @@ public class BaseImaginaryGeneratorBlockEntity extends BlockEntity {
     }
 
     public static void serverTick(Level level, BlockPos pos, BlockState state, BaseImaginaryGeneratorBlockEntity be) {
-        if (level.isClientSide) return;
         if (be.needsScan || level.getGameTime() >= be.nextScanGameTime) be.scanTargets();
         if (be.savedTargets.isEmpty()) return;
         provideEnergy(level, be);

@@ -14,7 +14,7 @@ import org.lyy.lyycore.content.logistics.LogisticsChannels;
 import org.lyy.lyycore.network.LogisticsNetwork;
 import org.lyy.lyycore.registry.LyyMenus;
 
-public final class LogisticsMenu extends AbstractContainerMenu {
+public final class LogisticsMenu extends MachineMenu {
     public static final int PAGE_SIZE = 5;
     private final BlockEntity machine;
     private final Player viewer;
@@ -37,9 +37,7 @@ public final class LogisticsMenu extends AbstractContainerMenu {
                 @Override public boolean mayPlace(ItemStack stack) { return !port.isOutput() && super.mayPlace(stack); }
             });
         }
-        for (int row = 0; row < 3; row++) for (int col = 0; col < 9; col++)
-            addSlot(new Slot(inventory, 9 + row * 9 + col, 44 + col * 18, 194 + row * 18));
-        for (int col = 0; col < 9; col++) addSlot(new Slot(inventory, col, 44 + col * 18, 252));
+        addPlayerSlots(inventory, 44, 194);
     }
     public boolean matrix() { return machine instanceof LogisticsMatrixBlockEntity; }
     public LogisticsNetwork.Snapshot snapshot() { return snapshot; }
@@ -92,18 +90,9 @@ public final class LogisticsMenu extends AbstractContainerMenu {
                 && player.distanceToSqr(machine.getBlockPos().getCenter()) < (matrix() ? 144 : 64);
     }
     @Override public ItemStack quickMoveStack(Player player, int index) {
-        if (index < 0 || index >= slots.size()) return ItemStack.EMPTY;
-        var slot = slots.get(index);
-        if (!slot.hasItem()) return ItemStack.EMPTY;
-        var stack = slot.getItem(); var copy = stack.copy();
-        boolean moved;
-        if (index < bufferSlots) moved = moveItemStackTo(stack, bufferSlots, slots.size(), true);
-        else if (bufferSlots > 0 && machine instanceof MatrixPortBlockEntity port && !port.isOutput())
-            moved = moveItemStackTo(stack, 0, bufferSlots, false);
-        else if (index < bufferSlots + 27) moved = moveItemStackTo(stack, bufferSlots + 27, slots.size(), false);
-        else moved = moveItemStackTo(stack, bufferSlots, bufferSlots + 27, false);
-        if (!moved) return ItemStack.EMPTY;
-        if (stack.isEmpty()) slot.set(ItemStack.EMPTY); else slot.setChanged();
-        slot.onTake(player, stack); return copy;
+        if (index < bufferSlots) return moveStack(player, index, bufferSlots, slots.size(), true);
+        if (machine instanceof MatrixPortBlockEntity port && !port.isOutput())
+            return moveStack(player, index, 0, bufferSlots, false);
+        return movePlayerStack(player, index);
     }
 }

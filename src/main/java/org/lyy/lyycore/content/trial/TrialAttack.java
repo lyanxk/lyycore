@@ -40,6 +40,7 @@ public final class TrialAttack extends Entity {
     public Vec3 destination() { return position().add(aim()); }
     public double ground() { return getY() + entityData.get(GROUND); }
     public static final int FIELD_TICKS = 160, FLIGHT_TICKS = 200;
+    private static final int THREAD_DELAY_TICKS = 40;
 
     static void cast(ServerLevel level, TrialGuide guide, SpacetimeTrials.Battle battle,
                      ServerPlayer target, Kind kind, boolean aerial) {
@@ -47,7 +48,7 @@ public final class TrialAttack extends Entity {
         Vec3 right = new Vec3(-forward.z, 0, forward.x);
         Vec3 behind = guide.position().add(forward.scale(-2.5)).add(0,1,0);
         if (kind == Kind.THREADS) {
-            spawn(level, guide, battle, target, kind, target.position().add(0,1,0), 0, 0);
+            spawn(level, guide, battle, target, kind, target.position().add(0,1,0), THREAD_DELAY_TICKS, 0);
             return;
         }
         int count = kind == Kind.SHOT ? 4 : 32;
@@ -170,7 +171,9 @@ public final class TrialAttack extends Entity {
         return position().add(6*Math.cos(angle), 0, 6*Math.sin(angle));
     }
     private void threads(ServerLevel level) {
-        if (age(0) >= FIELD_TICKS) { discard(); return; }
+        float activeAge = age(0) - delay();
+        if (activeAge < 0) return;
+        if (activeAge >= FIELD_TICKS) { discard(); return; }
         for (var player : battle.players(level)) {
             if (touched.contains(player.getUUID())) continue;
             var box = player.getBoundingBox().inflate(.06);

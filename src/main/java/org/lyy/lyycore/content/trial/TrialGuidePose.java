@@ -25,7 +25,7 @@ public record TrialGuidePose(AABB bounds, double scale) {
         } catch (java.io.IOException error) { throw new IllegalStateException("Cannot load trial guide bounds", error); }
         return Map.copyOf(result);
     }
-    public static TrialGuidePose sample(String clip, float seconds, float yaw) {
+    public static TrialGuidePose sample(String clip, double seconds, float yaw) {
         var frames = FRAMES.getOrDefault(clip, FRAMES.get("idle"));
         double frame = Math.max(0, seconds*20);
         frame = clip.equals("idle") ? frame%(frames.length-1) : Math.min(frame, frames.length-1);

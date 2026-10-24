@@ -40,17 +40,9 @@ public final class MindControl {
         var binding = MindControlData.get(level).active(tag.getUUID(OWNER));
         return binding != null && binding.id.equals(tag.getUUID(BINDING)) && binding.mobs.contains(mob.getUUID()) ? binding : null;
     }
-    private static void resolveLegacyExecution(Mob mob, MindControlData data) {
-        var tag = mob.getPersistentData();
-        if (data.hasLegacyExecution(mob.getUUID()) && tag.hasUUID(OWNER) && tag.hasUUID(BINDING))
-            data.resolveLegacyExecution(mob.getUUID(), tag.getUUID(OWNER), tag.getUUID(BINDING));
-    }
     public static void bind(Mob mob, MindControlData.Binding binding) {
         if (!(mob.level() instanceof ServerLevel server) || !eligible(mob)) return;
         var data = MindControlData.get(server);
-        resolveLegacyExecution(mob, data);
-        // Do not overwrite the only attribution in an incomplete legacy execution record.
-        if (data.hasLegacyExecution(mob.getUUID())) return;
         if (registeredBinding(mob) != null || !data.addMob(binding, mob.getUUID())) return;
         mob.getPersistentData().putUUID(OWNER, binding.owner); mob.getPersistentData().putUUID(BINDING, binding.id);
         if (!executionOnly(mob)) mob.setTarget(null);
@@ -94,7 +86,6 @@ public final class MindControl {
     public static void processExecution(Mob mob) {
         if (!(mob.level() instanceof ServerLevel level)) return;
         var data = MindControlData.get(level);
-        resolveLegacyExecution(mob, data);
         var request = data.beginExecution(mob.getUUID());
         if (request == null) return;
         boolean died = execute(mob, executionOwner(request, level));
@@ -106,10 +97,7 @@ public final class MindControl {
         }
     }
     @SubscribeEvent public static void join(EntityJoinLevelEvent event) {
-        if (event.getEntity() instanceof Mob mob && event.getLevel() instanceof ServerLevel level && mob.getPersistentData().hasUUID(OWNER)) {
-            resolveLegacyExecution(mob, MindControlData.get(level));
-            install(mob);
-        }
+        if (event.getEntity() instanceof Mob mob && event.getLevel() instanceof ServerLevel && mob.getPersistentData().hasUUID(OWNER)) install(mob);
     }
     @SubscribeEvent public static void despawn(MobDespawnEvent event) {
         if (binding(event.getEntity()) != null) event.setResult(MobDespawnEvent.Result.DENY);

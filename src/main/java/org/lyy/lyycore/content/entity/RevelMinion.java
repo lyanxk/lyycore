@@ -41,7 +41,6 @@ public abstract class RevelMinion extends RevelMob {
         }
         missingBossTicks = 0;
         if (!boss.isAlive()) { kill(); return; }
-        boss.minionAvailable(this);
         updateWithBoss(boss);
     }
     protected abstract void updateWithBoss(LifeRevel boss);

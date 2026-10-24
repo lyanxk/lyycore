@@ -5,7 +5,7 @@ import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import org.lyy.lyycore.content.blockEntities.FissionFurnaceBlockEntity;
 import org.lyy.lyycore.registry.LyyMenus;
-public final class FissionFurnaceMenu extends AbstractContainerMenu {
+public final class FissionFurnaceMenu extends MachineMenu {
     private final FissionFurnaceBlockEntity furnace;
     private final ContainerData data;
     public FissionFurnaceMenu(int id, Inventory inv, RegistryFriendlyByteBuf buf) {
@@ -18,22 +18,11 @@ public final class FissionFurnaceMenu extends AbstractContainerMenu {
             @Override public boolean mayPlace(ItemStack stack) { return false; }
             @Override public void onTake(Player player, ItemStack stack) { super.onTake(player, stack); furnace.awardExperience(); }
         });
-        for (int row = 0; row < 3; row++) for (int col = 0; col < 9; col++) addSlot(new Slot(inv, 9+row*9+col, 8+col*18, 96+row*18));
-        for (int col = 0; col < 9; col++) addSlot(new Slot(inv, col, 8+col*18, 154));
+        addPlayerSlots(inv, 8, 96);
     }
     public int energy() { return (data.get(0) & 65535) | (data.get(1) & 65535) << 16; }
     @Override public boolean stillValid(Player p) { return !furnace.isRemoved() && p.level() == furnace.getLevel() && p.distanceToSqr(furnace.getBlockPos().getCenter()) < 64; }
-    @Override public ItemStack quickMoveStack(Player p, int index) {
-        if (index < 0 || index >= slots.size()) return ItemStack.EMPTY;
-        var slot = slots.get(index);
-        if (!slot.hasItem()) return ItemStack.EMPTY;
-        var stack = slot.getItem();
-        var original = stack.copy();
-        if (index < 3) {
-            if (!moveItemStackTo(stack, 3, slots.size(), true)) return ItemStack.EMPTY;
-        } else if (!moveItemStackTo(stack, 0, 1, false)) return ItemStack.EMPTY;
-        if (stack.isEmpty()) slot.set(ItemStack.EMPTY); else slot.setChanged();
-        slot.onTake(p, original.copyWithCount(original.getCount() - stack.getCount()));
-        return original;
+    @Override public ItemStack quickMoveStack(Player player, int index) {
+        return index < 3 ? moveStack(player, index, 3, slots.size(), true) : moveStack(player, index, 0, 1, false);
     }
 }

@@ -24,7 +24,7 @@ public final class SkillInput {
             GuardSkill.reset(player);
         } else {
             GuardSkill.releaseIfExpired(player);
-            if (pressed) SkillSystem.cast(player, SkillSystem.SPECIAL);
+            if (pressed) SkillSystem.castSpecial(player);
         }
         SkillNetwork.sync(player);
     }
@@ -34,8 +34,8 @@ public final class SkillInput {
     public static boolean fresh(ServerPlayer player) { var state = STATES.get(player); return state != null && player.tickCount - state.receivedAt <= 20; }
     public static int forward(ServerPlayer player) { var state = STATES.get(player); return state == null ? 0 : state.forward; }
     public static int strafe(ServerPlayer player) { var state = STATES.get(player); return state == null ? 0 : state.strafe; }
-    public static boolean forwardSpecial(ServerPlayer player) {
-        return fresh(player) && player.isShiftKeyDown() && forward(player) > 0;
+    static boolean forwardSpecial(ServerPlayer player) {
+        return player.isShiftKeyDown() && forward(player) > 0;
     }
 
     static void tick(ServerPlayer player) {

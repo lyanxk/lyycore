@@ -8,6 +8,7 @@ import com.mojang.blaze3d.vertex.MeshData;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexBuffer;
 import com.mojang.blaze3d.vertex.VertexFormat;
+import com.mojang.blaze3d.vertex.VertexFormatElement;
 import com.mojang.blaze3d.vertex.VertexSorting;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,6 +35,8 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ModelEvent;
 import net.neoforged.neoforge.client.event.RegisterShadersEvent;
 import net.neoforged.neoforge.client.event.RegisterRenderBuffersEvent;
+import net.neoforged.neoforge.client.event.RenderFrameEvent;
+import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -45,6 +48,12 @@ public final class SonnetMaterialRenderer {
     private static final ResourceLocation SPHERE = id("textures/item/sonnet_material/ex_crystal.png");
     private static final ResourceLocation TOON = id("textures/item/sonnet_material/toon.png");
     private static final Map<BakedModel, CachedMesh> MESHES = new IdentityHashMap<>();
+    // A private layout keeps cached material flags stable when Iris extends vanilla entity vertices.
+    private static final VertexFormat MATERIAL_FORMAT = VertexFormat.builder()
+            .add("Position", VertexFormatElement.POSITION).add("Color", VertexFormatElement.COLOR)
+            .add("UV0", VertexFormatElement.UV0).add("UV1", VertexFormatElement.UV1)
+            .add("UV2", VertexFormatElement.UV2).add("Normal", VertexFormatElement.NORMAL).padding(1).build();
+    private static final ArrayList<Draw> SHADER_DRAWS = new ArrayList<>();
     private static ShaderInstance shader;
     private static final RenderType SOLID = type(false, false);
     private static final RenderType TRANSLUCENT = type(true, false);
@@ -60,7 +69,7 @@ public final class SonnetMaterialRenderer {
 
     private static RenderType type(boolean translucent, boolean world) {
         return RenderType.create("lyycore_sonnet_material" + (translucent ? "_translucent" : "") + (world ? "_world" : ""),
-                DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 65536, false, false,
+                MATERIAL_FORMAT, VertexFormat.Mode.QUADS, 65536, false, false,
                 RenderType.CompositeState.builder()
                         .setShaderState(new RenderStateShard.ShaderStateShard(() -> shader))
                         .setTextureState(new RenderStateShard.TextureStateShard(TextureAtlas.LOCATION_BLOCKS, false, false))
@@ -85,7 +94,27 @@ public final class SonnetMaterialRenderer {
     @SubscribeEvent
     public static void shaders(RegisterShadersEvent event) throws IOException {
         event.registerShader(new ShaderInstance(event.getResourceProvider(), id("sonnet_material"),
-                DefaultVertexFormat.NEW_ENTITY), loaded -> shader = loaded);
+                MATERIAL_FORMAT), loaded -> shader = loaded);
+    }
+
+    @SubscribeEvent
+    public static void beforeFrame(RenderFrameEvent.Pre event) {
+        SHADER_DRAWS.clear();
+    }
+
+    @SubscribeEvent
+    public static void afterLevel(RenderLevelStageEvent event) {
+        if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_LEVEL || SHADER_DRAWS.isEmpty()) return;
+        // Iris has finished its composite passes here. Unknown core shaders are no longer
+        // suppressed, and the main target still contains the world/hand depth buffer.
+        try {
+            SHADER_DRAWS.sort(Comparator.comparing(Draw::hand)
+                    .thenComparing(draw -> draw.opacity < 1.0F)
+                    .thenComparingDouble(draw -> draw.modelView.m32()));
+            for (Draw draw : SHADER_DRAWS) draw(draw, false);
+        } finally {
+            SHADER_DRAWS.clear();
+        }
     }
 
     @SubscribeEvent
@@ -99,6 +128,7 @@ public final class SonnetMaterialRenderer {
 
     private static void release() {
         CRYSTAL_BATCH.draws.clear();
+        SHADER_DRAWS.clear();
         MESHES.values().forEach(CachedMesh::close);
         MESHES.clear();
         SonnetItemRenderer.clearSelection();
@@ -106,7 +136,7 @@ public final class SonnetMaterialRenderer {
 
     private static CachedMesh upload(BakedModel model) {
         try (var memory = new ByteBufferBuilder(1024 * 1024)) {
-            var builder = new BufferBuilder(memory, VertexFormat.Mode.QUADS, DefaultVertexFormat.NEW_ENTITY);
+            var builder = new BufferBuilder(memory, VertexFormat.Mode.QUADS, MATERIAL_FORMAT);
             // UV1 carries a static material flag; the real overlay is a per-draw uniform.
             // This lets the nocked crystal arrow use its own material in the same pass
             // as the ordinary bow, without duplicating the whole bow for an emissive layer.
@@ -141,18 +171,19 @@ public final class SonnetMaterialRenderer {
 
     static void render(BakedModel source, PoseStack pose, MultiBufferSource buffers,
                        int light, int overlay, boolean crystal, boolean gui) {
-        render(source, pose, buffers, light, overlay, crystal, gui, 1.0F, false);
+        render(source, pose, buffers, light, overlay, crystal, gui, 1.0F, false, false);
     }
 
     static void renderBow(BakedModel source, PoseStack pose, MultiBufferSource buffers,
                           int light, int overlay, boolean crystal, ItemDisplayContext context) {
         boolean gui = context == ItemDisplayContext.GUI;
         render(source, pose, buffers, light, overlay, crystal, gui,
-                crystal ? CRYSTAL_OPACITY : 1.0F, crystal && !gui && !context.firstPerson());
+                crystal ? CRYSTAL_OPACITY : 1.0F, crystal && !gui && !context.firstPerson(), context.firstPerson());
     }
 
     private static void render(BakedModel source, PoseStack pose, MultiBufferSource buffers,
-                               int light, int overlay, boolean crystal, boolean gui, float opacity, boolean deferred) {
+                               int light, int overlay, boolean crystal, boolean gui, float opacity, boolean deferred, boolean hand) {
+        if (!gui && ShaderPackCompat.shadowPass()) return;
         BakedModel model = SonnetBowModel.unwrap(source);
         // OutlineBufferSource and other wrappers must receive their vertices so that
         // team outlines, capture passes, etc. continue to work with the host renderer.
@@ -168,8 +199,11 @@ public final class SonnetMaterialRenderer {
         if (mesh == null) return;
         var draw = new Draw(mesh, new Matrix4f(RenderSystem.getModelViewMatrix()).mul(pose.last().pose()),
                 new Matrix4f(RenderSystem.getProjectionMatrix()), RenderSystem.getShaderColor().clone(),
-                light, overlay, crystal, gui, opacity);
-        if (deferred && immediate == Minecraft.getInstance().renderBuffers().bufferSource()) {
+                light, overlay, crystal, gui, opacity, hand, RenderSystem.getShaderFogStart(),
+                RenderSystem.getShaderFogEnd(), RenderSystem.getShaderFogColor().clone(), RenderSystem.getShaderFogShape().getIndex());
+        if (!gui && ShaderPackCompat.active()) {
+            SHADER_DRAWS.add(draw);
+        } else if (deferred && immediate == Minecraft.getInstance().renderBuffers().bufferSource()) {
             CRYSTAL_BATCH.submit(immediate, draw);
         } else {
             // GUI backgrounds and first-person arms must precede translucent items.
@@ -192,6 +226,11 @@ public final class SonnetMaterialRenderer {
             RenderSystem.setShaderColor(draw.color[0], draw.color[1], draw.color[2], draw.color[3]);
             RenderSystem.setShaderTexture(3, SPHERE);
             RenderSystem.setShaderTexture(4, TOON);
+            shader.setDefaultUniforms(VertexFormat.Mode.QUADS, draw.modelView, draw.projection, Minecraft.getInstance().getWindow());
+            shader.safeGetUniform("FogStart").set(draw.fogStart);
+            shader.safeGetUniform("FogEnd").set(draw.fogEnd);
+            shader.safeGetUniform("FogColor").set(draw.fogColor);
+            shader.safeGetUniform("FogShape").set(draw.fogShape);
             shader.safeGetUniform("NormalMat").set(new Matrix3f(draw.modelView).invert().transpose());
             shader.safeGetUniform("LightUV").set((float) LightTexture.block(draw.light), (float) LightTexture.sky(draw.light));
             shader.safeGetUniform("OverlayUV").set((float) (draw.overlay & 65535), (float) (draw.overlay >>> 16));
@@ -200,8 +239,10 @@ public final class SonnetMaterialRenderer {
             shader.safeGetUniform("Gui").set(draw.gui ? 1.0F : 0.0F);
             draw.mesh.buffer.bind();
             if (translucent) draw.mesh.sort(draw.modelView);
-            draw.mesh.buffer.drawWithShader(draw.modelView, draw.projection, shader);
+            shader.apply();
+            draw.mesh.buffer.draw();
         } finally {
+            shader.clear();
             VertexBuffer.unbind();
             type.clearRenderState();
             RenderSystem.setShaderTexture(3, sphereSlot);
@@ -212,7 +253,8 @@ public final class SonnetMaterialRenderer {
     }
 
     private record Draw(CachedMesh mesh, Matrix4f modelView, Matrix4f projection, float[] color,
-                        int light, int overlay, boolean crystal, boolean gui, float opacity) {}
+                        int light, int overlay, boolean crystal, boolean gui, float opacity, boolean hand,
+                        float fogStart, float fogEnd, float[] fogColor, int fogShape) {}
 
     private static final class CachedMesh implements AutoCloseable {
         private final VertexBuffer buffer;

@@ -22,30 +22,26 @@ final class MovementSkill {
     private static final Map<ServerPlayer, Integer> HOVER_UNTIL = new WeakHashMap<>();
     private MovementSkill() { }
 
-    static boolean available(ServerPlayer player) {
-        return ResearchProgress.completed(player, BasicSkills.RESEARCH) || ResearchProgress.completed(player, BLINK_RESEARCH);
+    static void cast(ServerPlayer player) {
+        if (SkillInput.forwardSpecial(player) && ResearchProgress.completed(player, BLINK_RESEARCH)) blink(player);
+        else if (ResearchProgress.completed(player, BasicSkills.RESEARCH)) dash(player);
     }
 
-    static boolean cast(ServerPlayer player) {
-        if (SkillInput.forwardSpecial(player) && ResearchProgress.completed(player, BLINK_RESEARCH)) return blink(player);
-        return ResearchProgress.completed(player, BasicSkills.RESEARCH) && dash(player);
-    }
-
-    private static boolean blink(ServerPlayer player) {
-        if (player.tickCount < HOVER_UNTIL.getOrDefault(player, 0)) return false;
+    private static void blink(ServerPlayer player) {
+        if (player.tickCount < HOVER_UNTIL.getOrDefault(player, 0)) return;
         var target = player.level().getEntitiesOfClass(Mob.class, AABB.ofSize(player.position(), 10, 10, 10),
                 mob -> mob instanceof Enemy && !(mob instanceof net.minecraft.world.entity.NeutralMob)
                         && mob.isAlive() && !mob.isAlliedTo(player)
                         && org.lyy.lyycore.content.control.MindControl.binding(mob) == null)
                 .stream().min(Comparator.comparingDouble(player::distanceToSqr)).orElse(null);
-        if (target == null) return false;
+        if (target == null) return;
         var behind = Vec3.directionFromRotation(0, target.getYRot()).scale(-1);
         var destination = target.position().add(behind);
         var bounds = player.getBoundingBox().move(destination.subtract(player.position()));
         if (!player.level().hasChunkAt(BlockPos.containing(destination))
                 || !player.level().getWorldBorder().isWithinBounds(bounds)
                 || !player.level().noCollision(player, bounds)
-                || bounds.intersects(target.getBoundingBox())) return false;
+                || bounds.intersects(target.getBoundingBox())) return;
         player.teleportTo(destination.x, destination.y, destination.z);
         player.setDeltaMovement(player.getDeltaMovement().multiply(1, 0, 1));
         player.fallDistance = 0;
@@ -53,7 +49,6 @@ final class MovementSkill {
         HOVER_UNTIL.put(player, player.tickCount + 20);
         PacketDistributor.sendToPlayer(player, new SkillNetwork.Hover(player.level().getGameTime() + 20));
         player.serverLevel().sendParticles(ParticleTypes.PORTAL, destination.x, destination.y + 1, destination.z, 12, .3, .5, .3, .1);
-        return true;
     }
 
     static void tick(ServerPlayer player) {
@@ -68,8 +63,7 @@ final class MovementSkill {
     }
     static void forget(ServerPlayer player) { HOVER_UNTIL.remove(player); }
     static void clear() { HOVER_UNTIL.clear(); }
-    static boolean dash(ServerPlayer player) {
-        if (!SkillInput.fresh(player)) return false;
+    private static void dash(ServerPlayer player) {
         int forward = SkillInput.forward(player), strafe = SkillInput.strafe(player);
         Vec3 direction = player.getLookAngle();
         if (forward != 0 || strafe != 0) {
@@ -78,8 +72,7 @@ final class MovementSkill {
                     Math.cos(yaw) * forward + Math.sin(yaw) * strafe).normalize();
         }
         Vec3 origin = player.position();
-        if (!org.lyy.lyycore.content.PlayerMovement.dash(player, direction, 4)) return false;
-        player.serverLevel().sendParticles(ParticleTypes.END_ROD, origin.x, origin.y + 1, origin.z, 8, .2, .2, .2, .02);
-        return true;
+        if (org.lyy.lyycore.content.PlayerMovement.dash(player, direction, 4))
+            player.serverLevel().sendParticles(ParticleTypes.END_ROD, origin.x, origin.y + 1, origin.z, 8, .2, .2, .2, .02);
     }
 }

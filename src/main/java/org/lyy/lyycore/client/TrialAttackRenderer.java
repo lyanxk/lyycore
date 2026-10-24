@@ -110,15 +110,19 @@ public final class TrialAttackRenderer extends EntityRenderer<TrialAttack> {
         }
     }
     private void threads(TrialAttack e, float partial, PoseStack pose, MultiBufferSource buffers) {
-        float age = e.age(partial);
-        String clip = age<5 ? "spawn" : age>TrialAttack.FIELD_TICKS-4 ? "despawn" : "idle";
-        float time = (age>TrialAttack.FIELD_TICKS-4 ? age-TrialAttack.FIELD_TICKS+4 : age)/20;
+        float age = e.age(partial), activeAge = age-e.delay();
+        boolean ending = activeAge>TrialAttack.FIELD_TICKS-4;
+        String clip = age<5 ? "spawn" : ending ? "despawn" : "idle";
+        float time = (ending ? activeAge-TrialAttack.FIELD_TICKS+4 : age)/20;
+        float threadTime = (ending ? activeAge-TrialAttack.FIELD_TICKS+4 : activeAge)/20;
         for (int i=0; i<6; i++) {
             var a = e.threadAnchor(i).subtract(e.position());
             pose.pushPose(); pose.translate(a.x,a.y-.3,a.z);
             anchor.render(pose, buffers, LightTexture.FULL_BRIGHT, clip, time);
             pose.popPose();
-            for (int j=i+1; j<6; j++) line(pose, buffers, thread, a, e.threadAnchor(j).subtract(e.position()), 1, clip, time);
+            // Show the complete line when its collision becomes active, after the anchor warning.
+            if (activeAge>=0) for (int j=i+1; j<6; j++)
+                line(pose, buffers, thread, a, e.threadAnchor(j).subtract(e.position()), 1, ending ? "despawn" : "idle", threadTime);
         }
     }
     private static void face(PoseStack pose, Vector3f from, Vec3 direction) {

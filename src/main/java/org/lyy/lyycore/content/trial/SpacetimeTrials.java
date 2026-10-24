@@ -105,11 +105,10 @@ public final class SpacetimeTrials extends SavedData {
         var offerings = offerings(level, altar);
         if (offerings == null) { tell(initiator, "materials"); return; }
         var boss = LyyEntities.TRIAL_GUIDE.get().create(level);
-        if (boss == null) return;
         boss.begin(altar, players.size(), initiator.getYRot() + 180);
         if (!level.noCollision(boss)) { tell(initiator, "blocked"); return; }
         var reservations = SummoningReservations.get(level);
-        if (!reservations.reserve(altar, boss.getUUID())) { tell(initiator, "occupied"); return; }
+        reservations.reserve(altar, boss.getUUID());
         var battle = new Battle(boss.getUUID(), altar, offerings);
         for (var player : players) battle.members.put(player.getUUID(), new Member(level.getGameTime(), player.position()));
         battles.put(boss.getUUID(), battle);

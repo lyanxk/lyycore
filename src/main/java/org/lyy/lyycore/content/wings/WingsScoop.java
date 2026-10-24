@@ -1,6 +1,5 @@
 package org.lyy.lyycore.content.wings;
 
-import org.lyy.lyycore.content.combat.ActionRestrictions;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -39,21 +38,19 @@ public final class WingsScoop {
                 && player.level().dimension().equals(attack.dimension);
     }
 
-    public static boolean start(ServerPlayer player) {
-        if (AegisWings.level(player) < 2 || !player.isAlive() || player.isSpectator()
-                || ActionRestrictions.frozen(player) || active(player) || WingsAttack.busy(player)) return false;
+    /** SkillSystem has already checked the player's input and action restrictions. */
+    public static void start(ServerPlayer player) {
+        if (AegisWings.level(player) < 2 || active(player) || WingsAttack.busy(player)) return;
         stop(player);
         var attack = new Attack(player.tickCount, player.level().dimension(), new ArrayList<>(ScoopPaths.COUNT), new HashSet<>());
         ACTIVE.put(player, attack);
         for (int path = 0; path < ScoopPaths.COUNT; path++) {
             var feather = LyyEntities.SCOOP_FEATHER.get().create(player.level());
-            if (feather == null) { stop(player); return false; }
             feather.prepare(player, attack, path);
-            if (!player.level().addFreshEntity(feather)) { stop(player); return false; }
+            if (!player.level().addFreshEntity(feather)) { stop(player); return; }
             attack.feathers.add(feather);
         }
         WingsNetwork.scoop(player, player.getYRot());
-        return true;
     }
 
     private static void stop(ServerPlayer player) {

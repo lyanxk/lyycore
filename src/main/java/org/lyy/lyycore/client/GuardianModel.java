@@ -55,7 +55,7 @@ final class GuardianModel {
         JsonArray array = object.getAsJsonArray(field);
         return new Vec3(array.get(0).getAsDouble(), array.get(1).getAsDouble(), array.get(2).getAsDouble());
     }
-    void render(PoseStack pose, VertexConsumer vertices, int light, float age, boolean fastOrbit) {
+    void render(PoseStack pose, VertexConsumer vertices, int light, double age, boolean fastOrbit) {
         for (Bone bone : bones) {
             if (bone.cubes.isEmpty() || bone.name.startsWith("volley_")) continue;
             pose.pushPose();
@@ -64,14 +64,14 @@ final class GuardianModel {
             pose.popPose();
         }
     }
-    private void transform(PoseStack pose, Bone bone, float age, boolean fastOrbit) {
+    private void transform(PoseStack pose, Bone bone, double age, boolean fastOrbit) {
         Bone parent = byName.get(bone.parent);
         if (parent != null) transform(pose, parent, age, fastOrbit);
         Vec3 pivot = bone.pivot.subtract(parent == null ? Vec3.ZERO : parent.pivot).scale(1.0 / 16);
         pose.translate(pivot.x, pivot.y, pivot.z);
         if (bone.name.equals("body")) pose.translate(0, Math.sin(age * 0.06) * 0.06, 0);
-        if (bone.name.equals("orbit_horizontal")) pose.mulPose(Axis.YP.rotationDegrees(age * (fastOrbit ? 25 : 2)));
-        if (bone.name.equals("projectile_spin")) pose.mulPose(Axis.YP.rotationDegrees(age * 18));
+        if (bone.name.equals("orbit_horizontal")) pose.mulPose(Axis.YP.rotationDegrees((float) (age * (fastOrbit ? 25 : 2) % 360)));
+        if (bone.name.equals("projectile_spin")) pose.mulPose(Axis.YP.rotationDegrees((float) (age * 18 % 360)));
         pose.mulPose(Axis.ZP.rotationDegrees((float) bone.rotation.z));
         pose.mulPose(Axis.YP.rotationDegrees((float) bone.rotation.y));
         pose.mulPose(Axis.XP.rotationDegrees((float) bone.rotation.x));

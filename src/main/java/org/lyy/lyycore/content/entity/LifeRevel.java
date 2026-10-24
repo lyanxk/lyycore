@@ -118,9 +118,7 @@ public final class LifeRevel extends RevelMob {
     private void reconcileSummons() {
         RevelSummons.get((ServerLevel) level()).drain(getUUID()).forEach(this::minionRemoved);
     }
-    void minionAvailable(RevelMinion minion) {
-        if (cleaningUp || !isAlive()) return;
-        // Reattach survivors from older saves whose owner previously forgot unloaded UUIDs.
+    private void trackMinion(RevelMinion minion) {
         if (minion instanceof RevelDancer) dancers.add(minion.getUUID());
         else if (minion instanceof RevelBlind) blinds.add(minion.getUUID());
         RevelSummons.get((ServerLevel) level()).track(getUUID(), minion.getUUID());
@@ -128,9 +126,8 @@ public final class LifeRevel extends RevelMob {
     private void summonBlinds() {
         for (int corner = 0; corner < 4; corner++) {
             var blind = LyyEntities.REVEL_BLIND.get().create(level());
-            if (blind == null) continue;
             blind.beginSummoning(corner);
-            if (addMinion(blind, RevelBlind.formationOffset(corner))) blinds.add(blind.getUUID());
+            addMinion(blind, RevelBlind.formationOffset(corner));
         }
         blindTicks = blinds.isEmpty() ? BLIND_INTERVAL : -1;
     }
@@ -140,22 +137,21 @@ public final class LifeRevel extends RevelMob {
             // Space each wave evenly around the boss.
             double angle = i * Math.PI * 2 / DANCERS_PER_WAVE;
             Vec3 offset = new Vec3(Math.cos(angle) * 3, 0.6, Math.sin(angle) * 3);
-            if (dancer != null && addMinion(dancer, offset)) dancers.add(dancer.getUUID());
+            addMinion(dancer, offset);
         }
         if (canPlayIdleAction()) animate("summon_strikers", 22);
     }
-    private boolean addMinion(RevelMinion minion, Vec3 offset) {
+    private void addMinion(RevelMinion minion, Vec3 offset) {
         minion.bind(this);
         Vec3 desired = position().add(offset);
         for (int height = 0; height < 4; height++) {
             minion.setPos(desired.add(0, height, 0));
             if (level().hasChunkAt(BlockPos.containing(minion.position())) && level().noCollision(minion)
                     && level().addFreshEntity(minion)) {
-                minionAvailable(minion);
-                return true;
+                trackMinion(minion);
+                return;
             }
         }
-        return false;
     }
     public void minionRemoved(RevelMinion minion, boolean died) {
         minionRemoved(minion.getUUID(), died);

@@ -50,14 +50,12 @@ public final class GuardSkill {
     static void releaseIfExpired(ServerPlayer player) {
         if (!guarding(player)) { var state = STATES.get(player); if (state != null) state.guarding = false; }
     }
-    static boolean start(ServerPlayer player) {
-        if (!SkillInput.fresh(player)) return false;
+    static void start(ServerPlayer player) {
         var state = STATES.computeIfAbsent(player, ignored -> new State());
         state.guarding = true;
         state.started = player.tickCount;
         state.counterPending = player.isShiftKeyDown() && SkillInput.forward(player) > 0;
         AegisWings.showShield(player);
-        return true;
     }
     private static void counterattack(ServerPlayer player, LivingEntity target, float bonus) {
         if (!SkillSystem.consumeAction(player, COUNTER)) return;

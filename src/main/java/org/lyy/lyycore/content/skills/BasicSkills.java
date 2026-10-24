@@ -14,18 +14,11 @@ import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import org.lyy.lyycore.content.research.ResearchProgress;
 import org.lyy.lyycore.network.SkillNetwork;
 
-/** Exploration skill registration and lifecycle ordering; each mechanic owns its own state. */
+/** Exploration research and skill lifecycle ordering. */
 @EventBusSubscriber(modid = "lyycore")
 public final class BasicSkills {
     public static final ResourceLocation RESEARCH = ResourceLocation.parse("lyycore:research/exploration");
     private BasicSkills() { }
-    public static void register() {
-        SkillSystem.register(StyleSystem.Style.MOBILITY, SkillSystem.SPECIAL,
-                new SkillSystem.Skill(MovementSkill::available, MovementSkill::cast));
-        SkillSystem.register(StyleSystem.Style.TECHNIQUE, SkillSystem.SPECIAL, new SkillSystem.Skill(RESEARCH, GuardSkill::start));
-        SkillSystem.register(StyleSystem.Style.OFFENSE, SkillSystem.SPECIAL,
-                new SkillSystem.Skill(OffenseSkills.SCOOP_RESEARCH, OffenseSkills::scoop));
-    }
     public static boolean available(Player player) {
         return SkillSystem.enabled(player) && (player.level().isClientSide
                 ? player.getPersistentData().getBoolean("lyycore:exploration") : ResearchProgress.completed(player, RESEARCH));

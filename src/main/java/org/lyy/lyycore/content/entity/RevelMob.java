@@ -24,7 +24,7 @@ public abstract class RevelMob extends Monster {
         builder.define(ANIMATION_START, 0L);
     }
     public final String animation() { return entityData.get(ANIMATION); }
-    public final float animationTime(float partial) { return (level().getGameTime() - entityData.get(ANIMATION_START) + partial) / 20F; }
+    public final double animationTime(float partial) { return (level().getGameTime() - entityData.get(ANIMATION_START) + (double) partial) / 20; }
     protected final void animate(String name, int ticks) {
         entityData.set(ANIMATION, name);
         entityData.set(ANIMATION_START, level().getGameTime());

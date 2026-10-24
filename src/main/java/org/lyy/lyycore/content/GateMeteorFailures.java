@@ -5,21 +5,14 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import net.minecraft.commands.Commands;
-import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.*;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.saveddata.SavedData;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import org.lyy.lyycore.content.blockEntities.ImaginaryGateBlockEntity;
 
 /** Failure receipts survive an unloaded controller; absence of a loaded meteor is never treated as failure. */
-@EventBusSubscriber(modid = "lyycore")
 public final class GateMeteorFailures extends SavedData {
     private static final Factory<GateMeteorFailures> FACTORY = new Factory<>(GateMeteorFailures::new, GateMeteorFailures::load);
     private final Map<BlockPos, Set<UUID>> failures = new HashMap<>();
@@ -53,29 +46,8 @@ public final class GateMeteorFailures extends SavedData {
         var data = new GateMeteorFailures();
         for (var raw : tag.getList("Failures", Tag.TAG_COMPOUND)) {
             var row = (CompoundTag)raw;
-            if (row.hasUUID("Meteor")) data.failures.computeIfAbsent(BlockPos.of(row.getLong("Origin")), ignored -> new HashSet<>()).add(row.getUUID("Meteor"));
+            data.failures.computeIfAbsent(BlockPos.of(row.getLong("Origin")), ignored -> new HashSet<>()).add(row.getUUID("Meteor"));
         }
         return data;
-    }
-    /** Old versions did not record failed missions. Operators may explicitly cancel an unresolved one. */
-    @SubscribeEvent public static void commands(RegisterCommandsEvent event) {
-        event.getDispatcher().register(Commands.literal("lyy").then(Commands.literal("summons")
-                .requires(source -> source.hasPermission(2))
-                .then(Commands.literal("clear_meteor").then(Commands.argument("origin", BlockPosArgument.blockPos())
-                        .executes(context -> {
-                            var source = context.getSource(); var level = source.getLevel();
-                            var origin = BlockPosArgument.getLoadedBlockPos(context, "origin");
-                            if (!(level.getBlockEntity(origin) instanceof ImaginaryGateBlockEntity gate) || gate.meteorId() == null) {
-                                source.sendFailure(Component.literal("该坐标没有待完成的关门陨石流程。")); return 0;
-                            }
-                            var meteor = gate.meteorId();
-                            if (level.getEntity(meteor) != null) {
-                                source.sendFailure(Component.literal("对应陨石仍已加载，请先正常结束或移除它。")); return 0;
-                            }
-                            gate.meteorFailed(meteor);
-                            get(level).consume(origin, meteor);
-                            source.sendSuccess(() -> Component.literal("已取消旧陨石流程；旧实体即使重新加载也不能撞击这座门。"), true);
-                            return 1;
-                        })))));
     }
 }

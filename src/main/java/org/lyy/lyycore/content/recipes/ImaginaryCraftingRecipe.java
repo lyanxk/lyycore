@@ -13,19 +13,12 @@ import java.util.List;
 public record ImaginaryCraftingRecipe(List<Ingredient> ingredients, ItemStack result) implements OctagonalRecipe {
     public static final int DURATION = 100;
 
-    public ImaginaryCraftingRecipe {
-        OctagonalRecipe.validate(ingredients, result);
-        ingredients = List.copyOf(ingredients);
-        result = result.copy();
-    }
-
-    @Override public ItemStack result() { return result.copy(); }
     @Override public RecipeSerializer<?> getSerializer() { return LyyRecipes.IMAGINARY_CRAFTING_SERIALIZER.get(); }
     @Override public RecipeType<?> getType() { return LyyRecipes.IMAGINARY_CRAFTING.get(); }
 
     public static final class Serializer implements RecipeSerializer<ImaginaryCraftingRecipe> {
         private static final MapCodec<ImaginaryCraftingRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-                Ingredient.CODEC.listOf().fieldOf("ingredients").forGetter(ImaginaryCraftingRecipe::ingredients),
+                Ingredient.CODEC.listOf(9, 9).fieldOf("ingredients").forGetter(ImaginaryCraftingRecipe::ingredients),
                 ItemStack.STRICT_SINGLE_ITEM_CODEC.fieldOf("result").forGetter(ImaginaryCraftingRecipe::result)
         ).apply(instance, ImaginaryCraftingRecipe::new));
         private static final StreamCodec<RegistryFriendlyByteBuf, ImaginaryCraftingRecipe> STREAM = StreamCodec.of(

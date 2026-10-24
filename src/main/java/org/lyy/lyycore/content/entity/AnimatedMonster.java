@@ -20,7 +20,7 @@ public abstract class AnimatedMonster extends Monster {
         builder.define(STARTED, 0L);
     }
     public String animation() { return entityData.get(ANIMATION); }
-    public float animationTime(float partial) { return Math.max(0, (level().getGameTime() - entityData.get(STARTED) + partial) / 20F); }
+    public double animationTime(float partial) { return Math.max(0, (level().getGameTime() - entityData.get(STARTED) + (double) partial) / 20); }
     protected boolean playing(String clip, float duration) { return animation().equals(clip) && animationTime(0) < duration; }
     protected void animate(String clip) { if (!animation().equals(clip)) restartAnimation(clip); }
     protected void restartAnimation(String clip) {

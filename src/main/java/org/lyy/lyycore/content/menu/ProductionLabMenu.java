@@ -11,7 +11,7 @@ import org.lyy.lyycore.registry.LyyBlocks;
 import org.lyy.lyycore.registry.LyyItems;
 import org.lyy.lyycore.registry.LyyMenus;
 
-public final class ProductionLabMenu extends AbstractContainerMenu {
+public final class ProductionLabMenu extends MachineMenu {
     private final ContainerLevelAccess access;
     private final ContainerData data;
     public ProductionLabMenu(int id, Inventory inventory, RegistryFriendlyByteBuf buffer) {
@@ -26,23 +26,12 @@ public final class ProductionLabMenu extends AbstractContainerMenu {
             @Override public boolean mayPlace(ItemStack stack) { return stack.is(LyyItems.RESEARCH_NOTES.get()) && !hasItem(); }
             @Override public int getMaxStackSize(ItemStack stack) { return stack.is(LyyItems.RESEARCH_NOTES.get()) ? 1 : stack.getMaxStackSize(); }
         });
-        for (int row = 0; row < 3; row++) for (int col = 0; col < 9; col++)
-            addSlot(new Slot(inventory, 9 + row * 9 + col, 8 + col * 18, 112 + row * 18));
-        for (int col = 0; col < 9; col++) addSlot(new Slot(inventory, col, 8 + col * 18, 170));
+        addPlayerSlots(inventory, 8, 112);
     }
     public float progress() { return data.get(0) / 1000F; }
     public int status() { return data.get(1); }
     @Override public boolean stillValid(Player player) { return stillValid(access, player, LyyBlocks.PRODUCTION_LAB.get()); }
     @Override public ItemStack quickMoveStack(Player player, int index) {
-        if (index < 0 || index >= slots.size()) return ItemStack.EMPTY;
-        Slot slot = slots.get(index);
-        if (!slot.hasItem()) return ItemStack.EMPTY;
-        ItemStack stack = slot.getItem(), original = stack.copy();
-        if (index == 0) {
-            if (!moveItemStackTo(stack, 1, slots.size(), true)) return ItemStack.EMPTY;
-        } else if (!moveItemStackTo(stack, 0, 1, false)) return ItemStack.EMPTY;
-        if (stack.isEmpty()) slot.set(ItemStack.EMPTY); else slot.setChanged();
-        slot.onTake(player, original.copyWithCount(original.getCount() - stack.getCount()));
-        return original;
+        return index == 0 ? moveStack(player, index, 1, slots.size(), true) : moveStack(player, index, 0, 1, false);
     }
 }

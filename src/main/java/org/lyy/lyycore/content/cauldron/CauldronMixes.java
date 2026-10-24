@@ -12,8 +12,6 @@ import org.lyy.lyycore.registry.LyyItems;
 /** Mixing rules shared by the pot and recipe display. Counts are minimums, not exact matches. */
 public final class CauldronMixes {
     public record Special(List<ItemStack> ingredients, Item result) {
-        public Special { ingredients = ingredients.stream().map(ItemStack::copy).toList(); }
-        @Override public List<ItemStack> ingredients() { return ingredients.stream().map(ItemStack::copy).toList(); }
         public boolean matches(Map<Item, Integer> items) {
             return ingredients.stream().allMatch(stack -> items.getOrDefault(stack.getItem(), 0) >= stack.getCount());
         }

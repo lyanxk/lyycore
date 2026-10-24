@@ -14,7 +14,7 @@ final class FourWingAnimation {
     private static AnimatedMeshModel model;
     private final float[] pose, from;
     private String clip = "idle", destination = "idle";
-    private float started, blendStarted;
+    private double started, blendStarted;
     private long lastHit = Long.MIN_VALUE;
     private boolean pendingHit, initialized;
     private FourWingAnimation() { pose = model().newPose(); from = model().newPose(); model().sample("idle", 0, pose); }
@@ -24,7 +24,7 @@ final class FourWingAnimation {
     float[] pose() { return pose; }
     boolean folded() { return clip.equals("fold_hold"); }
     void update(AbstractClientPlayer player, float partial) {
-        float now = (player.tickCount + partial) / 20;
+        double now = ((double) player.tickCount + partial) / 20;
         long hit = AegisWings.shieldStarted(player);
         float hitAge = (player.level().getGameTime() - hit + partial) / 20;
         if (hit != lastHit) { pendingHit = hitAge >= 0 && hitAge < .86F; lastHit = hit; }
@@ -52,7 +52,7 @@ final class FourWingAnimation {
             else if (previous.equals("flight") || previous.equals("glide")) begin(previous + "_exit", now);
             else enter(now);
         }
-        float elapsed = now - started;
+        double elapsed = now - started;
         if (clip.equals("fold") && elapsed >= 1.2F) begin("fold_hold", now);
         else if (clip.equals("unfold") && elapsed >= 1.2F || clip.endsWith("_exit") && elapsed >= .5F
                 || clip.equals("shield_recall") && elapsed >= .65F) enter(now);
@@ -61,15 +61,15 @@ final class FourWingAnimation {
         else if (clip.equals("shield_hold") && pendingHit) begin("shield_hit", now);
         else if (clip.equals("shield_hit") && elapsed >= .28F) begin("shield_hold", now);
         model().sample(clip, now - started, pose);
-        float blend = Mth.clamp((now - blendStarted) / .12F, 0, 1);
+        float blend = (float) Mth.clamp((now - blendStarted) / .12, 0, 1);
         // Cubic easing avoids abrupt velocity changes when leaving a flapping loop mid-cycle.
         blend = blend * blend * (3 - 2 * blend);
         for (int i = 0; i < pose.length; i++) pose[i] = Mth.lerp(blend, from[i], pose[i]);
     }
-    private void enter(float now) {
+    private void enter(double now) {
         begin(switch (destination) { case "flight", "glide" -> destination + "_enter"; case "shield" -> "shield_deploy"; default -> destination; }, now);
     }
-    private void begin(String next, float now) {
+    private void begin(String next, double now) {
         System.arraycopy(pose, 0, from, 0, pose.length);
         clip = next; started = blendStarted = now;
         if (next.equals("shield_hit")) pendingHit = false;

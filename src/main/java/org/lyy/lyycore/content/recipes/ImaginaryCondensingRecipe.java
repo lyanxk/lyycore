@@ -11,22 +11,11 @@ import org.lyy.lyycore.registry.LyyRecipes;
 import java.util.List;
 
 public record ImaginaryCondensingRecipe(List<Ingredient> ingredients, ItemStack result, int duration, int energy, boolean energyPerTick) implements OctagonalRecipe {
-    public ImaginaryCondensingRecipe(List<Ingredient> ingredients, ItemStack result, int duration, int energy) {
-        this(ingredients, result, duration, energy, false);
-    }
-    public ImaginaryCondensingRecipe {
-        OctagonalRecipe.validate(ingredients, result);
-        if (duration < 1 || duration > 32767 || energy < 0 || energy > 1_000_000)
-            throw new IllegalArgumentException("Invalid condensing duration or energy");
-        ingredients = List.copyOf(ingredients);
-        result = result.copy();
-    }
-    @Override public ItemStack result() { return result.copy(); }
     @Override public RecipeSerializer<?> getSerializer() { return LyyRecipes.IMAGINARY_CONDENSING_SERIALIZER.get(); }
     @Override public RecipeType<?> getType() { return LyyRecipes.IMAGINARY_CONDENSING.get(); }
     public static final class Serializer implements RecipeSerializer<ImaginaryCondensingRecipe> {
         private static final MapCodec<ImaginaryCondensingRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-                Ingredient.CODEC.listOf().fieldOf("ingredients").forGetter(ImaginaryCondensingRecipe::ingredients),
+                Ingredient.CODEC.listOf(9, 9).fieldOf("ingredients").forGetter(ImaginaryCondensingRecipe::ingredients),
                 ItemStack.STRICT_SINGLE_ITEM_CODEC.fieldOf("result").forGetter(ImaginaryCondensingRecipe::result),
                 Codec.intRange(1, 32767).optionalFieldOf("duration", 100).forGetter(ImaginaryCondensingRecipe::duration),
                 Codec.intRange(0, 1_000_000).fieldOf("energy").forGetter(ImaginaryCondensingRecipe::energy),

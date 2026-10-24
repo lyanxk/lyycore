@@ -12,9 +12,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
-import org.lyy.lyycore.registry.LyyItems;
 
-/** Stored materials use the existing component format, so previously bottled mixtures still work. */
+/** Materials bottled from an unfinished cauldron mixture. */
 public final class IncompletePotionContents {
     private static final String KEY = "CauldronIngredients";
 
@@ -23,12 +22,7 @@ public final class IncompletePotionContents {
         var data = potion.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
         for (var raw : data.getList(KEY, Tag.TAG_COMPOUND)) {
             var entry = (CompoundTag) raw;
-            var id = ResourceLocation.tryParse(entry.getString("Item"));
-            int count = entry.getInt("Count");
-            if (id == null || !BuiltInRegistries.ITEM.containsKey(id) || count <= 0) continue;
-            var material = new ItemStack(BuiltInRegistries.ITEM.get(id), count);
-            // Old empty bottles could accidentally record themselves as an ingredient.
-            if (!material.isEmpty() && !material.is(LyyItems.INCOMPLETE_POTION)) materials.add(material);
+            materials.add(new ItemStack(BuiltInRegistries.ITEM.get(ResourceLocation.parse(entry.getString("Item"))), entry.getInt("Count")));
         }
         return materials;
     }

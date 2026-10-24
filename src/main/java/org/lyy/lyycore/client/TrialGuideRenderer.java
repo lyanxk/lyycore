@@ -24,14 +24,14 @@ public final class TrialGuideRenderer extends EntityRenderer<TrialGuide> {
     }
     @Override public void render(TrialGuide entity, float yaw, float partial, PoseStack pose, MultiBufferSource buffers, int light) {
         var state = transitions.computeIfAbsent(entity, ignored -> new Transition());
-        float time = entity.animationTime(partial);
+        double time = entity.animationTime(partial);
         if (!entity.animation().equals(state.clip)) {
             if (state.clip == null) model.sample(entity.animation(), time, state.pose);
             System.arraycopy(state.pose, 0, state.previous, 0, state.pose.length);
             state.clip = entity.animation();
         }
         model.sample(state.clip, time, state.pose);
-        float weight = Math.min(1, time / .25F);
+        float weight = (float) Math.min(1, time / .25);
         for (int i=0; i<state.pose.length && weight<1; i++) {
             int channel = i % 9;
             state.pose[i] = channel >= 3 && channel < 6 ? Mth.rotLerp(weight, state.previous[i], state.pose[i])

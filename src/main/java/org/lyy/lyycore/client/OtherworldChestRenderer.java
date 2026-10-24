@@ -17,12 +17,12 @@ public final class OtherworldChestRenderer implements BlockEntityRenderer<Otherw
     private final Map<OtherworldChestBlockEntity, Motion> motions = new WeakHashMap<>();
     private final class Motion {
         boolean open;
-        double changedAt;
         final float[] from = mesh.newPose(), current = mesh.newPose();
-        Motion(boolean open, double now) {
+        Motion(boolean open, boolean transitioning) {
             this.open = open;
-            changedAt = now - mesh.clipLength(open ? "open" : "close");
-            mesh.sample(open ? "opened" : "closed", 0, current);
+            boolean initialOpen = transitioning ? !open : open;
+            mesh.sample(initialOpen ? "opened" : "closed", 0, current);
+            System.arraycopy(current, 0, from, 0, current.length);
         }
     }
     @Override public AABB getRenderBoundingBox(OtherworldChestBlockEntity chest) {
@@ -30,19 +30,17 @@ public final class OtherworldChestRenderer implements BlockEntityRenderer<Otherw
     }
     @Override public void render(OtherworldChestBlockEntity chest, float partial, PoseStack pose, MultiBufferSource buffers, int light, int overlay) {
         if (chest.getLevel() == null) return;
-        double now = (chest.getLevel().getGameTime() + partial) / 20.0;
-        boolean open = chest.getBlockState().getValue(OtherworldChestBlock.OPEN);
-        var motion = motions.computeIfAbsent(chest, key -> new Motion(open, now));
+        boolean open = chest.animationOpen();
+        float progress = chest.animationProgress(partial);
+        var motion = motions.computeIfAbsent(chest, key -> new Motion(open, progress < 1));
         if (open != motion.open) {
             System.arraycopy(motion.current, 0, motion.from, 0, motion.current.length);
             motion.open = open;
-            motion.changedAt = now;
         }
-        float elapsed = (float)(now - motion.changedAt);
         String transition = open ? "open" : "close";
-        float duration = mesh.clipLength(transition);
-        String clip = elapsed < duration ? transition : open ? "opened" : "closed";
-        float time = elapsed < duration ? elapsed : (elapsed - duration) % mesh.clipLength(clip);
+        float elapsed = progress * mesh.clipLength(transition);
+        String clip = progress < 1 ? transition : open ? "opened" : "closed";
+        float time = progress < 1 ? elapsed : chest.idleAnimationTime(partial);
         mesh.sample(clip, time, motion.current);
         // Reversing the lid midway starts from the visible pose, rather than snapping.
         if (elapsed < .2F) {

@@ -13,16 +13,10 @@ import org.lyy.lyycore.content.ResourceFrameKind;
 
 /** Resource frames share a wire format while keeping separate production pools. */
 public record ResourceGatheringRecipe(ResourceFrameKind kind, ItemStack result, int dryCost, int wetCost) implements Recipe<RecipeInput> {
-    public ResourceGatheringRecipe {
-        if (result.isEmpty() || result.getCount() != 1 || dryCost <= 0 || wetCost <= 0)
-            throw new IllegalArgumentException("Gathering requires one result and positive IE costs");
-        result = result.copy();
-    }
-    @Override public ItemStack result() { return result.copy(); }
     public int energyCost(boolean wet) { return kind.supportsWater() && wet ? wetCost : dryCost; }
     @Override public boolean matches(RecipeInput input, Level level) { return true; }
     @Override public boolean canCraftInDimensions(int width, int height) { return true; }
-    @Override public ItemStack assemble(RecipeInput input, HolderLookup.Provider registries) { return result(); }
+    @Override public ItemStack assemble(RecipeInput input, HolderLookup.Provider registries) { return result.copy(); }
     @Override public ItemStack getResultItem(HolderLookup.Provider registries) { return result(); }
     @Override public boolean isSpecial() { return true; }
     @Override public RecipeSerializer<?> getSerializer() { return kind.serializer(); }

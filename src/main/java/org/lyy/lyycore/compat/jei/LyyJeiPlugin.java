@@ -32,7 +32,6 @@ import org.lyy.lyycore.registry.LyyItems;
 import org.lyy.lyycore.registry.LyyMenus;
 import org.lyy.lyycore.registry.LyyRecipes;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @JeiPlugin
 public class LyyJeiPlugin implements IModPlugin {
@@ -107,28 +106,6 @@ public class LyyJeiPlugin implements IModPlugin {
         reg.addItemStackInfo(new ItemStack(LyyBlocks.OTHERWORLD_CHEST.get()), net.minecraft.network.chat.Component.translatable("gui.lyycore.otherworld.take"), net.minecraft.network.chat.Component.translatable("gui.lyycore.otherworld.cost"));
         List<ImaginaryAlloyingRecipe> recipes = rm.getAllRecipesFor(LyyRecipes.IMAGINARY_ALLOYING.get())
                 .stream().map(RecipeHolder::value).toList();
-        if (recipes.isEmpty()) {
-            // Fallback: when type-key lookup misses, still collect by concrete recipe class.
-            recipes = rm.getRecipes().stream()
-                    .map(RecipeHolder::value)
-                    .filter(ImaginaryAlloyingRecipe.class::isInstance)
-                    .map(ImaginaryAlloyingRecipe.class::cast)
-                    .toList();
-        }
-
-        LogUtils.getLogger().info("[LyyCore JEI] imaginary_alloying recipes = {}", recipes.size());
-        if (recipes.isEmpty()) {
-            long modRecipeCount = rm.getRecipes().stream()
-                    .filter(h -> h.id().getNamespace().equals(LyyCore.MODID))
-                    .count();
-            List<String> modRecipeIds = rm.getRecipes().stream()
-                    .filter(h -> h.id().getNamespace().equals(LyyCore.MODID))
-                    .map(h -> h.id().toString())
-                    .sorted()
-                    .collect(Collectors.toList());
-            LogUtils.getLogger().warn("[LyyCore JEI] no imaginary_alloying recipes found. lyycore recipe count={}, ids={}",
-                    modRecipeCount, modRecipeIds);
-        }
         reg.addRecipes(LyyJeiTypes.IMAGINARY_ALLOYING, recipes);
         reg.addRecipes(PureSmeltingCategory.TYPE, rm.getAllRecipesFor(LyyRecipes.PURE_SMELTING.get()).stream().map(RecipeHolder::value).toList());
         reg.addRecipes(FissionCategory.TYPE, rm.getAllRecipesFor(net.minecraft.world.item.crafting.RecipeType.SMELTING).stream().map(RecipeHolder::value).toList());

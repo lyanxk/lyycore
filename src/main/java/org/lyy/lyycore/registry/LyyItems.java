@@ -1,6 +1,5 @@
 package org.lyy.lyycore.registry;
 
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
@@ -206,13 +205,4 @@ public class LyyItems {
     public static final DeferredItem<BlockItem> IGB_ITEM =
             ITEMS.registerSimpleBlockItem(LyyBlocks.IGB);
 
-    static {
-        // The altar material is the existing summoning crystal; migrate the former duplicate.
-        ITEMS.addAlias(ResourceLocation.fromNamespaceAndPath(LyyCore.MODID, "summoning_core"),
-                CONTROL_CRYSTAL.getId());
-        // Resolve old item stacks and datapack references to the renamed item.
-        // Saving those stacks again writes the canonical imaginary_crystal ID.
-        ITEMS.addAlias(ResourceLocation.fromNamespaceAndPath(LyyCore.MODID, "raw_imaginium"),
-                IMAGINARY_CRYSTAL.getId());
-    }
 }

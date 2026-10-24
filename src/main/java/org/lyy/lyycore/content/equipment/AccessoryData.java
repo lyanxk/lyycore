@@ -19,20 +19,11 @@ public record AccessoryData(List<Stat> traits, int[] points) {
     public int remaining() { return total() - java.util.Arrays.stream(points).sum(); }
     public static AccessoryData read(ItemStack stack) {
         var tag = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag().getCompound(KEY);
-        var traits = new ArrayList<Stat>();
-        for (var entry : tag.getList("Traits", 8)) {
-            try { var stat = Stat.valueOf(entry.getAsString()); if (!traits.contains(stat)) traits.add(stat); }
-            catch (IllegalArgumentException ignored) { }
-        }
-        if (traits.size() != 3 && traits.size() != 4) traits.clear();
+        var traits = tag.getList("Traits", 8).stream().map(entry -> Stat.valueOf(entry.getAsString())).toList();
         int[] points = new int[Stat.values().length];
-        int remaining = traits.size() == 4 ? 10 : traits.size() == 3 ? 8 : 0;
         var allocations = tag.getCompound("Points");
-        for (var stat : traits) {
-            points[stat.ordinal()] = Math.clamp(allocations.getInt(stat.name()), 0, remaining);
-            remaining -= points[stat.ordinal()];
-        }
-        return new AccessoryData(List.copyOf(traits), points);
+        for (var stat : traits) points[stat.ordinal()] = allocations.getInt(stat.name());
+        return new AccessoryData(traits, points);
     }
     private void save(ItemStack stack) {
         var tag = new CompoundTag(); var names = new ListTag(); var allocations = new CompoundTag();
@@ -41,7 +32,8 @@ public record AccessoryData(List<Stat> traits, int[] points) {
         CustomData.update(DataComponents.CUSTOM_DATA, stack, root -> root.put(KEY, tag));
     }
     public static void initialize(ItemStack stack, RandomSource random) {
-        if (!(stack.getItem() instanceof AccessoryItem) || !read(stack).traits.isEmpty()) return;
+        if (!(stack.getItem() instanceof AccessoryItem)
+                || stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).contains(KEY)) return;
         roll(List.of(), random.nextBoolean() ? 3 : 4, random).save(stack);
     }
     private static AccessoryData roll(List<Stat> locked, int count, RandomSource random) {

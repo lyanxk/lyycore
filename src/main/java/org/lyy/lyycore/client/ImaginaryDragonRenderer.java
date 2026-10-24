@@ -23,7 +23,7 @@ public final class ImaginaryDragonRenderer extends EntityRenderer<ImaginaryDrago
             case TELEPORT_IN -> teleport(pose, buffers, light, seconds, true);
             case TELEPORT_OUT -> teleport(pose, buffers, light, seconds, false);
             case BREATH -> model.render(pose, buffers, light, "breath_ultimate", ImaginaryDragon.breathAnimationSeconds(dragon.actionTicks(partial)));
-            case CHARGE -> model.renderBlended(pose, buffers, light, dragon.tickCount+partial, 0, 0, 1, Math.min(1, seconds*3));
+            case CHARGE -> model.renderBlended(pose, buffers, light, (double) dragon.tickCount+partial, 0, 0, 1, Math.min(1, seconds*3));
             case FALL -> model.render(pose, buffers, light, "glide", seconds);
             case IDLE -> model.render(pose, buffers, light, "fold_wings", Math.min(1.5F, seconds));
         }

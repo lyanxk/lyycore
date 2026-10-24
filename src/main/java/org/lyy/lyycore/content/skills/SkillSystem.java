@@ -6,41 +6,26 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import org.lyy.lyycore.content.research.ResearchProgress;
 import org.lyy.lyycore.content.item.SpecialWeapon;
+import org.lyy.lyycore.content.wings.WingsScoop;
 
-import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.function.Predicate;
 
 /** All skill requests pass through the server's unlock checks and current-style dispatch. */
 public final class SkillSystem {
-    public static final ResourceLocation SPECIAL = ResourceLocation.fromNamespaceAndPath("lyycore", "special");
+    private static final ResourceLocation SPECIAL = ResourceLocation.fromNamespaceAndPath("lyycore", "special");
     private static final String FACTOR_UNLOCKED = "lyycore:factor_unlocked";
     private static final String UNLOCKED = "lyycore:skills_unlocked";
-    private static final Map<StyleSystem.Style, Map<ResourceLocation, Skill>> BINDINGS = new EnumMap<>(StyleSystem.Style.class);
     private static final Map<ServerPlayer, Actions> ACTIONS = new WeakHashMap<>();
     private static final class Actions {
         int tick;
         final Set<ResourceLocation> consumed = new HashSet<>();
     }
 
-    public record Skill(Predicate<ServerPlayer> available, Predicate<ServerPlayer> cast) {
-        public Skill(ResourceLocation research, Predicate<ServerPlayer> cast) {
-            this(player -> ResearchProgress.completed(player, research), cast);
-        }
-    }
     private SkillSystem() { }
 
-    /** Register a key binding for a style when implementing its concrete research and effect. */
-    public static void register(StyleSystem.Style style, ResourceLocation key, Skill skill) {
-        if (style == StyleSystem.Style.BUILDING && key.equals(SPECIAL))
-            throw new IllegalArgumentException("The special key is only used by mobility, technique and offense");
-        if (BINDINGS.computeIfAbsent(style, ignored -> new HashMap<>()).putIfAbsent(key, skill) != null)
-            throw new IllegalStateException("Duplicate skill binding: " + style + "/" + key);
-    }
     public static boolean unlocked(Player player) {
         return player.getPersistentData().getCompound(Player.PERSISTED_NBT_TAG).getBoolean(UNLOCKED)
                 || player.getPersistentData().getCompound(Player.PERSISTED_NBT_TAG).getBoolean(FACTOR_UNLOCKED);
@@ -72,23 +57,26 @@ public final class SkillSystem {
         return enabled(player) && player.isAlive() && !player.isSpectator()
                 && player.containerMenu == player.inventoryMenu && !ActionRestrictions.frozen(player);
     }
-    public static boolean cast(ServerPlayer player, ResourceLocation key) {
-        if (!canUse(player)) return false;
+    /** SkillInput has already checked whether this press can be used. */
+    static void castSpecial(ServerPlayer player) {
         var style = StyleSystem.current(player);
-        var action = key.withSuffix("/" + style.key);
-        // Weapon actions own this press before research-bound active skills are considered.
-        if (style == StyleSystem.Style.OFFENSE && key.equals(SPECIAL)) {
-            var stack = player.getMainHandItem();
-            if (!stack.isEmpty() && stack.getItem() instanceof SpecialWeapon weapon) {
-                if (!consumeAction(player, action)) return false;
-                if (SkillInput.sneaking(player)) weapon.useUltimate(player, stack);
-                else weapon.useSkill(player, stack);
-                return true;
+        if (!consumeAction(player, SPECIAL.withSuffix("/" + style.key))) return;
+        switch (style) {
+            case BUILDING -> { }
+            case MOBILITY -> MovementSkill.cast(player);
+            case TECHNIQUE -> {
+                if (ResearchProgress.completed(player, BasicSkills.RESEARCH)) GuardSkill.start(player);
+            }
+            case OFFENSE -> {
+                var stack = player.getMainHandItem();
+                if (stack.getItem() instanceof SpecialWeapon weapon) {
+                    if (SkillInput.sneaking(player)) weapon.useUltimate(player, stack);
+                    else weapon.useSkill(player, stack);
+                } else if (SkillInput.forwardSpecial(player) && ResearchProgress.completed(player, OffenseSkills.SCOOP_RESEARCH)) {
+                    WingsScoop.start(player);
+                }
             }
         }
-        var skill = BINDINGS.getOrDefault(style, Map.of()).get(key);
-        return skill != null && skill.available().test(player)
-                && consumeAction(player, action) && skill.cast().test(player);
     }
 
     /** Reserve before calling a handler, so reentrant calls and repeated input edges cannot double-cast. */

@@ -25,8 +25,8 @@ public final class StyleHud {
             TECHNIQUE,
             new Glyph(StyleSystem.Style.OFFENSE, 1, 1, 25, 0));
     private static StyleSystem.Style selected, previous;
-    private static float changedAt;
-    private static float shownAt, shownFrom;
+    private static double changedAt, shownAt;
+    private static float shownFrom;
     private static SkillSettings.HudMode displayMode;
     private static net.minecraft.client.player.LocalPlayer observedPlayer;
 
@@ -46,7 +46,7 @@ public final class StyleHud {
         }
         var style = StyleSystem.current(mc.player);
         var mode = SkillSettings.hudMode(mc.player);
-        float now = mc.player.tickCount + delta.getGameTimeDeltaPartialTick(true);
+        double now = (double) mc.player.tickCount + delta.getGameTimeDeltaPartialTick(true);
         if (style != selected || mode != displayMode) {
             shownFrom = selected == null || mode != displayMode ? 0 : visibility(now);
             shownAt = now;
@@ -59,7 +59,7 @@ public final class StyleHud {
         }
         float opacity = visibility(now);
         if (opacity < .02F || mc.options.hideGui || mc.player.isSpectator() || mc.screen != null) return;
-        float blend = previous == null ? 1 : Mth.clamp((now - changedAt) / 4, 0, 1);
+        float blend = previous == null ? 1 : (float) Mth.clamp((now - changedAt) / 4, 0, 1);
         blend = blend * blend * (3 - 2 * blend);
         int centerX = 52, centerY = 52;
 
@@ -86,10 +86,10 @@ public final class StyleHud {
         RenderSystem.disableBlend();
     }
 
-    private static float visibility(float now) {
+    private static float visibility(double now) {
         if (displayMode == SkillSettings.HudMode.ON) return 1;
         if (displayMode != SkillSettings.HudMode.ON_SWITCH) return 0;
-        float age = now - shownAt;
+        float age = (float) (now - shownAt);
         // Fade in for 0.2 s, hold for 1.5 s, then fade out for 0.5 s.
         return Mth.lerp(smooth(age / 4), shownFrom, 1) * (1 - smooth((age - 34) / 10));
     }

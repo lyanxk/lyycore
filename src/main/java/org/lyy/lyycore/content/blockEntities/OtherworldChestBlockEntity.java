@@ -2,11 +2,9 @@ package org.lyy.lyycore.content.blockEntities;
 
 import java.util.List;
 import net.minecraft.core.*;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.*;
 import net.minecraft.world.inventory.*;
@@ -27,10 +25,31 @@ public final class OtherworldChestBlockEntity extends BlockEntity implements Men
     public final ImaginaryEnergyStorage energy = new ImaginaryEnergyStorage(CAPACITY, CAPACITY, 0, this::setChanged);
     public final ImaginaryEnergyFeAdapter fe = new ImaginaryEnergyFeAdapter(energy, this::setChanged, Integer.MAX_VALUE, 0);
     private ItemStack selection = ItemStack.EMPTY;
-    private ResourceLocation legacySelection;
     private List<ItemStack> cachedCatalog;
     private int selectedIndex = -1;
     private final java.util.Set<java.util.UUID> viewers = new java.util.HashSet<>();
+    // Client-local animation progress, matching the supplied 0.75 s / 0.6 s clips.
+    private static final int OPEN_TICKS = 15, CLOSE_TICKS = 12, IDLE_TICKS = 80;
+    private boolean animationOpen;
+    private int animationTick, previousAnimationTick, idleTick;
+
+    public static void clientTick(Level level, BlockPos pos, BlockState state, OtherworldChestBlockEntity chest) {
+        boolean open = state.getValue(OtherworldChestBlock.OPEN);
+        if (open != chest.animationOpen) {
+            chest.animationOpen = open;
+            chest.animationTick = chest.idleTick = 0;
+        }
+        chest.previousAnimationTick = chest.animationTick;
+        int duration = open ? OPEN_TICKS : CLOSE_TICKS;
+        if (chest.animationTick < duration) chest.animationTick++;
+        else chest.idleTick = chest.idleTick % IDLE_TICKS + 1;
+    }
+
+    public boolean animationOpen() { return animationOpen; }
+    public float animationProgress(float partial) {
+        return Mth.lerp(partial, previousAnimationTick, animationTick) / (animationOpen ? OPEN_TICKS : CLOSE_TICKS);
+    }
+    public float idleAnimationTime(float partial) { return Math.max(0, idleTick - 1 + partial) / 20F; }
     public void startOpen(Player player) {
         if (level == null || level.isClientSide) return;
         viewers.add(player.getUUID());
@@ -51,7 +70,11 @@ public final class OtherworldChestBlockEntity extends BlockEntity implements Men
         public void set(int index, int value) { }
         public int getCount() { return 3; }
     };
-    public OtherworldChestBlockEntity(BlockPos pos, BlockState state) { super(LyyBlockEntities.OTHERWORLD_CHEST.get(), pos, state); }
+    public OtherworldChestBlockEntity(BlockPos pos, BlockState state) {
+        super(LyyBlockEntities.OTHERWORLD_CHEST.get(), pos, state);
+        animationOpen = state.getValue(OtherworldChestBlock.OPEN);
+        animationTick = previousAnimationTick = animationOpen ? OPEN_TICKS : CLOSE_TICKS;
+    }
     public List<ItemStack> products() { return ProductionCatalog.products(level); }
     public int selectedIndex() {
         var catalog = products();
@@ -59,15 +82,8 @@ public final class OtherworldChestBlockEntity extends BlockEntity implements Men
             cachedCatalog = catalog; selectedIndex = -1;
             for (int i = 0; i < catalog.size(); i++) {
                 var candidate = catalog.get(i);
-                boolean matches = legacySelection != null
-                        ? BuiltInRegistries.ITEM.getKey(candidate.getItem()).equals(legacySelection)
-                        : !selection.isEmpty() && ItemStack.isSameItemSameComponents(candidate, selection);
-                if (!matches) continue;
+                if (!ItemStack.isSameItemSameComponents(candidate, selection)) continue;
                 selectedIndex = i;
-                if (legacySelection != null) {
-                    // Old saves lack component identity. Resolve once in deterministic catalog order.
-                    selection = candidate; legacySelection = null; setChanged();
-                }
                 break;
             }
         }
@@ -77,8 +93,8 @@ public final class OtherworldChestBlockEntity extends BlockEntity implements Men
         var catalog = products();
         if (index < 0 || index >= catalog.size()) return false;
         var next = catalog.get(index);
-        if (legacySelection != null || !ItemStack.isSameItemSameComponents(selection, next)) {
-            selection = next.copyWithCount(1); legacySelection = null; setChanged();
+        if (!ItemStack.isSameItemSameComponents(selection, next)) {
+            selection = next.copyWithCount(1); setChanged();
         }
         cachedCatalog = catalog; selectedIndex = index;
         return true;
@@ -132,15 +148,11 @@ public final class OtherworldChestBlockEntity extends BlockEntity implements Men
         super.saveAdditional(tag, registries); tag.putInt("Energy", energy.getImaginaryEnergyStored());
         tag.putInt("FeRemainder", fe.getRemainder());
         if (!selection.isEmpty()) tag.put("SelectedProduct", selection.save(registries));
-        else if (legacySelection != null) tag.putString("Selected", legacySelection.toString());
     }
     @Override protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries); energy.setImaginaryEnergy(tag.getInt("Energy"));
         fe.setRemainder(tag.getInt("FeRemainder"));
-        boolean hasProduct = tag.contains("SelectedProduct", Tag.TAG_COMPOUND);
-        selection = hasProduct ? ItemStack.parseOptional(registries, tag.getCompound("SelectedProduct")) : ItemStack.EMPTY;
-        if (!selection.isEmpty()) selection.setCount(1);
-        legacySelection = hasProduct ? null : ResourceLocation.tryParse(tag.getString("Selected"));
+        selection = ItemStack.parseOptional(registries, tag.getCompound("SelectedProduct"));
         cachedCatalog = null; selectedIndex = -1;
     }
 }

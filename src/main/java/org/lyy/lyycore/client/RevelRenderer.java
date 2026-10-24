@@ -40,16 +40,16 @@ public final class RevelRenderer<T extends RevelMob> extends EntityRenderer<T> {
             pose.translate(0, -0.5, 0);
         }
         String animation = entity.animation();
-        float seconds = entity.animationTime(partial);
+        double seconds = entity.animationTime(partial);
         // The supplied charge lasts 1.6 seconds; gameplay gives a full two-second telegraph.
-        float modelTime = animation.equals("laser_charge") ? Math.min(1.6F, seconds * 0.8F) : seconds;
-        if (animation.equals("idle")) modelTime = (entity.tickCount + partial) / 20F;
+        double modelTime = animation.equals("laser_charge") ? Math.min(1.6F, seconds * 0.8F) : seconds;
+        if (animation.equals("idle")) modelTime = ((double) entity.tickCount + partial) / 20;
         mesh.render(pose, buffers, light, animation, modelTime);
         pose.popPose();
         if (entity instanceof LifeRevel boss) renderLaser(boss, pose, buffers, seconds);
         super.render(entity, yaw, partial, pose, buffers, light);
     }
-    private static void renderLaser(LifeRevel boss, PoseStack pose, MultiBufferSource buffers, float time) {
+    private static void renderLaser(LifeRevel boss, PoseStack pose, MultiBufferSource buffers, double time) {
         boolean charging = boss.animation().equals("laser_charge");
         boolean firing = boss.animation().equals("laser_fire") && time < 0.3F;
         if (!charging && !firing) return;

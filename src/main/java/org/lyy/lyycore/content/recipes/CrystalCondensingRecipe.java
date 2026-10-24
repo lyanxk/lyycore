@@ -13,16 +13,9 @@ import org.lyy.lyycore.registry.LyyRecipes;
 
 /** Condensation has no item inputs. Water changes the cost and is not consumed. */
 public record CrystalCondensingRecipe(ItemStack result, int dryCost, int wetCost) implements Recipe<RecipeInput> {
-    public CrystalCondensingRecipe {
-        if (result.isEmpty() || result.getCount() != 1 || dryCost <= 0 || wetCost <= 0)
-            throw new IllegalArgumentException("Condensation requires one output and positive IE costs");
-        result = result.copy();
-    }
-
-    @Override public ItemStack result() { return result.copy(); }
     public int energyCost(boolean waterlogged) { return waterlogged ? wetCost : dryCost; }
     @Override public boolean matches(RecipeInput input, Level level) { return true; }
-    @Override public ItemStack assemble(RecipeInput input, HolderLookup.Provider registries) { return result(); }
+    @Override public ItemStack assemble(RecipeInput input, HolderLookup.Provider registries) { return result.copy(); }
     @Override public boolean canCraftInDimensions(int width, int height) { return true; }
     @Override public ItemStack getResultItem(HolderLookup.Provider registries) { return result(); }
     @Override public boolean isSpecial() { return true; }

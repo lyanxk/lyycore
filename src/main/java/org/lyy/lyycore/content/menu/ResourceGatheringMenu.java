@@ -21,7 +21,7 @@ public final class ResourceGatheringMenu extends CondensingFrameMenu {
     private final ContainerData data;
     public ResourceGatheringMenu(int id, Inventory inventory, ResourceGatheringFrameBlockEntity be,
                                  IItemHandlerModifiable output, ContainerData data) {
-        super(LyyMenus.RESOURCE_GATHERING.get(), id, inventory, be, output, data, 6);
+        super(LyyMenus.RESOURCE_GATHERING.get(), id, inventory, be, output, data);
         this.be = be;
         this.data = data;
     }
