@@ -1,0 +1,107 @@
+{
+  "type": "lyycore:spacetime",
+  "inputs": [
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:imaginary_reaper"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:netherite_axe"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:netherite_axe"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:netherite_axe"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy"
+      },
+      "count": 1
+    }
+  ],
+  "result": {
+    "id": "lyycore:riftbreaker"
+  },
+  "result_count": 1,
+  "duration": 600,
+  "energy": 2000000000
+}

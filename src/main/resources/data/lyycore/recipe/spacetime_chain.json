@@ -1,0 +1,107 @@
+{
+  "type": "lyycore:spacetime",
+  "inputs": [
+    {
+      "ingredient": {
+        "item": "minecraft:lead"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:lead"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:lead"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:lead"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:lead"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:lead"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:lead"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:lead"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy"
+      },
+      "count": 1
+    }
+  ],
+  "result": {
+    "id": "lyycore:spacetime_chain"
+  },
+  "result_count": 1,
+  "duration": 300,
+  "energy": 1000000000
+}

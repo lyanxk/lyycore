@@ -15,6 +15,8 @@
     "lyycore:infernal_steel_block",
     "lyycore:charged_steel_block",
     "lyycore:sixfold_alloy_block",
-    "lyycore:summoning_beacon"
+    "lyycore:summoning_beacon",
+    "lyycore:spacetime_alloy_block",
+    "lyycore:spacetime_factory"
   ]
 }

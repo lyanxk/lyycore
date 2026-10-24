@@ -21,6 +21,8 @@ import org.lyy.lyycore.content.blockEntities.ProductionLabBlockEntity;
 public class LyyBlockEntities {
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES =
             DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, LyyCore.MODID);
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SpacetimeFactoryBlockEntity>> SPACETIME_FACTORY =
+            BLOCK_ENTITIES.register("spacetime_factory", () -> BlockEntityType.Builder.of(SpacetimeFactoryBlockEntity::new, LyyBlocks.SPACETIME_FACTORY.get()).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ReforgingTableBlockEntity>> REFORGING_TABLE = BLOCK_ENTITIES.register("reforging_table", () -> BlockEntityType.Builder.of(ReforgingTableBlockEntity::new, LyyBlocks.REFORGING_TABLE.get()).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<org.lyy.lyycore.content.blocks.SummoningBeaconBlock.Controller>> SUMMONING_BEACON =
             BLOCK_ENTITIES.register("summoning_beacon", () -> BlockEntityType.Builder.of(org.lyy.lyycore.content.blocks.SummoningBeaconBlock.Controller::new, LyyBlocks.SUMMONING_BEACON.get()).build(null));

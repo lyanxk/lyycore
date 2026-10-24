@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "AEA",
+    "ECE",
+    "AEA"
+  ],
+  "key": {
+    "A": {
+      "item": "lyycore:sixfold_alloy_block"
+    },
+    "E": {
+      "item": "lyycore:energy_core"
+    },
+    "C": {
+      "item": "lyycore:spacetime_core"
+    }
+  },
+  "result": {
+    "id": "lyycore:spacetime_factory",
+    "count": 1
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "lightning_zap": {
+    "subtitle": "subtitles.lyycore.lightning_zap",
+    "sounds": [
+      "lyycore:lightning/zap",
+      "lyycore:lightning/zap_short",
+      "lyycore:lightning/zap_tail"
+    ]
+  }
+}

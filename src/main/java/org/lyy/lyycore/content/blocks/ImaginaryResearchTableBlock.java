@@ -62,7 +62,7 @@ public final class ImaginaryResearchTableBlock extends MachineBlock {
                 box(5.2, 9.2, 5.5, 5.5, 10.5, 10.5),
                 box(10.5, 9.2, 5.5, 10.8, 10.5, 10.5)).optimize();
     public ImaginaryResearchTableBlock() {
-        this(Properties.of().strength(3).sound(SoundType.STONE).noOcclusion().lightLevel(state -> 15));
+        this(Properties.of().strength(3).sound(SoundType.STONE).noOcclusion());
     }
     private ImaginaryResearchTableBlock(Properties properties) { super(properties); }
     @Override protected MapCodec<? extends MachineBlock> codec() { return CODEC; }

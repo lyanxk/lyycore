@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "lyycore:block/spacetime_alloy_block"
+    }
+  }
+}

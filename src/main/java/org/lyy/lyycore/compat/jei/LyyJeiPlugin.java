@@ -26,6 +26,7 @@ import org.lyy.lyycore.content.menu.IAFMenu;
 import org.lyy.lyycore.client.screen.IAFScreen;
 import org.lyy.lyycore.client.screen.ImaginaryCraftingScreen;
 import org.lyy.lyycore.client.screen.ResourceGatheringScreen;
+import org.lyy.lyycore.client.screen.SpacetimeFactoryScreen;
 import org.lyy.lyycore.content.recipes.ImaginaryAlloyingRecipe;
 import org.lyy.lyycore.registry.LyyBlocks;
 import org.lyy.lyycore.registry.LyyItems;
@@ -42,6 +43,7 @@ public class LyyJeiPlugin implements IModPlugin {
 
     @Override
     public void registerCategories(IRecipeCategoryRegistration reg) {
+        reg.addRecipeCategories(new SpacetimeCategory(reg.getJeiHelpers().getGuiHelper()));
         reg.addRecipeCategories(new EnergyProductionCategory(reg.getJeiHelpers().getGuiHelper(), true));
         reg.addRecipeCategories(new EnergyProductionCategory(reg.getJeiHelpers().getGuiHelper(), false));
         reg.addRecipeCategories(new FissionCategory(reg.getJeiHelpers().getGuiHelper()));
@@ -108,6 +110,7 @@ public class LyyJeiPlugin implements IModPlugin {
                 .stream().map(RecipeHolder::value).toList();
         reg.addRecipes(LyyJeiTypes.IMAGINARY_ALLOYING, recipes);
         reg.addRecipes(PureSmeltingCategory.TYPE, rm.getAllRecipesFor(LyyRecipes.PURE_SMELTING.get()).stream().map(RecipeHolder::value).toList());
+        reg.addRecipes(SpacetimeCategory.TYPE, rm.getAllRecipesFor(LyyRecipes.SPACETIME.get()).stream().map(RecipeHolder::value).toList());
         reg.addRecipes(FissionCategory.TYPE, rm.getAllRecipesFor(net.minecraft.world.item.crafting.RecipeType.SMELTING).stream().map(RecipeHolder::value).toList());
         reg.addItemStackInfo(new ItemStack(LyyBlocks.PURE_SMELTING_PLANT_SHELL.get()), net.minecraft.network.chat.Component.translatable("jei.lyycore.pure_smelting.activation"));
         reg.addRecipes(LyyJeiTypes.IMAGINARY_CONDENSING, rm.getAllRecipesFor(LyyRecipes.IMAGINARY_CONDENSING.get()).stream().map(RecipeHolder::value).toList());
@@ -125,6 +128,17 @@ public class LyyJeiPlugin implements IModPlugin {
 
     @Override
     public void registerGuiHandlers(IGuiHandlerRegistration reg) {
+        reg.addGuiContainerHandler(SpacetimeFactoryScreen.class, new IGuiContainerHandler<SpacetimeFactoryScreen>() {
+            @Override public java.util.Collection<IGuiClickableArea> getGuiClickableAreas(SpacetimeFactoryScreen screen, double x, double y) {
+                var type = switch (screen.getMenu().page()) {
+                    case SPACETIME -> SpacetimeCategory.TYPE;
+                    case CONDENSING -> LyyJeiTypes.IMAGINARY_CONDENSING;
+                    case CRAFTING -> LyyJeiTypes.IMAGINARY_CRAFTING;
+                    case ALLOYING -> LyyJeiTypes.IMAGINARY_ALLOYING;
+                };
+                return List.of(IGuiClickableArea.createBasic(screen.recipeX(), screen.recipeY(), 20, 12, type));
+            }
+        });
         reg.addRecipeClickArea(org.lyy.lyycore.client.screen.ErosionFactoryScreen.class, 104, 40, 26, 18, EnergyProductionCategory.EROSION);
         reg.addRecipeClickArea(org.lyy.lyycore.client.screen.FissionFurnaceScreen.class, 62, 38, 36, 20, FissionCategory.TYPE);
         reg.addGuiContainerHandler(ImaginaryCraftingScreen.class, new IGuiContainerHandler<ImaginaryCraftingScreen>() {
@@ -155,6 +169,8 @@ public class LyyJeiPlugin implements IModPlugin {
 
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration reg) {
+        reg.addRecipeCatalyst(new ItemStack(LyyBlocks.SPACETIME_FACTORY.get()), SpacetimeCategory.TYPE,
+                LyyJeiTypes.IMAGINARY_CONDENSING, LyyJeiTypes.IMAGINARY_CRAFTING, LyyJeiTypes.IMAGINARY_ALLOYING);
         reg.addRecipeCatalyst(new ItemStack(LyyBlocks.EROSION_FACTORY.get()), EnergyProductionCategory.EROSION);
         reg.addRecipeCatalyst(new ItemStack(LyyBlocks.OTHERWORLD_CHEST.get()), EnergyProductionCategory.OTHERWORLD);
         reg.addRecipeCatalyst(new ItemStack(LyyBlocks.FISSION_FURNACE.get()), FissionCategory.TYPE);
@@ -171,6 +187,10 @@ public class LyyJeiPlugin implements IModPlugin {
 
     @Override
     public void registerRecipeTransferHandlers(IRecipeTransferRegistration reg) {
+        reg.addRecipeTransferHandler(new SpacetimeTransferHandler<>(reg.getTransferHelper(), SpacetimeCategory.TYPE), SpacetimeCategory.TYPE);
+        reg.addRecipeTransferHandler(new SpacetimeTransferHandler<>(reg.getTransferHelper(), LyyJeiTypes.IMAGINARY_CONDENSING), LyyJeiTypes.IMAGINARY_CONDENSING);
+        reg.addRecipeTransferHandler(new SpacetimeTransferHandler<>(reg.getTransferHelper(), LyyJeiTypes.IMAGINARY_CRAFTING), LyyJeiTypes.IMAGINARY_CRAFTING);
+        reg.addRecipeTransferHandler(new SpacetimeTransferHandler<>(reg.getTransferHelper(), LyyJeiTypes.IMAGINARY_ALLOYING), LyyJeiTypes.IMAGINARY_ALLOYING);
         reg.addRecipeTransferHandler(org.lyy.lyycore.content.menu.FissionFurnaceMenu.class, LyyMenus.FISSION_FURNACE.get(), FissionCategory.TYPE, 0, 1, 3, 36);
         reg.addRecipeTransferHandler(new ImaginaryCraftingTransferInfo<>(reg.getTransferHelper(), LyyJeiTypes.IMAGINARY_CRAFTING, false));
         reg.addRecipeTransferHandler(new ImaginaryCraftingTransferInfo<>(reg.getTransferHelper(), LyyJeiTypes.IMAGINARY_CONDENSING, true));

@@ -89,6 +89,15 @@ public class LyyCreativeTab {
                         output.accept(LyyItems.MIRROR.get());
                         output.accept(LyyItems.REFORGING_TABLE.get());
                         output.accept(LyyItems.TIME_KNOCKING_STONE.get());
+                        output.accept(LyyItems.SPACETIME_CORE.get());
+                        output.accept(LyyItems.SPACETIME_FACTORY.get());
+                        output.accept(LyyItems.SPACETIME_CRYSTAL.get());
+                        output.accept(LyyItems.SPACETIME_ALLOY.get());
+                        output.accept(LyyItems.SPACETIME_ALLOY_BLOCK.get());
+                        output.accept(LyyItems.SPACETIME_ALLOY_PLATE.get());
+                        output.accept(LyyItems.SPACETIME_CHAIN.get());
+                        output.accept(LyyItems.SPACETIME_HOE.get());
+                        output.accept(LyyItems.RIFTBREAKER.get());
                         output.accept(LyyItems.SPACETIME_TRIAL_PROOF.get());
                         output.accept(LyyItems.PURE_IMAGINARY_CRYSTAL_NECKLACE.get());
                         output.accept(LyyItems.PURE_IMAGINARY_STEEL_NOTEBOOK.get());

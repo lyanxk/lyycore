@@ -28,6 +28,8 @@ import java.util.Map;
 
 public class LyyBlocks {
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(LyyCore.MODID);
+    public static final DeferredBlock<SpacetimeFactoryBlock> SPACETIME_FACTORY = BLOCKS.register("spacetime_factory", SpacetimeFactoryBlock::new);
+    public static final DeferredBlock<Block> SPACETIME_ALLOY_BLOCK = materialBlock("spacetime_alloy_block");
     public static final DeferredBlock<MirrorBlock> MIRROR = BLOCKS.register("mirror", MirrorBlock::new);
     public static final DeferredBlock<ReforgingTableBlock> REFORGING_TABLE = BLOCKS.register("reforging_table", ReforgingTableBlock::new);
     public static final DeferredBlock<SummoningBeaconBlock> SUMMONING_BEACON = BLOCKS.register("summoning_beacon", SummoningBeaconBlock::new);

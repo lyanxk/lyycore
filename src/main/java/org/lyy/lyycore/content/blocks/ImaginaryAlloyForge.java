@@ -41,8 +41,7 @@ public class ImaginaryAlloyForge extends MachineBlock {
     @Override protected MapCodec<? extends MachineBlock> codec() { return CODEC; }
 
     public ImaginaryAlloyForge() {
-        super(BlockBehaviour.Properties.of().strength(3).noOcclusion()
-                .lightLevel(state -> state.getValue(LIT) ? 10 : 0));
+        super(BlockBehaviour.Properties.of().strength(3).noOcclusion());
         registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(LIT, false));
     }
 

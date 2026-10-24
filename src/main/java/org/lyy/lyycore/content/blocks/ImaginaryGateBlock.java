@@ -29,7 +29,7 @@ public class ImaginaryGateBlock extends MachineBlock {
     public static final MapCodec<ImaginaryGateBlock> CODEC = simpleCodec(p -> new ImaginaryGateBlock());
 
     public ImaginaryGateBlock() {
-        super(Properties.of().strength(4).sound(SoundType.AMETHYST).noOcclusion().lightLevel(state -> 15).pushReaction(PushReaction.BLOCK));
+        super(Properties.of().strength(4).sound(SoundType.AMETHYST).noOcclusion().pushReaction(PushReaction.BLOCK));
         registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(COLUMN, 2).setValue(ROW, 0));
     }
     @Override protected MapCodec<? extends MachineBlock> codec() { return CODEC; }

@@ -1,0 +1,93 @@
+{
+  "type": "lyycore:spacetime",
+  "inputs": [
+    {
+      "ingredient": {
+        "item": "lyycore:energy_core"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": [],
+      "count": 1
+    },
+    {
+      "ingredient": [],
+      "count": 1
+    },
+    {
+      "ingredient": [],
+      "count": 1
+    },
+    {
+      "ingredient": [],
+      "count": 1
+    },
+    {
+      "ingredient": [],
+      "count": 1
+    },
+    {
+      "ingredient": [],
+      "count": 1
+    },
+    {
+      "ingredient": [],
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:flawless_crystal"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:flawless_crystal"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:flawless_crystal"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:flawless_crystal"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:flawless_crystal"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:flawless_crystal"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:flawless_crystal"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:flawless_crystal"
+      },
+      "count": 1
+    }
+  ],
+  "result": {
+    "id": "lyycore:spacetime_crystal"
+  },
+  "result_count": 1,
+  "duration": 40,
+  "energy": 2000000000
+}

@@ -39,7 +39,7 @@ public final class MirroredItemModel extends BakedModelWrapper<BakedModel> {
     @SubscribeEvent
     public static void register(ModelEvent.ModifyBakingResult event) {
         // These are live 3D item models. Pre-rendered Blender icons are intentionally excluded.
-        for (String name : List.of("summoning_beacon", "mirror", "reforging_table")) {
+        for (String name : List.of("summoning_beacon", "mirror", "reforging_table", "spacetime_factory", "riftbreaker")) {
             var id = new ModelResourceLocation(ResourceLocation.fromNamespaceAndPath(LyyCore.MODID, name), "inventory");
             event.getModels().computeIfPresent(id, (key, model) -> wrap(model));
         }

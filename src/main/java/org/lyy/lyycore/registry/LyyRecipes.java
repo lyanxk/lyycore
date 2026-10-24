@@ -8,6 +8,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import org.lyy.lyycore.LyyCore;
 import org.lyy.lyycore.content.ResourceFrameKind;
 import org.lyy.lyycore.content.recipes.PureSmeltingRecipe;
+import org.lyy.lyycore.content.recipes.SpacetimeRecipe;
 import org.lyy.lyycore.content.recipes.CrystalCondensingRecipe;
 import org.lyy.lyycore.content.recipes.ImaginaryAlloyingRecipe;
 import org.lyy.lyycore.content.recipes.ImaginaryCraftingRecipe;
@@ -19,6 +20,8 @@ import java.util.Map;
 public class LyyRecipes {
     public static final DeferredRegister<RecipeType<?>> RECIPE_TYPES =
             DeferredRegister.create(Registries.RECIPE_TYPE, LyyCore.MODID);
+    public static final DeferredHolder<RecipeType<?>, RecipeType<SpacetimeRecipe>> SPACETIME =
+            RECIPE_TYPES.register("spacetime", () -> new RecipeType<>() { @Override public String toString() { return "lyycore:spacetime"; } });
     public static final DeferredHolder<RecipeType<?>, RecipeType<PureSmeltingRecipe>> PURE_SMELTING =
             RECIPE_TYPES.register("pure_smelting", () -> new RecipeType<>() { @Override public String toString() { return "lyycore:pure_smelting"; } });
     public static final DeferredHolder<RecipeType<?>, RecipeType<ImaginaryCondensingRecipe>> IMAGINARY_CONDENSING =
@@ -45,6 +48,8 @@ public class LyyRecipes {
 
     public static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS =
             DeferredRegister.create(Registries.RECIPE_SERIALIZER, LyyCore.MODID);
+    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<SpacetimeRecipe>> SPACETIME_SERIALIZER =
+            RECIPE_SERIALIZERS.register("spacetime", SpacetimeRecipe.Serializer::new);
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<PureSmeltingRecipe>> PURE_SMELTING_SERIALIZER =
             RECIPE_SERIALIZERS.register("pure_smelting", PureSmeltingRecipe.Serializer::new);
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<ImaginaryCondensingRecipe>> IMAGINARY_CONDENSING_SERIALIZER =

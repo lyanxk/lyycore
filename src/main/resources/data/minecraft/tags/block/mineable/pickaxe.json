@@ -50,6 +50,8 @@
     "lyycore:capture_cage",
     "lyycore:summoning_beacon",
     "lyycore:mirror",
-    "lyycore:reforging_table"
+    "lyycore:reforging_table",
+    "lyycore:spacetime_alloy_block",
+    "lyycore:spacetime_factory"
   ]
 }

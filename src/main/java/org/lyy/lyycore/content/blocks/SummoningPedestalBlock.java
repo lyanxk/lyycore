@@ -14,7 +14,8 @@ public class SummoningPedestalBlock extends MachineBlock {
     private final net.minecraft.world.phys.shapes.VoxelShape shape;
     public SummoningPedestalBlock() { this(Properties.of(), "summoning_pedestal"); }
     protected SummoningPedestalBlock(Properties p, String model) {
-        super(p.strength(5).sound(SoundType.METAL).noOcclusion()); shape = SquareMachineShapes.load(model)[0];
+        // Both the altar and its surrounding offerings must preserve darkness-based production.
+        super(p.strength(5).sound(SoundType.METAL).noOcclusion(), 0); shape = SquareMachineShapes.load(model)[0];
     }
     @Override protected net.minecraft.world.phys.shapes.VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, net.minecraft.world.phys.shapes.CollisionContext context) { return shape; }
     @Override protected MapCodec<? extends SummoningPedestalBlock> codec() { return MapCodec.unit(this); }

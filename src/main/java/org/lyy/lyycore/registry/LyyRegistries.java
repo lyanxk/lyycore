@@ -9,6 +9,7 @@ public class LyyRegistries {
         LyyItems.ITEMS.register(bus);
         LyyEntities.ENTITIES.register(bus);
         LyyEffects.EFFECTS.register(bus);
+        LyySounds.SOUNDS.register(bus);
         LyyBlockEntities.BLOCK_ENTITIES.register(bus);
         LyyMenus.MENUS.register(bus);
         LyyRecipes.RECIPE_TYPES.register(bus);

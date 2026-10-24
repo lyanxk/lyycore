@@ -3,6 +3,28 @@
   "gui_light": "front",
   "models": [
     {
+      "id": "riftcleaver",
+      "source": "riftcleaver/source/riftcleaver.bbmodel",
+      "display_contract": "riftcleaver/source/riftcleaver.display.json",
+      "game_item": "riftbreaker"
+    },
+    {
+      "id": "spacetime_processing_factory_java",
+      "source": "spacetime_processing_factory_java/source/spacetime_processing_factory_java.bbmodel",
+      "display_contract": "spacetime_processing_factory_java/source/display.json",
+      "java_exports": [
+        "spacetime_processing_factory_java/export/spacetime_processing_factory.json",
+        "spacetime_processing_factory_java/export/assets/lyycore/models/block/spacetime_processing_factory.json",
+        "spacetime_processing_factory_java/export/assets/lyycore/models/item/spacetime_processing_factory.json"
+      ],
+      "game_item": "spacetime_factory"
+    },
+    {
+      "id": "spacetime_processing_factory",
+      "source": "spacetime_processing_factory/source/spacetime_processing_factory.bbmodel",
+      "display_contract": "spacetime_processing_factory/source/display.json"
+    },
+    {
       "id": "summoning_beacon",
       "source": "creature_summoning_beacon/source/creature_summoning_beacon.bbmodel",
       "game_item": "summoning_beacon"
@@ -11,7 +33,9 @@
       "id": "mirror",
       "source": "oval_mirror/source/oval_mirror.bbmodel",
       "game_item": "mirror",
-      "java_exports": ["oval_mirror/export/oval_mirror.json"]
+      "java_exports": [
+        "oval_mirror/export/oval_mirror.json"
+      ]
     },
     {
       "id": "reforging_table",
@@ -26,7 +50,9 @@
     {
       "id": "blue_revolver",
       "source": "_temporary_addon/revolver_blue_20261015/source/blue_revolver.bbmodel",
-      "bb_exports": ["_temporary_addon/revolver_blue_20261015/export/blue_revolver.bbmodel"],
+      "bb_exports": [
+        "_temporary_addon/revolver_blue_20261015/export/blue_revolver.bbmodel"
+      ],
       "display_contract": "_temporary_addon/revolver_blue_20261015/export/blue_revolver.display.json"
     }
   ],

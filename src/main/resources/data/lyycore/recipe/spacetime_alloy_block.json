@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "lyycore:spacetime_alloy"
+    },
+    {
+      "item": "lyycore:spacetime_alloy"
+    },
+    {
+      "item": "lyycore:spacetime_alloy"
+    },
+    {
+      "item": "lyycore:spacetime_alloy"
+    }
+  ],
+  "result": {
+    "id": "lyycore:spacetime_alloy_block",
+    "count": 1
+  }
+}

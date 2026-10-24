@@ -1,0 +1,254 @@
+{
+  "icon": {
+    "id": "lyycore:spacetime_core"
+  },
+  "rarity": "special",
+  "experience_points": 0,
+  "prerequisites": [
+    "lyycore:research/knocking"
+  ],
+  "materials": [
+    {
+      "id": "lyycore:spacetime_trial_proof",
+      "count": 1
+    }
+  ],
+  "title": "research.lyycore.cross_spacetime.title",
+  "summary": "research.lyycore.cross_spacetime.summary",
+  "description": "research.lyycore.cross_spacetime.description",
+  "production": {
+    "result": {
+      "id": "lyycore:spacetime_core"
+    },
+    "duration": 300,
+    "experiment": {
+      "nodes": [
+        {
+          "element": "ice",
+          "cell": 6
+        },
+        {
+          "element": "ice",
+          "cell": 7
+        },
+        {
+          "element": "ice",
+          "cell": 8
+        },
+        {
+          "element": "ice",
+          "cell": 13
+        },
+        {
+          "element": "ice",
+          "cell": 18
+        },
+        {
+          "element": "ice",
+          "cell": 17
+        },
+        {
+          "element": "ice",
+          "cell": 16
+        },
+        {
+          "element": "ice",
+          "cell": 11
+        },
+        {
+          "element": "fire",
+          "cell": 1
+        },
+        {
+          "element": "fire",
+          "cell": 3
+        },
+        {
+          "element": "fire",
+          "cell": 9
+        },
+        {
+          "element": "fire",
+          "cell": 19
+        },
+        {
+          "element": "fire",
+          "cell": 23
+        },
+        {
+          "element": "fire",
+          "cell": 21
+        },
+        {
+          "element": "fire",
+          "cell": 15
+        },
+        {
+          "element": "fire",
+          "cell": 5
+        },
+        {
+          "element": "lightning",
+          "cell": 0
+        },
+        {
+          "element": "lightning",
+          "cell": 2
+        },
+        {
+          "element": "lightning",
+          "cell": 4
+        },
+        {
+          "element": "lightning",
+          "cell": 14
+        },
+        {
+          "element": "lightning",
+          "cell": 24
+        },
+        {
+          "element": "lightning",
+          "cell": 22
+        },
+        {
+          "element": "lightning",
+          "cell": 20
+        },
+        {
+          "element": "lightning",
+          "cell": 10
+        }
+      ],
+      "links": [
+        {
+          "from": 0,
+          "to": 1
+        },
+        {
+          "from": 1,
+          "to": 2
+        },
+        {
+          "from": 2,
+          "to": 3
+        },
+        {
+          "from": 3,
+          "to": 4
+        },
+        {
+          "from": 4,
+          "to": 5
+        },
+        {
+          "from": 5,
+          "to": 6
+        },
+        {
+          "from": 6,
+          "to": 7
+        },
+        {
+          "from": 7,
+          "to": 0
+        },
+        {
+          "from": 8,
+          "to": 9
+        },
+        {
+          "from": 9,
+          "to": 10
+        },
+        {
+          "from": 10,
+          "to": 11
+        },
+        {
+          "from": 11,
+          "to": 12
+        },
+        {
+          "from": 12,
+          "to": 13
+        },
+        {
+          "from": 13,
+          "to": 14
+        },
+        {
+          "from": 14,
+          "to": 15
+        },
+        {
+          "from": 15,
+          "to": 8
+        },
+        {
+          "from": 16,
+          "to": 17
+        },
+        {
+          "from": 17,
+          "to": 18
+        },
+        {
+          "from": 18,
+          "to": 19
+        },
+        {
+          "from": 19,
+          "to": 20
+        },
+        {
+          "from": 20,
+          "to": 21
+        },
+        {
+          "from": 21,
+          "to": 22
+        },
+        {
+          "from": 22,
+          "to": 23
+        },
+        {
+          "from": 23,
+          "to": 16
+        }
+      ],
+      "target": [
+        0,
+        7,
+        4,
+        13,
+        24,
+        17,
+        20,
+        11,
+        2,
+        8,
+        10,
+        18,
+        22,
+        16,
+        14,
+        6,
+        1,
+        3,
+        5,
+        19,
+        21,
+        23,
+        15,
+        9
+      ]
+    }
+  },
+  "display": {
+    "stage": 4,
+    "purpose": "production",
+    "order": 9
+  }
+}

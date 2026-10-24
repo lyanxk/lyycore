@@ -16,7 +16,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import org.lyy.lyycore.content.blockEntities.MatrixPortBlockEntity;
 import org.lyy.lyycore.registry.LyyBlockEntities;
 
-@net.neoforged.fml.common.EventBusSubscriber(modid = "lyycore")
 public final class MatrixPortBlock extends MachineBlock {
     public enum Kind { INPUT, OUTPUT, COLLECTOR }
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
@@ -27,15 +26,13 @@ public final class MatrixPortBlock extends MachineBlock {
         registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH));
     }
     public Kind kind() { return kind; }
-    @net.neoforged.bus.api.SubscribeEvent
-    public static void sneakInteraction(net.neoforged.neoforge.event.entity.player.PlayerInteractEvent.RightClickBlock event) {
-        if (event.getEntity().isShiftKeyDown() && event.getLevel().getBlockState(event.getPos()).getBlock() instanceof MatrixPortBlock block
-                && block.kind == Kind.COLLECTOR) event.setUseBlock(net.neoforged.neoforge.common.util.TriState.TRUE);
-    }
     @Override protected MapCodec<MatrixPortBlock> codec() { return MapCodec.unit(this); }
     @Override protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) { builder.add(FACING); }
     @Override public BlockState getStateForPlacement(BlockPlaceContext context) {
-        return defaultBlockState().setValue(FACING, context.getNearestLookingDirection().getOpposite());
+        var facing = context.getNearestLookingDirection();
+        // Collector direction is chosen once on placement, including vertical directions.
+        if (kind != Kind.COLLECTOR || context.isSecondaryUseActive()) facing = facing.getOpposite();
+        return defaultBlockState().setValue(FACING, facing);
     }
     @Override protected BlockState rotate(BlockState state, Rotation rotation) { return state.setValue(FACING, rotation.rotate(state.getValue(FACING))); }
     @Override protected BlockState mirror(BlockState state, Mirror mirror) { return state.rotate(mirror.getRotation(state.getValue(FACING))); }
@@ -46,12 +43,6 @@ public final class MatrixPortBlock extends MachineBlock {
     }
     @Override protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
         if (player instanceof ServerPlayer server && level.getBlockEntity(pos) instanceof MatrixPortBlockEntity port) {
-            if (kind == Kind.COLLECTOR) {
-                var look = player.getLookAngle();
-                var facing = Direction.getNearest(look.x, look.y, look.z);
-                if (player.isShiftKeyDown()) facing = facing.getOpposite();
-                level.setBlock(pos, state.setValue(FACING, facing), UPDATE_ALL);
-            }
             server.openMenu(port, pos);
         }
         return InteractionResult.sidedSuccess(level.isClientSide);

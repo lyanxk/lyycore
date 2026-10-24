@@ -20,6 +20,10 @@ import org.lyy.lyycore.content.menu.ImaginaryReaperMenu;
 public class LyyMenus {
     public static final DeferredRegister<MenuType<?>> MENUS =
             DeferredRegister.create(Registries.MENU, LyyCore.MODID);
+    public static final DeferredHolder<MenuType<?>, MenuType<org.lyy.lyycore.content.menu.SpacetimeFactoryMenu>> SPACETIME_FACTORY =
+            MENUS.register("spacetime_factory", () -> IMenuTypeExtension.create(org.lyy.lyycore.content.menu.SpacetimeFactoryMenu::new));
+    public static final DeferredHolder<MenuType<?>, MenuType<org.lyy.lyycore.content.menu.RiftbreakerMenu>> RIFTBREAKER =
+            MENUS.register("riftbreaker", () -> IMenuTypeExtension.create(org.lyy.lyycore.content.menu.RiftbreakerMenu::new));
     public static final DeferredHolder<MenuType<?>, MenuType<org.lyy.lyycore.content.equipment.AccessoryMenu>> ACCESSORIES = MENUS.register("accessories", () -> IMenuTypeExtension.create(org.lyy.lyycore.content.equipment.AccessoryMenu::new));
     public static final DeferredHolder<MenuType<?>, MenuType<org.lyy.lyycore.content.equipment.ReforgingMenu>> REFORGING = MENUS.register("reforging", () -> IMenuTypeExtension.create(org.lyy.lyycore.content.equipment.ReforgingMenu::new));
     public static final DeferredHolder<MenuType<?>, MenuType<org.lyy.lyycore.content.menu.ExperimentTableMenu>> EXPERIMENT_TABLE = MENUS.register("experiment_table", () -> IMenuTypeExtension.create(org.lyy.lyycore.content.menu.ExperimentTableMenu::new));

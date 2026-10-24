@@ -22,6 +22,15 @@ import java.util.Map;
 
 public class LyyItems {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(LyyCore.MODID);
+    public static final DeferredItem<Item> SPACETIME_CORE = ITEMS.registerSimpleItem("spacetime_core", new Item.Properties().rarity(Rarity.EPIC));
+    public static final DeferredItem<Item> SPACETIME_CRYSTAL = ITEMS.registerSimpleItem("spacetime_crystal");
+    public static final DeferredItem<Item> SPACETIME_ALLOY = ITEMS.registerSimpleItem("spacetime_alloy");
+    public static final DeferredItem<Item> SPACETIME_ALLOY_PLATE = ITEMS.registerSimpleItem("spacetime_alloy_plate");
+    public static final DeferredItem<BlockItem> SPACETIME_ALLOY_BLOCK = ITEMS.registerSimpleBlockItem(LyyBlocks.SPACETIME_ALLOY_BLOCK);
+    public static final DeferredItem<BlockItem> SPACETIME_FACTORY = ITEMS.registerSimpleBlockItem(LyyBlocks.SPACETIME_FACTORY);
+    public static final DeferredItem<SpacetimeChainItem> SPACETIME_CHAIN = ITEMS.registerItem("spacetime_chain", SpacetimeChainItem::new, new Item.Properties().stacksTo(1));
+    public static final DeferredItem<SpacetimeHoeItem> SPACETIME_HOE = ITEMS.registerItem("spacetime_hoe", SpacetimeHoeItem::new, new Item.Properties().stacksTo(1));
+    public static final DeferredItem<RiftbreakerItem> RIFTBREAKER = ITEMS.registerItem("riftbreaker", RiftbreakerItem::new, new Item.Properties().stacksTo(1).rarity(Rarity.EPIC));
     public static final DeferredItem<BlockItem> MIRROR = ITEMS.registerSimpleBlockItem(LyyBlocks.MIRROR);
     public static final DeferredItem<BlockItem> REFORGING_TABLE = ITEMS.registerSimpleBlockItem(LyyBlocks.REFORGING_TABLE);
     public static final DeferredItem<AccessoryItem> PURE_IMAGINARY_CRYSTAL_NECKLACE = accessory("pure_imaginary_crystal_necklace", Kind.NECKLACE, Series.STEEL);
