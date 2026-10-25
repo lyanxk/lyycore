@@ -9,6 +9,8 @@ import org.lyy.lyycore.LyyCore;
 
 public final class LyySounds {
     public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(Registries.SOUND_EVENT, LyyCore.MODID);
+    public static final DeferredHolder<SoundEvent, SoundEvent> SPACETIME_MATRIX_HUM = SOUNDS.register("spacetime_matrix_hum",
+            () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(LyyCore.MODID, "spacetime_matrix_hum")));
     public static final DeferredHolder<SoundEvent, SoundEvent> LIGHTNING_ZAP = SOUNDS.register("lightning_zap",
             () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(LyyCore.MODID, "lightning_zap")));
     private LyySounds() { }

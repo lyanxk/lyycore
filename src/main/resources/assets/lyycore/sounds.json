@@ -1,4 +1,8 @@
 {
+  "spacetime_matrix_hum": {
+    "subtitle": "subtitles.lyycore.spacetime_matrix_hum",
+    "sounds": [{ "name": "lyycore:spacetime_matrix/hum", "attenuation_distance": 4 }]
+  },
   "lightning_zap": {
     "subtitle": "subtitles.lyycore.lightning_zap",
     "sounds": [

@@ -1,6 +1,6 @@
 {
   "icon": {
-    "id": "lyycore:transmission_core"
+    "id": "lyycore:channel_core"
   },
   "rarity": "high",
   "materials": [
@@ -22,7 +22,7 @@
   "description": "research.lyycore.logistics.description",
   "production": {
     "result": {
-      "id": "lyycore:transmission_core"
+      "id": "lyycore:channel_core"
     },
     "duration": 3600
   },

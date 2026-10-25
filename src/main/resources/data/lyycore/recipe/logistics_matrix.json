@@ -2,7 +2,7 @@
   "type": "lyycore:imaginary_condensing",
   "ingredients": [
     {
-      "item": "lyycore:transmission_core"
+      "item": "lyycore:channel_core"
     },
     {
       "item": "lyycore:matrix_casing"

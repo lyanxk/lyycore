@@ -9,25 +9,17 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
-import net.neoforged.neoforge.energy.IEnergyStorage;
-import org.lyy.lyycore.energy.ImaginaryEnergy;
 import org.lyy.lyycore.energy.EnergyReceiver;
+import org.lyy.lyycore.energy.EnergyTarget;
 import org.lyy.lyycore.energy.CoordinateEnergySource;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
-import java.util.IdentityHashMap;
 import java.util.List;
-import java.util.Set;
-import org.lyy.lyycore.registry.LyyCapabilities;
 
 /** Generates an independent energy budget at each configured, already-loaded destination. */
 public class TargetedEnergySourceBlockEntity extends BlockEntity implements CoordinateEnergySource {
     private final int maxTargets, iePerTick, fePerTick;
     @Override public int maxTargets() { return maxTargets; }
-    private static final Direction[] SIDES = {Direction.DOWN, Direction.UP, Direction.NORTH, Direction.SOUTH, Direction.WEST, Direction.EAST, null};
     private final List<Target> targets = new ArrayList<>();
 
     public TargetedEnergySourceBlockEntity(net.minecraft.world.level.block.entity.BlockEntityType<?> type, BlockPos pos, BlockState state, int maxTargets, int iePerTick, int fePerTick) {
@@ -64,62 +56,11 @@ public class TargetedEnergySourceBlockEntity extends BlockEntity implements Coor
 
     private final class Target {
         private final GlobalPos connection;
-        private final List<BlockCapabilityCache<ImaginaryEnergy, Direction>> ieCaches = new ArrayList<>();
-        private final List<BlockCapabilityCache<IEnergyStorage, Direction>> feCaches = new ArrayList<>();
-        private final Set<Object> visited = Collections.newSetFromMap(new IdentityHashMap<>());
-        private ServerLevel cachedLevel;
-        private BlockPos cachedReceiver;
-        private int cacheGeneration;
-
+        private final EnergyTarget energy = new EnergyTarget(() -> !isRemoved());
         private Target(GlobalPos connection) { this.connection = connection; }
-        private void clearCaches() {
-            cacheGeneration++;
-            cachedLevel = null;
-            cachedReceiver = null;
-            ieCaches.clear(); feCaches.clear(); visited.clear();
-        }
-        private void prepareCaches(ServerLevel destination, BlockPos receiver) {
-            if (cachedLevel == destination && receiver.equals(cachedReceiver)) return;
-            clearCaches();
-            cachedLevel = destination;
-            cachedReceiver = receiver.immutable();
-            int generation = cacheGeneration;
-            for (Direction side : SIDES) {
-                ieCaches.add(BlockCapabilityCache.create(LyyCapabilities.IMAGINARY_ENERGY, destination, receiver, side,
-                        () -> !isRemoved() && cacheGeneration == generation, () -> {}));
-                feCaches.add(BlockCapabilityCache.create(Capabilities.EnergyStorage.BLOCK, destination, receiver, side,
-                        () -> !isRemoved() && cacheGeneration == generation, () -> {}));
-            }
-        }
-
-        /** Returns false only when a loaded destination no longer exposes either energy capability. */
+        private void clearCaches() { energy.clear(); }
         private boolean supply(ServerLevel destination, BlockPos receiver) {
-            prepareCaches(destination, receiver);
-            // All faces of this receiver share one budget; repeated capability instances count once.
-            boolean supported = false;
-            int remaining = iePerTick;
-            visited.clear();
-            for (var cache : ieCaches) {
-                var energy = cache.getCapability();
-                supported |= energy != null;
-                if (energy != null && visited.add(energy) && energy.canReceiveImaginaryEnergy()) {
-                    remaining -= Math.clamp(energy.receiveImaginaryEnergy(remaining, false), 0, remaining);
-                    if (remaining == 0) return true;
-                }
-            }
-            // Each receiver uses FE only when its native IE interfaces accepted nothing.
-            if (remaining < iePerTick) return true;
-            remaining = fePerTick;
-            visited.clear();
-            for (var cache : feCaches) {
-                var energy = cache.getCapability();
-                supported |= energy != null;
-                if (energy != null && visited.add(energy) && energy.canReceive()) {
-                    remaining -= Math.clamp(energy.receiveEnergy(remaining, false), 0, remaining);
-                    if (remaining == 0) return true;
-                }
-            }
-            return supported;
+            return energy.supply(destination, receiver, iePerTick, fePerTick);
         }
     }
 

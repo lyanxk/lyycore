@@ -64,9 +64,7 @@ public final class SpacetimeFactoryScreen extends AbstractContainerScreen<Spacet
         int pulse = menu.running(page) ? Math.round(135 + 120 * (1 + (float)Math.cos(phase * Math.PI * 2)) / 2) : 100;
         int workingColor = pulse << 24 | SpacetimeGui.BLUE & 0xFFFFFF;
         if (page == Page.SPACETIME) {
-            SpacetimeGui.ring(g, leftPos, topPos, p, 0, 8, energyColor, 2);
-            SpacetimeGui.ring(g, leftPos, topPos, p, 8, 8, workingColor, 1);
-            for (int i = 8; i < 16; i++) connect(g, p[i], p[16], workingColor);
+            SpacetimeGui.diagram(g, leftPos + p[16][0] + 8, topPos + p[16][1] + 8, energyColor, workingColor);
         } else if (page == Page.CONDENSING || page == Page.CRAFTING) {
             ForgeGui.panel(g, leftPos + 39, topPos + 51, 178, 116);
             float progress = Math.clamp((menu.progress(page) + (menu.running(page) ? partial : 0)) / menu.duration(page), 0, 1);
@@ -78,8 +76,7 @@ public final class SpacetimeFactoryScreen extends AbstractContainerScreen<Spacet
             ForgeGui.arrow(g, leftPos + recipeX(), topPos + recipeY(), ForgeGui.ACCENT);
         }
         for (int i = 0; i <= page.inputCount; i++) {
-            if (spacetime) SpacetimeGui.slot(g, leftPos + p[i][0], topPos + p[i][1], i == page.inputCount || i < 8 ? SpacetimeGui.PINK : SpacetimeGui.BLUE);
-            else if (page == Page.ALLOYING || i == page.inputCount)
+            if (!spacetime && (page == Page.ALLOYING || i == page.inputCount))
                 ForgeGui.slot(g, leftPos + p[i][0], topPos + p[i][1], page == Page.ALLOYING ? i == 2 : i == page.inputCount);
         }
         for (int i = SpacetimeFactoryMenu.MACHINE_SLOTS; i < menu.slots.size(); i++) {
@@ -95,10 +92,6 @@ public final class SpacetimeFactoryScreen extends AbstractContainerScreen<Spacet
         g.fill(x, y, x + ENERGY_WIDTH, y + ENERGY_HEIGHT, ForgeGui.TRACK);
         g.fill(x, y, x + ForgeGui.scaled(menu.storedEnergy(), menu.capacity(), ENERGY_WIDTH), y + ENERGY_HEIGHT,
                 spacetime ? SpacetimeGui.PINK : ForgeGui.ACCENT);
-    }
-
-    private void connect(GuiGraphics g, int[] a, int[] b, int color) {
-        SpacetimeGui.line(g, leftPos + a[0] + 8, topPos + a[1] + 8, leftPos + b[0] + 8, topPos + b[1] + 8, color, 1);
     }
 
     @Override protected void renderLabels(GuiGraphics g, int mouseX, int mouseY) {

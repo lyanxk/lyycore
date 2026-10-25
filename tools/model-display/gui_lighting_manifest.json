@@ -54,6 +54,21 @@
         "_temporary_addon/revolver_blue_20261015/export/blue_revolver.bbmodel"
       ],
       "display_contract": "_temporary_addon/revolver_blue_20261015/export/blue_revolver.display.json"
+    },
+    {
+      "id": "spacetime_matrix_tier_1",
+      "source": "spacetime_matrix/source/spacetime_matrix_tier_1.bbmodel",
+      "display_contract": "spacetime_matrix/source/spacetime_matrix_tier_1.display.json"
+    },
+    {
+      "id": "spacetime_matrix_tier_2",
+      "source": "spacetime_matrix/source/spacetime_matrix_tier_2.bbmodel",
+      "display_contract": "spacetime_matrix/source/spacetime_matrix_tier_2.display.json"
+    },
+    {
+      "id": "spacetime_matrix_tier_3",
+      "source": "spacetime_matrix/source/spacetime_matrix_tier_3.bbmodel",
+      "display_contract": "spacetime_matrix/source/spacetime_matrix_tier_3.display.json"
     }
   ],
   "skip_game_items": {

@@ -1,0 +1,107 @@
+{
+  "type": "lyycore:spacetime",
+  "inputs": [
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy_block"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy_block"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy_block"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy_block"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy_block"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy_block"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy_block"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy_block"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:phantom_matrix"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:matrix_casing"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:matrix_casing"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:matrix_casing"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:channel_core"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:matrix_casing"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:matrix_casing"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:matrix_casing"
+      },
+      "count": 1
+    }
+  ],
+  "result": {
+    "id": "lyycore:spacetime_matrix"
+  },
+  "result_count": 1,
+  "duration": 600,
+  "energy": 2000000000
+}

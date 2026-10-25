@@ -91,6 +91,9 @@ public class LyyCreativeTab {
                         output.accept(LyyItems.TIME_KNOCKING_STONE.get());
                         output.accept(LyyItems.SPACETIME_CORE.get());
                         output.accept(LyyItems.SPACETIME_FACTORY.get());
+                        output.accept(LyyItems.SPACETIME_MATRIX.get());
+                        output.accept(LyyItems.SPACETIME_COORDINATE_DEVICE.get());
+                        output.accept(LyyItems.SPACETIME_SHARD.get());
                         output.accept(LyyItems.SPACETIME_CRYSTAL.get());
                         output.accept(LyyItems.SPACETIME_ALLOY.get());
                         output.accept(LyyItems.SPACETIME_ALLOY_BLOCK.get());
@@ -152,7 +155,7 @@ public class LyyCreativeTab {
                         output.accept(LyyItems.SUMMONING_BEACON.get());
                         output.accept(LyyItems.OTHERWORLD_CHEST.get());
                         output.accept(LyyItems.MATRIX_CASING.get());
-                        output.accept(LyyItems.TRANSMISSION_CORE.get());
+                        output.accept(LyyItems.CHANNEL_CORE.get());
                         output.accept(LyyItems.LOGISTICS_MATRIX.get());
                         output.accept(LyyItems.MATRIX_INPUT.get());
                         output.accept(LyyItems.MATRIX_OUTPUT.get());

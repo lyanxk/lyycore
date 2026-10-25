@@ -58,7 +58,9 @@ public final class RiftbreakerScreen extends AbstractContainerScreen<Riftbreaker
             }
         });
     }
-    private Component enchantmentLabel() { return text("gui.lyycore.reaper." + (menu.silkTouch() ? "silk_touch" : "fortune")); }
+    private Component enchantmentLabel() {
+        return text(menu.silkTouch() ? "gui.lyycore.reaper.silk_touch" : "gui.lyycore.riftbreaker.fortune");
+    }
     private void send(int button) {
         if (minecraft.gameMode != null) minecraft.gameMode.handleInventoryButtonClick(menu.containerId, button);
     }

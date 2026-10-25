@@ -24,6 +24,10 @@ public class LyyMenus {
             MENUS.register("spacetime_factory", () -> IMenuTypeExtension.create(org.lyy.lyycore.content.menu.SpacetimeFactoryMenu::new));
     public static final DeferredHolder<MenuType<?>, MenuType<org.lyy.lyycore.content.menu.RiftbreakerMenu>> RIFTBREAKER =
             MENUS.register("riftbreaker", () -> IMenuTypeExtension.create(org.lyy.lyycore.content.menu.RiftbreakerMenu::new));
+    public static final DeferredHolder<MenuType<?>, MenuType<org.lyy.lyycore.content.menu.SpacetimeMatrixMenu>> SPACETIME_MATRIX =
+            MENUS.register("spacetime_matrix", () -> IMenuTypeExtension.create(org.lyy.lyycore.content.menu.SpacetimeMatrixMenu::new));
+    public static final DeferredHolder<MenuType<?>, MenuType<org.lyy.lyycore.content.menu.SpacetimeCoordinatesMenu>> SPACETIME_COORDINATES =
+            MENUS.register("spacetime_coordinates", () -> IMenuTypeExtension.create(org.lyy.lyycore.content.menu.SpacetimeCoordinatesMenu::new));
     public static final DeferredHolder<MenuType<?>, MenuType<org.lyy.lyycore.content.equipment.AccessoryMenu>> ACCESSORIES = MENUS.register("accessories", () -> IMenuTypeExtension.create(org.lyy.lyycore.content.equipment.AccessoryMenu::new));
     public static final DeferredHolder<MenuType<?>, MenuType<org.lyy.lyycore.content.equipment.ReforgingMenu>> REFORGING = MENUS.register("reforging", () -> IMenuTypeExtension.create(org.lyy.lyycore.content.equipment.ReforgingMenu::new));
     public static final DeferredHolder<MenuType<?>, MenuType<org.lyy.lyycore.content.menu.ExperimentTableMenu>> EXPERIMENT_TABLE = MENUS.register("experiment_table", () -> IMenuTypeExtension.create(org.lyy.lyycore.content.menu.ExperimentTableMenu::new));

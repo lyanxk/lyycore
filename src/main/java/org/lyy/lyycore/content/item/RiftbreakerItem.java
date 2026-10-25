@@ -54,6 +54,7 @@ import java.util.function.Consumer;
 public final class RiftbreakerItem extends Item implements SpecialWeapon {
     public static final int MIN_EFFICIENCY = 8, MAX_EFFICIENCY = 128;
     private static final int ATTACK_RADIUS = 15;
+    private static final int FORTUNE_LEVEL = 20;
     private static final String SETTINGS = "Riftbreaker", READY = "lyycore:riftbreaker_ready";
 
     public RiftbreakerItem(Properties properties) { super(properties); }
@@ -194,14 +195,14 @@ public final class RiftbreakerItem extends Item implements SpecialWeapon {
 
     @Override public int getEnchantmentLevel(ItemStack stack, Holder<Enchantment> enchantment) {
         if (enchantment.is(Enchantments.SILK_TOUCH)) return silkTouch(stack) ? 1 : 0;
-        if (enchantment.is(Enchantments.FORTUNE)) return silkTouch(stack) ? 0 : 5;
+        if (enchantment.is(Enchantments.FORTUNE)) return silkTouch(stack) ? 0 : FORTUNE_LEVEL;
         return stack.getTagEnchantments().getLevel(enchantment);
     }
     @Override public ItemEnchantments getAllEnchantments(ItemStack stack, HolderLookup.RegistryLookup<Enchantment> lookup) {
         var enchantments = new ItemEnchantments.Mutable(stack.getTagEnchantments());
         boolean silk = silkTouch(stack);
         enchantments.set(lookup.getOrThrow(Enchantments.SILK_TOUCH), silk ? 1 : 0);
-        enchantments.set(lookup.getOrThrow(Enchantments.FORTUNE), silk ? 0 : 5);
+        enchantments.set(lookup.getOrThrow(Enchantments.FORTUNE), silk ? 0 : FORTUNE_LEVEL);
         return enchantments.toImmutable();
     }
     @Override public boolean isEnchantable(ItemStack stack) { return true; }
@@ -216,7 +217,7 @@ public final class RiftbreakerItem extends Item implements SpecialWeapon {
         int side = radius(stack) * 2 + 1;
         lines.add(Component.translatable("tooltip.lyycore.riftbreaker.settings", efficiency(stack), side, side).withColor(0xCBD2E2));
         lines.add((silkTouch(stack) ? Component.translatable("enchantment.minecraft.silk_touch")
-                : Component.translatable("enchantment.minecraft.fortune").append(" V")).withColor(0x9CD9F3));
+                : Component.translatable("enchantment.minecraft.fortune").append(" XX")).withColor(0x9CD9F3));
         lines.add(Component.translatable("tooltip.lyycore.riftbreaker.lightning").withColor(0xCBD2E2));
         lines.add(Component.translatable("tooltip.lyycore.riftbreaker.controls").withColor(0x9CD9F3));
     }

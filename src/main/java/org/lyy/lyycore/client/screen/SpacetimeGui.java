@@ -1,13 +1,17 @@
 package org.lyy.lyycore.client.screen;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
+import org.lyy.lyycore.content.blockEntities.SpacetimeFactoryBlockEntity.Page;
+import org.lyy.lyycore.content.menu.SpacetimeFactoryMenu;
 
-/** Shared spacetime panel and diagram strokes, including JEI. */
+/** Shared spacetime panel and recipe artwork, including JEI. */
 public final class SpacetimeGui {
     public static final int TEXT = 0xFF435770, PINK = 0xFFE79DC7, BLUE = 0xFF85C9E4;
     private static final ResourceLocation BACKGROUND = ResourceLocation.parse("lyycore:textures/gui/spacetime_background.png");
+    private static final ResourceLocation DIAGRAM = ResourceLocation.parse("lyycore:textures/gui/spacetime_diagram.png");
+    private static final int[][] DIAGRAM_SLOTS = SpacetimeFactoryMenu.positions(Page.SPACETIME);
     private SpacetimeGui() { }
 
     public static void panel(GuiGraphics g, int x, int y, int width, int height) {
@@ -30,22 +34,25 @@ public final class SpacetimeGui {
         g.fill(x + 1, y + 1, x + 15, y + 15, 0xFFEAF2FA);
     }
 
-    public static void line(GuiGraphics g, float ax, float ay, float bx, float by, int color, float width) {
-        float length = (float) Math.hypot(bx - ax, by - ay);
-        if (length == 0) return;
-        float dx = -(by - ay) / length * width / 2, dy = (bx - ax) / length * width / 2;
-        var vertices = g.bufferSource().getBuffer(RenderType.gui());
-        var pose = g.pose().last().pose();
-        vertices.addVertex(pose, ax + dx, ay + dy, 0).setColor(color);
-        vertices.addVertex(pose, bx + dx, by + dy, 0).setColor(color);
-        vertices.addVertex(pose, bx - dx, by - dy, 0).setColor(color);
-        vertices.addVertex(pose, ax - dx, ay - dy, 0).setColor(color);
+    public static int diagramSlotX(int slot) {
+        return DIAGRAM_SLOTS[slot][0] - DIAGRAM_SLOTS[16][0] - 8;
     }
 
-    public static void ring(GuiGraphics g, int x, int y, int[][] positions, int start, int count, int color, float width) {
-        for (int i = 0; i < count; i++) {
-            var a = positions[start + i]; var b = positions[start + (i + 1) % count];
-            line(g, x + a[0] + 8, y + a[1] + 8, x + b[0] + 8, y + b[1] + 8, color, width);
+    public static int diagramSlotY(int slot) {
+        return DIAGRAM_SLOTS[slot][1] - DIAGRAM_SLOTS[16][1] - 8;
+    }
+
+    /** Slot offsets and artwork share the same center in the machine and JEI. */
+    public static void diagram(GuiGraphics g, int centerX, int centerY, int outerColor, int innerColor) {
+        // Plain texture blits do not enable blending; preserve the artwork's soft alpha edges.
+        g.flush();
+        RenderSystem.enableBlend();
+        RenderSystem.defaultBlendFunc();
+        g.blit(DIAGRAM, centerX - 86, centerY - 86, 172, 172, 0, 0, 1254, 1254, 1254, 1254);
+        RenderSystem.disableBlend();
+        for (int i = 0; i < DIAGRAM_SLOTS.length; i++) {
+            slot(g, centerX + diagramSlotX(i), centerY + diagramSlotY(i),
+                    i < 8 || i == 16 ? outerColor : innerColor);
         }
     }
 }

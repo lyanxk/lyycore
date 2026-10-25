@@ -15,6 +15,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import org.lyy.lyycore.LyyCore;
@@ -73,13 +74,20 @@ public class LyyJeiPlugin implements IModPlugin {
         }
         reg.addItemStackInfo(new ItemStack(org.lyy.lyycore.registry.LyyItems.SUMMONING_BEACON.get()), net.minecraft.network.chat.Component.translatable("jei.lyycore.summoning_beacon"));
         reg.addItemStackInfo(new ItemStack(org.lyy.lyycore.registry.LyyItems.EXPERIMENT_TABLE.get()), net.minecraft.network.chat.Component.translatable("jei.lyycore.experiment_table"));
-        reg.addItemStackInfo(new ItemStack(org.lyy.lyycore.registry.LyyItems.EMBERFALL.get()), net.minecraft.network.chat.Component.translatable("jei.lyycore.emberfall"));
+        addWeaponInfo(reg, LyyItems.EMBERFALL.get(), "jei.lyycore.emberfall");
         reg.addItemStackInfo(new ItemStack(org.lyy.lyycore.registry.LyyItems.CAPTURE_CAGE.get()), net.minecraft.network.chat.Component.translatable("jei.lyycore.capture_cage"));
-        reg.addItemStackInfo(new ItemStack(org.lyy.lyycore.registry.LyyItems.HAIL.get()), net.minecraft.network.chat.Component.translatable("jei.lyycore.hail"));
-        reg.addItemStackInfo(new ItemStack(org.lyy.lyycore.registry.LyyItems.DRAGON_MIGHT.get()), net.minecraft.network.chat.Component.translatable("research.lyycore.in_our_hands.description"));
+        addWeaponInfo(reg, LyyItems.HAIL.get(), "jei.lyycore.hail");
+        addWeaponInfo(reg, LyyItems.DRAGON_MIGHT.get(), "jei.lyycore.dragon_might");
+        addWeaponInfo(reg, LyyItems.WHISPER_OF_THE_PAST.get(), "jei.lyycore.whisper_of_the_past");
+        addWeaponInfo(reg, LyyItems.THUNDER_SCYTHE.get(), "jei.lyycore.thunder_scythe");
+        addWeaponInfo(reg, LyyItems.RIFTBREAKER.get(), "jei.lyycore.riftbreaker");
+        addWeaponInfo(reg, LyyItems.IMAGINARY_REAPER.get(), "jei.lyycore.imaginary_reaper");
         reg.addItemStackInfo(new ItemStack(org.lyy.lyycore.registry.LyyItems.FRIENDLY_PROOF.get()), net.minecraft.network.chat.Component.translatable("research.lyycore.ritual.description"));
         reg.addItemStackInfo(new ItemStack(org.lyy.lyycore.registry.LyyItems.TIME_KNOCKING_STONE.get()), net.minecraft.network.chat.Component.translatable("jei.lyycore.spacetime_trial"));
         reg.addItemStackInfo(new ItemStack(org.lyy.lyycore.registry.LyyItems.SPACETIME_TRIAL_PROOF.get()), net.minecraft.network.chat.Component.translatable("jei.lyycore.spacetime_trial_proof"));
+        reg.addItemStackInfo(new ItemStack(org.lyy.lyycore.registry.LyyItems.SPACETIME_SHARD.get()), net.minecraft.network.chat.Component.translatable("jei.lyycore.spacetime_shard"));
+        reg.addItemStackInfo(new ItemStack(org.lyy.lyycore.registry.LyyItems.SPACETIME_MATRIX.get()), net.minecraft.network.chat.Component.translatable("jei.lyycore.spacetime_matrix"));
+        reg.addItemStackInfo(new ItemStack(org.lyy.lyycore.registry.LyyItems.SPACETIME_COORDINATE_DEVICE.get()), net.minecraft.network.chat.Component.translatable("jei.lyycore.spacetime_coordinates"));
         reg.addRecipes(AlloyCauldronCategory.TYPE, org.lyy.lyycore.content.cauldron.CauldronMixes.specials());
         Minecraft mc = Minecraft.getInstance();
         RecipeManager rm = null;
@@ -124,6 +132,17 @@ public class LyyJeiPlugin implements IModPlugin {
                 rm.getAllRecipesFor(kind.recipeType()).stream().map(RecipeHolder::value).toList());
         for (var kind : ResourceFrameKind.values()) reg.addRecipes(LyyJeiTypes.RESOURCE_GATHERING.get(kind),
                 rm.getAllRecipesFor(kind.recipeType()).stream().map(RecipeHolder::value).toList());
+    }
+
+    private static void addWeaponInfo(IRecipeRegistration reg, Item item, String descriptionKey) {
+        var ingredient = reg.getIngredientManager().createTypedIngredient(VanillaTypes.ITEM_STACK, item.getDefaultInstance(), false).orElseThrow();
+        reg.addRecipes(RecipeTypes.INFORMATION, List.of(new IJeiIngredientInfoRecipe() {
+            @Override public List<ITypedIngredient<?>> getIngredients() { return List.of(ingredient); }
+            @Override public List<FormattedText> getDescription() {
+                // Resolve skill bindings when the page opens, including bindings changed in-game.
+                return List.of(Component.translatable(descriptionKey, Component.keybind("key.lyycore.special_skill")));
+            }
+        }));
     }
 
     @Override

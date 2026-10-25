@@ -40,7 +40,7 @@ public final class TrialAttack extends Entity {
     public Vec3 destination() { return position().add(aim()); }
     public double ground() { return getY() + entityData.get(GROUND); }
     public static final int FIELD_TICKS = 160, FLIGHT_TICKS = 200;
-    private static final int THREAD_DELAY_TICKS = 40;
+    private static final int THREAD_DELAY_TICKS = 20;
 
     static void cast(ServerLevel level, TrialGuide guide, SpacetimeTrials.Battle battle,
                      ServerPlayer target, Kind kind, boolean aerial) {

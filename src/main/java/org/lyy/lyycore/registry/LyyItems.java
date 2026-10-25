@@ -22,6 +22,10 @@ import java.util.Map;
 
 public class LyyItems {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(LyyCore.MODID);
+    public static final DeferredItem<BlockItem> SPACETIME_MATRIX = ITEMS.registerSimpleBlockItem(LyyBlocks.SPACETIME_MATRIX);
+    public static final DeferredItem<Item> SPACETIME_SHARD = ITEMS.registerSimpleItem("spacetime_shard", new Item.Properties().fireResistant());
+    public static final DeferredItem<SpacetimeCoordinateDeviceItem> SPACETIME_COORDINATE_DEVICE = ITEMS.registerItem(
+            "spacetime_coordinate_device", SpacetimeCoordinateDeviceItem::new, new Item.Properties().stacksTo(1));
     public static final DeferredItem<Item> SPACETIME_CORE = ITEMS.registerSimpleItem("spacetime_core", new Item.Properties().rarity(Rarity.EPIC));
     public static final DeferredItem<Item> SPACETIME_CRYSTAL = ITEMS.registerSimpleItem("spacetime_crystal");
     public static final DeferredItem<Item> SPACETIME_ALLOY = ITEMS.registerSimpleItem("spacetime_alloy");
@@ -95,7 +99,7 @@ public class LyyItems {
     public static final DeferredItem<Item> INFERNAL_STEEL_PLATE = ITEMS.registerSimpleItem("infernal_steel_plate");
     public static final DeferredItem<Item> SIXFOLD_ALLOY_PLATE = ITEMS.registerSimpleItem("sixfold_alloy_plate");
     public static final DeferredItem<Item> MATRIX_CASING = ITEMS.registerSimpleItem("matrix_casing");
-    public static final DeferredItem<Item> TRANSMISSION_CORE = ITEMS.registerSimpleItem("transmission_core", new Item.Properties().rarity(Rarity.EPIC));
+    public static final DeferredItem<Item> CHANNEL_CORE = ITEMS.registerSimpleItem("channel_core", new Item.Properties().rarity(Rarity.EPIC));
     public static final DeferredItem<BlockItem> SIXFOLD_ALLOY_BLOCK = ITEMS.registerSimpleBlockItem(LyyBlocks.SIXFOLD_ALLOY_BLOCK);
     public static final DeferredItem<BlockItem> LOGISTICS_MATRIX = ITEMS.registerSimpleBlockItem(LyyBlocks.LOGISTICS_MATRIX);
     public static final DeferredItem<BlockItem> MATRIX_INPUT = ITEMS.registerSimpleBlockItem(LyyBlocks.MATRIX_INPUT);

@@ -3,6 +3,7 @@ package org.lyy.lyycore.registry;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.capabilities.BlockCapability;
+import net.neoforged.neoforge.capabilities.ItemCapability;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import org.lyy.lyycore.LyyCore;
@@ -10,6 +11,8 @@ import org.lyy.lyycore.energy.ImaginaryEnergy;
 
 public class LyyCapabilities {
     public static final BlockCapability<ImaginaryEnergy, Direction> IMAGINARY_ENERGY = BlockCapability.createSided(
+            ResourceLocation.fromNamespaceAndPath(LyyCore.MODID, "imaginary_energy"), ImaginaryEnergy.class);
+    public static final ItemCapability<ImaginaryEnergy, Void> IMAGINARY_ENERGY_ITEM = ItemCapability.createVoid(
             ResourceLocation.fromNamespaceAndPath(LyyCore.MODID, "imaginary_energy"), ImaginaryEnergy.class);
 
     private static org.lyy.lyycore.content.blockEntities.PureSmeltingPlantBlockEntity plant(net.minecraft.world.level.Level level, net.minecraft.core.BlockPos pos, net.minecraft.world.level.block.state.BlockState state) {

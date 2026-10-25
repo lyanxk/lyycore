@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " A ",
+    "ACA",
+    " A "
+  ],
+  "key": {
+    "A": {
+      "item": "lyycore:spacetime_alloy"
+    },
+    "C": {
+      "item": "lyycore:coordinate_device"
+    }
+  },
+  "result": {
+    "id": "lyycore:spacetime_coordinate_device",
+    "count": 1
+  }
+}

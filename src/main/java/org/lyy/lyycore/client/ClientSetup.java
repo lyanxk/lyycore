@@ -114,6 +114,7 @@ public class ClientSetup {
         event.registerEntityRenderer(LyyEntities.IMAGINARY_DRAGON.get(), ImaginaryDragonRenderer::new);
         event.registerEntityRenderer(LyyEntities.GATE_METEOR.get(), GateMeteorRenderer::new);
         event.registerBlockEntityRenderer(LyyBlockEntities.LOGISTICS_MATRIX.get(), context -> new EnergyMachineRenderer<>("logistics_matrix", "working"));
+        event.registerBlockEntityRenderer(LyyBlockEntities.SPACETIME_MATRIX.get(), SpacetimeMatrixRenderer::new);
         event.registerBlockEntityRenderer(LyyBlockEntities.SUMMONING_BEACON.get(), context -> new SummoningBeaconRenderer());
         event.registerBlockEntityRenderer(LyyBlockEntities.PHANTOM_MATRIX.get(), context -> new EnergyMachineRenderer<>("phantom_matrix", "working"));
         event.registerBlockEntityRenderer(LyyBlockEntities.EROSION_FACTORY.get(), context -> new EnergyMachineRenderer<>("erosion_factory", "working"));
@@ -180,6 +181,8 @@ public class ClientSetup {
     @SubscribeEvent
     public static void registerScreens(RegisterMenuScreensEvent event) {
         event.register(LyyMenus.SPACETIME_FACTORY.get(), org.lyy.lyycore.client.screen.SpacetimeFactoryScreen::new);
+        event.register(LyyMenus.SPACETIME_MATRIX.get(), org.lyy.lyycore.client.screen.SpacetimeMatrixScreen::new);
+        event.register(LyyMenus.SPACETIME_COORDINATES.get(), org.lyy.lyycore.client.screen.SpacetimeCoordinatesScreen::new);
         event.register(LyyMenus.RIFTBREAKER.get(), org.lyy.lyycore.client.screen.RiftbreakerScreen::new);
         event.register(LyyMenus.ACCESSORIES.get(), org.lyy.lyycore.client.screen.AccessoryScreen::new);
         event.register(LyyMenus.REFORGING.get(), org.lyy.lyycore.client.screen.ReforgingScreen::new);
