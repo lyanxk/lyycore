@@ -25,6 +25,9 @@ import org.lyy.lyycore.content.equipment.AccessoryItem;
 import org.lyy.lyycore.content.research.ResearchManager;
 import org.lyy.lyycore.client.screen.CrystalCondensingScreen;
 import org.lyy.lyycore.content.menu.IAFMenu;
+import org.lyy.lyycore.content.menu.SpacetimeFactoryMenu;
+import org.lyy.lyycore.content.menu.ImaginaryCraftingMenu;
+import org.lyy.lyycore.content.menu.FissionFurnaceMenu;
 import org.lyy.lyycore.client.screen.IAFScreen;
 import org.lyy.lyycore.client.screen.ImaginaryCraftingScreen;
 import org.lyy.lyycore.client.screen.ResourceGatheringScreen;
@@ -217,16 +220,14 @@ public class LyyJeiPlugin implements IModPlugin {
 
     @Override
     public void registerRecipeTransferHandlers(IRecipeTransferRegistration reg) {
-        reg.addRecipeTransferHandler(new SpacetimeTransferHandler<>(reg.getTransferHelper(), SpacetimeCategory.TYPE), SpacetimeCategory.TYPE);
-        reg.addRecipeTransferHandler(new SpacetimeTransferHandler<>(reg.getTransferHelper(), LyyJeiTypes.IMAGINARY_CONDENSING), LyyJeiTypes.IMAGINARY_CONDENSING);
-        reg.addRecipeTransferHandler(new SpacetimeTransferHandler<>(reg.getTransferHelper(), LyyJeiTypes.IMAGINARY_CRAFTING), LyyJeiTypes.IMAGINARY_CRAFTING);
-        reg.addRecipeTransferHandler(new SpacetimeTransferHandler<>(reg.getTransferHelper(), LyyJeiTypes.IMAGINARY_ALLOYING), LyyJeiTypes.IMAGINARY_ALLOYING);
-        reg.addRecipeTransferHandler(org.lyy.lyycore.content.menu.FissionFurnaceMenu.class, LyyMenus.FISSION_FURNACE.get(), FissionCategory.TYPE, 0, 1, 3, 36);
-        reg.addRecipeTransferHandler(new ImaginaryCraftingTransferInfo<>(reg.getTransferHelper(), LyyJeiTypes.IMAGINARY_CRAFTING, false));
-        reg.addRecipeTransferHandler(new ImaginaryCraftingTransferInfo<>(reg.getTransferHelper(), LyyJeiTypes.IMAGINARY_CONDENSING, true));
-        reg.addRecipeTransferHandler(IAFMenu.class, LyyMenus.IAF_MENU.get(),
-                LyyJeiTypes.IMAGINARY_ALLOYING,
-                0, 3,   // machine input slots start, count
-                4, 36); // player inventory start, count
+        var helper = reg.getTransferHelper();
+        reg.addRecipeTransferHandler(new MachineRecipeTransferHandler<>(helper, SpacetimeFactoryMenu.class, LyyMenus.SPACETIME_FACTORY.get(), SpacetimeCategory.TYPE), SpacetimeCategory.TYPE);
+        reg.addRecipeTransferHandler(new MachineRecipeTransferHandler<>(helper, SpacetimeFactoryMenu.class, LyyMenus.SPACETIME_FACTORY.get(), LyyJeiTypes.IMAGINARY_CONDENSING), LyyJeiTypes.IMAGINARY_CONDENSING);
+        reg.addRecipeTransferHandler(new MachineRecipeTransferHandler<>(helper, SpacetimeFactoryMenu.class, LyyMenus.SPACETIME_FACTORY.get(), LyyJeiTypes.IMAGINARY_CRAFTING), LyyJeiTypes.IMAGINARY_CRAFTING);
+        reg.addRecipeTransferHandler(new MachineRecipeTransferHandler<>(helper, SpacetimeFactoryMenu.class, LyyMenus.SPACETIME_FACTORY.get(), LyyJeiTypes.IMAGINARY_ALLOYING), LyyJeiTypes.IMAGINARY_ALLOYING);
+        reg.addRecipeTransferHandler(new MachineRecipeTransferHandler<>(helper, FissionFurnaceMenu.class, LyyMenus.FISSION_FURNACE.get(), FissionCategory.TYPE), FissionCategory.TYPE);
+        reg.addRecipeTransferHandler(new MachineRecipeTransferHandler<>(helper, ImaginaryCraftingMenu.class, LyyMenus.IMAGINARY_CRAFTING.get(), LyyJeiTypes.IMAGINARY_CRAFTING), LyyJeiTypes.IMAGINARY_CRAFTING);
+        reg.addRecipeTransferHandler(new MachineRecipeTransferHandler<>(helper, ImaginaryCraftingMenu.class, LyyMenus.IMAGINARY_CRAFTING.get(), LyyJeiTypes.IMAGINARY_CONDENSING), LyyJeiTypes.IMAGINARY_CONDENSING);
+        reg.addRecipeTransferHandler(new MachineRecipeTransferHandler<>(helper, IAFMenu.class, LyyMenus.IAF_MENU.get(), LyyJeiTypes.IMAGINARY_ALLOYING), LyyJeiTypes.IMAGINARY_ALLOYING);
     }
 }
