@@ -80,6 +80,9 @@ public class LyyJeiPlugin implements IModPlugin {
         addWeaponInfo(reg, LyyItems.WHISPER_OF_THE_PAST.get(), "jei.lyycore.whisper_of_the_past");
         addWeaponInfo(reg, LyyItems.THUNDER_SCYTHE.get(), "jei.lyycore.thunder_scythe");
         addWeaponInfo(reg, LyyItems.RIFTBREAKER.get(), "jei.lyycore.riftbreaker");
+        addWeaponInfo(reg, LyyItems.LIUXI.get(), "jei.lyycore.liuxi");
+        reg.addItemStackInfo(new ItemStack(LyyItems.SUCHEN.get()), Component.translatable("jei.lyycore.suchen"));
+        reg.addItemStackInfo(new ItemStack(LyyItems.GREEN_ONION.get()), Component.translatable("jei.lyycore.green_onion"));
         addWeaponInfo(reg, LyyItems.IMAGINARY_REAPER.get(), "jei.lyycore.imaginary_reaper");
         reg.addItemStackInfo(new ItemStack(org.lyy.lyycore.registry.LyyItems.FRIENDLY_PROOF.get()), net.minecraft.network.chat.Component.translatable("research.lyycore.ritual.description"));
         reg.addItemStackInfo(new ItemStack(org.lyy.lyycore.registry.LyyItems.TIME_KNOCKING_STONE.get()), net.minecraft.network.chat.Component.translatable("jei.lyycore.spacetime_trial"));

@@ -13,5 +13,7 @@ public final class LyySounds {
             () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(LyyCore.MODID, "spacetime_matrix_hum")));
     public static final DeferredHolder<SoundEvent, SoundEvent> LIGHTNING_ZAP = SOUNDS.register("lightning_zap",
             () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(LyyCore.MODID, "lightning_zap")));
+    public static final DeferredHolder<SoundEvent, SoundEvent> LIUXI_THROW = SOUNDS.register("liuxi_throw",
+            () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(LyyCore.MODID, "liuxi_throw")));
     private LyySounds() { }
 }

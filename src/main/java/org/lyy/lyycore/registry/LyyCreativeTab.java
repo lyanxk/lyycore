@@ -82,6 +82,8 @@ public class LyyCreativeTab {
                         output.accept(LyyItems.SUMMONING_PEDESTAL.get());
                         output.accept(LyyItems.FRIENDLY_PROOF.get());
                         output.accept(LyyItems.ZHUZHU.get());
+                        output.accept(LyyItems.ELEPHANT.get());
+                        output.accept(LyyItems.GREEN_ONION.get());
                         output.accept(LyyItems.IMAGINARY_DRAGON_NEST.get());
                         output.accept(LyyItems.DRAGON_MIGHT.get());
                         output.accept(LyyItems.AMPLIFICATION_POTION.get());
@@ -100,6 +102,11 @@ public class LyyCreativeTab {
                         output.accept(LyyItems.SPACETIME_ALLOY_PLATE.get());
                         output.accept(LyyItems.SPACETIME_CHAIN.get());
                         output.accept(LyyItems.SPACETIME_HOE.get());
+                        output.accept(LyyItems.SUCHEN.get());
+                        var liuxi = new ItemStack(LyyItems.LIUXI.get());
+                        liuxi.enchant(params.holders().lookupOrThrow(Registries.ENCHANTMENT)
+                                .getOrThrow(net.minecraft.world.item.enchantment.Enchantments.LOOTING), 20);
+                        output.accept(liuxi);
                         output.accept(LyyItems.RIFTBREAKER.get());
                         output.accept(LyyItems.SPACETIME_TRIAL_PROOF.get());
                         output.accept(LyyItems.PURE_IMAGINARY_CRYSTAL_NECKLACE.get());

@@ -69,6 +69,38 @@
       "id": "spacetime_matrix_tier_3",
       "source": "spacetime_matrix/source/spacetime_matrix_tier_3.bbmodel",
       "display_contract": "spacetime_matrix/source/spacetime_matrix_tier_3.display.json"
+    },
+    {
+      "id": "green_onion_stage_0",
+      "source": "green_onion/source/green_onion_stage_0.bbmodel",
+      "display_contract": "green_onion/source/green_onion_stage_0.display.json",
+      "java_exports": [
+        "green_onion/export/assets/lyycore/models/block/green_onion_stage_0.json"
+      ]
+    },
+    {
+      "id": "green_onion_stage_1",
+      "source": "green_onion/source/green_onion_stage_1.bbmodel",
+      "display_contract": "green_onion/source/green_onion_stage_1.display.json",
+      "java_exports": [
+        "green_onion/export/assets/lyycore/models/block/green_onion_stage_1.json"
+      ]
+    },
+    {
+      "id": "green_onion_stage_2",
+      "source": "green_onion/source/green_onion_stage_2.bbmodel",
+      "display_contract": "green_onion/source/green_onion_stage_2.display.json",
+      "java_exports": [
+        "green_onion/export/assets/lyycore/models/block/green_onion_stage_2.json"
+      ]
+    },
+    {
+      "id": "green_onion_stage_3",
+      "source": "green_onion/source/green_onion_stage_3.bbmodel",
+      "display_contract": "green_onion/source/green_onion_stage_3.display.json",
+      "java_exports": [
+        "green_onion/export/assets/lyycore/models/block/green_onion_stage_3.json"
+      ]
     }
   ],
   "skip_game_items": {

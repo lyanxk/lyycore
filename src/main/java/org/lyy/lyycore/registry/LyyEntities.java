@@ -41,6 +41,9 @@ import org.lyy.lyycore.content.trial.TrialAttack;
 public class LyyEntities {
     public static final DeferredRegister<EntityType<?>> ENTITIES =
             DeferredRegister.create(Registries.ENTITY_TYPE, LyyCore.MODID);
+    public static final DeferredHolder<EntityType<?>, EntityType<org.lyy.lyycore.content.entity.LiuxiKnife>> LIUXI_KNIFE =
+            ENTITIES.register("liuxi_knife", () -> EntityType.Builder.of(org.lyy.lyycore.content.entity.LiuxiKnife::new, MobCategory.MISC)
+                    .sized(0.25F, 0.25F).clientTrackingRange(8).updateInterval(1).noSave().build("lyycore:liuxi_knife"));
     public static final DeferredHolder<EntityType<?>, EntityType<TrialGuide>> TRIAL_GUIDE = ENTITIES.register("trial_guide", () ->
             EntityType.Builder.of(TrialGuide::new, MobCategory.MONSTER).sized(1.8F, 1.8F)
                     .clientTrackingRange(20).updateInterval(1).build("lyycore:trial_guide"));

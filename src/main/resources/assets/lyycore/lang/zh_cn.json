@@ -769,7 +769,7 @@
   "jei.lyycore.dragon_might": "按住右键蓄力，松开发射激光；最多蓄力1秒，射程64格，命中第一个目标或方块后停止。每束造成40×（1＋蓄力秒数）⁴魔法伤害，满蓄力640点。\n绑定龙巢中的龙已收起时造成完整伤害，并附加持续5秒的龙火；最多三级，每秒分别造成50／100／400魔法伤害。龙未收起或无法查询龙巢时，伤害降至四分之一，不附加龙火。\n进攻风格：连续发射四束，冷却1.05秒。其他风格：单束，冷却0.3秒。技巧风格蓄力期间额外减伤50%。潜行右键打开龙模式界面。",
   "jei.lyycore.whisper_of_the_past": "右键直接射击，无需蓄力，每秒一次，造成400特殊物理伤害；不消耗箭，支持药水箭与光灵箭效果。\n进攻风格按“%1$s”：发射穿透结晶箭，造成（攻击力＋40）×20特殊物理伤害；冷却5秒，发射后悬停1秒。每次命中叠加一级结晶并刷新20秒持续时间；三级时冻结行动，再次命中三级目标时额外造成（攻击力＋20）×160特殊物理伤害并清除结晶。\n进攻风格潜行＋“%1$s”：0.5秒后展开持续15秒的穹顶，武器变为结晶形态。此时右键每秒可对穹顶内全部敌人造成（攻击力＋20）×32特殊物理伤害；再次按终结技可提前收回。\n上述伤害均受增伤与物理增伤影响。",
   "jei.lyycore.thunder_scythe": "左键：每秒可触发一次（韧性×20＋240）×8特殊雷伤；间隔内使用普通近战攻击。\n进攻风格右键：横扫半径5格内的敌人，造成（韧性×4＋20）×16特殊雷伤，冷却1秒。\n建造风格右键方块：召唤雷击。主手持握时，实体与方块触及距离均增加4格。\n上述特殊雷伤均受增伤与雷属性增伤影响。",
-  "jei.lyycore.riftbreaker": "右键：攻击半径15格内的所有非玩家生物，造成（攻击力＋40）×100特殊雷伤，冷却1秒。\n伤害受增伤、雷属性增伤与攻击附魔影响；支持附魔增伤、击退和命中效果。潜行右键打开配置界面。",
+  "jei.lyycore.riftbreaker": "右键：仅攻击半径15格内的敌对生物，造成（攻击力＋40）×100特殊雷伤，冷却1秒。\n伤害受增伤、雷属性增伤与攻击附魔影响；支持附魔增伤、击退和命中效果。潜行右键打开配置界面。",
   "jei.lyycore.imaginary_reaper": "左键进行普通近战攻击。潜行右键打开配置界面，可将武器攻击伤害在2～42之间调整，默认42；实际伤害还受玩家属性与普通近战规则影响。",
   "block.lyycore.spacetime_matrix": "超时空矩阵",
   "item.lyycore.spacetime_shard": "时空碎片",
@@ -811,5 +811,15 @@
   "gui.lyycore.spacetime_coordinates.pending_targets": "暂存目标 %s",
   "gui.lyycore.spacetime_coordinates.copy": "添加到其他频道",
   "gui.lyycore.spacetime_coordinates.copy_destination": "选择目的频道",
-  "subtitles.lyycore.spacetime_matrix_hum": "超时空矩阵：低鸣"
+  "subtitles.lyycore.spacetime_matrix_hum": "超时空矩阵：低鸣",
+  "item.lyycore.liuxi": "流隙",
+  "entity.lyycore.liuxi_knife": "流隙",
+  "item.lyycore.suchen": "溯尘",
+  "item.lyycore.green_onion": "大葱",
+  "block.lyycore.green_onion": "大葱",
+  "item.lyycore.elephant": "大象",
+  "subtitles.lyycore.liuxi_throw": "流隙：掷出",
+  "jei.lyycore.liuxi": "左键掷出飞刀，以60格/秒直线飞行并穿透生物，每次命中造成（攻击力＋20）×20的特殊物理伤害。飞行1秒或撞到方块后立即回归，期间不能再次投掷。无限耐久，自带抢夺XX。",
+  "jei.lyycore.suchen": "右键立即完成刷取，保留考古奖励并破坏刷取后的方块。连锁刷取相邻的可刷取方块，每次最多64个。",
+  "jei.lyycore.green_onion": "破坏草时有6.25%的概率掉落，为原版小麦种子掉率的一半。大葱本体可直接种在耕地上，生长、产量与食用效果均与胡萝卜一致。"
 }

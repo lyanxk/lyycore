@@ -1,0 +1,90 @@
+{
+  "type": "lyycore:spacetime",
+  "inputs": [
+    {
+      "ingredient": [],
+      "count": 1
+    },
+    {
+      "ingredient": [],
+      "count": 1
+    },
+    {
+      "ingredient": [],
+      "count": 1
+    },
+    {
+      "ingredient": [],
+      "count": 1
+    },
+    {
+      "ingredient": [],
+      "count": 1
+    },
+    {
+      "ingredient": [],
+      "count": 1
+    },
+    {
+      "ingredient": [],
+      "count": 1
+    },
+    {
+      "ingredient": [],
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": [],
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": [],
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": [],
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": [],
+      "count": 1
+    }
+  ],
+  "result": {
+    "id": "lyycore:liuxi",
+    "components": {
+      "minecraft:enchantments": {
+        "levels": {
+          "minecraft:looting": 20
+        }
+      }
+    }
+  },
+  "result_count": 1,
+  "duration": 200,
+  "energy": 1000000000
+}

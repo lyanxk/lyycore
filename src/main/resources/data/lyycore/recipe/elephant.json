@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "lyycore:zhuzhu"
+    },
+    {
+      "item": "lyycore:green_onion"
+    }
+  ],
+  "result": {
+    "id": "lyycore:elephant",
+    "count": 1
+  }
+}

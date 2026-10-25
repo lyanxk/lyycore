@@ -65,6 +65,9 @@ public class ClientSetup {
         }
         if (empty != null) {
             event.getModels().computeIfPresent(grapple, (id, model) -> GrappleHeldModel.wrap(model, empty, GrappleControls::hasActiveHook));
+            var liuxi = new net.minecraft.client.resources.model.ModelResourceLocation(LyyItems.LIUXI.getId(), "inventory");
+            event.getModels().computeIfPresent(liuxi, (id, model) -> GrappleHeldModel.wrap(model, empty,
+                    entity -> entity != null && org.lyy.lyycore.content.item.LiuxiItem.isThrown(entity.getMainHandItem())));
             var frostChain = new net.minecraft.client.resources.model.ModelResourceLocation(LyyItems.FROST_CHAIN.getId(), "inventory");
             event.getModels().computeIfPresent(frostChain, (id, model) -> GrappleHeldModel.wrap(model, empty, FrostChainControls::hasActiveHook));
         }
@@ -95,6 +98,7 @@ public class ClientSetup {
 
     @SubscribeEvent
     public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
+        event.registerEntityRenderer(LyyEntities.LIUXI_KNIFE.get(), LiuxiKnifeRenderer::new);
         event.registerEntityRenderer(LyyEntities.TRIAL_GUIDE.get(), TrialGuideRenderer::new);
         event.registerEntityRenderer(LyyEntities.TRIAL_ATTACK.get(), TrialAttackRenderer::new);
         event.registerBlockEntityRenderer(LyyBlockEntities.EXPERIMENT_TABLE.get(), ExperimentTableRenderer::new);

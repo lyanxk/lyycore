@@ -1,7 +1,12 @@
 {
   "spacetime_matrix_hum": {
     "subtitle": "subtitles.lyycore.spacetime_matrix_hum",
-    "sounds": [{ "name": "lyycore:spacetime_matrix/hum", "attenuation_distance": 4 }]
+    "sounds": [
+      {
+        "name": "lyycore:spacetime_matrix/hum",
+        "attenuation_distance": 4
+      }
+    ]
   },
   "lightning_zap": {
     "subtitle": "subtitles.lyycore.lightning_zap",
@@ -9,6 +14,12 @@
       "lyycore:lightning/zap",
       "lyycore:lightning/zap_short",
       "lyycore:lightning/zap_tail"
+    ]
+  },
+  "liuxi_throw": {
+    "subtitle": "subtitles.lyycore.liuxi_throw",
+    "sounds": [
+      "lyycore:liuxi/throw"
     ]
   }
 }

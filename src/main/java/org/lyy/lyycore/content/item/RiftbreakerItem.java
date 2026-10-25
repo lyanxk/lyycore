@@ -18,6 +18,7 @@ import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -114,7 +115,8 @@ public final class RiftbreakerItem extends Item implements SpecialWeapon {
             var start = player.getEyePosition().add(0, -.25, 0);
             var source = SpecialDamage.source(player, player, SpecialDamage.Element.LIGHTNING);
             for (var target : level.getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(ATTACK_RADIUS),
-                    target -> !(target instanceof Player) && target.isAlive() && target.distanceToSqr(player) <= ATTACK_RADIUS * ATTACK_RADIUS)) {
+                    target -> target instanceof Enemy && !(target instanceof Player) && target.isAlive()
+                            && target.distanceToSqr(player) <= ATTACK_RADIUS * ATTACK_RADIUS)) {
                 float enchantedBase = EnchantmentHelper.modifyDamage(server.serverLevel(), stack, target, source, (float) base);
                 if (SpecialDamage.combinedHitFromBase(player, player, target, SpecialDamage.Element.LIGHTNING, enchantedBase, 100)) {
                     float knockback = EnchantmentHelper.modifyKnockback(server.serverLevel(), stack, target, source, 0);

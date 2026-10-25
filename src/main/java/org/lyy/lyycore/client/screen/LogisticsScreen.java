@@ -16,7 +16,8 @@ import org.lyy.lyycore.network.LogisticsNetwork.Action;
 public final class LogisticsScreen extends AbstractContainerScreen<LogisticsMenu> {
     private static final int PAPER = 0xFFFFFBFD, PINK = 0xFFE9A2C7, INK = 0xFF593F50;
     private static final int MUTED = 0xFF97818E, LINE = 0xFFEED7E3, HOVER = 0xFFFBE9F2;
-    private final List<ChannelButton> rows = new ArrayList<>(), deletes = new ArrayList<>();
+    private static final int ROW_X = 16, ROW_WIDTH = 216;
+    private final List<ChannelButton> rows = new ArrayList<>();
     private EditBox name;
     private Button previous, next, unbind, accept, cancel, visibility;
     private UUID editing;
@@ -60,11 +61,10 @@ public final class LogisticsScreen extends AbstractContainerScreen<LogisticsMenu
             g.fill(x + dx, y + dy, x + dx + 3, y + dy + 3, LINE);
     }
     @Override protected void init() {
-        super.init(); rows.clear(); deletes.clear();
+        super.init(); rows.clear();
         for (int i = 0; i < LogisticsMenu.PAGE_SIZE; i++) {
             final int row = i;
-            rows.add(button(Component.empty(), 16, 28 + i * 22, menu.matrix() ? 190 : 216, b -> select(row)));
-            if (menu.matrix()) deletes.add(button(Component.literal("×"), 211, 28 + i * 22, 21, b -> confirmDelete(row)));
+            rows.add(button(Component.empty(), ROW_X, 28 + i * 22, ROW_WIDTH, b -> select(row)));
         }
         if (!menu.matrix()) {
             previous = button(Component.literal("<"), 16, 140, 22, b -> send(Action.PAGE, LogisticsNetwork.NONE, "", menu.snapshot().page() - 1));
@@ -119,7 +119,6 @@ public final class LogisticsScreen extends AbstractContainerScreen<LogisticsMenu
             if (entry != null) row.setTooltip(Tooltip.create(Component.literal(entry.name() + "\n" + text(entry.publicChannel() ? "public" : "private").getString() + "\n" + entry.source().dimension().location()
                     + "\n" + entry.source().pos().toShortString())));
             else row.setTooltip(null);
-            if (menu.matrix()) { deletes.get(i).visible = editing == null && entry != null; deletes.get(i).active = entry != null && entry.editable(); }
         }
         if (!menu.matrix()) {
             previous.active = snapshot.page() > 0; next.active = snapshot.page() + 1 < snapshot.pages();
@@ -165,7 +164,19 @@ public final class LogisticsScreen extends AbstractContainerScreen<LogisticsMenu
     }
     @Override public void render(GuiGraphics g, int x, int y, float partial) { super.render(g, x, y, partial); if (editing == null) renderTooltip(g, x, y); }
     @Override public boolean mouseClicked(double x, double y, int button) {
-        if (editing == null) return super.mouseClicked(x, y, button);
+        if (editing == null) {
+            if (menu.matrix() && button == 1) {
+                for (int i = 0; i < rows.size(); i++) {
+                    var row = rows.get(i);
+                    if (row.visible && row.active && row.channel != null && row.isMouseOver(x, y)) {
+                        row.playDownSound(minecraft.getSoundManager());
+                        confirmDelete(i);
+                        return true;
+                    }
+                }
+            }
+            return super.mouseClicked(x, y, button);
+        }
         if (name.visible && name.mouseClicked(x, y, button)) { setFocused(name); return true; }
         if (visibility.visible && visibility.mouseClicked(x, y, button)) return true;
         if (accept.mouseClicked(x, y, button) || cancel.mouseClicked(x, y, button)) return true;

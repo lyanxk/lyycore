@@ -34,6 +34,13 @@ public class LyyItems {
     public static final DeferredItem<BlockItem> SPACETIME_FACTORY = ITEMS.registerSimpleBlockItem(LyyBlocks.SPACETIME_FACTORY);
     public static final DeferredItem<SpacetimeChainItem> SPACETIME_CHAIN = ITEMS.registerItem("spacetime_chain", SpacetimeChainItem::new, new Item.Properties().stacksTo(1));
     public static final DeferredItem<SpacetimeHoeItem> SPACETIME_HOE = ITEMS.registerItem("spacetime_hoe", SpacetimeHoeItem::new, new Item.Properties().stacksTo(1));
+    public static final DeferredItem<LiuxiItem> LIUXI = ITEMS.registerItem("liuxi", LiuxiItem::new, new Item.Properties().stacksTo(1).rarity(Rarity.EPIC));
+    public static final DeferredItem<SuchenItem> SUCHEN = ITEMS.registerItem("suchen", SuchenItem::new, new Item.Properties().stacksTo(1));
+    public static final DeferredItem<net.minecraft.world.item.ItemNameBlockItem> GREEN_ONION = ITEMS.registerItem("green_onion",
+            properties -> new net.minecraft.world.item.ItemNameBlockItem(LyyBlocks.GREEN_ONION.get(), properties),
+            new Item.Properties().food(net.minecraft.world.food.Foods.CARROT));
+    public static final DeferredItem<Item> ELEPHANT = ITEMS.registerSimpleItem("elephant",
+            new Item.Properties().food(new net.minecraft.world.food.FoodProperties.Builder().nutrition(12).saturationModifier(0.8F).fast().build()));
     public static final DeferredItem<RiftbreakerItem> RIFTBREAKER = ITEMS.registerItem("riftbreaker", RiftbreakerItem::new, new Item.Properties().stacksTo(1).rarity(Rarity.EPIC));
     public static final DeferredItem<BlockItem> MIRROR = ITEMS.registerSimpleBlockItem(LyyBlocks.MIRROR);
     public static final DeferredItem<BlockItem> REFORGING_TABLE = ITEMS.registerSimpleBlockItem(LyyBlocks.REFORGING_TABLE);
