@@ -22,6 +22,7 @@ import org.lyy.lyycore.LyyCore;
 import org.lyy.lyycore.content.ResourceFrameKind;
 import org.lyy.lyycore.content.FrameProduction;
 import org.lyy.lyycore.content.equipment.AccessoryItem;
+import org.lyy.lyycore.content.research.ResearchManager;
 import org.lyy.lyycore.client.screen.CrystalCondensingScreen;
 import org.lyy.lyycore.content.menu.IAFMenu;
 import org.lyy.lyycore.client.screen.IAFScreen;
@@ -34,6 +35,7 @@ import org.lyy.lyycore.registry.LyyItems;
 import org.lyy.lyycore.registry.LyyMenus;
 import org.lyy.lyycore.registry.LyyRecipes;
 import java.util.List;
+import java.util.function.Supplier;
 
 @JeiPlugin
 public class LyyJeiPlugin implements IModPlugin {
@@ -63,14 +65,8 @@ public class LyyJeiPlugin implements IModPlugin {
     public void registerRecipes(IRecipeRegistration reg) {
         for (var entry : LyyItems.ITEMS.getEntries()) {
             if (!(entry.get() instanceof AccessoryItem item)) continue;
-            var ingredient = reg.getIngredientManager().createTypedIngredient(VanillaTypes.ITEM_STACK, item.getDefaultInstance(), false).orElseThrow();
-            reg.addRecipes(RecipeTypes.INFORMATION, List.of(new IJeiIngredientInfoRecipe() {
-                @Override public List<ITypedIngredient<?>> getIngredients() { return List.of(ingredient); }
-                @Override public List<FormattedText> getDescription() {
-                    // Resolve the key when opening the page; ordinary JEI info freezes text during registration.
-                    return List.of(Component.translatable("jei.lyycore.accessory", Component.keybind("key.lyycore.memory")));
-                }
-            }));
+            addDynamicInfo(reg, item.getDefaultInstance(), () -> List.of(
+                    Component.translatable("jei.lyycore.accessory", Component.keybind("key.lyycore.memory"))));
         }
         reg.addItemStackInfo(new ItemStack(org.lyy.lyycore.registry.LyyItems.SUMMONING_BEACON.get()), net.minecraft.network.chat.Component.translatable("jei.lyycore.summoning_beacon"));
         reg.addItemStackInfo(new ItemStack(org.lyy.lyycore.registry.LyyItems.EXPERIMENT_TABLE.get()), net.minecraft.network.chat.Component.translatable("jei.lyycore.experiment_table"));
@@ -99,6 +95,18 @@ public class LyyJeiPlugin implements IModPlugin {
         }
 
         if (mc.level != null) {
+            var researchEntries = ResearchManager.all(mc.level).stream()
+                    .sorted(java.util.Comparator.comparing(entry -> entry.id().toString())).toList();
+            for (var entry : researchEntries) {
+                var research = entry.value();
+                var production = research.production().orElse(null);
+                if (production == null) continue;
+                addDynamicInfo(reg, production.result(), () -> List.of(
+                        Component.translatable("jei.lyycore.research_obtain",
+                                Component.translatable(research.title()), Component.keybind("key.lyycore.memory")),
+                        Component.translatable(production.experiment().isPresent()
+                                ? "jei.lyycore.research_experiment" : "jei.lyycore.research_production")));
+            }
             reg.addRecipes(EnergyProductionCategory.OTHERWORLD, org.lyy.lyycore.content.ProductionCatalog.products(mc.level).stream()
                     .map(item -> new EnergyProductionCategory.View(item, List.of())).toList());
             var stones = List.of(net.minecraft.world.item.Items.STONE, net.minecraft.world.item.Items.COBBLESTONE,
@@ -135,13 +143,16 @@ public class LyyJeiPlugin implements IModPlugin {
     }
 
     private static void addWeaponInfo(IRecipeRegistration reg, Item item, String descriptionKey) {
-        var ingredient = reg.getIngredientManager().createTypedIngredient(VanillaTypes.ITEM_STACK, item.getDefaultInstance(), false).orElseThrow();
+        addDynamicInfo(reg, item.getDefaultInstance(), () -> List.of(
+                Component.translatable(descriptionKey, Component.keybind("key.lyycore.special_skill"))));
+    }
+
+    /** Resolve translated text and key bindings when the information page opens. */
+    private static void addDynamicInfo(IRecipeRegistration reg, ItemStack stack, Supplier<List<FormattedText>> description) {
+        var ingredient = reg.getIngredientManager().createTypedIngredient(VanillaTypes.ITEM_STACK, stack, false).orElseThrow();
         reg.addRecipes(RecipeTypes.INFORMATION, List.of(new IJeiIngredientInfoRecipe() {
             @Override public List<ITypedIngredient<?>> getIngredients() { return List.of(ingredient); }
-            @Override public List<FormattedText> getDescription() {
-                // Resolve skill bindings when the page opens, including bindings changed in-game.
-                return List.of(Component.translatable(descriptionKey, Component.keybind("key.lyycore.special_skill")));
-            }
+            @Override public List<FormattedText> getDescription() { return description.get(); }
         }));
     }
 

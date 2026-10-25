@@ -1,4 +1,7 @@
 {
+  "jei.lyycore.research_obtain": "Complete the research \"%s\", then press [%s] to open Memory. Select the research and click Transcribe.",
+  "jei.lyycore.research_production": "Process the research report in a Laboratory to obtain this item.",
+  "jei.lyycore.research_experiment": "Complete the report's experiment at an Experiment Table, then process it in a Laboratory to obtain this item.",
   "item.lyycore.zhuzhu": "Zhuzhu",
   "tooltip.lyycore.description.zhuzhu": "A group chat friend. Tasty.",
   "research.lyycore.supersonic.title": "Supersonic",

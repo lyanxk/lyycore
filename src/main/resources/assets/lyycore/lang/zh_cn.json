@@ -1,4 +1,7 @@
 {
+  "jei.lyycore.research_obtain": "完成研究「%s」后，按 [%s] 打开记忆，选择该研究并点击“抄写”。",
+  "jei.lyycore.research_production": "将研究报告放入实验室加工，即可获得。",
+  "jei.lyycore.research_experiment": "先在实验台完成研究报告的实验，再放入实验室加工，即可获得。",
   "item.lyycore.zhuzhu": "猪猪",
   "tooltip.lyycore.description.zhuzhu": "群友，好吃",
   "research.lyycore.supersonic.title": "超音速",
