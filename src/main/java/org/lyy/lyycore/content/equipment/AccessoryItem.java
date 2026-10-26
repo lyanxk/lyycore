@@ -41,16 +41,20 @@ public final class AccessoryItem extends Item implements Accessory {
     }
     @Override public List<Bonus> bonuses() { return series.bonuses; }
     @Override public ResourceLocation setId() { return series.id; }
+    @Override public double setBonusMultiplier() { return 2; }
     @Override public Item reforgeMaterial() { return series.plate.get(); }
     public static Component statName(Stat stat) { return Component.translatable(stat.attribute.value().getDescriptionId()); }
     public static String amount(Stat stat, double value) {
         return String.format(java.util.Locale.ROOT, stat.ordinal() < 4 ? "+%.0f" : "+%.0f%%", stat.ordinal() < 4 ? value : value * 100);
     }
     @Override public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> lines, TooltipFlag flags) {
-        for (var bonus : series.bonuses)
-            lines.add(Component.translatable("tooltip.lyycore.accessory.bonus", statName(bonus.stat()), amount(bonus.stat(), bonus.amount())).withStyle(ChatFormatting.AQUA));
+        appendBonusTooltip(bonuses(), lines);
         lines.add(Component.translatable("tooltip.lyycore.accessory.set").withStyle(ChatFormatting.LIGHT_PURPLE));
         appendTraitTooltip(stack, lines, Component.translatable("tooltip.lyycore.accessory.unrolled"));
+    }
+    public static void appendBonusTooltip(List<Bonus> bonuses, List<Component> lines) {
+        for (var bonus : bonuses)
+            lines.add(Component.translatable("tooltip.lyycore.accessory.bonus", statName(bonus.stat()), amount(bonus.stat(), bonus.amount())).withStyle(ChatFormatting.AQUA));
     }
     public static void appendTraitTooltip(ItemStack stack, List<Component> lines, Component unrolled) {
         var data = AccessoryData.read(stack);

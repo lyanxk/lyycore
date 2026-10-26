@@ -1,0 +1,104 @@
+{
+  "type": "lyycore:spacetime",
+  "inputs": [
+    {
+      "ingredient": [],
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy_block"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy_block"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy_block"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": [],
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy_block"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy_block"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy_block"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:crossbow"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy_plate"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:crossbow"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy_plate"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:crossbow"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy_plate"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:crossbow"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy_plate"
+      },
+      "count": 1
+    }
+  ],
+  "result": {
+    "id": "lyycore:frozen_moment"
+  },
+  "result_count": 1,
+  "duration": 300,
+  "energy": 1000000000,
+  "energy_per_tick": true
+}

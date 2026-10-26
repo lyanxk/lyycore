@@ -37,6 +37,8 @@ public class LyyItems {
     public static final DeferredItem<SpacetimeHoeItem> SPACETIME_HOE = ITEMS.registerItem("spacetime_hoe", SpacetimeHoeItem::new, new Item.Properties().stacksTo(1));
     public static final DeferredItem<LiuxiItem> LIUXI = ITEMS.registerItem("liuxi", LiuxiItem::new, new Item.Properties().stacksTo(1).rarity(Rarity.EPIC));
     public static final DeferredItem<SuchenItem> SUCHEN = ITEMS.registerItem("suchen", SuchenItem::new, new Item.Properties().stacksTo(1));
+    public static final DeferredItem<CelestialOrderItem> CELESTIAL_ORDER = ITEMS.registerItem("celestial_order", CelestialOrderItem::new, new Item.Properties().stacksTo(1).rarity(Rarity.EPIC));
+    public static final DeferredItem<FrozenMomentItem> FROZEN_MOMENT = ITEMS.registerItem("frozen_moment", FrozenMomentItem::new, new Item.Properties().stacksTo(1).rarity(Rarity.EPIC));
     public static final DeferredItem<net.minecraft.world.item.ItemNameBlockItem> GREEN_ONION = ITEMS.registerItem("green_onion",
             properties -> new net.minecraft.world.item.ItemNameBlockItem(LyyBlocks.GREEN_ONION.get(), properties),
             new Item.Properties().food(net.minecraft.world.food.Foods.CARROT));

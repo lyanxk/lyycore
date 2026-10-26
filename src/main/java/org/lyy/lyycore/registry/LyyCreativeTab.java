@@ -105,6 +105,8 @@ public class LyyCreativeTab {
                         output.accept(LyyItems.SPACETIME_CHAIN.get());
                         output.accept(LyyItems.SPACETIME_HOE.get());
                         output.accept(LyyItems.SUCHEN.get());
+                        output.accept(LyyItems.CELESTIAL_ORDER.get());
+                        output.accept(LyyItems.FROZEN_MOMENT.get());
                         var liuxi = new ItemStack(LyyItems.LIUXI.get());
                         liuxi.enchant(params.holders().lookupOrThrow(Registries.ENCHANTMENT)
                                 .getOrThrow(net.minecraft.world.item.enchantment.Enchantments.LOOTING), 20);

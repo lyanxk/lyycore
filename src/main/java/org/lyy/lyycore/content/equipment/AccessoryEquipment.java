@@ -57,7 +57,7 @@ public final class AccessoryEquipment extends ItemStackHandler {
         for (int slot = 0; slot < 2; slot++) {
             var stack = getStackInSlot(slot);
             if (!(stack.getItem() instanceof Accessory item)) continue;
-            for (var bonus : item.bonuses()) totals[bonus.stat().ordinal()] += bonus.amount() * (set ? 2 : 1);
+            for (var bonus : item.bonuses()) totals[bonus.stat().ordinal()] += bonus.amount() * (set ? item.setBonusMultiplier() : 1);
             var data = AccessoryData.read(stack);
             for (var stat : data.traits()) totals[stat.ordinal()] += data.allocated(stat) * stat.perPoint;
         }

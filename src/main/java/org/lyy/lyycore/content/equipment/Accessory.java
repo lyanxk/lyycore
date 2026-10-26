@@ -16,5 +16,6 @@ public interface Accessory {
     int attributePoints(int traitCount);
     List<Bonus> bonuses();
     ResourceLocation setId();
+    default double setBonusMultiplier() { return 1; }
     Item reforgeMaterial();
 }

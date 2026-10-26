@@ -21,5 +21,11 @@
     "sounds": [
       "lyycore:liuxi/throw"
     ]
+  },
+  "frozen_moment_fire": {
+    "subtitle": "subtitles.lyycore.frozen_moment_fire",
+    "sounds": [
+      "lyycore:frozen_moment/fire"
+    ]
   }
 }

@@ -1,6 +1,7 @@
 package org.lyy.lyycore.content.equipment;
 
 import java.util.List;
+import java.util.EnumMap;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -15,10 +16,12 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import org.lyy.lyycore.registry.LyyItems;
+import org.lyy.lyycore.content.PlayerAttributes.Stat;
 
 @EventBusSubscriber(modid = "lyycore")
 public final class SpacetimeAccessoryItem extends Item implements Accessory {
     private static final ResourceLocation SET = ResourceLocation.parse("lyycore:spacetime_blessing");
+    private static final List<Bonus> BONUSES = combinedBonuses();
     private final Kind kind;
 
     public SpacetimeAccessoryItem(Properties properties, Kind kind) {
@@ -29,11 +32,19 @@ public final class SpacetimeAccessoryItem extends Item implements Accessory {
     @Override public Kind kind() { return kind; }
     @Override public int rollTraitCount(RandomSource random) { return 4; }
     @Override public int attributePoints(int traitCount) { return traitCount == 4 ? 20 : 0; }
-    @Override public List<Bonus> bonuses() { return List.of(); }
+    @Override public List<Bonus> bonuses() { return BONUSES; }
     @Override public ResourceLocation setId() { return SET; }
     @Override public Item reforgeMaterial() { return LyyItems.SPACETIME_ALLOY_PLATE.get(); }
 
+    private static List<Bonus> combinedBonuses() {
+        var totals = new EnumMap<Stat, Double>(Stat.class);
+        for (var series : AccessoryItem.Series.values())
+            for (var bonus : series.bonuses) totals.merge(bonus.stat(), bonus.amount(), Double::sum);
+        return totals.entrySet().stream().map(entry -> new Bonus(entry.getKey(), entry.getValue())).toList();
+    }
+
     @Override public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> lines, TooltipFlag flags) {
+        AccessoryItem.appendBonusTooltip(bonuses(), lines);
         lines.add(Component.translatable("tooltip.lyycore.spacetime_blessing.set").withStyle(ChatFormatting.LIGHT_PURPLE));
         AccessoryItem.appendTraitTooltip(stack, lines, Component.translatable("tooltip.lyycore.spacetime_blessing.unrolled"));
     }

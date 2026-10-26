@@ -826,6 +826,19 @@
   "tooltip.lyycore.spacetime_blessing.set": "Spacetime Blessing: wearing both prevents death and fully heals you",
   "tooltip.lyycore.spacetime_blessing.unrolled": "Rolls 4 traits with 20 attribute points",
   "jei.lyycore.spacetime.energy_per_tick": "Energy: %s IE/t",
-  "jei.lyycore.spacetime_blessing": "Each piece rolls 4 distinct traits and grants 20 points to allocate among those traits. Reforge with Spacetime Alloy Plates using the usual trait locks and costs.\nEquip both Oath of Rewind and Chapter of Continuance to receive Spacetime Blessing: prevents death and restores full health, with no cooldown or consumption. A held Totem of Undying still activates first.",
-  "key.lyycore.tool_mode": "Tool Mode"
+  "jei.lyycore.spacetime_blessing": "Each piece combines the fixed bonuses of all eight metal series: +40 attack, +20 health, +20 armor, +6 armor toughness, +10% global damage, and +20% physical, ice, fire and lightning damage each. Both pieces add their bonuses without an extra set multiplier.\nEach piece rolls 4 distinct traits and grants 20 points to allocate among those traits. Reforge with Spacetime Alloy Plates using the usual trait locks and costs.\nEquip both Oath of Rewind and Chapter of Continuance to receive Spacetime Blessing: prevents death and restores full health, with no cooldown or consumption. A held Totem of Undying still activates first.",
+  "key.lyycore.tool_mode": "Tool Mode",
+  "item.lyycore.celestial_order": "Celestial Order",
+  "item.lyycore.frozen_moment": "Frozen in This Moment",
+  "tooltip.lyycore.celestial_order": "Use to configure time; sneak-use blocks for ×%s random ticks, or creatures to grow or create offspring.",
+  "tooltip.lyycore.frozen_moment": "Attack to fire; hold use for 4× aiming.",
+  "gui.lyycore.celestial_order.time": "Time",
+  "gui.lyycore.celestial_order.weather": "Weather",
+  "gui.lyycore.celestial_order.random_ticks": "Random ticks",
+  "gui.lyycore.celestial_order.clear": "Clear",
+  "gui.lyycore.celestial_order.rain": "Rain",
+  "gui.lyycore.celestial_order.thunder": "Thunder",
+  "subtitles.lyycore.frozen_moment_fire": "Frozen in This Moment fires",
+  "jei.lyycore.celestial_order": "Use to adjust time forward or backward by 6 or 12 hours over 4 seconds. Choose clear weather, rain or thunder for 1 hour. Time and weather affect the Overworld.\nChoose 1, 10 or 100 random ticks, then sneak-use a block to run its own random-tick logic. Does not advance machine timers.\nSneak-use a non-hostile creature with a baby form to instantly grow it up, or create one baby if it is an adult. Includes villagers and polar bears.",
+  "jei.lyycore.frozen_moment": "Press attack to fire an instant laser, one shot per press and at most one per second. No reload. Range: 128 blocks; hit radius: 1 block. Pierces creatures but stops at blocks. Deals (attack + 20) × 400 special physical damage once per target, scaled by global and physical damage bonuses. Hits apply Slowness 255 for 5 seconds.\nHold use for 4× aiming with a circular scope and thin blue crosshair. Other HUD elements are hidden; release to exit."
 }

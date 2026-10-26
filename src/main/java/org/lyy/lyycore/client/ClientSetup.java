@@ -188,6 +188,7 @@ public class ClientSetup {
         event.register(LyyMenus.SPACETIME_MATRIX.get(), org.lyy.lyycore.client.screen.SpacetimeMatrixScreen::new);
         event.register(LyyMenus.SPACETIME_COORDINATES.get(), org.lyy.lyycore.client.screen.SpacetimeCoordinatesScreen::new);
         event.register(LyyMenus.RIFTBREAKER.get(), org.lyy.lyycore.client.screen.RiftbreakerScreen::new);
+        event.register(LyyMenus.CELESTIAL_ORDER.get(), org.lyy.lyycore.client.screen.CelestialOrderScreen::new);
         event.register(LyyMenus.ACCESSORIES.get(), org.lyy.lyycore.client.screen.AccessoryScreen::new);
         event.register(LyyMenus.REFORGING.get(), org.lyy.lyycore.client.screen.ReforgingScreen::new);
         event.register(LyyMenus.CAPTURE_CAGE.get(), org.lyy.lyycore.client.screen.CaptureCageScreen::new);

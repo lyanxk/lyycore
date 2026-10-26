@@ -16,4 +16,6 @@ public final class LyySounds {
     public static final DeferredHolder<SoundEvent, SoundEvent> LIUXI_THROW = SOUNDS.register("liuxi_throw",
             () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(LyyCore.MODID, "liuxi_throw")));
     private LyySounds() { }
+    public static final DeferredHolder<SoundEvent, SoundEvent> FROZEN_MOMENT_FIRE = SOUNDS.register("frozen_moment_fire",
+            () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(LyyCore.MODID, "frozen_moment_fire")));
 }

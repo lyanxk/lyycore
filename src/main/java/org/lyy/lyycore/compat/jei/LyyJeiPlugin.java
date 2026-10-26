@@ -87,6 +87,8 @@ public class LyyJeiPlugin implements IModPlugin {
         addDynamicInfo(reg, LyyItems.RIFTBREAKER.get().getDefaultInstance(), () -> List.of(
                 Component.translatable("jei.lyycore.riftbreaker", Component.keybind("key.lyycore.tool_mode"))));
         addWeaponInfo(reg, LyyItems.LIUXI.get(), "jei.lyycore.liuxi");
+        addWeaponInfo(reg, LyyItems.FROZEN_MOMENT.get(), "jei.lyycore.frozen_moment");
+        reg.addItemStackInfo(LyyItems.CELESTIAL_ORDER.get().getDefaultInstance(), Component.translatable("jei.lyycore.celestial_order"));
         reg.addItemStackInfo(new ItemStack(LyyItems.SUCHEN.get()), Component.translatable("jei.lyycore.suchen"));
         reg.addItemStackInfo(new ItemStack(LyyItems.GREEN_ONION.get()), Component.translatable("jei.lyycore.green_onion"));
         addWeaponInfo(reg, LyyItems.IMAGINARY_REAPER.get(), "jei.lyycore.imaginary_reaper");

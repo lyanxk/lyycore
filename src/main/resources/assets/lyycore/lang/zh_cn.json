@@ -826,6 +826,19 @@
   "tooltip.lyycore.spacetime_blessing.set": "时空的祝福：两件齐备时免于死亡并恢复全部生命",
   "tooltip.lyycore.spacetime_blessing.unrolled": "固定随机获得 4 个词条，可分配 20 点属性",
   "jei.lyycore.spacetime.energy_per_tick": "耗能：%s IE/t",
-  "jei.lyycore.spacetime_blessing": "固定随机获得 4 个不同词条，每件可分配 20 点属性，仅能投入本件具有的词条。使用时空合金板重铸，沿用词条锁定与费用规则。\n同时佩戴回溯之誓与永续之章，获得时空的祝福：取消死亡并恢复全部生命，无冷却、无消耗。手持不死图腾仍优先触发。",
-  "key.lyycore.tool_mode": "工具模式"
+  "jei.lyycore.spacetime_blessing": "每件自带全部八个钢材系列的单件固定加成之和：攻击＋40、生命＋20、护甲＋20、韧性＋6、总增伤＋10%，物理／冰／火／雷增伤各＋20%。两件固定加成正常相加，不额外翻倍。\n固定随机获得 4 个不同词条，每件可分配 20 点属性，仅能投入本件具有的词条。使用时空合金板重铸，沿用词条锁定与费用规则。\n同时佩戴回溯之誓与永续之章，获得时空的祝福：取消死亡并恢复全部生命，无冷却、无消耗。手持不死图腾仍优先触发。",
+  "key.lyycore.tool_mode": "工具模式",
+  "item.lyycore.celestial_order": "天序",
+  "item.lyycore.frozen_moment": "定格于此刻",
+  "tooltip.lyycore.celestial_order": "右键调节时序；潜行右键方块加速 ×%s，生物成长或产生幼体。",
+  "tooltip.lyycore.frozen_moment": "左键射击；按住右键四倍瞄准。",
+  "gui.lyycore.celestial_order.time": "时间",
+  "gui.lyycore.celestial_order.weather": "天气",
+  "gui.lyycore.celestial_order.random_ticks": "随机刻",
+  "gui.lyycore.celestial_order.clear": "晴天",
+  "gui.lyycore.celestial_order.rain": "雨天",
+  "gui.lyycore.celestial_order.thunder": "雷暴",
+  "subtitles.lyycore.frozen_moment_fire": "定格于此刻：开火",
+  "jei.lyycore.celestial_order": "右键打开界面，向前或向后调整 6／12 小时，过程持续 4 秒。天气可选晴天、雨天、雷暴，持续 1 小时。时间与天气作用于主世界。\n随机刻可选 1／10／100 次；潜行右键方块执行所选次数，按方块自身规则生长或转化，不加速机器计时。\n潜行右键有幼年形态的非敌对生物：幼体立即成年，成体产生一只幼体。支持村民、北极熊等无法正常繁殖的生物。",
+  "jei.lyycore.frozen_moment": "左键发射即时激光，每次按键发射一枪，每秒最多一发，无需装填。射程 128 格、命中判定半径 1 格；穿透生物，遇方块停止。每个目标结算一次（攻击力＋20）×400 特殊物理伤害，受增伤与物理增伤影响。命中后施加缓慢 255，持续 5 秒。\n按住右键开启四倍镜，显示圆形视野与蓝色细线十字准星，隐藏其余 HUD，松开退出。"
 }
