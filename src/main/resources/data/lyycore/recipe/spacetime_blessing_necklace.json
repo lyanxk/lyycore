@@ -1,0 +1,108 @@
+{
+  "type": "lyycore:spacetime",
+  "inputs": [
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:totem_of_undying"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_crystal"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:totem_of_undying"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_crystal"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:totem_of_undying"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_crystal"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:totem_of_undying"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_crystal"
+      },
+      "count": 1
+    }
+  ],
+  "result": {
+    "id": "lyycore:spacetime_blessing_necklace"
+  },
+  "result_count": 1,
+  "duration": 100,
+  "energy": 1000000000,
+  "energy_per_tick": true
+}

@@ -73,7 +73,7 @@ public abstract class AbstractImaginaryCraftingBlockEntity extends BlockEntity i
         var recipe = level.getRecipeManager().byKey(completedRecipe).orElse(null);
         if (recipe != null && recipe.value() instanceof OctagonalRecipe crafting
                 && (ItemStack.isSameItemSameComponents(taken, crafting.result())
-                    || taken.getItem() instanceof org.lyy.lyycore.content.equipment.AccessoryItem && ItemStack.isSameItem(taken, crafting.result())))
+                    || taken.getItem() instanceof org.lyy.lyycore.content.equipment.Accessory && ItemStack.isSameItem(taken, crafting.result())))
             CriteriaTriggers.RECIPE_CRAFTED.trigger(server, completedRecipe, java.util.List.of());
         completedRecipe = null;
         setChanged();

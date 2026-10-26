@@ -14,7 +14,7 @@ import org.lyy.lyycore.registry.LyyRecipes;
 import java.util.List;
 
 /** Outer ring 0–7, then inner ring 8–15; both start at the top and run clockwise. */
-public record SpacetimeRecipe(List<Input> inputs, ItemStack result, int resultCount, int duration, int energy)
+public record SpacetimeRecipe(List<Input> inputs, ItemStack result, int resultCount, int duration, int energy, boolean energyPerTick)
         implements Recipe<RecipeInput> {
     public record Input(Ingredient ingredient, int count) {
         public static final Codec<Input> CODEC = RecordCodecBuilder.create(i -> i.group(
@@ -48,16 +48,17 @@ public record SpacetimeRecipe(List<Input> inputs, ItemStack result, int resultCo
                 ItemStack.STRICT_SINGLE_ITEM_CODEC.fieldOf("result").forGetter(SpacetimeRecipe::result),
                 Codec.intRange(1, 256).fieldOf("result_count").forGetter(SpacetimeRecipe::resultCount),
                 Codec.intRange(1, 72000).fieldOf("duration").forGetter(SpacetimeRecipe::duration),
-                Codec.intRange(0, Integer.MAX_VALUE).fieldOf("energy").forGetter(SpacetimeRecipe::energy)
+                Codec.intRange(0, Integer.MAX_VALUE).fieldOf("energy").forGetter(SpacetimeRecipe::energy),
+                Codec.BOOL.optionalFieldOf("energy_per_tick", false).forGetter(SpacetimeRecipe::energyPerTick)
         ).apply(i, SpacetimeRecipe::new));
         private static final StreamCodec<RegistryFriendlyByteBuf, SpacetimeRecipe> STREAM = StreamCodec.of((b, r) -> {
             for (var input : r.inputs) { Ingredient.CONTENTS_STREAM_CODEC.encode(b, input.ingredient); b.writeVarInt(input.count); }
             ItemStack.STREAM_CODEC.encode(b, r.result);
-            b.writeVarInt(r.resultCount); b.writeVarInt(r.duration); b.writeVarInt(r.energy);
+            b.writeVarInt(r.resultCount); b.writeVarInt(r.duration); b.writeVarInt(r.energy); b.writeBoolean(r.energyPerTick);
         }, b -> {
             var inputs = new java.util.ArrayList<Input>(16);
             for (int slot = 0; slot < 16; slot++) inputs.add(new Input(Ingredient.CONTENTS_STREAM_CODEC.decode(b), b.readVarInt()));
-            return new SpacetimeRecipe(inputs, ItemStack.STREAM_CODEC.decode(b), b.readVarInt(), b.readVarInt(), b.readVarInt());
+            return new SpacetimeRecipe(inputs, ItemStack.STREAM_CODEC.decode(b), b.readVarInt(), b.readVarInt(), b.readVarInt(), b.readBoolean());
         });
         @Override public MapCodec<SpacetimeRecipe> codec() { return CODEC; }
         @Override public StreamCodec<RegistryFriendlyByteBuf, SpacetimeRecipe> streamCodec() { return STREAM; }

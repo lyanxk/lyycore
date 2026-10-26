@@ -28,9 +28,9 @@ public final class ReforgingMenu extends MachineMenu {
     public int cost() { return 1 << Integer.bitCount(locks()); }
     public boolean canReforge() {
         var data = AccessoryData.read(accessory());
-        return accessory().getItem() instanceof AccessoryItem item && !data.traits().isEmpty()
+        return accessory().getItem() instanceof Accessory item && !data.traits().isEmpty()
                 && Integer.bitCount(locks()) < data.traits().size()
-                && getSlot(1).getItem().is(item.series.plate.get()) && getSlot(1).getItem().getCount() >= cost();
+                && getSlot(1).getItem().is(item.reforgeMaterial()) && getSlot(1).getItem().getCount() >= cost();
     }
     private void refreshLocks() {
         if (!ItemStack.matches(observed, accessory())) { locks.set(0); observed = accessory().copy(); }

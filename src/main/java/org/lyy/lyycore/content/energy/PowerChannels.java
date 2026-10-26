@@ -18,7 +18,7 @@ import org.lyy.lyycore.energy.EnergyReceiver;
 
 /** One persistent, independently owned power channel for each spacetime matrix. */
 public final class PowerChannels extends SavedData {
-    public static final int TARGET_LIMIT = 30, NAME_LIMIT = 32;
+    public static final int NAME_LIMIT = 32;
 
     public static final class Channel {
         public final UUID id;
@@ -86,7 +86,7 @@ public final class PowerChannels extends SavedData {
     public boolean addTarget(UUID id, UUID actor, GlobalPos target) {
         var channel = channel(id);
         target = receiver(server, target);
-        if (channel == null || !channel.visibleTo(actor) || channel.targets.size() >= TARGET_LIMIT
+        if (channel == null || !channel.visibleTo(actor)
                 || containsReceiver(channel, target)) return false;
         channel.targets.add(target);
         changed();
@@ -102,14 +102,13 @@ public final class PowerChannels extends SavedData {
         return false;
     }
 
-    /** Merges bindings until the destination is full; existing receivers are skipped. */
+    /** Merges all bindings; existing receivers are skipped. */
     public boolean copyTargets(UUID from, UUID to, UUID actor) {
         var source = channel(from);
         var target = channel(to);
         if (source == null || target == null || source == target || !source.visibleTo(actor) || !target.visibleTo(actor)) return false;
         boolean added = false;
         for (var connection : source.targets) {
-            if (target.targets.size() >= TARGET_LIMIT) break;
             var receiver = receiver(server, connection);
             if (containsReceiver(target, receiver)) continue;
             target.targets.add(receiver);
@@ -176,7 +175,6 @@ public final class PowerChannels extends SavedData {
             var channel = new Channel(entry.getUUID("Id"), source.get(), entry.getUUID("Owner"),
                     cleanName(entry.getString("Name")), entry.getBoolean("Public"));
             for (var value : entry.getList("Targets", Tag.TAG_COMPOUND)) {
-                if (channel.targets.size() >= TARGET_LIMIT) break;
                 GlobalPos.CODEC.parse(NbtOps.INSTANCE, value).result().ifPresent(target -> {
                     if (!channel.targets.contains(target)) channel.targets.add(target);
                 });

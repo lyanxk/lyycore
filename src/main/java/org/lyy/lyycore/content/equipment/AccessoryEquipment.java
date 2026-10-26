@@ -30,7 +30,7 @@ public final class AccessoryEquipment extends ItemStackHandler {
     public static AccessoryEquipment get(ServerPlayer player) { return INVENTORIES.computeIfAbsent(player, AccessoryEquipment::new); }
     @Override public int getSlotLimit(int slot) { return 1; }
     @Override public boolean isItemValid(int slot, ItemStack stack) {
-        return stack.getItem() instanceof AccessoryItem item && item.kind.ordinal() == slot;
+        return stack.getItem() instanceof Accessory item && item.kind().ordinal() == slot;
     }
     @Override protected void onContentsChanged(int slot) { changed(); }
     public void changed() { commit(false); }
@@ -52,18 +52,19 @@ public final class AccessoryEquipment extends ItemStackHandler {
     }
     private void updateAttributes() {
         double[] totals = new double[Stat.values().length];
-        boolean set = getStackInSlot(0).getItem() instanceof AccessoryItem a && getStackInSlot(1).getItem() instanceof AccessoryItem b && a.series == b.series;
+        boolean set = getStackInSlot(0).getItem() instanceof Accessory a && getStackInSlot(1).getItem() instanceof Accessory b
+                && a.setId() != null && a.setId().equals(b.setId());
         for (int slot = 0; slot < 2; slot++) {
             var stack = getStackInSlot(slot);
-            if (!(stack.getItem() instanceof AccessoryItem item)) continue;
-            for (var bonus : item.series.bonuses) totals[bonus.stat().ordinal()] += bonus.amount() * (set ? 2 : 1);
+            if (!(stack.getItem() instanceof Accessory item)) continue;
+            for (var bonus : item.bonuses()) totals[bonus.stat().ordinal()] += bonus.amount() * (set ? 2 : 1);
             var data = AccessoryData.read(stack);
             for (var stat : data.traits()) totals[stat.ordinal()] += data.allocated(stat) * stat.perPoint;
         }
         for (var stat : Stat.values()) PlayerAttributes.setPersistentBonus(owner, stat.attribute, BONUS, totals[stat.ordinal()]);
     }
-    public boolean allocate(int slot, Stat stat, boolean add) {
-        if (!AccessoryData.allocate(getStackInSlot(slot), stat, add)) return false;
+    public boolean allocate(int slot, Stat stat, boolean add, int amount) {
+        if (!AccessoryData.allocate(getStackInSlot(slot), stat, add, amount)) return false;
         changed(); return true;
     }
     @SubscribeEvent public static void login(PlayerEvent.PlayerLoggedInEvent event) { if (event.getEntity() instanceof ServerPlayer player) get(player).commit(true); }

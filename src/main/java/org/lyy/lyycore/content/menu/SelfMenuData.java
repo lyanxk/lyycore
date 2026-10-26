@@ -18,16 +18,22 @@ import net.minecraft.world.item.component.CustomData;
 public final class SelfMenuData implements ContainerData {
     public static final int FLIGHT = -10000, PURSUIT = -10010, ALLOCATE = -10020, REFUND = -10030, ACCELERATION = -10200;
     public static final int SKILLS = -10040, STYLE_HUD = -10041, EQUIPMENT = -10050;
+    public static final int ALLOCATE_TEN = -10060, REFUND_TEN = -10070;
     private final Player player;
     private static final int ATTACK_VALUE = 19;
     private final int[] client = new int[20];
     private int selectedSlot;
     private CustomData observedData;
+    private net.minecraft.world.item.Item observedItem;
     private AccessoryData accessoryData;
     private AccessoryData accessory() {
         var stack = AccessoryEquipment.get((ServerPlayer)player).getStackInSlot(selectedSlot);
         var data = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY);
-        if (accessoryData == null || observedData != data) { observedData = data; accessoryData = AccessoryData.read(stack); }
+        if (accessoryData == null || observedData != data || observedItem != stack.getItem()) {
+            observedData = data;
+            observedItem = stack.getItem();
+            accessoryData = AccessoryData.read(stack);
+        }
         return accessoryData;
     }
     public SelfMenuData(Player player) { this.player = player; }
@@ -77,8 +83,10 @@ public final class SelfMenuData implements ContainerData {
         }
         if (id == EQUIPMENT || id == EQUIPMENT - 1) { selectedSlot = EQUIPMENT - id; return true; }
         int statCount = PlayerAttributes.Stat.values().length;
-        if (id <= ALLOCATE && id > ALLOCATE - statCount) return AccessoryEquipment.get(player).allocate(selectedSlot, Stat.values()[ALLOCATE - id], true);
-        if (id <= REFUND && id > REFUND - statCount) return AccessoryEquipment.get(player).allocate(selectedSlot, Stat.values()[REFUND - id], false);
+        if (id <= ALLOCATE && id > ALLOCATE - statCount) return AccessoryEquipment.get(player).allocate(selectedSlot, Stat.values()[ALLOCATE - id], true, 1);
+        if (id <= REFUND && id > REFUND - statCount) return AccessoryEquipment.get(player).allocate(selectedSlot, Stat.values()[REFUND - id], false, 1);
+        if (id <= ALLOCATE_TEN && id > ALLOCATE_TEN - statCount) return AccessoryEquipment.get(player).allocate(selectedSlot, Stat.values()[ALLOCATE_TEN - id], true, 10);
+        if (id <= REFUND_TEN && id > REFUND_TEN - statCount) return AccessoryEquipment.get(player).allocate(selectedSlot, Stat.values()[REFUND_TEN - id], false, 10);
         if (!AegisWings.unlocked(player)) return false;
         int pursuit = WingsSettings.pursuit(player), acceleration = WingsSettings.acceleration(player);
         boolean flight = WingsSettings.flight(player);

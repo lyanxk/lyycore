@@ -23,7 +23,7 @@ public final class AccessoryMenu extends MachineMenu {
             final int slot = i;
             addSlot(new SlotItemHandler(items, i, 88 + i * 56, 54) {
                 @Override public int getMaxStackSize() { return 1; }
-                @Override public boolean mayPlace(ItemStack stack) { return stack.getItem() instanceof AccessoryItem item && item.kind.ordinal() == slot; }
+                @Override public boolean mayPlace(ItemStack stack) { return stack.getItem() instanceof Accessory item && item.kind().ordinal() == slot; }
                 @Override public void setChanged() { super.setChanged(); if (items instanceof AccessoryEquipment equipment) equipment.changed(); }
             });
         }
@@ -32,7 +32,7 @@ public final class AccessoryMenu extends MachineMenu {
     @Override public boolean stillValid(Player player) { return player.isAlive() && stillValid(access, player, LyyBlocks.MIRROR.get()); }
     @Override public ItemStack quickMoveStack(Player player, int index) {
         if (index < 2) return moveStack(player, index, 2, slots.size(), true);
-        return slots.get(index).getItem().getItem() instanceof AccessoryItem item
-                ? moveStack(player, index, item.kind.ordinal(), item.kind.ordinal() + 1, false) : movePlayerStack(player, index);
+        return slots.get(index).getItem().getItem() instanceof Accessory item
+                ? moveStack(player, index, item.kind().ordinal(), item.kind().ordinal() + 1, false) : movePlayerStack(player, index);
     }
 }

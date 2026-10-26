@@ -41,7 +41,8 @@ public final class SpacetimeCategory implements IRecipeCategory<SpacetimeRecipe>
         SpacetimeGui.diagram(g, CENTER_X, CENTER_Y, SpacetimeGui.PINK, SpacetimeGui.BLUE);
         var font = Minecraft.getInstance().font;
         g.drawString(font, Component.translatable("jei.lyycore.spacetime.time", recipe.duration() / 20), 10, 185, SpacetimeGui.TEXT, false);
-        g.drawString(font, Component.translatable("jei.lyycore.spacetime.energy", String.format(java.util.Locale.ROOT, "%,d", recipe.energy())),
+        g.drawString(font, Component.translatable(recipe.energyPerTick() ? "jei.lyycore.spacetime.energy_per_tick" : "jei.lyycore.spacetime.energy",
+                        String.format(java.util.Locale.ROOT, "%,d", recipe.energy())),
                 10, 199, SpacetimeGui.TEXT, false);
     }
 }

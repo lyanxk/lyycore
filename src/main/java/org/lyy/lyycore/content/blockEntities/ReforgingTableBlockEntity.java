@@ -12,14 +12,23 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import org.lyy.lyycore.content.equipment.*;
 import org.lyy.lyycore.registry.LyyBlockEntities;
+import com.google.common.base.Suppliers;
+import java.util.Set;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.item.Item;
 
 public final class ReforgingTableBlockEntity extends BlockEntity implements MenuProvider {
+    private static final Supplier<Set<Item>> REFORGING_MATERIALS = Suppliers.memoize(() -> BuiltInRegistries.ITEM.stream()
+            .filter(item -> item instanceof Accessory)
+            .map(item -> ((Accessory)item).reforgeMaterial())
+            .collect(Collectors.toUnmodifiableSet()));
     public final ItemStackHandler items = new ItemStackHandler(2) {
         @Override public int getSlotLimit(int slot) { return slot == 0 ? 1 : 64; }
         @Override public boolean isItemValid(int slot, ItemStack stack) {
-            if (slot == 0) return stack.getItem() instanceof AccessoryItem;
-            for (var series : AccessoryItem.Series.values()) if (stack.is(series.plate.get())) return true;
-            return false;
+            if (slot == 0) return stack.getItem() instanceof Accessory;
+            return REFORGING_MATERIALS.get().contains(stack.getItem());
         }
         @Override protected void onContentsChanged(int slot) {
             if (slot == 0 && level != null && !level.isClientSide) AccessoryData.initialize(getStackInSlot(0), level.random);

@@ -21,7 +21,8 @@ import net.minecraft.world.item.crafting.RecipeManager;
 import org.lyy.lyycore.LyyCore;
 import org.lyy.lyycore.content.ResourceFrameKind;
 import org.lyy.lyycore.content.FrameProduction;
-import org.lyy.lyycore.content.equipment.AccessoryItem;
+import org.lyy.lyycore.content.equipment.Accessory;
+import org.lyy.lyycore.content.equipment.SpacetimeAccessoryItem;
 import org.lyy.lyycore.content.research.ResearchManager;
 import org.lyy.lyycore.client.screen.CrystalCondensingScreen;
 import org.lyy.lyycore.content.menu.IAFMenu;
@@ -67,9 +68,13 @@ public class LyyJeiPlugin implements IModPlugin {
     @Override
     public void registerRecipes(IRecipeRegistration reg) {
         for (var entry : LyyItems.ITEMS.getEntries()) {
-            if (!(entry.get() instanceof AccessoryItem item)) continue;
-            addDynamicInfo(reg, item.getDefaultInstance(), () -> List.of(
-                    Component.translatable("jei.lyycore.accessory", Component.keybind("key.lyycore.memory"))));
+            if (!(entry.get() instanceof Accessory)) continue;
+            addDynamicInfo(reg, entry.get().getDefaultInstance(), () -> {
+                var equipmentInfo = Component.translatable("jei.lyycore.accessory", Component.keybind("key.lyycore.memory"));
+                return entry.get() instanceof SpacetimeAccessoryItem
+                        ? List.of(equipmentInfo, Component.translatable("jei.lyycore.spacetime_blessing"))
+                        : List.of(equipmentInfo);
+            });
         }
         reg.addItemStackInfo(new ItemStack(org.lyy.lyycore.registry.LyyItems.SUMMONING_BEACON.get()), net.minecraft.network.chat.Component.translatable("jei.lyycore.summoning_beacon"));
         reg.addItemStackInfo(new ItemStack(org.lyy.lyycore.registry.LyyItems.EXPERIMENT_TABLE.get()), net.minecraft.network.chat.Component.translatable("jei.lyycore.experiment_table"));
@@ -79,7 +84,8 @@ public class LyyJeiPlugin implements IModPlugin {
         addWeaponInfo(reg, LyyItems.DRAGON_MIGHT.get(), "jei.lyycore.dragon_might");
         addWeaponInfo(reg, LyyItems.WHISPER_OF_THE_PAST.get(), "jei.lyycore.whisper_of_the_past");
         addWeaponInfo(reg, LyyItems.THUNDER_SCYTHE.get(), "jei.lyycore.thunder_scythe");
-        addWeaponInfo(reg, LyyItems.RIFTBREAKER.get(), "jei.lyycore.riftbreaker");
+        addDynamicInfo(reg, LyyItems.RIFTBREAKER.get().getDefaultInstance(), () -> List.of(
+                Component.translatable("jei.lyycore.riftbreaker", Component.keybind("key.lyycore.tool_mode"))));
         addWeaponInfo(reg, LyyItems.LIUXI.get(), "jei.lyycore.liuxi");
         reg.addItemStackInfo(new ItemStack(LyyItems.SUCHEN.get()), Component.translatable("jei.lyycore.suchen"));
         reg.addItemStackInfo(new ItemStack(LyyItems.GREEN_ONION.get()), Component.translatable("jei.lyycore.green_onion"));

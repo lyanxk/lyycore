@@ -150,7 +150,7 @@ public final class SpacetimeFactoryBlockEntity extends BlockEntity implements Me
             state.progress = 0; setChanged();
         }
         state.activeRecipe = state.recipe.id(); state.definition = definition;
-        if (recipe instanceof SpacetimeRecipe r) { state.duration = r.duration(); state.cost = r.energy(); state.energyPerTick = false; }
+        if (recipe instanceof SpacetimeRecipe r) { state.duration = r.duration(); state.cost = r.energy(); state.energyPerTick = r.energyPerTick(); }
         else if (recipe instanceof OctagonalRecipe r) { state.duration = r.duration(); state.cost = r.energy(); state.energyPerTick = r.energyPerTick(); }
         else if (recipe instanceof ImaginaryAlloyingRecipe r) { state.duration = r.processTime() * 20; state.cost = r.energyCost(); state.energyPerTick = false; }
         if (state.progress >= state.duration) state.progress = 0;
@@ -172,10 +172,12 @@ public final class SpacetimeFactoryBlockEntity extends BlockEntity implements Me
         if (state.outputCount + result.getCount() > OUTPUT_LIMIT || state.outputCount > 0
                 && !ItemStack.isSameItemSameComponents(state.output, result)) return;
         int due;
-        if (state.recipe.value() instanceof OctagonalRecipe) {
+        if (state.energyPerTick) {
+            due = state.cost;
+        } else if (state.recipe.value() instanceof OctagonalRecipe) {
             // Existing tables require the full fee available while progressing and pay at completion.
             if (energy.getImaginaryEnergyStored() < state.cost) return;
-            due = state.energyPerTick || state.progress + 1 >= state.duration ? state.cost : 0;
+            due = state.progress + 1 >= state.duration ? state.cost : 0;
         } else {
             // Exact total payment, entirely in int arithmetic, with the remainder paid over early ticks.
             due = state.cost / state.duration + (state.progress < state.cost % state.duration ? 1 : 0);
@@ -195,9 +197,9 @@ public final class SpacetimeFactoryBlockEntity extends BlockEntity implements Me
             state.inputs.extractItem(0, 1, false); state.inputs.extractItem(1, 1, false);
             if (!r.catalyst().isEmpty() && r.catalystConsumed()) state.inputs.extractItem(2, 1, false);
         } else {
-            AccessoryData.initialize(result, level.random);
             for (int slot = 0; slot < state.inputs.getSlots(); slot++) state.inputs.extractItem(slot, 1, false);
         }
+        AccessoryData.initialize(result, level.random);
         state.output = result.copyWithCount(1); state.outputCount += result.getCount();
         state.completedRecipe = state.recipe.id(); state.progress = 0; state.dirty = true;
     }

@@ -100,6 +100,8 @@ public class LyyCreativeTab {
                         output.accept(LyyItems.SPACETIME_ALLOY.get());
                         output.accept(LyyItems.SPACETIME_ALLOY_BLOCK.get());
                         output.accept(LyyItems.SPACETIME_ALLOY_PLATE.get());
+                        output.accept(LyyItems.SPACETIME_BLESSING_NECKLACE.get());
+                        output.accept(LyyItems.SPACETIME_BLESSING_NOTEBOOK.get());
                         output.accept(LyyItems.SPACETIME_CHAIN.get());
                         output.accept(LyyItems.SPACETIME_HOE.get());
                         output.accept(LyyItems.SUCHEN.get());

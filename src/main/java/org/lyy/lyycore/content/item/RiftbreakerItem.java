@@ -44,6 +44,7 @@ import net.neoforged.neoforge.event.level.BlockDropsEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.lyy.lyycore.content.SpecialDamage;
 import org.lyy.lyycore.content.ToolMining;
+import org.lyy.lyycore.content.blocks.MachineBlock;
 import org.lyy.lyycore.content.menu.RiftbreakerMenu;
 import org.lyy.lyycore.network.ReaperLightningPayload;
 
@@ -99,15 +100,18 @@ public final class RiftbreakerItem extends Item implements SpecialWeapon {
     @Override public void useSkill(ServerPlayer player, ItemStack stack) { }
     @Override public void useUltimate(ServerPlayer player, ItemStack stack) { }
 
+    public static void openSettings(ServerPlayer player) {
+        var stack = player.getMainHandItem();
+        if (!player.isAlive() || player.isSpectator() || !(stack.getItem() instanceof RiftbreakerItem)
+                || org.lyy.lyycore.content.ProductionOwnership.isForeign(stack, player.getUUID())) return;
+        player.openMenu(new SimpleMenuProvider((id, inventory, owner) -> new RiftbreakerMenu(id, inventory, InteractionHand.MAIN_HAND),
+                stack.getHoverName()), buffer -> buffer.writeEnum(InteractionHand.MAIN_HAND));
+    }
+
     @Override public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         var stack = player.getItemInHand(hand);
         if (player.isSpectator()) return InteractionResultHolder.pass(stack);
-        if (player.isShiftKeyDown()) {
-            if (player instanceof ServerPlayer server)
-                server.openMenu(new SimpleMenuProvider((id, inventory, owner) -> new RiftbreakerMenu(id, inventory, hand),
-                        stack.getHoverName()), buffer -> buffer.writeEnum(hand));
-            return InteractionResultHolder.sidedSuccess(stack, level.isClientSide);
-        }
+        if (player.isShiftKeyDown()) return InteractionResultHolder.pass(stack);
         if (level.getGameTime() < player.getPersistentData().getLong(READY)) return InteractionResultHolder.fail(stack);
         if (player instanceof ServerPlayer server) {
             player.getPersistentData().putLong(READY, level.getGameTime() + 20);
@@ -133,8 +137,16 @@ public final class RiftbreakerItem extends Item implements SpecialWeapon {
     }
 
     @Override public InteractionResult useOn(UseOnContext context) {
-        return context.getPlayer() == null ? InteractionResult.PASS
-                : use(context.getLevel(), context.getPlayer(), context.getHand()).getResult();
+        var player = context.getPlayer();
+        if (player == null || player.isSpectator()) return InteractionResult.PASS;
+        if (!player.isShiftKeyDown()) return use(context.getLevel(), player, context.getHand()).getResult();
+        var level = context.getLevel();
+        var pos = context.getClickedPos();
+        // Other mods can handle their own wrench interaction via the common item tag.
+        if (!(level.getBlockState(pos).getBlock() instanceof MachineBlock)) return InteractionResult.PASS;
+        if (context.getHand() != InteractionHand.MAIN_HAND) return InteractionResult.FAIL;
+        if (player instanceof ServerPlayer server && !ToolMining.breakSingleBlock(server, pos)) return InteractionResult.FAIL;
+        return InteractionResult.sidedSuccess(level.isClientSide);
     }
     @Override public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext context) { return useOn(context); }
 
@@ -162,7 +174,7 @@ public final class RiftbreakerItem extends Item implements SpecialWeapon {
         var state = player.level().getBlockState(pos);
         if (state.getDestroySpeed(player.level(), pos) >= 0) return;
         var stack = player.getMainHandItem();
-        if (player.canInteractWithBlock(pos, 1) && ToolMining.breakSpacetimeOrigin(player, pos))
+        if (player.canInteractWithBlock(pos, 1) && ToolMining.breakSingleBlock(player, pos))
             ToolMining.mineSpacetime(mode(stack), player.level(), state, pos, player, radius(stack));
         // Leave the client initiation packet intact; the normal block update confirms removal.
         event.setCanceled(true);
@@ -221,6 +233,6 @@ public final class RiftbreakerItem extends Item implements SpecialWeapon {
         lines.add((silkTouch(stack) ? Component.translatable("enchantment.minecraft.silk_touch")
                 : Component.translatable("enchantment.minecraft.fortune").append(" XX")).withColor(0x9CD9F3));
         lines.add(Component.translatable("tooltip.lyycore.riftbreaker.lightning").withColor(0xCBD2E2));
-        lines.add(Component.translatable("tooltip.lyycore.riftbreaker.controls").withColor(0x9CD9F3));
+        lines.add(Component.translatable("tooltip.lyycore.riftbreaker.controls", Component.keybind("key.lyycore.tool_mode")).withColor(0x9CD9F3));
     }
 }

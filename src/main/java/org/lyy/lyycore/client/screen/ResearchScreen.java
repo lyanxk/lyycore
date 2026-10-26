@@ -153,8 +153,10 @@ public final class ResearchScreen extends AbstractContainerScreen<ResearchMenu> 
             for (int i = 0; i < org.lyy.lyycore.content.PlayerAttributes.Stat.values().length; i++) {
                 final int stat = i;
                 int y = ATTRIBUTE_TOP + i * ATTRIBUTE_ROW_HEIGHT;
-                attributeRefunds.add(button(226, y, ATTRIBUTE_BUTTON_SIZE, ATTRIBUTE_BUTTON_SIZE, Component.literal("−"), () -> sendSelf(SelfMenuData.REFUND - stat)));
-                attributeAdds.add(button(270, y, ATTRIBUTE_BUTTON_SIZE, ATTRIBUTE_BUTTON_SIZE, Component.literal("+"), () -> sendSelf(SelfMenuData.ALLOCATE - stat)));
+                attributeRefunds.add(button(226, y, ATTRIBUTE_BUTTON_SIZE, ATTRIBUTE_BUTTON_SIZE, Component.literal("−"),
+                        () -> sendSelf((hasShiftDown() ? SelfMenuData.REFUND_TEN : SelfMenuData.REFUND) - stat)));
+                attributeAdds.add(button(270, y, ATTRIBUTE_BUTTON_SIZE, ATTRIBUTE_BUTTON_SIZE, Component.literal("+"),
+                        () -> sendSelf((hasShiftDown() ? SelfMenuData.ALLOCATE_TEN : SelfMenuData.ALLOCATE) - stat)));
             }
             for (int i = 0; i < 2; i++) {
                 final int slot = i;

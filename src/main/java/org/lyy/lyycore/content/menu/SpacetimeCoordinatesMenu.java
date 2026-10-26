@@ -66,9 +66,7 @@ public final class SpacetimeCoordinatesMenu extends AbstractContainerMenu {
                     var destination = directory.channel(request.channel());
                     if (destination == null || !destination.visibleTo(player.getUUID())) return;
                     directory.copyTargets(selected.id, destination.id, player.getUUID());
-                    var destinationReceivers = destination.targets().stream().map(address -> PowerChannels.receiver(player.serverLevel(), address)).toList();
-                    boolean full = selected.targets().stream().map(address -> PowerChannels.receiver(player.serverLevel(), address)).anyMatch(address -> !destinationReceivers.contains(address));
-                    player.displayClientMessage(Component.translatable("message.lyycore.spacetime_coordinates." + (full ? "full" : "copied")), true);
+                    player.displayClientMessage(Component.translatable("message.lyycore.spacetime_coordinates.copied"), true);
                 }
             }
             case PREVIEW -> {

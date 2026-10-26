@@ -48,28 +48,22 @@ public final class SpacetimeCoordinateDeviceItem extends Item {
         }
         CustomData.update(DataComponents.CUSTOM_DATA, stack, tag -> { if (list.isEmpty()) tag.remove(PENDING); else tag.put(PENDING, list); });
     }
-    /** Move only accepted pending positions; a full channel never loses unsent positions. */
+    /** Imports pending positions into the selected channel, skipping duplicate receivers. */
     public static void bind(ServerPlayer player, ItemStack tool, UUID id) {
-        var directory = PowerChannels.get(player.serverLevel()); var selected = directory.channel(id);
+        var directory = PowerChannels.get(player.serverLevel());
+        var selected = directory.channel(id);
         if (selected == null || !selected.visibleTo(player.getUUID())) return;
         channel(tool, id);
-        var remaining = new ArrayList<GlobalPos>();
-        for (var address : pending(tool)) {
-            var receiver = PowerChannels.receiver(player.serverLevel(), address);
-            boolean alreadyBound = selected.targets().stream().anyMatch(existing -> PowerChannels.receiver(player.serverLevel(), existing).equals(receiver));
-            if (!alreadyBound && !directory.addTarget(id, player.getUUID(), receiver)) remaining.add(address);
-        }
-        pending(tool, remaining); player.getInventory().setChanged();
-        if (!remaining.isEmpty()) player.displayClientMessage(Component.translatable("message.lyycore.spacetime_coordinates.full"), true);
+        for (var address : pending(tool)) directory.addTarget(id, player.getUUID(), address);
+        pending(tool, List.of());
+        player.getInventory().setChanged();
     }
     private static void add(ServerPlayer player, ItemStack tool, GlobalPos address) {
         var directory = PowerChannels.get(player.serverLevel()); var selected = directory.channel(channel(tool));
         address = PowerChannels.receiver(player.serverLevel(), address);
         String message;
         if (selected != null && selected.visibleTo(player.getUUID())) {
-            var receiver = address;
-            if (selected.targets().stream().anyMatch(existing -> PowerChannels.receiver(player.serverLevel(), existing).equals(receiver))) message = "duplicate";
-            else message = directory.addTarget(selected.id, player.getUUID(), address) ? "added" : "full";
+            message = directory.addTarget(selected.id, player.getUUID(), address) ? "added" : "duplicate";
         } else {
             channel(tool, null);
             var pending = new ArrayList<>(pending(tool));
