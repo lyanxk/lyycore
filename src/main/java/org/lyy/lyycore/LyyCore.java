@@ -17,6 +17,7 @@ public class LyyCore {
     public LyyCore(IEventBus modEventBus, ModContainer modContainer) {
         LyyRegistries.registerAll(modEventBus);
         modEventBus.addListener(LyyCapabilities::register);
+        modEventBus.addListener(org.lyy.lyycore.content.equipment.SpacetimeAccessoryItem::registerDeathGuard);
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
     }
 }

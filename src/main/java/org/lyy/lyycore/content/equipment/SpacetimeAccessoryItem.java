@@ -14,6 +14,8 @@ import net.minecraft.world.item.TooltipFlag;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import org.lyy.lyycore.registry.LyyItems;
 import org.lyy.lyycore.content.PlayerAttributes.Stat;
@@ -49,7 +51,14 @@ public final class SpacetimeAccessoryItem extends Item implements Accessory {
         AccessoryItem.appendTraitTooltip(stack, lines, Component.translatable("tooltip.lyycore.spacetime_blessing.unrolled"));
     }
 
-    // Cancel before our ordinary death cleanup and encounter counters. Vanilla totems run earlier.
+    public static void registerDeathGuard(FMLCommonSetupEvent event) {
+        // Register after automatic subscribers to catch forced kills that uncancel death.
+        // Equal-priority listeners run in registration order. Reuse the guard before die() can
+        // send the death-screen packet or settle drops/statistics; already-canceled events skip it.
+        event.enqueueWork(() -> NeoForge.EVENT_BUS.addListener(EventPriority.LOWEST, SpacetimeAccessoryItem::preventDeath));
+    }
+
+    // Cancel early as well, before ordinary death cleanup and encounter counters.
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void preventDeath(LivingDeathEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
