@@ -28,6 +28,8 @@ public class LyyMenus {
             MENUS.register("celestial_order", () -> IMenuTypeExtension.create(org.lyy.lyycore.content.menu.CelestialOrderMenu::new));
     public static final DeferredHolder<MenuType<?>, MenuType<org.lyy.lyycore.content.menu.SpacetimeMatrixMenu>> SPACETIME_MATRIX =
             MENUS.register("spacetime_matrix", () -> IMenuTypeExtension.create(org.lyy.lyycore.content.menu.SpacetimeMatrixMenu::new));
+    public static final DeferredHolder<MenuType<?>, MenuType<org.lyy.lyycore.content.menu.SpacetimeLocatorMenu>> SPACETIME_LOCATOR =
+            MENUS.register("spacetime_locator", () -> IMenuTypeExtension.create(org.lyy.lyycore.content.menu.SpacetimeLocatorMenu::new));
     public static final DeferredHolder<MenuType<?>, MenuType<org.lyy.lyycore.content.menu.SpacetimeCoordinatesMenu>> SPACETIME_COORDINATES =
             MENUS.register("spacetime_coordinates", () -> IMenuTypeExtension.create(org.lyy.lyycore.content.menu.SpacetimeCoordinatesMenu::new));
     public static final DeferredHolder<MenuType<?>, MenuType<org.lyy.lyycore.content.equipment.AccessoryMenu>> ACCESSORIES = MENUS.register("accessories", () -> IMenuTypeExtension.create(org.lyy.lyycore.content.equipment.AccessoryMenu::new));

@@ -95,6 +95,7 @@ public class LyyCreativeTab {
                         output.accept(LyyItems.SPACETIME_FACTORY.get());
                         output.accept(LyyItems.SPACETIME_MATRIX.get());
                         output.accept(LyyItems.SPACETIME_COORDINATE_DEVICE.get());
+                        output.accept(LyyItems.SPACETIME_COLLECTION_DEVICE.get());
                         output.accept(LyyItems.SPACETIME_SHARD.get());
                         output.accept(LyyItems.SPACETIME_CRYSTAL.get());
                         output.accept(LyyItems.SPACETIME_ALLOY.get());
@@ -107,6 +108,10 @@ public class LyyCreativeTab {
                         output.accept(LyyItems.SUCHEN.get());
                         output.accept(LyyItems.CELESTIAL_ORDER.get());
                         output.accept(LyyItems.FROZEN_MOMENT.get());
+                        output.accept(LyyItems.SPACETIME_HELMET.get());
+                        output.accept(LyyItems.SPACETIME_CHESTPLATE.get());
+                        output.accept(LyyItems.SPACETIME_LEGGINGS.get());
+                        output.accept(LyyItems.SPACETIME_BOOTS.get());
                         var liuxi = new ItemStack(LyyItems.LIUXI.get());
                         liuxi.enchant(params.holders().lookupOrThrow(Registries.ENCHANTMENT)
                                 .getOrThrow(net.minecraft.world.item.enchantment.Enchantments.LOOTING), 20);

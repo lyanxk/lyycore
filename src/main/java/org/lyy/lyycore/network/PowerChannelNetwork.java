@@ -106,6 +106,8 @@ public final class PowerChannelNetwork {
         registrar.playToClient(Preview.TYPE, Preview.CODEC, (preview, context) -> {
             if (context.player().containerMenu instanceof SpacetimeCoordinatesMenu menu && menu.containerId == preview.menu)
                 menu.updatePreview(preview);
+            else if (context.player().containerMenu instanceof org.lyy.lyycore.content.menu.SpacetimeLocatorMenu menu && menu.containerId == preview.menu)
+                menu.updatePreview(preview);
         });
     }
     private PowerChannelNetwork() { }

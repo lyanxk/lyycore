@@ -27,7 +27,10 @@ public final class CombatDamage {
         boolean previous = extra;
         extra = true;
         boolean damaged;
-        try { target.invulnerableTime = 0; damaged = target.hurt(source, amount); }
+        try {
+            target.invulnerableTime = 0;
+            damaged = SpecialDamage.isSpecial(source) ? SpecialDamage.hit(target, source, amount) : target.hurt(source, amount);
+        }
         finally { target.invulnerableTime = invulnerability; extra = previous; }
         player.serverLevel().sendParticles(ParticleTypes.END_ROD, target.getX(), target.getY() + target.getBbHeight() / 2, target.getZ(), 3, .2, .3, .2, .01);
         return damaged;

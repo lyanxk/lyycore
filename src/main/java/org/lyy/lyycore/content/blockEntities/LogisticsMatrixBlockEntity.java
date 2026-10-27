@@ -34,11 +34,13 @@ public final class LogisticsMatrixBlockEntity extends BlockEntity implements Men
     }
     public static void serverTick(Level level, BlockPos pos, BlockState state, LogisticsMatrixBlockEntity matrix) {
         if (!matrix.tickets) matrix.chunks(true);
+        // Spread collection across ticks so nearby matrices do not all scan together.
+        if (Math.floorMod(level.getGameTime() + pos.asLong(), 20) != 0) return;
         var directory = LogisticsChannels.get((ServerLevel) level);
         if (matrix.channelRevision != directory.revision()) {
             matrix.channels = directory.atSource(matrix.address()); matrix.channelRevision = directory.revision();
         }
-        for (var channel : matrix.channels) channel.transfer();
+        for (var channel : matrix.channels) channel.collectAndOutput((ServerLevel) level);
     }
     @Override public Component getDisplayName() { return getBlockState().getBlock().getName(); }
     @Override public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player) { return new LogisticsMenu(id, inventory, this); }

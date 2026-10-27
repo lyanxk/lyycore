@@ -31,8 +31,14 @@ public class ClientSetup {
     @SubscribeEvent public static void addPlayerLayers(EntityRenderersEvent.AddLayers event) {
         for (var skin : event.getSkins()) {
             net.minecraft.client.renderer.entity.player.PlayerRenderer renderer = event.getSkin(skin);
-            if (renderer != null) renderer.addLayer(new AegisWingsLayer(renderer));
+            if (renderer != null) {
+                renderer.addLayer(new AegisWingsLayer(renderer));
+                renderer.addLayer(new SpacetimeHaloLayer(renderer));
+            }
         }
+    }
+    @SubscribeEvent public static void spacetimeArmor(net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent event) {
+        SpacetimeHaloLayer.registerArmor(event);
     }
 
     @SubscribeEvent
@@ -187,6 +193,7 @@ public class ClientSetup {
         event.register(LyyMenus.SPACETIME_FACTORY.get(), org.lyy.lyycore.client.screen.SpacetimeFactoryScreen::new);
         event.register(LyyMenus.SPACETIME_MATRIX.get(), org.lyy.lyycore.client.screen.SpacetimeMatrixScreen::new);
         event.register(LyyMenus.SPACETIME_COORDINATES.get(), org.lyy.lyycore.client.screen.SpacetimeCoordinatesScreen::new);
+        event.register(LyyMenus.SPACETIME_LOCATOR.get(), org.lyy.lyycore.client.screen.SpacetimeLocatorScreen::new);
         event.register(LyyMenus.RIFTBREAKER.get(), org.lyy.lyycore.client.screen.RiftbreakerScreen::new);
         event.register(LyyMenus.CELESTIAL_ORDER.get(), org.lyy.lyycore.client.screen.CelestialOrderScreen::new);
         event.register(LyyMenus.ACCESSORIES.get(), org.lyy.lyycore.client.screen.AccessoryScreen::new);

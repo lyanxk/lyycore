@@ -1,0 +1,108 @@
+{
+  "type": "lyycore:spacetime",
+  "inputs": [
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy_plate"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy_plate"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy_plate"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy_plate"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy_plate"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy_plate"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy_plate"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy_plate"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:diamond_helmet"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:diamond_helmet"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:diamond_helmet"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:diamond_helmet"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:diamond_helmet"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:diamond_helmet"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:diamond_helmet"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:diamond_helmet"
+      },
+      "count": 1
+    }
+  ],
+  "result": {
+    "id": "lyycore:spacetime_helmet"
+  },
+  "result_count": 1,
+  "duration": 40,
+  "energy": 1000000000,
+  "energy_per_tick": true
+}

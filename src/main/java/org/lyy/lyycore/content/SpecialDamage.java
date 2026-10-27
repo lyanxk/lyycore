@@ -4,11 +4,15 @@ import javax.annotation.Nullable;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.*;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.*;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.neoforged.neoforge.entity.PartEntity;
 import org.lyy.lyycore.registry.LyyAttributes;
 
@@ -52,14 +56,56 @@ public final class SpecialDamage {
         return combinedHitFromBase(player, direct, target, target, element, basePerStrike, strikeCount);
     }
     /**
-     * Settle the combined formula through one target.hurt call, preserving hurt cooldown,
-     * multipart forwarding and hit-location scaling. Returns that call's acceptance result,
-     * not the amount of health lost. No hit is attempted for an invalid target or zero damage.
+     * Lethal formulas execute hostile targets directly. Other hits use one target.hurt call,
+     * preserving hurt cooldown, multipart forwarding and hit-location scaling.
      */
     public static boolean combinedHitFromBase(Player player, Entity direct, Entity target, LivingEntity healthOwner,
                                               Element element, double basePerStrike, int strikeCount) {
-        if (strikeCount <= 0 || !healthOwner.isAlive() || healthOwner.isRemoved() || target.isRemoved()) return false;
+        if (strikeCount <= 0) return false;
         float damage = scale(player, element, basePerStrike * strikeCount);
-        return damage > 0 && target.hurt(source(player, direct, element), damage);
+        return hit(target, source(player, direct, element), damage);
+    }
+
+    /** The execution threshold uses health before the hit and the fully scaled formula. */
+    public static boolean hit(Entity target, DamageSource source, float damage) {
+        if (damage <= 0 || target.isRemoved() || target.level().isClientSide) return false;
+        LivingEntity living = healthOwner(target);
+        if (living != null && !living.isAlive()) return false;
+        // Phantom implements Enemy too; players and neutral creatures never qualify.
+        if (living instanceof Enemy && living.getHealth() < damage) {
+            forceKill(living, source, damage);
+            return true;
+        }
+        return target.hurt(source, damage);
+    }
+
+    /** Infinity-sword style death settlement, retaining kill credit, loot and death observers. */
+    private static void forceKill(LivingEntity target, DamageSource source, float damage) {
+        ServerLevel level = (ServerLevel) target.level();
+        if (source.getEntity() instanceof Player player) {
+            target.setLastHurtByPlayer(player);
+            target.lastHurtByPlayerTime = 100;
+            target.setLastHurtByMob(player);
+        }
+        target.getCombatTracker().recordDamage(source, damage);
+        target.setHealth(0);
+        // Preserve mob-specific death animations and cleanup whenever normal death succeeds.
+        target.die(source);
+        if (target.isRemoved() || target.dead) return;
+        // If normal death was blocked, finish directly without posting the death event again.
+        target.setHealth(0);
+        LivingEntity killer = target.getKillCredit();
+        if (target.deathScore >= 0 && killer != null)
+            killer.awardKillScore(target, target.deathScore, source);
+        if (target.isSleeping()) target.stopSleeping();
+        target.dead = true;
+        target.getCombatTracker().recheckStatus();
+        Entity attacker = source.getEntity();
+        if (attacker == null || attacker.killedEntity(level, target)) {
+            target.gameEvent(GameEvent.ENTITY_DIE);
+            target.dropAllDeathLoot(level, source);
+        }
+        level.broadcastEntityEvent(target, (byte) 3);
+        target.setPose(Pose.DYING);
     }
 }

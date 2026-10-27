@@ -3,11 +3,13 @@ package org.lyy.lyycore.registry;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.ArmorItem;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.lyy.lyycore.LyyCore;
 import org.lyy.lyycore.content.equipment.AccessoryItem;
 import org.lyy.lyycore.content.equipment.SpacetimeAccessoryItem;
+import org.lyy.lyycore.content.equipment.SpacetimeArmorItem;
 import org.lyy.lyycore.content.equipment.Accessory.Kind;
 import org.lyy.lyycore.content.equipment.AccessoryItem.Series;
 import org.lyy.lyycore.content.item.*;
@@ -23,10 +25,19 @@ import java.util.Map;
 
 public class LyyItems {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(LyyCore.MODID);
+    public static final DeferredItem<SpacetimeArmorItem> SPACETIME_HELMET = spacetimeArmor("spacetime_helmet", ArmorItem.Type.HELMET);
+    public static final DeferredItem<SpacetimeArmorItem> SPACETIME_CHESTPLATE = spacetimeArmor("spacetime_chestplate", ArmorItem.Type.CHESTPLATE);
+    public static final DeferredItem<SpacetimeArmorItem> SPACETIME_LEGGINGS = spacetimeArmor("spacetime_leggings", ArmorItem.Type.LEGGINGS);
+    public static final DeferredItem<SpacetimeArmorItem> SPACETIME_BOOTS = spacetimeArmor("spacetime_boots", ArmorItem.Type.BOOTS);
+    private static DeferredItem<SpacetimeArmorItem> spacetimeArmor(String id, ArmorItem.Type type) {
+        return ITEMS.registerItem(id, properties -> new SpacetimeArmorItem(type, properties.rarity(Rarity.EPIC)));
+    }
     public static final DeferredItem<BlockItem> SPACETIME_MATRIX = ITEMS.registerSimpleBlockItem(LyyBlocks.SPACETIME_MATRIX);
     public static final DeferredItem<Item> SPACETIME_SHARD = ITEMS.registerSimpleItem("spacetime_shard", new Item.Properties().fireResistant());
     public static final DeferredItem<SpacetimeCoordinateDeviceItem> SPACETIME_COORDINATE_DEVICE = ITEMS.registerItem(
             "spacetime_coordinate_device", SpacetimeCoordinateDeviceItem::new, new Item.Properties().stacksTo(1));
+    public static final DeferredItem<SpacetimeCollectionDeviceItem> SPACETIME_COLLECTION_DEVICE = ITEMS.registerItem(
+            "spacetime_collection_device", SpacetimeCollectionDeviceItem::new, new Item.Properties().stacksTo(1));
     public static final DeferredItem<Item> SPACETIME_CORE = ITEMS.registerSimpleItem("spacetime_core", new Item.Properties().rarity(Rarity.EPIC));
     public static final DeferredItem<Item> SPACETIME_CRYSTAL = ITEMS.registerSimpleItem("spacetime_crystal");
     public static final DeferredItem<Item> SPACETIME_ALLOY = ITEMS.registerSimpleItem("spacetime_alloy");

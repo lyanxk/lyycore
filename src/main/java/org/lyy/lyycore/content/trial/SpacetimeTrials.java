@@ -250,14 +250,23 @@ public final class SpacetimeTrials extends SavedData {
             }
             alive++;
             var member = entry.getValue();
+            int extraTime = org.lyy.lyycore.content.equipment.SpacetimeAccelerationEffect.extraDurationTicks(player);
+            // These effects use encounter deadlines rather than their displayed potion duration.
+            var lock = player.getEffect(LyyEffects.SPACETIME_LOCK);
+            if (extraTime > 0 && member.layers > 1 && lock != null) {
+                member.decayAt -= extraTime;
+                lock.duration = (int)Math.max(2, member.decayAt - now + 1);
+            }
             if (member.layers > 1 && now >= member.decayAt && player.hasEffect(LyyEffects.SPACETIME_LOCK)) {
                 member.layers--; member.decayAt = now + 2400; applyLock(player, member, now);
             }
+            if (now < member.boundUntil) member.boundUntil -= extraTime;
             if (now < member.boundUntil) {
                 // A short vanilla effect cannot outlive this trial after a crash or disconnect.
                 player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 2, 255, false, false, false));
                 if (!player.hasEffect(LyyEffects.TRIAL_BINDING)) player.addEffect(new MobEffectInstance(LyyEffects.TRIAL_BINDING,
                         (int)(member.boundUntil-now), 0, false, false, true));
+                else if (extraTime > 0) player.getEffect(LyyEffects.TRIAL_BINDING).duration = (int)(member.boundUntil - now);
             } else if (member.boundUntil != 0) {
                 member.boundUntil = 0;
                 clearBinding(player, member, now);

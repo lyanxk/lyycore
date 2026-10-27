@@ -88,6 +88,8 @@ public class LyyJeiPlugin implements IModPlugin {
                 Component.translatable("jei.lyycore.riftbreaker", Component.keybind("key.lyycore.tool_mode"))));
         addWeaponInfo(reg, LyyItems.LIUXI.get(), "jei.lyycore.liuxi");
         addWeaponInfo(reg, LyyItems.FROZEN_MOMENT.get(), "jei.lyycore.frozen_moment");
+        for (var armor : List.of(LyyItems.SPACETIME_HELMET, LyyItems.SPACETIME_CHESTPLATE, LyyItems.SPACETIME_LEGGINGS, LyyItems.SPACETIME_BOOTS))
+            reg.addItemStackInfo(armor.get().getDefaultInstance(), Component.translatable("jei.lyycore.spacetime_armor"));
         reg.addItemStackInfo(LyyItems.CELESTIAL_ORDER.get().getDefaultInstance(), Component.translatable("jei.lyycore.celestial_order"));
         reg.addItemStackInfo(new ItemStack(LyyItems.SUCHEN.get()), Component.translatable("jei.lyycore.suchen"));
         reg.addItemStackInfo(new ItemStack(LyyItems.GREEN_ONION.get()), Component.translatable("jei.lyycore.green_onion"));
@@ -98,6 +100,7 @@ public class LyyJeiPlugin implements IModPlugin {
         reg.addItemStackInfo(new ItemStack(org.lyy.lyycore.registry.LyyItems.SPACETIME_SHARD.get()), net.minecraft.network.chat.Component.translatable("jei.lyycore.spacetime_shard"));
         reg.addItemStackInfo(new ItemStack(org.lyy.lyycore.registry.LyyItems.SPACETIME_MATRIX.get()), net.minecraft.network.chat.Component.translatable("jei.lyycore.spacetime_matrix"));
         reg.addItemStackInfo(new ItemStack(org.lyy.lyycore.registry.LyyItems.SPACETIME_COORDINATE_DEVICE.get()), net.minecraft.network.chat.Component.translatable("jei.lyycore.spacetime_coordinates"));
+        reg.addItemStackInfo(new ItemStack(org.lyy.lyycore.registry.LyyItems.SPACETIME_COLLECTION_DEVICE.get()), net.minecraft.network.chat.Component.translatable("jei.lyycore.spacetime_locator"));
         reg.addRecipes(AlloyCauldronCategory.TYPE, org.lyy.lyycore.content.cauldron.CauldronMixes.specials());
         Minecraft mc = Minecraft.getInstance();
         RecipeManager rm = null;

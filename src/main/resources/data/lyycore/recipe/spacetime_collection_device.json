@@ -1,0 +1,108 @@
+{
+  "type": "lyycore:spacetime",
+  "inputs": [
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:compass"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:hopper"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:compass"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:hopper"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:compass"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:hopper"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:compass"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:hopper"
+      },
+      "count": 1
+    }
+  ],
+  "result": {
+    "id": "lyycore:spacetime_collection_device"
+  },
+  "result_count": 1,
+  "duration": 20,
+  "energy": 1000000000,
+  "energy_per_tick": false
+}

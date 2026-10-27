@@ -17,7 +17,7 @@ public final class FlightSpeedEffects {
     private FlightSpeedEffects() { }
 
     public static void update(ServerPlayer player) {
-        update(player, player.isAlive() && !player.isSpectator() && player.getAbilities().mayfly
+        update(player, player.isAlive() && !player.isSpectator() && player.mayFly()
                 && player.hasEffect(LyyEffects.FLIGHT_SPEED));
     }
 

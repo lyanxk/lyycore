@@ -39,7 +39,7 @@ public final class MatrixPortBlock extends MachineBlock {
     @Override public RenderShape getRenderShape(BlockState state) { return RenderShape.MODEL; }
     @Override public BlockEntity newBlockEntity(BlockPos pos, BlockState state) { return new MatrixPortBlockEntity(pos, state); }
     @Override public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        return level.isClientSide || kind == Kind.INPUT ? null : createTickerHelper(type, LyyBlockEntities.MATRIX_PORT.get(), MatrixPortBlockEntity::serverTick);
+        return level.isClientSide ? null : createTickerHelper(type, LyyBlockEntities.MATRIX_PORT.get(), MatrixPortBlockEntity::serverTick);
     }
     @Override protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
         if (player instanceof ServerPlayer server && level.getBlockEntity(pos) instanceof MatrixPortBlockEntity port) {

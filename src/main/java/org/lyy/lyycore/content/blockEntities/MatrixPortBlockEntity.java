@@ -1,12 +1,12 @@
 package org.lyy.lyycore.content.blockEntities;
 
+import java.util.List;
 import java.util.UUID;
 import net.minecraft.core.*;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.*;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.*;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
@@ -18,6 +18,7 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.items.*;
 import org.lyy.lyycore.content.blocks.MatrixPortBlock;
 import org.lyy.lyycore.content.logistics.LogisticsChannels;
+import org.lyy.lyycore.content.logistics.LogisticsTransfer;
 import org.lyy.lyycore.content.menu.LogisticsMenu;
 import org.lyy.lyycore.registry.LyyBlockEntities;
 
@@ -63,42 +64,35 @@ public final class MatrixPortBlockEntity extends BlockEntity implements MenuProv
     @Override public void setRemoved() { detach(); super.setRemoved(); }
 
     public static void serverTick(Level level, BlockPos pos, BlockState state, MatrixPortBlockEntity port) {
-        if (port.channel != null && LogisticsChannels.get((ServerLevel) level).channel(port.channel) == null) port.clearBinding();
-        if (port.isOutput()) port.pushOutput();
-        else if (port.kind() == MatrixPortBlock.Kind.COLLECTOR && Math.floorMod(level.getGameTime() + pos.asLong(), 20) == 0) port.collect();
-    }
-    private void collect() {
-        boolean room = false;
-        for (int slot = 0; slot < items.getSlots(); slot++) {
-            var stack = items.getStackInSlot(slot);
-            if (stack.isEmpty() || stack.getCount() < Math.min(64, stack.getMaxStackSize())) { room = true; break; }
+        if (port.channel == null) return;
+        var server = (ServerLevel) level;
+        var bound = LogisticsChannels.get(server).channel(port.channel);
+        if (bound == null) { port.clearBinding(); return; }
+        if (port.isOutput()) {
+            port.pushOutput();
+            return;
         }
-        if (!room) return;
+        if (port.kind() == MatrixPortBlock.Kind.COLLECTOR
+                && Math.floorMod(level.getGameTime() + pos.asLong(), 20) == 0 && bound.hasOutputPorts()) {
+            port.collect(server);
+        }
+        bound.pushFrom(port);
+    }
+    private void collect(ServerLevel server) {
         // Seven cells outward, seven across, seven high. The device itself is outside the volume.
         var center = worldPosition.relative(getBlockState().getValue(MatrixPortBlock.FACING), 4);
         var range = new AABB(center).inflate(3);
-        for (var entity : level.getEntitiesOfClass(ItemEntity.class, range, e -> e.isAlive() && !e.getItem().isEmpty())) {
-            var stack = entity.getItem();
-            var remaining = ItemHandlerHelper.insertItemStacked(items, stack, false);
-            if (remaining.isEmpty()) entity.discard();
-            else if (remaining.getCount() != stack.getCount()) entity.setItem(remaining);
-        }
+        LogisticsTransfer.collect(server, range, List.of(items));
     }
     private void pushOutput() {
-        boolean empty = true;
-        for (int slot = 0; slot < items.getSlots(); slot++) if (!items.getStackInSlot(slot).isEmpty()) { empty = false; break; }
-        if (empty) return;
+        if (!LogisticsTransfer.hasItems(items)) return;
         for (var direction : Direction.values()) {
             var targetPos = worldPosition.relative(direction);
             if (!level.hasChunkAt(targetPos)) continue;
             var target = level.getCapability(Capabilities.ItemHandler.BLOCK, targetPos, direction.getOpposite());
             if (target == null) continue;
-            for (int slot = 0; slot < items.getSlots(); slot++) {
-                var stack = items.extractItem(slot, 64, true);
-                if (stack.isEmpty()) continue;
-                int accepted = stack.getCount() - ItemHandlerHelper.insertItemStacked(target, stack, false).getCount();
-                items.extractItem(slot, accepted, false);
-            }
+            LogisticsTransfer.move(items, target);
+            if (!LogisticsTransfer.hasItems(items)) break;
         }
     }
     public void dropContents() {

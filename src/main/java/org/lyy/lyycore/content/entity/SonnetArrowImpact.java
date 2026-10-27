@@ -30,7 +30,7 @@ final class SonnetArrowImpact {
         owner.setLastHurtMob(target);
         int previousFire = target.getRemainingFireTicks();
         if (arrow.isOnFire() && target.getType() != EntityType.ENDERMAN) target.igniteForSeconds(5);
-        if (target.hurt(source, damage)) successful(arrow, owner, target, source, level, effects, knockback);
+        if (SpecialDamage.hit(target, source, damage)) successful(arrow, owner, target, source, level, effects, knockback);
         else blocked(arrow, owner, target, previousFire);
     }
 

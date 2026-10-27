@@ -142,7 +142,7 @@ public final class TrialGuide extends AnimatedMonster {
         // Operator removal remains possible, but is never a successful trial.
         setHealth(0); die(damageSources().genericKill());
     }
-    @Override protected void dropAllDeathLoot(ServerLevel level, DamageSource source) {
+    @Override public void dropAllDeathLoot(ServerLevel level, DamageSource source) {
         if (SpacetimeTrials.get(level).end(level, getUUID(), SpecialDamage.isSpecial(source)))
             super.dropAllDeathLoot(level, source);
     }

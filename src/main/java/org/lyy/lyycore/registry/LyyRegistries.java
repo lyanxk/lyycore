@@ -5,6 +5,7 @@ import net.neoforged.bus.api.IEventBus;
 public class LyyRegistries {
     public static void registerAll(IEventBus bus) {
         LyyAttributes.ATTRIBUTES.register(bus);
+        LyyArmorMaterials.MATERIALS.register(bus);
         LyyBlocks.BLOCKS.register(bus);
         LyyItems.ITEMS.register(bus);
         LyyEntities.ENTITIES.register(bus);

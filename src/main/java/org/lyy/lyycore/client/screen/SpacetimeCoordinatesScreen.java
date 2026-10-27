@@ -1,19 +1,14 @@
 package org.lyy.lyycore.client.screen;
 
 import java.util.*;
-import com.mojang.blaze3d.platform.Lighting;
-import com.mojang.math.Axis;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.RenderShape;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.lyy.lyycore.content.menu.SpacetimeCoordinatesMenu;
 import org.lyy.lyycore.network.PowerChannelNetwork;
@@ -131,26 +126,9 @@ public final class SpacetimeCoordinatesScreen extends AbstractContainerScreen<Sp
             ForgeGui.centeredText(g, font, text(selected == null ? "select_target" : preview == null ? "loading" : "unloaded"), leftPos + 265, topPos + 224, SpacetimeGui.TEXT);
             return;
         }
-        // Only baked block models are rendered: no level replacement, ticking, entities or BE renderers.
-        g.flush();
-        g.enableScissor(leftPos + 175, topPos + 201, leftPos + 356, topPos + 256);
-        var pose = g.pose(); pose.pushPose();
-        try {
-            Lighting.setupFor3DItems();
-            pose.translate(leftPos + 265, topPos + 230, 150);
-            pose.scale(7, -7, 7); pose.mulPose(Axis.XP.rotationDegrees(25)); pose.mulPose(Axis.YP.rotationDegrees(135));
-            for (int y = 0; y < 5; y++) for (int z = 0; z < 5; z++) for (int x = 0; x < 5; x++) {
-                var state = Block.stateById(preview.states().get(y * 25 + z * 5 + x));
-                if (state.getRenderShape() != RenderShape.MODEL) continue;
-                pose.pushPose(); pose.translate(x - 2.5, y - 2.5, z - 2.5);
-                minecraft.getBlockRenderer().renderSingleBlock(state, pose, g.bufferSource(), LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
-                pose.popPose();
-            }
-            g.flush();
-        } finally {
-            pose.popPose(); Lighting.setupFor3DItems(); g.disableScissor();
-        }
+        SpacetimeBlockPreview.render(g, leftPos + 175, topPos + 201, 181, 55, preview);
     }
+
     @Override protected void renderLabels(GuiGraphics g, int mouseX, int mouseY) { ForgeGui.centeredText(g, font, title, imageWidth / 2, 13, SpacetimeGui.TEXT); }
     @Override public void render(GuiGraphics g, int mouseX, int mouseY, float partial) {
         super.render(g, mouseX, mouseY, partial);
