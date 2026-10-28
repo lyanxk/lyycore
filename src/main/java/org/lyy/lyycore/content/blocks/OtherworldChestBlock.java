@@ -21,13 +21,7 @@ import org.lyy.lyycore.registry.LyyBlockEntities;
 public final class OtherworldChestBlock extends MachineBlock {
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
     public static final BooleanProperty OPEN = BooleanProperty.create("open");
-    private static final VoxelShape[] SHAPES = rotatedShapes();
-    private static VoxelShape[] rotatedShapes() {
-        var shapes = new VoxelShape[4];
-        shapes[0] = SquareMachineShapes.load("otherworld_chest")[0];
-        for (int i = 1; i < 4; i++) shapes[i] = SquareMachineShapes.clockwise(shapes[i - 1]);
-        return shapes;
-    }
+    private static final VoxelShape[] SHAPES = SquareMachineShapes.loadHorizontal("otherworld_chest");
     public OtherworldChestBlock() {
         super(Properties.of().strength(5).sound(SoundType.METAL).noOcclusion());
         registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(OPEN, false));

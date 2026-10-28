@@ -128,7 +128,7 @@ public class ClientSetup {
         event.registerBlockEntityRenderer(LyyBlockEntities.SUMMONING_BEACON.get(), context -> new SummoningBeaconRenderer());
         event.registerBlockEntityRenderer(LyyBlockEntities.PHANTOM_MATRIX.get(), context -> new EnergyMachineRenderer<>("phantom_matrix", "working"));
         event.registerBlockEntityRenderer(LyyBlockEntities.EROSION_FACTORY.get(), context -> new EnergyMachineRenderer<>("erosion_factory", "working"));
-        event.registerBlockEntityRenderer(LyyBlockEntities.OTHERWORLD_CHEST.get(), context -> new OtherworldChestRenderer());
+        event.registerBlockEntityRenderer(LyyBlockEntities.OTHERWORLD_CHEST.get(), context -> new AnimatedChestRenderer<>("otherworld_chest", chest -> chest.lidAnimation));
         event.registerBlockEntityRenderer(LyyBlockEntities.SUMMONING_ALTAR.get(), context -> new SummoningPedestalRenderer<>());
         event.registerBlockEntityRenderer(LyyBlockEntities.SUMMONING_PEDESTAL.get(), context -> new SummoningPedestalRenderer<>());
         event.registerBlockEntityRenderer(LyyBlockEntities.PURE_SMELTING_PLANT.get(), PureSmeltingRenderer::new);

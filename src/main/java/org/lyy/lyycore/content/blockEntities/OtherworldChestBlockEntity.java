@@ -4,7 +4,7 @@ import java.util.List;
 import net.minecraft.core.*;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.util.Mth;
+import org.lyy.lyycore.content.ChestLidAnimation;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.*;
 import net.minecraft.world.inventory.*;
@@ -28,28 +28,12 @@ public final class OtherworldChestBlockEntity extends BlockEntity implements Men
     private List<ItemStack> cachedCatalog;
     private int selectedIndex = -1;
     private final java.util.Set<java.util.UUID> viewers = new java.util.HashSet<>();
-    // Client-local animation progress, matching the supplied 0.75 s / 0.6 s clips.
-    private static final int OPEN_TICKS = 15, CLOSE_TICKS = 12, IDLE_TICKS = 80;
-    private boolean animationOpen;
-    private int animationTick, previousAnimationTick, idleTick;
+    public final ChestLidAnimation lidAnimation;
 
     public static void clientTick(Level level, BlockPos pos, BlockState state, OtherworldChestBlockEntity chest) {
-        boolean open = state.getValue(OtherworldChestBlock.OPEN);
-        if (open != chest.animationOpen) {
-            chest.animationOpen = open;
-            chest.animationTick = chest.idleTick = 0;
-        }
-        chest.previousAnimationTick = chest.animationTick;
-        int duration = open ? OPEN_TICKS : CLOSE_TICKS;
-        if (chest.animationTick < duration) chest.animationTick++;
-        else chest.idleTick = chest.idleTick % IDLE_TICKS + 1;
+        chest.lidAnimation.tick(state.getValue(OtherworldChestBlock.OPEN));
     }
 
-    public boolean animationOpen() { return animationOpen; }
-    public float animationProgress(float partial) {
-        return Mth.lerp(partial, previousAnimationTick, animationTick) / (animationOpen ? OPEN_TICKS : CLOSE_TICKS);
-    }
-    public float idleAnimationTime(float partial) { return Math.max(0, idleTick - 1 + partial) / 20F; }
     public void startOpen(Player player) {
         if (level == null || level.isClientSide) return;
         viewers.add(player.getUUID());
@@ -72,8 +56,7 @@ public final class OtherworldChestBlockEntity extends BlockEntity implements Men
     };
     public OtherworldChestBlockEntity(BlockPos pos, BlockState state) {
         super(LyyBlockEntities.OTHERWORLD_CHEST.get(), pos, state);
-        animationOpen = state.getValue(OtherworldChestBlock.OPEN);
-        animationTick = previousAnimationTick = animationOpen ? OPEN_TICKS : CLOSE_TICKS;
+        lidAnimation = new ChestLidAnimation(15, 12, 80, state.getValue(OtherworldChestBlock.OPEN));
     }
     public List<ItemStack> products() { return ProductionCatalog.products(level); }
     public int selectedIndex() {

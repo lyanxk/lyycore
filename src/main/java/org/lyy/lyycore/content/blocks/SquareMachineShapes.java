@@ -7,8 +7,14 @@ import java.nio.charset.StandardCharsets;
 import net.minecraft.world.phys.shapes.*;
 
 /** Import-time bounds, clipped to each occupied cell and cached on both logical sides. */
-final class SquareMachineShapes {
+public final class SquareMachineShapes {
     private SquareMachineShapes() { }
+    public static VoxelShape[] loadHorizontal(String name) {
+        var shapes = new VoxelShape[4];
+        shapes[0] = load(name)[0];
+        for (int i = 1; i < 4; i++) shapes[i] = clockwise(shapes[i - 1]);
+        return shapes;
+    }
     static VoxelShape clockwise(VoxelShape source) {
         var result = new java.util.ArrayList<VoxelShape>();
         source.forAllBoxes((x1, y1, z1, x2, y2, z2) -> result.add(Shapes.box(1-z2, y1, x1, 1-z1, y2, x2)));

@@ -11,15 +11,21 @@ import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.*;
 import net.minecraft.world.level.block.state.*;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 import org.lyy.lyycore.content.blocks.MachineBlock;
+import org.lyy.lyycore.content.blocks.SquareMachineShapes;
 
 public final class GenesisBlock extends MachineBlock {
+    public static final BooleanProperty OPEN = BlockStateProperties.OPEN;
+    private static final VoxelShape[] SHAPES = SquareMachineShapes.loadHorizontal("genesis");
     public GenesisBlock() {
         super(Properties.of().strength(5).sound(SoundType.METAL).noOcclusion());
         registerDefaultState(
-                stateDefinition.any().setValue(HorizontalDirectionalBlock.FACING, Direction.NORTH));
+                stateDefinition.any().setValue(HorizontalDirectionalBlock.FACING, Direction.NORTH).setValue(OPEN, false));
     }
 
     @Override
@@ -29,7 +35,7 @@ public final class GenesisBlock extends MachineBlock {
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(HorizontalDirectionalBlock.FACING);
+        builder.add(HorizontalDirectionalBlock.FACING, OPEN);
     }
 
     @Override
@@ -46,13 +52,7 @@ public final class GenesisBlock extends MachineBlock {
             BlockGetter level,
             BlockPos pos,
             net.minecraft.world.phys.shapes.CollisionContext context) {
-        return org.lyy.lyycore.registry.LyyBlocks.OTHERWORLD_CHEST
-                .get()
-                .defaultBlockState()
-                .setValue(
-                        HorizontalDirectionalBlock.FACING,
-                        state.getValue(HorizontalDirectionalBlock.FACING))
-                .getShape(level, pos, context);
+        return SHAPES[(state.getValue(HorizontalDirectionalBlock.FACING).get2DDataValue() + 2) % 4];
     }
 
     @Override
@@ -68,9 +68,7 @@ public final class GenesisBlock extends MachineBlock {
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(
             Level level, BlockState state, BlockEntityType<T> type) {
-        return level.isClientSide
-                ? null
-                : createTickerHelper(
+        return createTickerHelper(
                         type, FinalityContent.GENESIS_ENTITY.get(), GenesisBlockEntity::tick);
     }
 

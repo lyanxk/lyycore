@@ -41,6 +41,8 @@ public final class FinalityClient {
 
     @SubscribeEvent
     public static void entities(EntityRenderersEvent.RegisterRenderers event) {
+        event.registerBlockEntityRenderer(FinalityContent.GENESIS_ENTITY.get(),
+                context -> new org.lyy.lyycore.client.AnimatedChestRenderer<>("genesis", chest -> chest.lidAnimation));
         impactModel =
                 org.lyy.lyycore.client.finality.model.StarfallImpactGeometry.createBodyLayer()
                         .bakeRoot();

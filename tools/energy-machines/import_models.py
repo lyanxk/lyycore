@@ -30,7 +30,9 @@ def clip_polygon(vertices, axis, boundary, sign):
 
 
 def import_machine(folder, name, height, source_name=None, oriented=False, width=3, source_offset=(0, 0, 0), gui_scale=0.9,
-                   emissive_overlay=None, top_overhang=0, gui_rotation=(20, 30, 0)):
+                   emissive_overlay=None, top_overhang=0, gui_rotation=(20, 30, 0), clip_surfaces=True):
+    if not clip_surfaces and (height != 1 or width != 1):
+        raise ValueError("Unclipped surfaces require a single-block model")
     source = json.loads((SOURCE / folder / "source" / f"{source_name or folder}.bbmodel").read_text(encoding="utf-8"))
     source.setdefault("animations", [])
     paths, texture_map, emissive = [], {}, set()
@@ -109,6 +111,9 @@ def import_machine(folder, name, height, source_name=None, oriented=False, width
             item.append(face_json(icon, face["texture"]))
             if index in moving: continue
             layer = "glass" if "glass" in paths[face["texture"]] else "body"
+            if not clip_surfaces:
+                parts[0, layer].append(face_json(vertices, face["texture"]))
+                continue
             for part in range(cell_count):
                 origin = cell_origin(part)
                 high = cell_high(origin)

@@ -14,6 +14,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.items.*;
 
 import org.lyy.lyycore.content.ItemProduction;
+import org.lyy.lyycore.content.ChestLidAnimation;
 import org.lyy.lyycore.energy.*;
 
 public final class GenesisBlockEntity extends BlockEntity implements MenuProvider {
@@ -32,9 +33,30 @@ public final class GenesisBlockEntity extends BlockEntity implements MenuProvide
             };
     private ItemStack ghost = ItemStack.EMPTY;
     private boolean useGhost;
+    public final ChestLidAnimation lidAnimation;
+    private final java.util.Set<java.util.UUID> viewers = new java.util.HashSet<>();
 
     public GenesisBlockEntity(BlockPos pos, BlockState state) {
         super(FinalityContent.GENESIS_ENTITY.get(), pos, state);
+        lidAnimation = new ChestLidAnimation(13, 10, 20, state.getValue(GenesisBlock.OPEN));
+    }
+
+    public void startOpen(Player player) {
+        if (level == null || level.isClientSide || player.isSpectator()) return;
+        viewers.add(player.getUUID());
+        updateOpenState();
+    }
+
+    public void stopOpen(Player player) {
+        if (level == null || level.isClientSide) return;
+        viewers.remove(player.getUUID());
+        updateOpenState();
+    }
+
+    private void updateOpenState() {
+        boolean open = !viewers.isEmpty();
+        if (!isRemoved() && getBlockState().getValue(GenesisBlock.OPEN) != open)
+            level.setBlock(worldPosition, getBlockState().setValue(GenesisBlock.OPEN, open), 3);
     }
 
     public ItemStack ghost() {
@@ -73,6 +95,17 @@ public final class GenesisBlockEntity extends BlockEntity implements MenuProvide
 
     public static void tick(
             Level level, BlockPos pos, BlockState state, GenesisBlockEntity machine) {
+        if (level.isClientSide) {
+            machine.lidAnimation.tick(state.getValue(GenesisBlock.OPEN));
+            return;
+        }
+        if (!machine.viewers.isEmpty() && level.getGameTime() % 20 == 0)
+            machine.viewers.removeIf(id -> {
+                var player = level.getPlayerByUUID(id);
+                return player == null || !player.isAlive()
+                        || !(player.containerMenu instanceof GenesisMenu menu) || menu.machine != machine;
+            });
+        machine.updateOpenState();
         if (level.hasNeighborSignal(pos))
             ItemProduction.output(
                     level,

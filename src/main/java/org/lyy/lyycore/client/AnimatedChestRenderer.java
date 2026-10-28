@@ -8,13 +8,20 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.AABB;
-import org.lyy.lyycore.content.blockEntities.OtherworldChestBlockEntity;
-import org.lyy.lyycore.content.blocks.OtherworldChestBlock;
+import org.lyy.lyycore.content.ChestLidAnimation;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import java.util.function.Function;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 
 /** Stationary surfaces stay in the chunk mesh; only the lid and motes animate here. */
-public final class OtherworldChestRenderer implements BlockEntityRenderer<OtherworldChestBlockEntity> {
-    private final AnimatedMeshModel mesh = new AnimatedMeshModel("otherworld_chest");
-    private final Map<OtherworldChestBlockEntity, Motion> motions = new WeakHashMap<>();
+public final class AnimatedChestRenderer<T extends BlockEntity> implements BlockEntityRenderer<T> {
+    private final AnimatedMeshModel mesh;
+    private final Function<T, ChestLidAnimation> animation;
+    public AnimatedChestRenderer(String model, Function<T, ChestLidAnimation> animation) {
+        this.mesh = new AnimatedMeshModel(model);
+        this.animation = animation;
+    }
+    private final Map<T, Motion> motions = new WeakHashMap<>();
     private final class Motion {
         boolean open;
         final float[] from = mesh.newPose(), current = mesh.newPose();
@@ -25,13 +32,14 @@ public final class OtherworldChestRenderer implements BlockEntityRenderer<Otherw
             System.arraycopy(current, 0, from, 0, current.length);
         }
     }
-    @Override public AABB getRenderBoundingBox(OtherworldChestBlockEntity chest) {
+    @Override public AABB getRenderBoundingBox(T chest) {
         return new AABB(chest.getBlockPos()).inflate(.5, 0, .5).expandTowards(0, 1, 0);
     }
-    @Override public void render(OtherworldChestBlockEntity chest, float partial, PoseStack pose, MultiBufferSource buffers, int light, int overlay) {
+    @Override public void render(T chest, float partial, PoseStack pose, MultiBufferSource buffers, int light, int overlay) {
         if (chest.getLevel() == null) return;
-        boolean open = chest.animationOpen();
-        float progress = chest.animationProgress(partial);
+        var lid = animation.apply(chest);
+        boolean open = lid.open();
+        float progress = lid.progress(partial);
         var motion = motions.computeIfAbsent(chest, key -> new Motion(open, progress < 1));
         if (open != motion.open) {
             System.arraycopy(motion.current, 0, motion.from, 0, motion.current.length);
@@ -40,7 +48,7 @@ public final class OtherworldChestRenderer implements BlockEntityRenderer<Otherw
         String transition = open ? "open" : "close";
         float elapsed = progress * mesh.clipLength(transition);
         String clip = progress < 1 ? transition : open ? "opened" : "closed";
-        float time = progress < 1 ? elapsed : chest.idleAnimationTime(partial);
+        float time = progress < 1 ? elapsed : lid.idleTime(partial);
         mesh.sample(clip, time, motion.current);
         // Reversing the lid midway starts from the visible pose, rather than snapping.
         if (elapsed < .2F) {
@@ -50,7 +58,7 @@ public final class OtherworldChestRenderer implements BlockEntityRenderer<Otherw
         }
         pose.pushPose();
         pose.translate(.5, 0, .5);
-        pose.mulPose(Axis.YP.rotationDegrees(180 - chest.getBlockState().getValue(OtherworldChestBlock.FACING).toYRot()));
+        pose.mulPose(Axis.YP.rotationDegrees(180 - chest.getBlockState().getValue(HorizontalDirectionalBlock.FACING).toYRot()));
         mesh.renderPose(pose, buffers, light, motion.current);
         pose.popPose();
     }

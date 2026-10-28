@@ -55,6 +55,13 @@ public final class GenesisMenu extends MachineMenu {
                             }
                         };
         addDataSlots(data);
+        machine.startOpen(inventory.player);
+    }
+
+    @Override
+    public void removed(Player player) {
+        super.removed(player);
+        machine.stopOpen(player);
     }
 
     public int energy() {
