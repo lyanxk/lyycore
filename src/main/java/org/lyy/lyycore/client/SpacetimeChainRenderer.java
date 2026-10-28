@@ -14,7 +14,7 @@ import org.lyy.lyycore.network.SpacetimeChainPayload;
 
 import java.util.List;
 
-/** A lightly sagging blue tether follows both interpolated endpoints, just like a leash. */
+/** A lightly sagging tether follows both interpolated endpoints, just like a leash. */
 @EventBusSubscriber(modid = "lyycore", value = Dist.CLIENT)
 public final class SpacetimeChainRenderer {
     private static ClientLevel level;
@@ -49,7 +49,7 @@ public final class SpacetimeChainRenderer {
                 Vec3 to = start.lerp(end, b).add(0, -4 * sag * b * (1 - b), 0);
                 Vec3 side = to.subtract(from).cross(camera.subtract(from)).normalize().scale(.018);
                 for (Vec3 point : new Vec3[]{from.add(side), to.add(side), to.subtract(side), from.subtract(side)})
-                    vertices.addVertex(pose.last().pose(), (float) point.x, (float) point.y, (float) point.z).setColor(76, 180, 255, 235);
+                    vertices.addVertex(pose.last().pose(), (float) point.x, (float) point.y, (float) point.z).setColor(link.color());
             }
         }
         buffers.endBatch(RenderType.lightning());

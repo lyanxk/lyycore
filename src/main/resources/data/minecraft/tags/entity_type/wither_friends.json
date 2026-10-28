@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "lyycore:finality_summon",
+    "lyycore:finality_wither"
+  ]
+}

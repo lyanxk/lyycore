@@ -67,6 +67,13 @@ public class LyyJeiPlugin implements IModPlugin {
 
     @Override
     public void registerRecipes(IRecipeRegistration reg) {
+        for (var item : List.of(org.lyy.lyycore.content.finality.FinalityContent.HELMET.get(), org.lyy.lyycore.content.finality.FinalityContent.CHEST.get(),
+                org.lyy.lyycore.content.finality.FinalityContent.LEGS.get(), org.lyy.lyycore.content.finality.FinalityContent.BOOTS.get(),
+                org.lyy.lyycore.content.finality.FinalityContent.NECKLACE.get(), org.lyy.lyycore.content.finality.FinalityContent.NOTEBOOK.get(), org.lyy.lyycore.content.finality.FinalityContent.WEAVER.get()))
+            reg.addItemStackInfo(item.getDefaultInstance(),Component.translatable("tooltip.lyycore.finality.origin"));
+        reg.addItemStackInfo(org.lyy.lyycore.content.finality.FinalityContent.ECHO.get().getDefaultInstance(),Component.translatable("jei.lyycore.finality_trial"));
+        reg.addItemStackInfo(org.lyy.lyycore.content.finality.FinalityContent.PORTABLE.get().getDefaultInstance(),Component.translatable("jei.lyycore.portable_spacetime_energy"));
+        reg.addItemStackInfo(org.lyy.lyycore.content.finality.FinalityContent.GENESIS.get().getDefaultInstance(),Component.translatable("jei.lyycore.genesis"));
         for (var entry : LyyItems.ITEMS.getEntries()) {
             if (!(entry.get() instanceof Accessory)) continue;
             addDynamicInfo(reg, entry.get().getDefaultInstance(), () -> {
@@ -175,6 +182,7 @@ public class LyyJeiPlugin implements IModPlugin {
 
     @Override
     public void registerGuiHandlers(IGuiHandlerRegistration reg) {
+        reg.addGhostIngredientHandler(org.lyy.lyycore.client.finality.GenesisScreen.class,new GenesisGhostHandler());
         reg.addGuiContainerHandler(SpacetimeFactoryScreen.class, new IGuiContainerHandler<SpacetimeFactoryScreen>() {
             @Override public java.util.Collection<IGuiClickableArea> getGuiClickableAreas(SpacetimeFactoryScreen screen, double x, double y) {
                 var type = switch (screen.getMenu().page()) {

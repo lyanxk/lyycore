@@ -22,7 +22,6 @@ public abstract class LargeStructureBlock extends MachineBlock {
     public static void sneakInteraction(net.neoforged.neoforge.event.entity.player.PlayerInteractEvent.RightClickBlock event) {
         if (event.getEntity().isShiftKeyDown() && event.getLevel().getBlockState(event.getPos()).getBlock() instanceof LargeStructureBlock) {
             event.setUseBlock(net.neoforged.neoforge.common.util.TriState.TRUE);
-            event.setUseItem(net.neoforged.neoforge.common.util.TriState.FALSE);
         }
     }
     private final VoxelShape[][] shapes = new VoxelShape[4][27];

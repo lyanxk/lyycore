@@ -32,7 +32,9 @@ public final class SpacetimeChainItem extends Item {
         return context.getPlayer() == null ? InteractionResult.PASS
                 : use(context.getLevel(), context.getPlayer(), context.getHand()).getResult();
     }
-    @Override public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext context) { return useOn(context); }
+    @Override public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext context) {
+        return context.isSecondaryUseActive() ? useOn(context) : InteractionResult.PASS;
+    }
 
     private static void interact(PlayerInteractEvent.EntityInteract event) {
         var player = event.getEntity();

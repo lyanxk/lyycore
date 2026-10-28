@@ -126,21 +126,7 @@ public final class OtherworldChestBlockEntity extends BlockEntity implements Men
         if (!level.hasNeighborSignal(pos) || chest.affordable() == 0) return;
         var product = chest.selected();
         if (product.isEmpty()) return;
-        var front = state.getValue(OtherworldChestBlock.FACING);
-        for (var side : new Direction[]{front.getCounterClockWise(), front.getClockWise()}) {
-            var targetPos = pos.relative(side);
-            if (!level.hasChunkAt(targetPos)) continue;
-            var target = level.getCapability(Capabilities.ItemHandler.BLOCK, targetPos, side.getOpposite());
-            if (target == null) continue;
-            for (int slot = 0; slot < target.getSlots() && chest.affordable() > 0; slot++) {
-                var current = target.getStackInSlot(slot);
-                if (!current.isEmpty() && !ItemStack.isSameItemSameComponents(current, product)) continue;
-                int count = Math.min(chest.affordable(), Math.max(0, target.getSlotLimit(slot) - current.getCount()));
-                if (count == 0) continue;
-                var remaining = target.insertItem(slot, product.copyWithCount(count), false);
-                chest.charge(count - remaining.getCount());
-            }
-        }
+        org.lyy.lyycore.content.ItemProduction.output(level,pos,state.getValue(OtherworldChestBlock.FACING),product,chest.energy,COST);
     }
     @Override public Component getDisplayName() { return Component.translatable("block.lyycore.otherworld_chest"); }
     @Override public AbstractContainerMenu createMenu(int id, Inventory inv, Player player) { return new OtherworldChestMenu(id, inv, this, data); }

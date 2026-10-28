@@ -43,7 +43,9 @@ public final class FrozenMomentItem extends Item implements SpecialWeapon {
         return context.getPlayer() == null ? InteractionResult.PASS
                 : use(context.getLevel(), context.getPlayer(), context.getHand()).getResult();
     }
-    @Override public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext context) { return useOn(context); }
+    @Override public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext context) {
+        return context.isSecondaryUseActive() ? useOn(context) : InteractionResult.PASS;
+    }
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void entity(PlayerInteractEvent.EntityInteract event) {
         if (!(event.getItemStack().getItem() instanceof FrozenMomentItem item)) return;

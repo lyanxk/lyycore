@@ -1,0 +1,20 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "lyycore:block/genesis",
+      "y": 0
+    },
+    "facing=east": {
+      "model": "lyycore:block/genesis",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "lyycore:block/genesis",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "lyycore:block/genesis",
+      "y": 270
+    }
+  }
+}

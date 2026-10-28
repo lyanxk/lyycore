@@ -122,7 +122,7 @@ public final class SpacetimeChains {
         }
     }
 
-    private static void sync(ServerLevel level) {
+    public static void sync(ServerLevel level) {
         var visible = new ArrayList<SpacetimeChainPayload.Link>();
         for (var player : level.players()) {
             var links = links(player);
@@ -131,6 +131,7 @@ public final class SpacetimeChains {
                 if (target != null) visible.add(new SpacetimeChainPayload.Link(player.getId(), target.getId()));
             }
         }
+        org.lyy.lyycore.content.finality.DestinyWeaverItem.appendLinks(level, visible);
         var payload = new SpacetimeChainPayload(level.dimension().location(), visible);
         if (visible.isEmpty() && !DISPLAYED.remove(level.dimension())) return;
         if (!visible.isEmpty()) DISPLAYED.add(level.dimension());

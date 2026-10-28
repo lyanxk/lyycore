@@ -1,4 +1,7 @@
 {
   "replace": false,
-  "values": ["lyycore:riftbreaker"]
+  "values": [
+    "lyycore:riftbreaker",
+    "lyycore:destiny_weaver"
+  ]
 }

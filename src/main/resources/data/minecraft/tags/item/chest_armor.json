@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "lyycore:spacetime_chestplate"
+    "lyycore:spacetime_chestplate",
+    "lyycore:finality_chestplate"
   ]
 }

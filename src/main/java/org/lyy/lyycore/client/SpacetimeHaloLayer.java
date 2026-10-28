@@ -22,8 +22,9 @@ import org.lyy.lyycore.content.equipment.SpacetimeArmorItem;
 import org.lyy.lyycore.registry.LyyItems;
 
 final class SpacetimeHaloLayer extends RenderLayer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> {
-    private static final RenderType[] STAGES = new RenderType[4];
+    private static final RenderType[] STAGES = new RenderType[4], FINALITY_STAGES = new RenderType[4];
     static {
+        for (int i=0; i<4; i++) FINALITY_STAGES[i]=RenderType.entityTranslucentEmissive(ResourceLocation.parse("lyycore:textures/entity/finality/halo_"+(i+1)+".png"));
         for (int i = 0; i < STAGES.length; i++) STAGES[i] = RenderType.entityTranslucentEmissive(
                 ResourceLocation.parse("lyycore:textures/entity/spacetime_halo/" + (i + 1) + ".png"));
     }
@@ -38,19 +39,21 @@ final class SpacetimeHaloLayer extends RenderLayer<AbstractClientPlayer, PlayerM
             @Override public Model getGenericArmorModel(LivingEntity entity, ItemStack stack, EquipmentSlot slot, HumanoidModel<?> original) {
                 return EMPTY_ARMOR; // Also suppress enchanted glint and trims on the worn armor.
             }
-        }, LyyItems.SPACETIME_HELMET.get(), LyyItems.SPACETIME_CHESTPLATE.get(), LyyItems.SPACETIME_LEGGINGS.get(), LyyItems.SPACETIME_BOOTS.get());
+        }, LyyItems.SPACETIME_HELMET.get(), LyyItems.SPACETIME_CHESTPLATE.get(), LyyItems.SPACETIME_LEGGINGS.get(), LyyItems.SPACETIME_BOOTS.get(),
+                org.lyy.lyycore.content.finality.FinalityContent.HELMET.get(), org.lyy.lyycore.content.finality.FinalityContent.CHEST.get(),
+                org.lyy.lyycore.content.finality.FinalityContent.LEGS.get(), org.lyy.lyycore.content.finality.FinalityContent.BOOTS.get());
     }
 
     @Override public void render(PoseStack pose, MultiBufferSource buffers, int light, AbstractClientPlayer player,
                                  float walk, float speed, float partial, float age, float yaw, float pitch) {
-        int pieces = SpacetimeArmorItem.equippedPieces(player);
+        int pieces = SpacetimeArmorItem.equippedPieces(player) + org.lyy.lyycore.content.finality.FinalityArmorItem.pieces(player);
         if (pieces == 0 || player.isInvisible() || player.isSpectator()) return;
         pose.pushPose();
         getParentModel().body.translateAndRotate(pose);
         // Keep the halo at the back-of-head height, but orient it with the torso rather than the gaze.
         pose.translate(0, -.25, .3);
         // Each supplied image already contains every ring for that stage: one quad, not four overlaid images.
-        var vertices = buffers.getBuffer(STAGES[pieces - 1]);
+        var vertices = buffers.getBuffer(org.lyy.lyycore.content.finality.FinalityArmorItem.pieces(player)>0 ? FINALITY_STAGES[pieces-1] : STAGES[pieces-1]);
         vertex(vertices, pose, -1, -1, 0, 0);
         vertex(vertices, pose, -1, 1, 0, 1);
         vertex(vertices, pose, 1, 1, 1, 1);

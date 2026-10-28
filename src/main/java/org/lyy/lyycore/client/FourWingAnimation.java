@@ -12,6 +12,9 @@ import org.lyy.lyycore.content.wings.FeatherAttack;
 final class FourWingAnimation {
     private static final Map<Player, FourWingAnimation> PLAYERS = new WeakHashMap<>();
     private static AnimatedMeshModel model;
+    // fold_hold is a 3.2-second loop with linear keys every 0.2 seconds, shared by all players.
+    private static final float FOLD_FRAME_SECONDS = .2F;
+    private static float[][] foldedFrames;
     private final float[] pose, from;
     private String clip = "idle", destination = "idle";
     private double started, blendStarted;
@@ -20,7 +23,7 @@ final class FourWingAnimation {
     private FourWingAnimation() { pose = model().newPose(); from = model().newPose(); model().sample("idle", 0, pose); }
     static AnimatedMeshModel model() { if (model == null) model = new AnimatedMeshModel("white_aegis_four_wings"); return model; }
     static FourWingAnimation get(Player player) { return PLAYERS.computeIfAbsent(player, ignored -> new FourWingAnimation()); }
-    static void reset() { PLAYERS.clear(); model = null; }
+    static void reset() { PLAYERS.clear(); model = null; foldedFrames = null; }
     float[] pose() { return pose; }
     boolean folded() { return clip.equals("fold_hold"); }
     void update(AbstractClientPlayer player, float partial) {
@@ -60,11 +63,26 @@ final class FourWingAnimation {
         else if (clip.equals("shield_deploy") && elapsed >= .58F) begin(pendingHit ? "shield_hit" : "shield_hold", now);
         else if (clip.equals("shield_hold") && pendingHit) begin("shield_hit", now);
         else if (clip.equals("shield_hit") && elapsed >= .28F) begin("shield_hold", now);
-        model().sample(clip, now - started, pose);
+        if (folded()) sampleFolded(now - started, pose);
+        else model().sample(clip, now - started, pose);
         float blend = (float) Mth.clamp((now - blendStarted) / .12, 0, 1);
+        if (blend >= 1) return;
         // Cubic easing avoids abrupt velocity changes when leaving a flapping loop mid-cycle.
         blend = blend * blend * (3 - 2 * blend);
         for (int i = 0; i < pose.length; i++) pose[i] = Mth.lerp(blend, from[i], pose[i]);
+    }
+    private static void sampleFolded(double seconds, float[] result) {
+        if (foldedFrames == null) {
+            foldedFrames = new float[17][];
+            for (int frame = 0; frame < foldedFrames.length; frame++) {
+                foldedFrames[frame] = model().newPose();
+                model().sample("fold_hold", frame * FOLD_FRAME_SECONDS, foldedFrames[frame]);
+            }
+        }
+        float frame = (float) (seconds % (16 * FOLD_FRAME_SECONDS)) / FOLD_FRAME_SECONDS;
+        int index = Math.min((int) frame, foldedFrames.length - 2);
+        float[] a = foldedFrames[index], b = foldedFrames[index + 1];
+        for (int i = 0; i < result.length; i++) result[i] = Mth.lerp(frame - index, a[i], b[i]);
     }
     private void enter(double now) {
         begin(switch (destination) { case "flight", "glide" -> destination + "_enter"; case "shield" -> "shield_deploy"; default -> destination; }, now);

@@ -38,15 +38,6 @@ public final class SpacetimeHoeItem extends HoeItem {
         return block instanceof BushBlock || block instanceof CocoaBlock || block instanceof GrowingPlantHeadBlock;
     }
 
-    @Override public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext context) {
-        var player = context.getPlayer();
-        // Enter before the hoe's own placement snapshot: each seed use owns its events and rollback.
-        if (player == null || context.getHand() != InteractionHand.MAIN_HAND || !isSeed(player.getOffhandItem()))
-            return InteractionResult.PASS;
-        var result = useOn(context);
-        return result == InteractionResult.PASS ? InteractionResult.FAIL : result;
-    }
-
     @Override public InteractionResult useOn(UseOnContext context) {
         var player = context.getPlayer();
         if (player == null || context.getHand() != InteractionHand.MAIN_HAND

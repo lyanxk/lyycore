@@ -11,7 +11,6 @@ import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.client.settings.KeyConflictContext;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.lwjgl.glfw.GLFW;
-import org.lyy.lyycore.content.item.RiftbreakerItem;
 import org.lyy.lyycore.network.ToolModePayload;
 
 @EventBusSubscriber(modid = "lyycore", value = Dist.CLIENT)
@@ -24,8 +23,7 @@ public final class ToolModeControls {
     @SubscribeEvent public static void tick(ClientTickEvent.Post event) {
         var mc = Minecraft.getInstance();
         while (MODE.consumeClick()) {
-            if (mc.screen == null && mc.player != null && !mc.player.isSpectator()
-                    && mc.player.getMainHandItem().getItem() instanceof RiftbreakerItem)
+            if (mc.screen == null && mc.player != null && !mc.player.isSpectator())
                 PacketDistributor.sendToServer(new ToolModePayload());
         }
     }

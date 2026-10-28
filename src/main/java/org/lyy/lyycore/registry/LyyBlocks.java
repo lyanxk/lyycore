@@ -28,6 +28,8 @@ import java.util.Map;
 
 public class LyyBlocks {
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(LyyCore.MODID);
+    public static final DeferredBlock<FinalityArenaFloorBlock> FINALITY_ARENA_FLOOR =
+            BLOCKS.register("finality_arena_floor", FinalityArenaFloorBlock::new);
     public static final DeferredBlock<GreenOnionCropBlock> GREEN_ONION = BLOCKS.register("green_onion",
             () -> new GreenOnionCropBlock(BlockBehaviour.Properties.ofFullCopy(net.minecraft.world.level.block.Blocks.CARROTS)));
     public static final DeferredBlock<SpacetimeMatrixBlock> SPACETIME_MATRIX = BLOCKS.register("spacetime_matrix", SpacetimeMatrixBlock::new);

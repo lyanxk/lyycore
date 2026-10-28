@@ -18,4 +18,7 @@ public interface Accessory {
     ResourceLocation setId();
     default double setBonusMultiplier() { return 1; }
     Item reforgeMaterial();
+    default boolean canReforge() { return true; }
+    default List<Bonus> setBonuses() { return List.of(); }
+    default double setReachBonus() { return 0; }
 }

@@ -23,7 +23,7 @@ public class SummoningPedestalBlockEntity extends BlockEntity {
             if (level != null && !level.isClientSide) level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
         }
     };
-    public boolean locked() { return level instanceof ServerLevel server && SpacetimeTrials.get(server).locked(worldPosition); }
+    public boolean locked() { return level instanceof ServerLevel server && (SpacetimeTrials.get(server).locked(worldPosition) || org.lyy.lyycore.content.finality.FinalityTrials.get(server).locked(server,worldPosition)); }
     public SummoningPedestalBlockEntity(BlockPos pos, BlockState state) { this(LyyBlockEntities.SUMMONING_PEDESTAL.get(), pos, state); }
     protected SummoningPedestalBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) { super(type, pos, state); }
     @Override protected void saveAdditional(CompoundTag tag, HolderLookup.Provider r) { super.saveAdditional(tag, r); tag.put("Items", items.serializeNBT(r)); }

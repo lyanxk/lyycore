@@ -41,6 +41,9 @@ public final class SummoningAltarBlockEntity extends SummoningPedestalBlockEntit
         else if (occupied(server)) error = "occupied";
         if (error != null) { player.displayClientMessage(Component.translatable("message.lyycore.altar."+error), true); return; }
         // Dimension and occupancy rules apply equally to ordinary offerings and the life ritual.
+        if (items.getStackInSlot(0).is(LyyItems.SPACETIME_CRYSTAL.get())) {
+            org.lyy.lyycore.content.finality.FinalityTrials.get(server).begin(player,worldPosition); return;
+        }
         if (items.getStackInSlot(0).is(LyyItems.TIME_KNOCKING_STONE.get())) {
             org.lyy.lyycore.content.trial.SpacetimeTrials.get(server).begin(server, player, worldPosition);
             return;

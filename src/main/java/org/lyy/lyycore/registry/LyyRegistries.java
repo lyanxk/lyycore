@@ -4,6 +4,7 @@ import net.neoforged.bus.api.IEventBus;
 
 public class LyyRegistries {
     public static void registerAll(IEventBus bus) {
+        org.lyy.lyycore.content.finality.FinalityContent.register(bus);
         LyyAttributes.ATTRIBUTES.register(bus);
         LyyArmorMaterials.MATERIALS.register(bus);
         LyyBlocks.BLOCKS.register(bus);

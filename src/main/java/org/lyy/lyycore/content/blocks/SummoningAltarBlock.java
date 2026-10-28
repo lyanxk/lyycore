@@ -38,7 +38,6 @@ public final class SummoningAltarBlock extends SummoningPedestalBlock {
     public static void sneakInteraction(net.neoforged.neoforge.event.entity.player.PlayerInteractEvent.RightClickBlock e) {
         if (e.getEntity().isShiftKeyDown() && e.getLevel().getBlockState(e.getPos()).getBlock() instanceof SummoningAltarBlock) {
             e.setUseBlock(net.neoforged.neoforge.common.util.TriState.TRUE);
-            e.setUseItem(net.neoforged.neoforge.common.util.TriState.FALSE);
         }
     }
 }

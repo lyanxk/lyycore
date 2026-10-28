@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "lyycore:spacetime_helmet"
+    "lyycore:spacetime_helmet",
+    "lyycore:finality_helmet"
   ]
 }

@@ -100,12 +100,12 @@ public final class RiftbreakerItem extends Item implements SpecialWeapon {
     @Override public void useSkill(ServerPlayer player, ItemStack stack) { }
     @Override public void useUltimate(ServerPlayer player, ItemStack stack) { }
 
-    public static void openSettings(ServerPlayer player) {
-        var stack = player.getMainHandItem();
+    public static void openSettings(ServerPlayer player, InteractionHand hand) {
+        var stack = player.getItemInHand(hand);
         if (!player.isAlive() || player.isSpectator() || !(stack.getItem() instanceof RiftbreakerItem)
                 || org.lyy.lyycore.content.ProductionOwnership.isForeign(stack, player.getUUID())) return;
-        player.openMenu(new SimpleMenuProvider((id, inventory, owner) -> new RiftbreakerMenu(id, inventory, InteractionHand.MAIN_HAND),
-                stack.getHoverName()), buffer -> buffer.writeEnum(InteractionHand.MAIN_HAND));
+        player.openMenu(new SimpleMenuProvider((id, inventory, owner) -> new RiftbreakerMenu(id, inventory, hand),
+                stack.getHoverName()), buffer -> buffer.writeEnum(hand));
     }
 
     @Override public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
@@ -148,7 +148,11 @@ public final class RiftbreakerItem extends Item implements SpecialWeapon {
         if (player instanceof ServerPlayer server && !ToolMining.breakSingleBlock(server, pos)) return InteractionResult.FAIL;
         return InteractionResult.sidedSuccess(level.isClientSide);
     }
-    @Override public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext context) { return useOn(context); }
+    @Override public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext context) {
+        return context.isSecondaryUseActive()
+                && context.getLevel().getBlockState(context.getClickedPos()).getBlock() instanceof MachineBlock
+                ? useOn(context) : InteractionResult.PASS;
+    }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void rightEntity(PlayerInteractEvent.EntityInteract event) {

@@ -16,7 +16,8 @@ public final class BuildingSkills {
     /** Server-side, per-player switch for equipment/effects; enabled unless explicitly disabled. */
     public static boolean damagePenaltyEnabled(ServerPlayer player) {
         return !player.getPersistentData().getBoolean(DAMAGE_PENALTY_DISABLED)
-                && org.lyy.lyycore.content.equipment.SpacetimeAccelerationEffect.level(player) < 4;
+                && org.lyy.lyycore.content.equipment.SpacetimeAccelerationEffect.level(player) < 4
+                && !org.lyy.lyycore.content.finality.FinalityEquipment.helmet(player);
     }
     public static void setDamagePenaltyEnabled(ServerPlayer player, boolean enabled) {
         if (enabled) player.getPersistentData().remove(DAMAGE_PENALTY_DISABLED);

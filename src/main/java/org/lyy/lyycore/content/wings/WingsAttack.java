@@ -29,15 +29,7 @@ public final class WingsAttack {
         final List<Volley> pending = new ArrayList<>();
     }
     private record Pursuit(LivingEntity target, int hitAt) { }
-    private static final class Volley {
-        final LivingEntity target;
-        final WingsTier tier;
-        final int started;
-        int feather;
-        Volley(LivingEntity target, WingsTier tier, int started) {
-            this.target = target; this.tier = tier; this.started = started;
-        }
-    }
+    private record Volley(LivingEntity target, float damage, int hitAt) { }
     private WingsAttack() { }
 
     private static boolean canAttack(ServerPlayer player) {
@@ -66,7 +58,9 @@ public final class WingsAttack {
         var tier = pursuit == 1 ? WingsTier.FIRST : WingsTier.SECOND;
         // Lower-tier volleys may overlap, but none may shorten the last outstanding recall.
         state.busyUntil = Math.max(state.busyUntil, player.tickCount + (int)Math.ceil(FeatherAttack.duration(tier.featherCount()) * 20));
-        state.pending.add(new Volley(target, tier, player.tickCount));
+        // Settle the full volley on its first impact; individual feathers remain cosmetic.
+        state.pending.add(new Volley(target, tier.featherDamage() * tier.featherCount(),
+                player.tickCount + FeatherAttack.hitTick(0, tier.featherCount())));
         WingsNetwork.attack(player, target, tier.featherCount());
         return true;
     }
@@ -93,12 +87,10 @@ public final class WingsAttack {
             if (!volley.target.isAlive() || volley.target.level() != player.level() || volley.target.isRemoved()) {
                 iterator.remove(); continue;
             }
-            while (volley.feather < volley.tier.featherCount() && volley.target.isAlive()
-                    && player.tickCount - volley.started >= FeatherAttack.hitTick(volley.feather, volley.tier.featherCount())) {
-                volley.feather++;
-                CombatDamage.hit(player, volley.target, volley.tier.featherDamage());
+            if (player.tickCount >= volley.hitAt) {
+                iterator.remove();
+                CombatDamage.hit(player, volley.target, volley.damage);
             }
-            if (volley.feather == volley.tier.featherCount() || !volley.target.isAlive()) iterator.remove();
         }
     }
 

@@ -61,6 +61,13 @@ public final class AccessoryEquipment extends ItemStackHandler {
             var data = AccessoryData.read(stack);
             for (var stat : data.traits()) totals[stat.ordinal()] += data.allocated(stat) * stat.perPoint;
         }
+        double reach = 0;
+        if (set && getStackInSlot(0).getItem() instanceof Accessory accessory) {
+            for (var bonus : accessory.setBonuses()) totals[bonus.stat().ordinal()] += bonus.amount();
+            reach = accessory.setReachBonus();
+        }
+        PlayerAttributes.setPersistentBonus(owner, net.minecraft.world.entity.ai.attributes.Attributes.BLOCK_INTERACTION_RANGE, BONUS, reach);
+        PlayerAttributes.setPersistentBonus(owner, net.minecraft.world.entity.ai.attributes.Attributes.ENTITY_INTERACTION_RANGE, BONUS, reach);
         for (var stat : Stat.values()) PlayerAttributes.setPersistentBonus(owner, stat.attribute, BONUS, totals[stat.ordinal()]);
     }
     public boolean allocate(int slot, Stat stat, boolean add, int amount) {

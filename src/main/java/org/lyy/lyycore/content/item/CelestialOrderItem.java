@@ -46,7 +46,9 @@ public final class CelestialOrderItem extends Item {
         return InteractionResultHolder.sidedSuccess(stack, level.isClientSide);
     }
 
-    @Override public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext context) { return useOn(context); }
+    @Override public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext context) {
+        return context.isSecondaryUseActive() ? useOn(context) : InteractionResult.PASS;
+    }
     @Override public InteractionResult useOn(UseOnContext context) {
         var player = context.getPlayer();
         if (player == null || player.isSpectator()) return InteractionResult.PASS;

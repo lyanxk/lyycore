@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "lyycore:spacetime_boots"
+    "lyycore:spacetime_boots",
+    "lyycore:finality_boots"
   ]
 }

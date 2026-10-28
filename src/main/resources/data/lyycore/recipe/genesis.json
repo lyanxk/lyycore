@@ -1,0 +1,108 @@
+{
+  "type": "lyycore:spacetime",
+  "inputs": [
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy_plate"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy_plate"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy_plate"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy_plate"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy_plate"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy_plate"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy_plate"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_alloy_plate"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:otherworld_chest"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_crystal"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:energy_core"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_crystal"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:echo_of_two_realms"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_crystal"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:energy_core"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "lyycore:spacetime_crystal"
+      },
+      "count": 1
+    }
+  ],
+  "result": {
+    "id": "lyycore:genesis"
+  },
+  "result_count": 1,
+  "duration": 100,
+  "energy": 1000000000,
+  "energy_per_tick": true
+}

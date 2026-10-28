@@ -27,7 +27,7 @@ public final class ReforgingTableBlockEntity extends BlockEntity implements Menu
     public final ItemStackHandler items = new ItemStackHandler(2) {
         @Override public int getSlotLimit(int slot) { return slot == 0 ? 1 : 64; }
         @Override public boolean isItemValid(int slot, ItemStack stack) {
-            if (slot == 0) return stack.getItem() instanceof Accessory;
+            if (slot == 0) return stack.getItem() instanceof Accessory accessory && accessory.canReforge();
             return REFORGING_MATERIALS.get().contains(stack.getItem());
         }
         @Override protected void onContentsChanged(int slot) {

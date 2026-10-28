@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "lyycore:spacetime_leggings"
+    "lyycore:spacetime_leggings",
+    "lyycore:finality_leggings"
   ]
 }

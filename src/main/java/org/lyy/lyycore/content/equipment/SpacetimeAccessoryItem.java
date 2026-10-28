@@ -63,8 +63,11 @@ public final class SpacetimeAccessoryItem extends Item implements Accessory {
     public static void preventDeath(LivingDeathEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
         var equipment = AccessoryEquipment.get(player);
-        if (!equipment.getStackInSlot(Kind.NECKLACE.ordinal()).is(LyyItems.SPACETIME_BLESSING_NECKLACE.get())
-                || !equipment.getStackInSlot(Kind.NOTEBOOK.ordinal()).is(LyyItems.SPACETIME_BLESSING_NOTEBOOK.get())) return;
+        boolean spacetime = equipment.getStackInSlot(0).is(LyyItems.SPACETIME_BLESSING_NECKLACE.get())
+                && equipment.getStackInSlot(1).is(LyyItems.SPACETIME_BLESSING_NOTEBOOK.get());
+        boolean finality = equipment.getStackInSlot(0).is(org.lyy.lyycore.content.finality.FinalityContent.NECKLACE.get())
+                && equipment.getStackInSlot(1).is(org.lyy.lyycore.content.finality.FinalityContent.NOTEBOOK.get());
+        if (!spacetime && !finality) return;
         event.setCanceled(true);
         player.setHealth(player.getMaxHealth());
     }

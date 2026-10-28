@@ -43,6 +43,7 @@ public class SummoningPedestalBlock extends MachineBlock {
         if (!state.is(replacement.getBlock()) && level instanceof net.minecraft.server.level.ServerLevel server
                 && level.getBlockEntity(pos) instanceof SummoningPedestalBlockEntity pedestal) {
             org.lyy.lyycore.content.trial.SpacetimeTrials.get(server).broken(server, pos);
+            org.lyy.lyycore.content.finality.FinalityTrials.get(server).broken(server, pos);
             Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), pedestal.items.getStackInSlot(0));
         }
         super.onRemove(state, level, pos, replacement, moving);

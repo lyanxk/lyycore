@@ -1,0 +1,22 @@
+{
+  "type": "lyycore:finality_arena",
+  "generator": {
+    "type": "minecraft:flat",
+    "settings": {
+      "biome": "lyycore:finality_arena",
+      "lakes": false,
+      "features": false,
+      "structure_overrides": [],
+      "layers": [
+        {
+          "height": 63,
+          "block": "minecraft:air"
+        },
+        {
+          "height": 1,
+          "block": "lyycore:finality_arena_floor"
+        }
+      ]
+    }
+  }
+}
