@@ -915,6 +915,6 @@
   "message.lyycore.weaver.attack": "Attack mode",
   "jei.lyycore.finality_trial": "After Across Spacetime: offer a spacetime crystal and alternate four spacetime alloy blocks and four energy cores around the ritual altar. Sneak-use the altar to begin. Completion rewards two Echoes of Two Realms.",
   "jei.lyycore.portable_spacetime_energy": "Use to select a power channel. Charges carried items while its source matrix is loaded.",
-  "jei.lyycore.genesis": "The template retains all item data; the right target stores only its item type and accepts JEI drops. Click the center for one item, Shift-click for a stack. A redstone signal outputs to both sides. Costs 10,000 IE per item.",
+  "jei.lyycore.genesis": "Place a template item on the left; the right target only accepts JEI drops. Both retain all item data. Click the right slot with an empty cursor to clear it. Click the center for one item, Shift-click for a stack. A redstone signal outputs to both sides. Costs 10,000 IE per item.",
   "gui.lyycore.finality.night_vision": "Night vision"
 }

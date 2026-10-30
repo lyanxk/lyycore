@@ -90,8 +90,8 @@ public final class GenesisMenu extends MachineMenu {
             if (!player.level().isClientSide && !player.isSpectator() && stillValid(player)) {
                 if (slot == 1 && (type == ClickType.PICKUP || type == ClickType.QUICK_MOVE))
                     machine.take(player, type == ClickType.QUICK_MOVE);
-                else if (slot == 2 && type == ClickType.PICKUP)
-                    machine.ghost(machine.ghost().isEmpty() ? getCarried() : ItemStack.EMPTY);
+                else if (slot == 2 && type == ClickType.PICKUP && getCarried().isEmpty())
+                    machine.ghost(ItemStack.EMPTY);
                 broadcastChanges();
             }
             return;

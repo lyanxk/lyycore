@@ -69,7 +69,7 @@ public final class GenesisBlockEntity extends BlockEntity implements MenuProvide
     }
 
     public void ghost(ItemStack stack) {
-        ghost = stack.isEmpty() ? ItemStack.EMPTY : new ItemStack(stack.getItem());
+        ghost = stack.copyWithCount(1);
         useGhost = !ghost.isEmpty();
         setChanged();
     }

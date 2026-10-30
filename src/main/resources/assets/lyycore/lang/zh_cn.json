@@ -915,6 +915,6 @@
   "message.lyycore.weaver.attack": "攻击模式",
   "jei.lyycore.finality_trial": "完成“跨越时空”后，在仪式祭坛放入时空水晶，周围交替放入四个时空合金块和四个能量核心，潜行右键开启终焉试炼。通过后获得两界的回响 ×2。",
   "jei.lyycore.portable_spacetime_energy": "右键选择供能频道。携带时自动充能，矩阵所在区块需要已加载。",
-  "jei.lyycore.genesis": "模板保留完整物品数据；右侧目标仅保留物品类型，支持 JEI 拖入。点击中间取出，Shift 点击取出一组。红石信号下自动向左右输出。每个物品消耗 10,000 IE。",
+  "jei.lyycore.genesis": "左侧放入物品作为模板；右侧仅接受 JEI 拖入，两侧均保留完整物品数据。空手点击右侧清除目标。点击中间取出，Shift 点击取出一组。红石信号下自动向左右输出。每个物品消耗 10,000 IE。",
   "gui.lyycore.finality.night_vision": "夜视"
 }

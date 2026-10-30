@@ -19,7 +19,16 @@ write(path, states)
 
 path = ASSETS / "models/item/genesis.json"
 item = json.loads(path.read_text(encoding="utf-8"))
-item.update(json.loads((SOURCE / "origin_of_all/source/origin_of_all.display.json").read_text(encoding="utf-8")))
+source = json.loads((SOURCE / "origin_of_all/source/origin_of_all.bbmodel").read_text(encoding="utf-8"))
+# Bedrock's BB Display applies the artist's transform around (0, 0, 0).
+# The shared block importer already adds half a block to X/Z, but leaves Y
+# ground-relative. ItemRenderer subtracts (.5, .5, .5), so compensate Y here
+# as well. This is item-only: placed geometry and lid pivots must stay intact.
+for face in item["faces"]:
+    for vertex in face["vertices"]:
+        vertex[1] = round(vertex[1] + 0.5, 6)
+item["display"] = source.get("display", {})
+item["gui_light"] = "front" if source.get("front_gui_light", False) else "side"
 item["render_type"] = "minecraft:cutout"
 write(path, item)
 

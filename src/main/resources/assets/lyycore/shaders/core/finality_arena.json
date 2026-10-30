@@ -7,6 +7,18 @@
   "samplers": [],
   "uniforms": [
     {
+      "name": "RenderFloor",
+      "type": "float",
+      "count": 1,
+      "values": [0]
+    },
+    {
+      "name": "FloorExtent",
+      "type": "float",
+      "count": 1,
+      "values": [1024]
+    },
+    {
       "name": "InverseViewProjection",
       "type": "matrix4x4",
       "count": 16,

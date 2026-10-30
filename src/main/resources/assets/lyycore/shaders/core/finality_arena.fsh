@@ -1,11 +1,11 @@
 #version 150
 
 uniform mat4 InverseViewProjection;
-uniform mat4 ViewProjection;
 uniform vec3 CameraPosition;
-uniform float FloorHeight;
 uniform float SceneTime;
+uniform float RenderFloor;
 in vec2 screenPosition;
+in vec3 relativePosition;
 out vec4 fragColor;
 
 const float PI = 3.14159265;
@@ -135,19 +135,14 @@ vec3 floorSurface(vec2 p, float distance) {
 }
 
 void main() {
+    if (RenderFloor > 0.5) {
+        fragColor = vec4(floorSurface(CameraPosition.xz + relativePosition.xz, length(relativePosition)), 1.0);
+        return;
+    }
     vec4 nearPoint = InverseViewProjection * vec4(screenPosition, -1.0, 1.0);
-    vec4 farPoint = InverseViewProjection * vec4(screenPosition, 1.0, 1.0);
+    // A point inside the frustum also works with an infinite far projection.
+    vec4 farPoint = InverseViewProjection * vec4(screenPosition, 0.0, 1.0);
     vec3 origin = nearPoint.xyz / nearPoint.w;
     vec3 ray = normalize(farPoint.xyz / farPoint.w - origin);
-    float height = FloorHeight - CameraPosition.y - origin.y;
-    float t = height / (abs(ray.y) < 0.00001 ? 0.00001 : ray.y);
-    if (t > 0.0 && ray.y < 0.0) {
-        vec3 relative = origin + ray * t;
-        vec4 clip = ViewProjection * vec4(relative, 1.0);
-        gl_FragDepth = clamp(clip.z / clip.w * 0.5 + 0.5, 0.0, 1.0);
-        fragColor = vec4(floorSurface(CameraPosition.xz + relative.xz, t), 1.0);
-    } else {
-        gl_FragDepth = 1.0;
-        fragColor = vec4(sky(ray), 1.0);
-    }
+    fragColor = vec4(sky(ray), 1.0);
 }
