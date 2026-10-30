@@ -30,7 +30,7 @@ public final class FinalitySummon extends Monster {
 
     private static final EntityDataAccessor<Integer> KIND =
             SynchedEntityData.defineId(FinalitySummon.class, EntityDataSerializers.INT);
-    private static final EntityDataAccessor<Integer> LINK =
+    private static final EntityDataAccessor<Integer> TARGET_PLAYER =
             SynchedEntityData.defineId(FinalitySummon.class, EntityDataSerializers.INT);
     private UUID parent, target;
     private int lastAttack;
@@ -46,6 +46,7 @@ public final class FinalitySummon extends Monster {
     public static AttributeSupplier.Builder attributes() {
         return Monster.createMonsterAttributes()
                 .add(Attributes.MAX_HEALTH, 10000)
+                .add(Attributes.SCALE, 2)
                 .add(Attributes.ARMOR, 0)
                 .add(Attributes.ARMOR_TOUGHNESS, 0)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 1);
@@ -62,19 +63,24 @@ public final class FinalitySummon extends Monster {
     protected void defineSynchedData(SynchedEntityData.Builder b) {
         super.defineSynchedData(b);
         b.define(KIND, 0);
-        b.define(LINK, -1);
+        b.define(TARGET_PLAYER, -1);
     }
 
     public Kind kind() {
         return Kind.values()[entityData.get(KIND)];
     }
 
-    public int linkedPlayer() {
-        return entityData.get(LINK);
+    public int targetPlayerId() {
+        return entityData.get(TARGET_PLAYER);
+    }
+
+    private void facePlayer(ServerPlayer player) {
+        entityData.set(TARGET_PLAYER, player.getId());
     }
 
     public void setup(Kind kind) {
         entityData.set(KIND, kind.ordinal());
+        getAttribute(Attributes.SCALE).setBaseValue(kind == Kind.STAKE ? 4 : 2);
         setCustomName(
                 net.minecraft.network.chat.Component.translatable(
                         "entity.lyycore.finality."
@@ -99,6 +105,12 @@ public final class FinalitySummon extends Monster {
         }
         var targets = trial.players();
         if (targets.isEmpty()) return;
+        if (!targets.contains(level.getEntity(targetPlayerId()))) {
+            var closest = targets.getFirst();
+            for (var player : targets)
+                if (distanceToSqr(player) < distanceToSqr(closest)) closest = player;
+            facePlayer(closest);
+        }
         if (kind() == Kind.HEART) {
             if (tickCount % 20 == 0) {
                 for (var s : trial.summons) if (s != this && s.isAlive()) s.heal(30000);
@@ -106,6 +118,7 @@ public final class FinalitySummon extends Monster {
             }
             if (tickCount % 160 == 0) {
                 var p = targets.get(random.nextInt(targets.size()));
+                facePlayer(p);
                 boolean exists =
                         trial.summons.stream()
                                 .anyMatch(
@@ -117,7 +130,7 @@ public final class FinalitySummon extends Monster {
                     stake.setup(Kind.STAKE);
                     stake.parent = getUUID();
                     stake.target = p.getUUID();
-                    stake.entityData.set(LINK, p.getId());
+                    stake.facePlayer(p);
                     double angle = random.nextDouble() * Math.PI * 2,
                             distance = 4 + random.nextDouble() * 2;
                     stake.setPos(
@@ -135,6 +148,7 @@ public final class FinalitySummon extends Monster {
         } else if (tickCount - lastAttack >= trial.interval()) {
             lastAttack = tickCount;
             var p = targets.get(random.nextInt(targets.size()));
+            facePlayer(p);
             FinalityProjectile.cast(level, this, p);
         }
         if (kind() == Kind.SWORD
@@ -157,7 +171,7 @@ public final class FinalitySummon extends Monster {
         }
         var p = target == null ? null : level.getServer().getPlayerList().getPlayer(target);
         if (p == null || p.level() != level || !p.isAlive()) return;
-        entityData.set(LINK, p.getId());
+        facePlayer(p);
         Vec3 delta = position().subtract(p.position());
         double distance = delta.length();
         if (distance > 8) {

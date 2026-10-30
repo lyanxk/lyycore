@@ -136,7 +136,7 @@ public final class FinalityClient {
         }
         for (var entity : entities)
             if (entity instanceof FinalitySummon summon) {
-                Vec3 from = summon.getPosition(partial).add(0, .75, 0);
+                Vec3 from = summon.getPosition(partial).add(0, .75 * summon.getScale(), 0);
                 if (summon.kind() == FinalitySummon.Kind.HEART)
                     for (var target : entities) {
                         if (target == summon) continue;
@@ -152,7 +152,7 @@ public final class FinalityClient {
                                 0xFFFFE9BC);
                     }
                 if (summon.kind() == FinalitySummon.Kind.STAKE
-                        && mc.level.getEntity(summon.linkedPlayer())
+                        && mc.level.getEntity(summon.targetPlayerId())
                                 instanceof net.minecraft.world.entity.player.Player player)
                     FinalityProjectileRenderer.line(
                             pose,

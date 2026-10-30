@@ -1,6 +1,7 @@
 package org.lyy.lyycore.client.finality;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 
 import net.minecraft.client.animation.KeyframeAnimations;
 import net.minecraft.client.model.HierarchicalModel;
@@ -68,6 +69,14 @@ public final class FinalitySummonRenderer extends EntityRenderer<FinalitySummon>
             KeyframeAnimations.animate(
                     book, PrayerBookAnimations.page_turn, millis, 1, animationCache);
         pose.pushPose();
+        float scale = entity.getScale();
+        pose.scale(scale, scale, scale);
+        var target = entity.level().getEntity(entity.targetPlayerId());
+        if (target != null) {
+            var direction = target.getPosition(partial).subtract(entity.getPosition(partial));
+            yaw = (float) Math.toDegrees(Math.atan2(direction.z, direction.x)) - 90;
+        }
+        pose.mulPose(Axis.YP.rotationDegrees(180 - yaw));
         pose.translate(0, 1.5, 0);
         pose.scale(-1, -1, 1);
         root.render(

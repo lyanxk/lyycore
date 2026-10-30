@@ -11,6 +11,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.*;
 
 import org.joml.Quaternionf;
+import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lyy.lyycore.client.finality.model.*;
 import org.lyy.lyycore.content.finality.*;
@@ -41,6 +42,8 @@ public final class FinalityProjectileRenderer extends EntityRenderer<FinalityPro
     @Override
     public boolean shouldRender(FinalityProjectile e, Frustum f, double x, double y, double z) {
         var p = e.position();
+        if (e.kind() == FinalityProjectile.Kind.BEAM)
+            return f.isVisible(e.beamBounds(e.at(e.age(0) - 1), p).inflate(1));
         return f.isVisible(new AABB(p.x - 2, 0, p.z - 2, p.x + 2, 61, p.z + 2));
     }
 
@@ -53,7 +56,7 @@ public final class FinalityProjectileRenderer extends EntityRenderer<FinalityPro
             MultiBufferSource buffers,
             int light) {
         float age = e.age(partial);
-        Vec3 origin = e.at(0), position = e.getPosition(partial);
+        Vec3 position = e.getPosition(partial);
         if (e.kind() == FinalityProjectile.Kind.STONE) {
             pose.pushPose();
             pose.translate(0, .025 - position.y, 0);
@@ -74,30 +77,18 @@ public final class FinalityProjectileRenderer extends EntityRenderer<FinalityPro
                     .018F,
                     0x50FFE5AA);
         }
-        if (e.kind() == FinalityProjectile.Kind.BEAM && age < e.delay()) {
-            Vec3 end = origin.add(e.velocity().scale(20));
-            line(
-                    pose,
-                    buffers,
-                    origin.subtract(position).add(0, .04, 0),
-                    end.subtract(position).add(0, .04, 0),
-                    .05F,
-                    0xA0FFE5AA);
-            line(
-                    pose,
-                    buffers,
-                    origin.subtract(position),
-                    origin.subtract(position).add(0, 60, 0),
-                    .025F,
-                    0x40FFE5AA);
-        }
         if (age < e.delay() && e.kind() != FinalityProjectile.Kind.SWORD) return;
         if (e.kind() == FinalityProjectile.Kind.STONE)
             draw(trail, FinalitySummonRenderer.texture("starfall_trail"), pose, buffers, 1, 1, 1);
         pose.pushPose();
-        if (e.kind() == FinalityProjectile.Kind.BEAM)
-            draw(models[3], getTextureLocation(e), pose, buffers, 8, 60, 8);
-        else {
+        if (e.kind() == FinalityProjectile.Kind.BEAM) {
+            var direction = e.beamTop().subtract(position);
+            // Shear the column so the top stays fixed and the foot light stays on the ground.
+            pose.mulPose(new Matrix4f()
+                    .m10((float) (direction.x / direction.y))
+                    .m12((float) (direction.z / direction.y)));
+            draw(models[3], getTextureLocation(e), pose, buffers, 8, (float) direction.y, 8);
+        } else {
             if (e.kind() == FinalityProjectile.Kind.SWORD)
                 pose.mulPose(
                         new Quaternionf()

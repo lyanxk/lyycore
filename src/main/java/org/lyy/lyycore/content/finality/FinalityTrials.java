@@ -46,6 +46,7 @@ public final class FinalityTrials extends SavedData {
                             helper.getBlockTickets().keySet().forEach(helper::removeAllTickets));
     private GlobalPos altar;
     private final Map<UUID, Integer> members = new LinkedHashMap<>();
+    private final Set<UUID> markWarnings = new HashSet<>();
     private final Set<UUID> returnOnLogin = new HashSet<>();
     final Set<FinalitySummon> summons = new HashSet<>();
     final Set<FinalityWither> withers = new HashSet<>();
@@ -142,6 +143,7 @@ public final class FinalityTrials extends SavedData {
         if (entrants.isEmpty()) return;
         altar = GlobalPos.of(source.dimension(), pos.immutable());
         progress = age = emptyTicks = 0;
+        markWarnings.clear();
         for (var p : entrants) members.put(p.getUUID(), 1);
         tickets(source, true);
         arenaTickets(arena, true);
@@ -151,7 +153,16 @@ public final class FinalityTrials extends SavedData {
             enter(p);
         }
         refreshPlayers(arena);
+        announce(arena, "enter");
         replenish(arena, 8, 8);
+    }
+
+    private void announce(ServerLevel level, String message) {
+        var text = Component.translatable("message.lyycore.finality." + message);
+        for (var id : members.keySet()) {
+            var player = level.getServer().getPlayerList().getPlayer(id);
+            if (player != null) player.sendSystemMessage(text);
+        }
     }
 
     private void enter(ServerPlayer player) {
@@ -212,13 +223,10 @@ public final class FinalityTrials extends SavedData {
                     net.minecraft.sounds.SoundSource.AMBIENT,
                     .35F,
                     .65F);
-        for (var p : arena.players()) constrain(p);
         summons.removeIf(Entity::isRemoved);
         withers.removeIf(Entity::isRemoved);
         attacks.removeIf(Entity::isRemoved);
         witherProjectiles.removeIf(Entity::isRemoved);
-        summons.forEach(FinalityTrials::constrain);
-        withers.forEach(FinalityTrials::constrain);
         if (age % 40 == 0)
             replenish(arena, progress >= 70 ? 5 : 4, progress >= 70 ? 16 : progress >= 35 ? 12 : 8);
         for (var p : players) if (age % 4 == 0) FinalityNetwork.status(p, progress, layers(p));
@@ -245,8 +253,12 @@ public final class FinalityTrials extends SavedData {
 
     public void killed(FinalitySummon summon) {
         if (!active() || !summons.remove(summon)) return;
+        int previous = progress;
         progress += summon.kind().progress;
-        if (progress >= 100) finish((ServerLevel) summon.level(), true);
+        var level = (ServerLevel) summon.level();
+        if (previous < 35 && progress >= 35) announce(level, "progress_35");
+        if (previous < 70 && progress >= 70) announce(level, "progress_70");
+        if (progress >= 100) finish(level, true);
     }
 
     public void hit(ServerPlayer player, Entity attacker) {
@@ -266,11 +278,14 @@ public final class FinalityTrials extends SavedData {
     public void addMark(ServerPlayer player) {
         int layers = layers(player);
         if (layers == 0 || layers + 1 >= 100) {
+            if (layers == 0) announce(player.serverLevel(), "mark_cleared");
             finish(player.serverLevel(), false);
             return;
         }
         applyMark(player, layers + 1);
         members.put(player.getUUID(), layers + 1);
+        if (layers < 80 && layers + 1 >= 80 && markWarnings.add(player.getUUID()))
+            player.sendSystemMessage(Component.translatable("message.lyycore.finality.mark_80"));
     }
 
     public static int layers(Player player) {
@@ -329,6 +344,7 @@ public final class FinalityTrials extends SavedData {
             }
         }
         members.clear();
+        markWarnings.clear();
         players = List.of();
         setDirty();
     }
@@ -361,26 +377,12 @@ public final class FinalityTrials extends SavedData {
 
     private static Vec3 clamp(Vec3 pos, double horizontalMargin, double height) {
         double r = Math.hypot(pos.x, pos.z),
-                limit = 42 - horizontalMargin,
+                // Leave room for the stepped block wall and the entity's square hitbox.
+                limit = FinalityArenaGenerator.RADIUS - 1 - horizontalMargin * Math.sqrt(2),
                 scale = r > limit ? limit / r : 1;
-        return new Vec3(pos.x * scale, Math.clamp(pos.y, 0, 60 - height), pos.z * scale);
-    }
-
-    private static void constrain(Entity entity) {
-        Vec3 allowed = clamp(entity.position(), entity.getBbWidth() / 2, entity.getBbHeight());
-        if (allowed.distanceToSqr(entity.position()) > 1e-8) {
-            if (entity instanceof ServerPlayer p)
-                p.connection.teleport(allowed.x, allowed.y, allowed.z, p.getYRot(), p.getXRot());
-            else entity.setPos(allowed);
-            Vec3 velocity = entity.getDeltaMovement(),
-                    future =
-                            clamp(
-                                    allowed.add(velocity),
-                                    entity.getBbWidth() / 2,
-                                    entity.getBbHeight());
-            entity.setDeltaMovement(future.subtract(allowed));
-            entity.hurtMarked = true;
-        }
+        return new Vec3(pos.x * scale,
+                Math.clamp(pos.y, FinalityArenaGenerator.FLOOR_Y, FinalityArenaGenerator.CEILING_Y - height),
+                pos.z * scale);
     }
 
     @SubscribeEvent

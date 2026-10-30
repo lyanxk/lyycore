@@ -1,5 +1,6 @@
 package org.lyy.lyycore.content.finality;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.*;
@@ -7,6 +8,7 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.neoforged.bus.api.*;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.capabilities.*;
@@ -30,6 +32,12 @@ public final class FinalityContent {
             DeferredRegister.create(Registries.MENU, "lyycore");
     private static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES =
             DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, "lyycore");
+    private static final DeferredRegister<MapCodec<? extends ChunkGenerator>> CHUNK_GENERATORS =
+            DeferredRegister.create(Registries.CHUNK_GENERATOR, "lyycore");
+
+    static {
+        CHUNK_GENERATORS.register("finality_arena", () -> FinalityArenaGenerator.CODEC);
+    }
 
     public static ResourceLocation id(String path) {
         return ResourceLocation.fromNamespaceAndPath("lyycore", path);
@@ -120,6 +128,7 @@ public final class FinalityContent {
         EFFECTS.register(bus);
         MENUS.register(bus);
         BLOCK_ENTITIES.register(bus);
+        CHUNK_GENERATORS.register(bus);
     }
 
     @SubscribeEvent
@@ -127,7 +136,9 @@ public final class FinalityContent {
         e.put(SUMMON.get(), FinalitySummon.attributes().build());
         e.put(
                 WITHER.get(),
-                net.minecraft.world.entity.boss.wither.WitherBoss.createAttributes().build());
+                net.minecraft.world.entity.boss.wither.WitherBoss.createAttributes()
+                        .add(net.minecraft.world.entity.ai.attributes.Attributes.SCALE, 2)
+                        .build());
     }
 
     @SubscribeEvent

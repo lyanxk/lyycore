@@ -37,7 +37,7 @@ public final class FinalitySettingsScreen extends AbstractContainerScreen<Finali
             options =
                     switch (armor.getEquipmentSlot()) {
                         case HEAD -> new String[] {"exhaustion", "healing", "debuff_decay", "night_vision"};
-                        case CHEST -> new String[] {"cancel_damage", "flight"};
+                        case CHEST -> new String[] {"cancel_damage", "flight", "prevent_teleport"};
                         case LEGS -> new String[] {"retaliation"};
                         default -> new String[] {"speed", "step"};
                     };

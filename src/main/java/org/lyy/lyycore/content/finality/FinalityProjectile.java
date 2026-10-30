@@ -17,6 +17,7 @@ import java.util.*;
  * Spawn parameters determine both client motion and server collision; no periodic position stream.
  */
 public final class FinalityProjectile extends Entity {
+    public static final double BEAM_HEIGHT = FinalityArenaGenerator.CEILING_Y;
     public enum Kind {
         STONE,
         CRYSTAL,
@@ -73,6 +74,15 @@ public final class FinalityProjectile extends Entity {
 
     public Vec3 at(float age) {
         return new Vec3(entityData.get(ORIGIN)).add(velocity().scale(Math.max(0, age - delay())));
+    }
+
+    public Vec3 beamTop() {
+        return at(0).add(0, BEAM_HEIGHT, 0);
+    }
+
+    public AABB beamBounds(Vec3 from, Vec3 to) {
+        var top = beamTop();
+        return new AABB(from, to).minmax(new AABB(top, top)).inflate(1);
     }
 
     public static void cast(ServerLevel level, FinalitySummon owner, ServerPlayer target) {
@@ -181,7 +191,7 @@ public final class FinalityProjectile extends Entity {
         if (age < delay() && kind() != Kind.SWORD) return;
         AABB bounds =
                 kind() == Kind.BEAM
-                        ? new AABB(previous.x, 0, previous.z, next.x, 60, next.z).inflate(1, 0, 1)
+                        ? beamBounds(previous, next)
                         : new AABB(previous, next).inflate(.3);
         for (var player : trial.players()) {
             if (hit.contains(player.getUUID()) || !bounds.intersects(player.getBoundingBox()))
@@ -204,9 +214,10 @@ public final class FinalityProjectile extends Entity {
         }
         boolean expired = kind() == Kind.STONE ? next.y <= 0 : age - delay() >= 20;
         if (expired
-                || kind() != Kind.BEAM && next.x * next.x + next.z * next.z > 42 * 42
-                || next.y < 0
-                || next.y > 60) {
+                || kind() != Kind.BEAM && next.x * next.x + next.z * next.z
+                        > FinalityArenaGenerator.RADIUS * FinalityArenaGenerator.RADIUS
+                || next.y < FinalityArenaGenerator.FLOOR_Y
+                || next.y > FinalityArenaGenerator.CEILING_Y) {
             if (kind() == Kind.STONE && next.y <= 0) {
                 level.playSound(
                         null,
@@ -243,7 +254,13 @@ public final class FinalityProjectile extends Entity {
         }
     }
 
-    private static boolean beamHits(ServerPlayer player, Vec3 from, Vec3 to) {
+    private boolean beamHits(ServerPlayer player, Vec3 from, Vec3 to) {
+        var top = beamTop();
+        var box = player.getBoundingBox();
+        // The bottom moves straight away from its initial position below the fixed top.
+        // These endpoints cover the sweep across the player's full height during this tick.
+        from = top.lerp(from, Math.clamp((top.y - box.maxY) / BEAM_HEIGHT, 0, 1));
+        to = top.lerp(to, Math.clamp((top.y - box.minY) / BEAM_HEIGHT, 0, 1));
         Vec3 delta = to.subtract(from), offset = player.position().subtract(from);
         double length = delta.horizontalDistanceSqr();
         double t =

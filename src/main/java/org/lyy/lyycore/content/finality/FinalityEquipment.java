@@ -6,6 +6,7 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.*;
 import net.neoforged.bus.api.*;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.entity.EntityTeleportEvent;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
@@ -36,7 +37,7 @@ public final class FinalityEquipment {
         FlightPermissions.update(
                 player,
                 SOURCE,
-                player.isAlive() && FinalityArmorItem.active(player, EquipmentSlot.CHEST, 1));
+                player.isAlive() && FinalityArmorItem.active(player, EquipmentSlot.CHEST, FinalityArmorItem.CHEST_FLIGHT));
         double speed =
                 FinalityArmorItem.active(player, EquipmentSlot.FEET, 0)
                         ? FinalityArmorItem.speed(player.getItemBySlot(EquipmentSlot.FEET)) - 1
@@ -116,6 +117,13 @@ public final class FinalityEquipment {
             attribute.addTransientModifier(new AttributeModifier(SOURCE, value, operation));
     }
 
+    @SubscribeEvent
+    public static void teleport(EntityTeleportEvent event) {
+        if (event.getEntity() instanceof ServerPlayer player
+                && FinalityArmorItem.active(player, EquipmentSlot.CHEST, FinalityArmorItem.CHEST_PREVENT_TELEPORT))
+            event.setCanceled(true);
+    }
+
     @SubscribeEvent(priority = EventPriority.HIGHEST, receiveCanceled = true)
     public static void damage(LivingIncomingDamageEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
@@ -132,6 +140,6 @@ public final class FinalityEquipment {
                 reflecting = false;
             }
         }
-        if (FinalityArmorItem.active(player, EquipmentSlot.CHEST, 0)) event.setCanceled(true);
+        if (FinalityArmorItem.active(player, EquipmentSlot.CHEST, FinalityArmorItem.CHEST_CANCEL_DAMAGE)) event.setCanceled(true);
     }
 }

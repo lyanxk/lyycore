@@ -44,24 +44,25 @@ float line(float distance, float width) {
 }
 
 vec3 starField(vec3 ray) {
-    vec2 uv = vec2(atan(ray.z, ray.x) / (2.0 * PI), asin(clamp(ray.y, -1.0, 1.0)) / PI);
+    // Sample a spherical shell through a 3D field, without longitude seams or polar crowding.
+    float angularPixel = max(length(dFdx(ray)), length(dFdy(ray)));
     vec3 result = vec3(0);
     for (int layer = 0; layer < 2; layer++) {
-        float scale = layer == 0 ? 420.0 : 115.0;
-        vec2 cell = floor(uv * scale);
-        float seed = hash(vec3(cell, float(layer)));
-        vec2 center = vec2(hash(vec3(cell, 2.0)), hash(vec3(cell, 3.0))) * 0.6 + 0.2;
-        vec2 delta = fract(uv * scale) - center;
-        delta.x *= max(cos(uv.y * PI), 0.1) * 2.0;
-        float pixel = max(length(fwidth(uv * scale)), 0.001);
-        float radius = max(layer == 0 ? 0.025 : 0.016, pixel * 0.55);
+        float scale = layer == 0 ? 150.0 : 65.0;
+        vec3 p = ray * scale;
+        vec3 cell = floor(p);
+        float seed = hash(cell + float(layer) * 17.0);
+        vec3 center = vec3(hash(cell + 2.0), hash(cell + 7.0), hash(cell + 13.0)) * 0.5 + 0.25;
+        vec3 delta = fract(p) - center;
+        float baseRadius = layer == 0 ? 0.055 : 0.07;
+        // Keep filtering inside the cell and conserve brightness as a point gets wider.
+        float radius = clamp(angularPixel * scale * 0.55, baseRadius, 0.10);
         float core = exp(-dot(delta, delta) / (radius * radius));
-        float rays = exp(-abs(delta.x) / max(pixel * 0.35, 0.009) - abs(delta.y) * 18.0)
-                   + exp(-abs(delta.y) / max(pixel * 0.35, 0.009) - abs(delta.x) * 18.0);
-        float present = step(layer == 0 ? 0.86 : 0.97, seed);
+        core *= baseRadius * baseRadius / (radius * radius);
+        float present = step(layer == 0 ? 0.70 : 0.92, seed);
         float twinkle = 0.85 + 0.15 * sin(SceneTime * 0.7 + seed * 90.0);
         result += mix(vec3(0.70, 0.69, 1.0), vec3(1.0, 0.86, 0.67), seed)
-                * (core + rays * (layer == 0 ? 0.0 : 0.9)) * present * twinkle;
+                * core * present * twinkle * (layer == 0 ? 2.0 : 3.0);
     }
     return result;
 }

@@ -9,6 +9,7 @@ import org.lyy.lyycore.registry.LyyArmorMaterials;
 
 public final class FinalityArmorItem extends ArmorItem {
     public static final int HEAD_EXHAUSTION = 0, HEAD_HEALING = 1, HEAD_DEBUFF_DECAY = 2, HEAD_NIGHT_VISION = 3;
+    public static final int CHEST_CANCEL_DAMAGE = 0, CHEST_FLIGHT = 1, CHEST_PREVENT_TELEPORT = 2;
 
     public FinalityArmorItem(Type type, Properties properties) {
         super(LyyArmorMaterials.SPACETIME, type, properties.stacksTo(1).rarity(Rarity.EPIC));
@@ -29,6 +30,7 @@ public final class FinalityArmorItem extends ArmorItem {
         if (!(stack.getItem() instanceof FinalityArmorItem armor)) return 0;
         return switch (armor.getEquipmentSlot()) {
             case HEAD -> 4;
+            case CHEST -> 3;
             case LEGS -> 1;
             default -> 2;
         };
